@@ -18,21 +18,21 @@ public class AddMarkers {
         Marker[] marker = new Marker[HandleJSON.busInfo.length];
 
         Log.i("MyAddMarkers", "addMarkersToMap() HandleJSON.busInfo.length : " + HandleJSON.busInfo.length);
-    /*    for(int i = 0; i < HandleJSON.busInfo.length; i ++){
+        for(int i = 0; i < HandleJSON.busInfo.length; i ++){
 
-            markerLocation[0] = new LatLng(HandleJSON.busInfo[0].getBusStopLat(), HandleJSON.busInfo[0].getBusStopLng());
-            marker[0] = MapsActivity.mMap.addMarker(new MarkerOptions()
-                    .position(markerLocation[0]));
-            marker[0].setTitle(HandleJSON.busInfo[0].getBusId());
-
-
-        }*/
+            markerLocation[i] = new LatLng(HandleJSON.busInfo[i].getBusStopLat(), HandleJSON.busInfo[i].getBusStopLng());
+            marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
+                    .position(markerLocation[i]));
+            marker[i].setTitle(HandleJSON.busInfo[i].getBusId());
 
 
+        }
 
-        Marker markerTwo = MapsActivity.mMap.addMarker(
+
+
+       /* Marker markerTwo = MapsActivity.mMap.addMarker(
                 new MarkerOptions().position(new LatLng(HandleJSON.busInfo[3].getBusStopLat(), HandleJSON.busInfo[3].getBusStopLng())));
-                markerTwo.setVisible(true);
+                markerTwo.setVisible(true);*/
 
     }
 
