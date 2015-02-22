@@ -8,8 +8,8 @@ public class BusInfo {
     public String stopCode = "";
     public String busName = "";
     public String distance = "";
-    static String latitude = "";
-    static String longitude = "";
+    public String latitude = "";
+    public String longitude = "";
     public int radiusTaskNumber = 0;
     //constructor
 

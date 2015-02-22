@@ -69,8 +69,14 @@ public class HandleJSON {
                 busInfo[i].busStopLng(tlt.getString("lon"));
 
 
+
             }
 
+            for(int i = 0; i < busInfo.length; i ++){
+
+                Log.i("MyHandleJSON", busInfo[i].getBusStopLat() + "");
+                Log.i("MyHandleJSON", busInfo[i].getBusStopLng() + "");
+            }
 
             Log.i("MyHandleJSON", "inside readAndParseJSON  with code" );
 

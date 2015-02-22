@@ -2,6 +2,7 @@ package clearfaun.com.pokebuspro;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -17,27 +18,24 @@ public class AddMarkers {
         Marker[] marker = new Marker[HandleJSON.busInfo.length];
 
         Log.i("MyAddMarkers", "addMarkersToMap() HandleJSON.busInfo.length : " + HandleJSON.busInfo.length);
-      /*  for(int i = 0; i < HandleJSON.busInfo.length; i ++){
+    /*    for(int i = 0; i < HandleJSON.busInfo.length; i ++){
 
-            markerLocation[i] = new LatLng(HandleJSON.busInfo[i].getBusStopLat(), HandleJSON.busInfo[i].getBusStopLng());
-            marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
-                    .position(markerLocation[i]));
-
-            marker[i].setTitle(HandleJSON.busInfo[i].busName);
+            markerLocation[0] = new LatLng(HandleJSON.busInfo[0].getBusStopLat(), HandleJSON.busInfo[0].getBusStopLng());
+            marker[0] = MapsActivity.mMap.addMarker(new MarkerOptions()
+                    .position(markerLocation[0]));
+            marker[0].setTitle(HandleJSON.busInfo[0].getBusId());
 
 
         }*/
 
 
-        //create marker
 
+        Marker markerTwo = MapsActivity.mMap.addMarker(
+                new MarkerOptions().position(new LatLng(HandleJSON.busInfo[3].getBusStopLat(), HandleJSON.busInfo[3].getBusStopLng())));
+                markerTwo.setVisible(true);
 
-        LatLng MTA_301648LatLng1 = new LatLng(HandleJSON.busInfo[0].getBusStopLat(), HandleJSON.busInfo[0].getBusStopLng());
-        Marker MTA_301648Marker1 = MapsActivity.mMap.addMarker(new MarkerOptions()
-                .position(MTA_301648LatLng1));
-
-        MTA_301648Marker1.setTitle(HandleJSON.busInfo[0].busName);
     }
+
 
 
 }
