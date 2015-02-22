@@ -13,7 +13,7 @@ import java.net.URL;
 /**
  * Created by spencer on 2/21/2015.
  */
-public class HandleJSON {
+public class GetBusStopJSON {
 
     final static public String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28";
     static String testLat = "40.6455520";
@@ -32,11 +32,6 @@ public class HandleJSON {
     public volatile boolean parsingComplete = true;
 
 
-
-
-
-
-
     @SuppressLint("NewApi")
     public void readAndParseJSON(String in) {
 
@@ -45,9 +40,9 @@ public class HandleJSON {
 
         try {
 
-            Log.i("MyHandleJSON", "inside readAndParseJSON");
+            Log.i("MyGetBusStopJSON", "inside readAndParseJSON");
             JSONObject reader = new JSONObject(in);
-            Log.i("MyHandleJSON", "after JSONObject reader = new JSONObject(in);");
+            Log.i("MyGetBusStopJSON", "after JSONObject reader = new JSONObject(in);");
 
             JSONObject sys = reader.getJSONObject("data");
             JSONArray stopsArray= (JSONArray) sys.get("stops");
@@ -55,12 +50,12 @@ public class HandleJSON {
             busInfo = new BusInfo[stopsArray.length()];
 
 
-            Log.i("MyHandleJSON", "stopsArray.length()   " + stopsArray.length());
+            Log.i("MyGetBusStopJSON", "stopsArray.length()   " + stopsArray.length());
 
 
             for(int i = 0; i < stopsArray.length(); i++){
                 JSONObject tlt = stopsArray.getJSONObject(i);
-                Log.i("MyHandleJSON", stopsArray.getJSONObject(i).toString());
+                Log.i("MyGetBusStopJSON", stopsArray.getJSONObject(i).toString());
 
                 busInfo[i] =  new BusInfo();
                 busInfo[i].busCode(tlt.getString("code"));
@@ -82,19 +77,19 @@ public class HandleJSON {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Log.i("MyHandleJSON", "inside readAndParseJSON  Exception  " + e.toString());
+            Log.i("MyGetBusStopJSON", "inside readAndParseJSON  Exception  " + e.toString());
         }
 
     }
 
 
-    public void fetchJSON() {
+    public void fetchBusStop() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
 
-                    Log.i("MyHandleJSON", "inside fetchJSON");
+                    Log.i("MyHandleJSON", "inside fetchBusStop");
 
                     URL url = new URL(downloadURL);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -113,7 +108,7 @@ public class HandleJSON {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.i("MyHandleJSON", "inside fetchJSON inside exception");
+                    Log.i("MyGetBusStopJSON", "inside fetchBusStop inside exception");
                 }
             }
         });

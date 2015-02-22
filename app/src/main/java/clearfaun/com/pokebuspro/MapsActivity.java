@@ -13,7 +13,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity {
@@ -23,7 +22,8 @@ public class MapsActivity extends FragmentActivity {
     static double latitude;
     static double longitude;
     static Context mContext;
-    static HandleJSON obj;
+    static GetBusStopJSON obj;
+    static GetBusDistanceJSON objTwo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,23 +55,29 @@ public class MapsActivity extends FragmentActivity {
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 
-        open();
+        getBusStops();
+        getBusDistance();
 
         AddMarkers.addMarkersToMap();
 
     }
 
+    public static void getBusDistance(){
+
+        objTwo = new GetBusDistanceJSON();
+        objTwo.fetchBusDistanceJson("301487");
+
+    }
 
 
 
-
-    public static void open(){
+    public static void getBusStops(){
 
         Log.i("MyMapsActivity", "inside open");
 
 
-        obj = new HandleJSON();
-        obj.fetchJSON();
+        obj = new GetBusStopJSON();
+        obj.fetchBusStop();
 
         Log.i("MyMapsActivity", "before while");
         while(obj.parsingComplete);
