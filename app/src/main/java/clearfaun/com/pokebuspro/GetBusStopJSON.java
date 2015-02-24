@@ -25,7 +25,7 @@ public class GetBusStopJSON {
             MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
     //private String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&lat=40.6455520&lon=-73.9829084&radius=130";
 
-    static BusInfo[] busInfo;
+    BusInfo[] busInfo;
 
 
 
@@ -33,7 +33,7 @@ public class GetBusStopJSON {
 
 
     @SuppressLint("NewApi")
-    public void readAndParseJSON(String in) {
+    public void readAndParseJSON(String in, BusInfo[] businfo) {
 
 
 
@@ -44,10 +44,13 @@ public class GetBusStopJSON {
             JSONObject reader = new JSONObject(in);
             Log.i("MyGetBusStopJSON", "after JSONObject reader = new JSONObject(in);");
 
+
+
             JSONObject sys = reader.getJSONObject("data");
             JSONArray stopsArray= (JSONArray) sys.get("stops");
 
-            busInfo = new BusInfo[stopsArray.length()];
+
+
 
 
             Log.i("MyGetBusStopJSON", "stopsArray.length()   " + stopsArray.length());
@@ -58,16 +61,16 @@ public class GetBusStopJSON {
                 Log.i("MyGetBusStopJSON", stopsArray.getJSONObject(i).toString());
 
                 busInfo[i] =  new BusInfo();
-                busInfo[i].busCode(tlt.getString("code"));
-                busInfo[i].busId(tlt.getString("id"));
-                busInfo[i].busStopLat(tlt.getString("lat"));
-                busInfo[i].busStopLng(tlt.getString("lon"));
+                busInfo[i].setBusCode(tlt.getString("code"));
+                busInfo[i].setBusId(tlt.getString("id"));
+                busInfo[i].setBusStopLat(tlt.getString("lat"));
+                busInfo[i].setBusStopLng(tlt.getString("lon"));
 
 
 
             }
 
-
+            Log.i("MyGetBusStopJSON", " busInfo[0].getBusId()  " +  busInfo[0].getBusId());
 
 
 
@@ -83,7 +86,8 @@ public class GetBusStopJSON {
     }
 
 
-    public void fetchBusStop() {
+    public void fetchBusStop(BusInfo[] busInfoIn) {
+        busInfo = busInfoIn;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -103,7 +107,7 @@ public class GetBusStopJSON {
 
                     String data = convertStreamToString(stream);
 
-                    readAndParseJSON(data);
+                    readAndParseJSON(data, busInfo);
                     stream.close();
 
                 } catch (Exception e) {

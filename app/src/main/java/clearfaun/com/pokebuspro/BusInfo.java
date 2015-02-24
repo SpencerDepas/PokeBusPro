@@ -14,23 +14,23 @@ public class BusInfo {
     //constructor
 
 
-    public void busCode(String codeForStop) {
+    public void setBusCode(String codeForStop) {
         stopCode = codeForStop;
     }
 
-    public void busId(String nameOfBus) {
+    public void setBusId(String nameOfBus) {
         busName = nameOfBus;
     }
 
-    public void busStopLat(String latatudeIn) {
+    public void setBusStopLat(String latatudeIn) {
         latitude = latatudeIn;
     }
 
-    public void busStopLng(String longitudeIn) {
+    public void setBusStopLng(String longitudeIn) {
         longitude = longitudeIn;
     }
 
-    public void busDistance(String busDistance) {
+    public void setBusDistance(String busDistance) {
         distance = busDistance;
     }
 

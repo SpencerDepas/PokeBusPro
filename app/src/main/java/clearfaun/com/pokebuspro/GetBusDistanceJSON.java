@@ -3,7 +3,6 @@ package clearfaun.com.pokebuspro;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -16,8 +15,9 @@ import java.net.URL;
 public class GetBusDistanceJSON {
 
     final static public String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28";
-    int stopCode = 301648;
-    String downloadURLTwo = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&MonitoringRef=MTA_" + stopCode + "&MaximumStopVisits=1";
+    int stopCode;
+    int busInfoIndex;
+    String tempDistance;
 
 
     @SuppressLint("NewApi")
@@ -42,6 +42,10 @@ public class GetBusDistanceJSON {
 
 
             Log.i("MyGetBusDistanceJSON", " JSONArray  " + sys.get("PresentableDistance"));
+            tempDistance = sys.get("PresentableDistance").toString();
+
+            Log.i("MyGetBusDistanceJSON", " tempDistance  " + tempDistance);
+
 
 
 
@@ -51,12 +55,20 @@ public class GetBusDistanceJSON {
             Log.i("MyGetBusDistanceJSON", "inside readAndParseJSON  Exception  " + e.toString());
         }
 
+        busInfo.setBusDistance(tempDistance);
+        Log.i("MyGetBusDistanceJSON", "inside GetBusStopJSON.busInfo[busInfoIndex].getDistance()  " + busInfo.getDistance());
+
     }
+    BusInfo busInfo;
+
+    public void fetchBusDistanceJson(BusInfo busInfo, int Index) {
+        this.busInfo = busInfo;
 
 
-    public void fetchBusDistanceJson(String busCode) {
 
-        stopCode = Integer.parseInt(busCode);
+        stopCode = Integer.parseInt(busInfo.getBusCode());
+        busInfoIndex = Index;
+        final String downloadURLTwo = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&MonitoringRef=MTA_" + stopCode + "&MaximumStopVisits=1";
 
         Thread thread = new Thread(new Runnable() {
             @Override

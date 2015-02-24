@@ -23,7 +23,7 @@ public class MapsActivity extends FragmentActivity {
     static double longitude;
     static Context mContext;
     static GetBusStopJSON obj;
-    static GetBusDistanceJSON objTwo;
+    static BusInfo[] busInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,8 @@ public class MapsActivity extends FragmentActivity {
         mMap.setMyLocationEnabled(true);
 
 
+        busInfo = new BusInfo[5];
+
         // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(currentLocation)    // Sets the center of the map to Mountain View
@@ -55,32 +57,28 @@ public class MapsActivity extends FragmentActivity {
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 
-        getBusStops();
-        getBusDistance();
+        getBusStops(busInfo);
+        //getBusDistance();
 
-        AddMarkers.addMarkersToMap();
-
-    }
-
-    public static void getBusDistance(){
-
-        objTwo = new GetBusDistanceJSON();
-        objTwo.fetchBusDistanceJson("301487");
+       //AddMarkers.addMarkersToMap(busInfo);
 
     }
 
 
-
-    public static void getBusStops(){
+    public static void getBusStops(BusInfo[] busInfo){
 
         Log.i("MyMapsActivity", "inside open");
 
 
         obj = new GetBusStopJSON();
-        obj.fetchBusStop();
+        obj.fetchBusStop(busInfo);
 
         Log.i("MyMapsActivity", "before while");
         while(obj.parsingComplete);
+
+        Log.i("MyMapsActivity", "businfo" + busInfo[0].getBusCode());
+
+
 
     /*    busName.setText(HandleJSON.busInfo[1].getBusId());
         stopCode.setText(HandleJSON.busInfo[1].getBusCode());
@@ -89,6 +87,22 @@ public class MapsActivity extends FragmentActivity {
         Log.i("MyMapsActivity", "after while");
 
     }
+
+   /* public static void getBusDistance(){
+
+        Log.i("MyMapsActivity", "getBusDistance");
+
+        for( int i = 0; i < busInfo.length; i ++) {
+
+            objTwo = new GetBusDistanceJSON();
+            objTwo.fetchBusDistanceJson(busInfo[i], i);
+
+        }
+
+        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo[0].getDistance());
+
+
+    }*/
 
     @Override
     protected void onResume() {
