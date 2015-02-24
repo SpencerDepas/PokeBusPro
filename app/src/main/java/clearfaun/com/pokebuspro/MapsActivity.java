@@ -15,6 +15,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MapsActivity extends FragmentActivity {
 
     static GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -23,7 +26,8 @@ public class MapsActivity extends FragmentActivity {
     static double longitude;
     static Context mContext;
     static GetBusStopJSON obj;
-    static BusInfo[] busInfo;
+    //static BusInfo[] busInfo;
+    static ArrayList<BusInfo> busInfo = new ArrayList<BusInfo>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,7 @@ public class MapsActivity extends FragmentActivity {
         mMap.setMyLocationEnabled(true);
 
 
-        busInfo = new BusInfo[5];
+        //busInfo = new BusInfo[5];
 
         // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -65,7 +69,7 @@ public class MapsActivity extends FragmentActivity {
     }
 
 
-    public static void getBusStops(BusInfo[] busInfo){
+    public static void getBusStops(ArrayList<BusInfo> busInfo){
 
         Log.i("MyMapsActivity", "inside open");
 
@@ -76,7 +80,7 @@ public class MapsActivity extends FragmentActivity {
         Log.i("MyMapsActivity", "before while");
         while(obj.parsingComplete);
 
-        Log.i("MyMapsActivity", "businfo" + busInfo[0].getBusCode());
+        Log.i("MyMapsActivity", "businfo " + busInfo.get(1).getBusCode());
 
 
 

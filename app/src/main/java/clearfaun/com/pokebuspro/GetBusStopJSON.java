@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by spencer on 2/21/2015.
@@ -25,15 +27,15 @@ public class GetBusStopJSON {
             MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
     //private String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&lat=40.6455520&lon=-73.9829084&radius=130";
 
-    BusInfo[] busInfo;
-
+    BusInfo tempBusInfo;
+    ArrayList<BusInfo> busInfo;
 
 
     public volatile boolean parsingComplete = true;
 
 
     @SuppressLint("NewApi")
-    public void readAndParseJSON(String in, BusInfo[] businfo) {
+    public void readAndParseJSON(String in, ArrayList<BusInfo> busInfo) {
 
 
 
@@ -49,7 +51,7 @@ public class GetBusStopJSON {
             JSONObject sys = reader.getJSONObject("data");
             JSONArray stopsArray= (JSONArray) sys.get("stops");
 
-
+            tempBusInfo = new BusInfo();
 
 
 
@@ -60,17 +62,18 @@ public class GetBusStopJSON {
                 JSONObject tlt = stopsArray.getJSONObject(i);
                 Log.i("MyGetBusStopJSON", stopsArray.getJSONObject(i).toString());
 
-                busInfo[i] =  new BusInfo();
-                busInfo[i].setBusCode(tlt.getString("code"));
-                busInfo[i].setBusId(tlt.getString("id"));
-                busInfo[i].setBusStopLat(tlt.getString("lat"));
-                busInfo[i].setBusStopLng(tlt.getString("lon"));
 
+                tempBusInfo =  new BusInfo();
+                tempBusInfo.setBusCode(tlt.getString("code"));
+                tempBusInfo.setBusId(tlt.getString("id"));
+                tempBusInfo.setBusStopLat(tlt.getString("lat"));
+                tempBusInfo.setBusStopLng(tlt.getString("lon"));
+                busInfo.add(tempBusInfo);
 
 
             }
 
-            Log.i("MyGetBusStopJSON", " busInfo[0].getBusId()  " +  busInfo[0].getBusId());
+            Log.i("MyGetBusStopJSON", " busInfo[0].getBusId()  " +  tempBusInfo.getBusId());
 
 
 
@@ -86,7 +89,7 @@ public class GetBusStopJSON {
     }
 
 
-    public void fetchBusStop(BusInfo[] busInfoIn) {
+    public void fetchBusStop(ArrayList<BusInfo> busInfoIn) {
         busInfo = busInfoIn;
         Thread thread = new Thread(new Runnable() {
             @Override
