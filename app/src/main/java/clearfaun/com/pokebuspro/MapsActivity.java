@@ -26,8 +26,9 @@ public class MapsActivity extends FragmentActivity {
     static double longitude;
     static Context mContext;
     static GetBusStopJSON obj;
+    static GetBusDistanceJSON objTwo;
     //static BusInfo[] busInfo;
-    static ArrayList<BusInfo> busInfo = new ArrayList<BusInfo>();
+    static ArrayList<BusInfo> busInfo = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,21 @@ public class MapsActivity extends FragmentActivity {
 
 
         getBusStops(busInfo);
-        //getBusDistance();
+        while (!getBusDistance(busInfo));
 
-       //AddMarkers.addMarkersToMap(busInfo);
+        Log.i("MyMapsActivity", "after busDistance  addDistance distance : " + busInfo.get(0).getDistance() );
+        Log.i("MyMapsActivity", "after busDistance addDistance size() : " + busInfo.size() );
 
+        AddMarkers.addMarkersToMap(busInfo);
+
+    }
+
+
+    public static void addDistance(String distance, int index){
+        busInfo.get(index).setBusDistance(distance);
+        Log.i("MyMapsActivity", "addDistance distance : " + busInfo.get(index).getDistance() );
+        Log.i("MyMapsActivity", "addDistance size() : " + busInfo.get(index).getBusId() );
+        Log.i("MyMapsActivity", "addDistance size() : " + busInfo.size() );
     }
 
 
@@ -80,33 +92,33 @@ public class MapsActivity extends FragmentActivity {
         Log.i("MyMapsActivity", "before while");
         while(obj.parsingComplete);
 
-        Log.i("MyMapsActivity", "businfo " + busInfo.get(1).getBusCode());
+        Log.i("MyMapsActivity", "businfo " + busInfo.size());
 
 
 
-    /*    busName.setText(HandleJSON.busInfo[1].getBusId());
-        stopCode.setText(HandleJSON.busInfo[1].getBusCode());
-        lat.setText(HandleJSON.busInfo[1].getBusStopLatString());
-        lng.setText(HandleJSON.busInfo[1].getBusStopLngString());*/
         Log.i("MyMapsActivity", "after while");
 
     }
 
-   /* public static void getBusDistance(){
+    public static boolean getBusDistance(ArrayList<BusInfo> busInfo){
 
         Log.i("MyMapsActivity", "getBusDistance");
 
-        for( int i = 0; i < busInfo.length; i ++) {
+        for( int i = 0; i < busInfo.size(); i ++) {
 
             objTwo = new GetBusDistanceJSON();
-            objTwo.fetchBusDistanceJson(busInfo[i], i);
+            objTwo.fetchBusDistanceJson(busInfo, i);
 
         }
 
-        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo[0].getDistance());
+        while(objTwo.parsingComplete);
 
+        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(0).getDistance());
+        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(1).getDistance());
+        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(2).getDistance());
 
-    }*/
+        return true;
+    }
 
     @Override
     protected void onResume() {

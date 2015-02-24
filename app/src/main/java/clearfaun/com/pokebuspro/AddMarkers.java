@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 /**
  * Created by spencer on 2/21/2015.
  */
@@ -13,21 +15,21 @@ public class AddMarkers {
 
 
 
-    public static void addMarkersToMap(BusInfo[] busInfo) {
+    public static void addMarkersToMap(ArrayList<BusInfo> busInfo) {
 
 
-        LatLng[] markerLocation = new LatLng[busInfo.length];
-        Marker[] marker = new Marker[busInfo.length];
+        LatLng[] markerLocation = new LatLng[busInfo.size()];
+        Marker[] marker = new Marker[busInfo.size()];
 
-        Log.i("MyAddMarkers", "addMarkersToMap() HandleJSON.busInfo.length : " + busInfo.length);
-        for(int i = 0; i < busInfo.length; i ++){
+        Log.i("MyAddMarkers", "addMarkersToMap() HandleJSON.busInfo.length : " + busInfo.size());
+        for(int i = 0; i < busInfo.size(); i ++){
 
-            markerLocation[i] = new LatLng(busInfo[i].getBusStopLat(), busInfo[i].getBusStopLng());
+            markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
                     .position(markerLocation[i]));
-            marker[i].setTitle(busInfo[i].getBusId());
-            marker[i].setSnippet(busInfo[i].getDistance());
-            Log.i("MyAddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo[i].getDistance());
+            marker[i].setTitle(busInfo.get(i).getBusId());
+            marker[i].setSnippet(busInfo.get(i).getDistance());
+            Log.i("MyAddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance());
         }
 
 

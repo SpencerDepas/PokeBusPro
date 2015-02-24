@@ -18,8 +18,8 @@ import java.util.List;
 public class GetBusStopJSON {
 
     final static public String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28";
-    static String testLat = "40.6455520";
-    static String testLng = "-73.9829084";
+   /* static String testLat = "40.6455520";
+    static String testLng = "-73.9829084";*/
 
     int stopRadius = 200;
 
@@ -68,6 +68,7 @@ public class GetBusStopJSON {
                 tempBusInfo.setBusId(tlt.getString("id"));
                 tempBusInfo.setBusStopLat(tlt.getString("lat"));
                 tempBusInfo.setBusStopLng(tlt.getString("lon"));
+
                 busInfo.add(tempBusInfo);
 
 
