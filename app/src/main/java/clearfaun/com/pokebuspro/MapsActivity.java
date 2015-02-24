@@ -63,27 +63,31 @@ public class MapsActivity extends FragmentActivity {
 
 
         getBusStops(busInfo);
-        while (!getBusDistance(busInfo));
+        Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
+
+
+        getBusDistance(busInfo);
+        Log.i("MyMapsActivity", "after while (!getBusDistance(busInfo)); " );
 
         Log.i("MyMapsActivity", "after busDistance  addDistance distance : " + busInfo.get(0).getDistance() );
         Log.i("MyMapsActivity", "after busDistance addDistance size() : " + busInfo.size() );
 
-        AddMarkers.addMarkersToMap(busInfo);
+        //AddMarkers.addMarkersToMap(busInfo);
+        //added to post execute of get distance
 
     }
 
 
     public static void addDistance(String distance, int index){
         busInfo.get(index).setBusDistance(distance);
-        Log.i("MyMapsActivity", "addDistance distance : " + busInfo.get(index).getDistance() );
-        Log.i("MyMapsActivity", "addDistance size() : " + busInfo.get(index).getBusId() );
-        Log.i("MyMapsActivity", "addDistance size() : " + busInfo.size() );
+        busInfo.get(index).setDistanceBoolean(true);
     }
+
 
 
     public static void getBusStops(ArrayList<BusInfo> busInfo){
 
-        Log.i("MyMapsActivity", "inside open");
+        Log.i("MyMapsActivity", "inside getBusStops");
 
 
         obj = new GetBusStopJSON();
@@ -92,13 +96,12 @@ public class MapsActivity extends FragmentActivity {
         Log.i("MyMapsActivity", "before while");
         while(obj.parsingComplete);
 
-        Log.i("MyMapsActivity", "businfo " + busInfo.size());
+        Log.i("MyMapsActivity", "after while while(obj.parsingComplete);    busInfo.size():" + busInfo.size());
 
-
-
-        Log.i("MyMapsActivity", "after while");
 
     }
+
+    static boolean obtainedAllDistances = false;
 
     public static boolean getBusDistance(ArrayList<BusInfo> busInfo){
 
@@ -110,14 +113,16 @@ public class MapsActivity extends FragmentActivity {
             objTwo.fetchBusDistanceJson(busInfo, i);
 
         }
+        Log.i("MyMapsActivity", "for( int i = 0");
 
-        while(objTwo.parsingComplete);
+        //while(!obtainedAllDistances);
 
         Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(0).getDistance());
         Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(1).getDistance());
         Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(2).getDistance());
+        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(3).getDistance());
 
-        return true;
+        return false;
     }
 
     @Override

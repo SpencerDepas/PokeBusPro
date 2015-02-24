@@ -11,11 +11,16 @@ public class BusInfo {
     public String latitude = "";
     public String longitude = "";
     public int radiusTaskNumber = 0;
+    boolean distanceIsSet = false;
     //constructor
 
 
     public void setBusCode(String codeForStop) {
         stopCode = codeForStop;
+    }
+
+    public void setDistanceBoolean(Boolean setDistance) {
+        distanceIsSet = setDistance;
     }
 
     public void setBusId(String nameOfBus) {
@@ -45,6 +50,10 @@ public class BusInfo {
 
     public String getBusCode(){
         return stopCode;
+    }
+
+    public Boolean getDistanceBoolean(){
+        return distanceIsSet;
     }
 
     public String getBusStopLatString(){
