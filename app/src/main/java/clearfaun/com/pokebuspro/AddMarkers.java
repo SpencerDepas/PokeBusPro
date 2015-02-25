@@ -29,9 +29,14 @@ public class AddMarkers {
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
                     .position(markerLocation[i]));
             marker[i].setTitle(busInfo.get(i).getBusName());
-            marker[i].setSnippet(busInfo.get(i).getDistance());
+            marker[i].setSnippet(busInfo.get(i).getDistance()[0] +
+                    "\n" + busInfo.get(i).getDistance()[1] +
+                    "\n" + busInfo.get(i).getDistance()[2]);
+
+
+
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
-            Log.i("MyAddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance());
+            Log.i("MyAddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);
         }
 
 

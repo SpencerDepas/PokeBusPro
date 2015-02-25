@@ -38,18 +38,56 @@ public class GetBusDistanceJSON {
             Log.i("MyGetBusDistanceJSON", "inside readAndParseJSON");
             JSONObject reader = new JSONObject(in);
 
-            JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+            /*JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
                     .getJSONObject(0)
                     .getJSONArray("MonitoredStopVisit")
                     .getJSONObject(0)
                     .getJSONObject("MonitoredVehicleJourney")
                     .getJSONObject("MonitoredCall")
                     .getJSONObject("Extensions")
+                    .getJSONObject("Distances");*/
+
+            JSONObject sysTwo = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                    .getJSONObject(0)
+                    .getJSONArray("MonitoredStopVisit")
+                    .getJSONObject(1)
+                    .getJSONObject("MonitoredVehicleJourney")
+                    .getJSONObject("MonitoredCall")
+                    .getJSONObject("Extensions")
                     .getJSONObject("Distances");
+
+
+            int distanceArrayLength = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                    .getJSONObject(0)
+                    .getJSONArray("MonitoredStopVisit").length();
+
+            String[] tempDistance = new String[distanceArrayLength];
+
+            for (int i = 0 ; i < distanceArrayLength; i ++){
+
+                JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                        .getJSONObject(0)
+                        .getJSONArray("MonitoredStopVisit")
+                        .getJSONObject(i)
+                        .getJSONObject("MonitoredVehicleJourney")
+                        .getJSONObject("MonitoredCall")
+                        .getJSONObject("Extensions")
+                        .getJSONObject("Distances");
+
+                tempDistance[i] = sys.get("PresentableDistance").toString();
+                Log.i("MyGetBusDistanceJSON", " sys  " + sys.get("PresentableDistance").toString());
+
+            }
+
+
+            //Log.i("MyGetBusDistanceJSON", " sys  " + sys.get("PresentableDistance").toString());
+            Log.i("MyGetBusDistanceJSON", " sysTwo  " + sysTwo.get("PresentableDistance").toString());
+
+
 
             trackLoops++;
 
-            MapsActivity.addDistance(sys.get("PresentableDistance").toString(), index);
+            MapsActivity.addDistance(tempDistance, index);
 
             //busInfo.setBusDistance(sys.get("PresentableDistance").toString());
             /*tempBusInfo.setBusDistance(sys.get("PresentableDistance").toString());
@@ -113,7 +151,9 @@ public class GetBusDistanceJSON {
 
         @Override
         protected String doInBackground(String... params) {
-            final String downloadURLTwo = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&MonitoringRef=MTA_" + stopCode + "&MaximumStopVisits=1";
+            String trackHowManyBuses = "3";
+            final String downloadURLTwo = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&MonitoringRef=MTA_"
+                    + stopCode + "&MaximumStopVisits=" + trackHowManyBuses;
 
             Log.i("MyAsyncTask", "inside AsyncTask");
 

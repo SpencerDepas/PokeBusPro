@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -61,6 +62,8 @@ public class MapsActivity extends FragmentActivity {
                 .build();                   // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+        mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
 
         getBusStops(busInfo);
         Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
@@ -78,9 +81,13 @@ public class MapsActivity extends FragmentActivity {
     }
 
 
-    public static void addDistance(String distance, int index){
-        busInfo.get(index).setBusDistance(distance);
-        busInfo.get(index).setDistanceBoolean(true);
+    public static void addDistance(String[] distance, int index){
+
+
+        for(int i = 0; i < distance.length; i ++) {
+            busInfo.get(index).setBusDistance(distance);
+            busInfo.get(index).setDistanceBoolean(true);
+        }
     }
 
 

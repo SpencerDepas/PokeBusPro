@@ -7,7 +7,7 @@ public class BusInfo {
 
     public String stopCode = "";
     public String busNameId = "";
-    public String distance = "";
+    public String[] distance = new String[3];
     public String latitude = "";
     public String longitude = "";
     public int radiusTaskNumber = 0;
@@ -40,7 +40,7 @@ public class BusInfo {
         longitude = longitudeIn;
     }
 
-    public void setBusDistance(String busDistance) {
+    public void setBusDistance(String[] busDistance) {
         distance = busDistance;
     }
 
@@ -89,7 +89,7 @@ public class BusInfo {
         return busNameId;
     }
 
-    public String getDistance() {
+    public String[] getDistance() {
         return distance;
     }
 
