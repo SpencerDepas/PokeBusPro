@@ -7,6 +7,9 @@ import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,8 +19,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -30,6 +37,10 @@ public class MapsActivity extends FragmentActivity {
     static GetBusDistanceJSON objTwo;
     //static BusInfo[] busInfo;
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
+
+    Timer timer;
+    TimerTask timerTask;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +86,10 @@ public class MapsActivity extends FragmentActivity {
         Log.i("MyMapsActivity", "after busDistance  addDistance distance : " + busInfo.get(0).getDistance() );
         Log.i("MyMapsActivity", "after busDistance addDistance size() : " + busInfo.size() );
 
-        //AddMarkers.addMarkersToMap(busInfo);
-        //added to post execute of get distance
+
+
+        startTimer();
+
 
     }
 
@@ -86,7 +99,7 @@ public class MapsActivity extends FragmentActivity {
 
         for(int i = 0; i < distance.length; i ++) {
             busInfo.get(index).setBusDistance(distance);
-            busInfo.get(index).setDistanceBoolean(true);
+
         }
     }
 
@@ -108,7 +121,7 @@ public class MapsActivity extends FragmentActivity {
 
     }
 
-    static boolean obtainedAllDistances = false;
+
 
     public static boolean getBusDistance(ArrayList<BusInfo> busInfo){
 
@@ -120,14 +133,12 @@ public class MapsActivity extends FragmentActivity {
             objTwo.fetchBusDistanceJson(busInfo, i);
 
         }
-        Log.i("MyMapsActivity", "for( int i = 0");
 
-        //while(!obtainedAllDistances);
 
-        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(0).getDistance());
-        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(1).getDistance());
-        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(2).getDistance());
-        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(3).getDistance());
+
+
+        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(0).getDistance()[0]);
+
 
         return false;
     }
@@ -137,6 +148,37 @@ public class MapsActivity extends FragmentActivity {
         super.onResume();
         Log.i("MyMapsActivity","onResume()");
         setUpMapIfNeeded();
+    }
+
+    public void startTimer() {
+        //set a new Timer
+        timer = new Timer();
+
+        //initialize the TimerTask's job
+        initializeTimerTask();
+
+        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+        timer.schedule(timerTask, 5000, 10000); //
+    }
+
+    public void stoptimertask(View v) {
+        //stop the timer, if it's not already null
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    public void initializeTimerTask() {
+
+        timerTask = new TimerTask() {
+            public void run() {
+                Log.i("MyMapsActivity","initializeTimerTask    timerTask");
+                getBusDistance(busInfo);
+
+
+            }
+        };
     }
 
 

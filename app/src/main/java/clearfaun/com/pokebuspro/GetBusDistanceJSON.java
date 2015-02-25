@@ -21,9 +21,7 @@ public class GetBusDistanceJSON {
 
     final static public String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28";
     int stopCode;
-    int busInfoIndex;
     int index;
-    static int trackLoops = 0;
     ArrayList<BusInfo> busInfo;
     public volatile boolean parsingComplete = true;
 
@@ -38,23 +36,9 @@ public class GetBusDistanceJSON {
             Log.i("MyGetBusDistanceJSON", "inside readAndParseJSON");
             JSONObject reader = new JSONObject(in);
 
-            /*JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
-                    .getJSONObject(0)
-                    .getJSONArray("MonitoredStopVisit")
-                    .getJSONObject(0)
-                    .getJSONObject("MonitoredVehicleJourney")
-                    .getJSONObject("MonitoredCall")
-                    .getJSONObject("Extensions")
-                    .getJSONObject("Distances");*/
 
-            JSONObject sysTwo = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
-                    .getJSONObject(0)
-                    .getJSONArray("MonitoredStopVisit")
-                    .getJSONObject(1)
-                    .getJSONObject("MonitoredVehicleJourney")
-                    .getJSONObject("MonitoredCall")
-                    .getJSONObject("Extensions")
-                    .getJSONObject("Distances");
+
+
 
 
             int distanceArrayLength = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
@@ -81,30 +65,18 @@ public class GetBusDistanceJSON {
 
 
             //Log.i("MyGetBusDistanceJSON", " sys  " + sys.get("PresentableDistance").toString());
-            Log.i("MyGetBusDistanceJSON", " sysTwo  " + sysTwo.get("PresentableDistance").toString());
+            //Log.i("MyGetBusDistanceJSON", " sysTwo  " + sysTwo.get("PresentableDistance").toString());
 
 
 
-            trackLoops++;
+
 
             MapsActivity.addDistance(tempDistance, index);
-
-            //busInfo.setBusDistance(sys.get("PresentableDistance").toString());
-            /*tempBusInfo.setBusDistance(sys.get("PresentableDistance").toString());
-            tempBusInfo.setDistanceBoolean(true);
-            busInfo.add(index, tempBusInfo);*/
 
 
 
             Log.i("MyGetBusDistanceJSON", " tempBusInfo  " + tempBusInfo.getBusCode());
-            //busInfo.get(index).setBusDistance(sys.get("PresentableDistance").toString());
-
-            //busInfo.remove(index);
-
-            //Log.i("MyGetBusDistanceJSON", " tempDistance  " + sys.get("PresentableDistance").toString());
-
             Log.i("MyGetBusDistanceJSON", " busInfo.size()  " + busInfo.size());
-
             Log.i("MyGetBusDistanceJSON", " busInfo  index   " + index );
 
 
@@ -195,9 +167,17 @@ public class GetBusDistanceJSON {
             Log.i("MyAsyncTask", "onPostExecute AsyncTask onPostExecuteCount:" + onPostExecuteCount );
 
             if(onPostExecuteCount == busInfo.size()){
-                MapsActivity.obtainedAllDistances = true;
+                onPostExecuteCount = 0;
                 Log.i("MyAsyncTask", " AsyncTask  onPostExecute MapsActivity.obtainedAllDistances = true;");
-                AddMarkers.addMarkersToMap(busInfo);
+
+                if(AddMarkers.markersAdded) {
+                    //update marker
+                    AddMarkers.updateMarkersToMap(busInfo);
+
+                }else{
+                    //to make markers on first run
+                    AddMarkers.addMarkersToMap(busInfo);
+                }
             }
 
         }

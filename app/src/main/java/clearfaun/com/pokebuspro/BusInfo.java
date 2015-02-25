@@ -11,7 +11,7 @@ public class BusInfo {
     public String latitude = "";
     public String longitude = "";
     public int radiusTaskNumber = 0;
-    boolean distanceIsSet = false;
+    boolean markerSet = false;
     public String busName = "";
     //constructor
 
@@ -26,8 +26,8 @@ public class BusInfo {
         busName = name;
     }
 
-    public void setDistanceBoolean(Boolean setDistance) {
-        distanceIsSet = setDistance;
+    public void setMarkerSet(Boolean setMarker) {
+        markerSet = setMarker;
     }
 
     public void setBusId(String nameOfBus) {
@@ -63,8 +63,8 @@ public class BusInfo {
         return busName;
     }
 
-    public Boolean getDistanceBoolean(){
-        return distanceIsSet;
+    public Boolean getMarkerSet(){
+        return markerSet;
     }
 
     public String getBusStopLatString(){
