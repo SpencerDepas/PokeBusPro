@@ -7,13 +7,15 @@ public class BusInfo {
 
     public String stopCode = "";
     public String busNameId = "";
-    public String[] distance = new String[3];
+    public String[] distance = {"Not available", "Not available","Not available"};
     public String latitude = "";
     public String longitude = "";
     public int radiusTaskNumber = 0;
     boolean distanceIsSet = false;
     public String busName = "";
     //constructor
+
+
 
 
     public void setBusCode(String codeForStop) {
