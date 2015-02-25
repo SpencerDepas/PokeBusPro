@@ -6,12 +6,13 @@ package clearfaun.com.pokebuspro;
 public class BusInfo {
 
     public String stopCode = "";
-    public String busName = "";
+    public String busNameId = "";
     public String distance = "";
     public String latitude = "";
     public String longitude = "";
     public int radiusTaskNumber = 0;
     boolean distanceIsSet = false;
+    public String busName = "";
     //constructor
 
 
@@ -19,12 +20,16 @@ public class BusInfo {
         stopCode = codeForStop;
     }
 
+    public void setBusName(String name) {
+        busName = name;
+    }
+
     public void setDistanceBoolean(Boolean setDistance) {
         distanceIsSet = setDistance;
     }
 
     public void setBusId(String nameOfBus) {
-        busName = nameOfBus;
+        busNameId = nameOfBus;
     }
 
     public void setBusStopLat(String latatudeIn) {
@@ -52,6 +57,10 @@ public class BusInfo {
         return stopCode;
     }
 
+    public String getBusName(){
+        return busName;
+    }
+
     public Boolean getDistanceBoolean(){
         return distanceIsSet;
     }
@@ -77,7 +86,7 @@ public class BusInfo {
     }
 
     public String getBusId(){
-        return busName;
+        return busNameId;
     }
 
     public String getDistance() {

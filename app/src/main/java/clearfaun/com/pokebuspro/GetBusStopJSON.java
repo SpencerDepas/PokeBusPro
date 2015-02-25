@@ -61,9 +61,29 @@ public class GetBusStopJSON {
             for(int i = 0; i < stopsArray.length(); i++){
                 JSONObject tlt = stopsArray.getJSONObject(i);
                 Log.i("MyGetBusStopJSON", stopsArray.getJSONObject(i).toString());
+                Log.i("MyGetBusStopJSON", "tlt" + tlt.getJSONArray("routes")
+                        .getJSONObject(0)
+                        .getString("shortName")
+                        );
+                /*Log.i("MyGetBusStopJSON", "tlt" + tlt.getJSONArray("routes")
+                                .getJSONObject(0)
 
+                );
+                Log.i("MyGetBusStopJSON", "tlt plus i " + i + " " + tlt.getJSONArray("routes")
+                        .getJSONObject(0)
+                        .getString("shortname")
+
+                        );*/
+
+
+
+               // Log.i("MyGetBusStopJSON", "stopsArray.getJSONObject(i).getJSONObject(\"shortName\").toString()" + stopsArray.getJSONObject(i).getJSONObject("shortName").toString());
 
                 tempBusInfo =  new BusInfo();
+                tempBusInfo.setBusName(tlt.getJSONArray("routes")
+                        .getJSONObject(0)
+                        .getString("shortName"));
+
                 tempBusInfo.setBusCode(tlt.getString("code"));
                 tempBusInfo.setBusId(tlt.getString("id"));
                 tempBusInfo.setBusStopLat(tlt.getString("lat"));
@@ -71,10 +91,10 @@ public class GetBusStopJSON {
 
                 busInfo.add(tempBusInfo);
 
-
+                Log.i("MyGetBusStopJSON", " tempBusInfo.getBusName()::  " +  tempBusInfo.getBusName());
             }
 
-            Log.i("MyGetBusStopJSON", " busInfo[0].getBusId()  " +  tempBusInfo.getBusId());
+
 
 
 

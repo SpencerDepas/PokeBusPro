@@ -27,7 +27,7 @@ public class AddMarkers {
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
                     .position(markerLocation[i]));
-            marker[i].setTitle(busInfo.get(i).getBusId());
+            marker[i].setTitle(busInfo.get(i).getBusName());
             marker[i].setSnippet(busInfo.get(i).getDistance());
             Log.i("MyAddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance());
         }
