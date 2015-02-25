@@ -2,6 +2,7 @@ package clearfaun.com.pokebuspro;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -29,6 +30,7 @@ public class AddMarkers {
                     .position(markerLocation[i]));
             marker[i].setTitle(busInfo.get(i).getBusName());
             marker[i].setSnippet(busInfo.get(i).getDistance());
+            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
             Log.i("MyAddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance());
         }
 
