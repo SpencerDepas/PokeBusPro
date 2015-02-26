@@ -43,18 +43,15 @@ public class BusInfo {
         longitude = longitudeIn;
     }
 
+
+
     public void setBusDistance(String[] busDistance) {
-
-        distance = busDistance;
-    }
-
-   /* public void setBusDistance(String[] busDistance) {
         distance = new String[busDistance.length];
         distance[0] = "Not available";
         distance[1] = "Not available";
         distance[2] = "Not available";
-        distance = busDistance;
-    }*/
+        distance = busDistance.clone();
+    }
 
     public void busRadiusTaskNumber(int TaskNumber) {
         radiusTaskNumber = TaskNumber;
