@@ -34,7 +34,7 @@ public class AddMarkers {
             Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[0]);
             Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[1]);
             Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[2]);
-            Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[2]);
+
         }
 
 

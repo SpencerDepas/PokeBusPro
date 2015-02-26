@@ -47,10 +47,15 @@ public class BusInfo {
 
     public void setBusDistance(String[] busDistance) {
         distance = new String[busDistance.length];
+
         distance[0] = "Not available";
         distance[1] = "Not available";
         distance[2] = "Not available";
-        distance = busDistance.clone();
+
+        for(int i = 0 ; i < busDistance.length; i ++) {
+            distance[i] = busDistance[i];
+        }
+
     }
 
     public void busRadiusTaskNumber(int TaskNumber) {
