@@ -7,12 +7,13 @@ public class BusInfo {
 
     public String stopCode = "";
     public String busNameId = "";
-    public String[] distance = {"Not available", "Not available","Not available"};
     public String latitude = "";
     public String longitude = "";
     public int radiusTaskNumber = 0;
     boolean markerSet = false;
     public String busName = "";
+    //public String[] distance = {"Not available", "Not available","Not available"};
+    public String[] distance = {"Not available", "Not available","Not available"};
     //constructor
 
 
@@ -43,8 +44,17 @@ public class BusInfo {
     }
 
     public void setBusDistance(String[] busDistance) {
+
         distance = busDistance;
     }
+
+   /* public void setBusDistance(String[] busDistance) {
+        distance = new String[busDistance.length];
+        distance[0] = "Not available";
+        distance[1] = "Not available";
+        distance[2] = "Not available";
+        distance = busDistance;
+    }*/
 
     public void busRadiusTaskNumber(int TaskNumber) {
         radiusTaskNumber = TaskNumber;

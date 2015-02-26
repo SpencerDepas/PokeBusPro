@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:padding="2dip"
-        android:src="@drawable/abc_btn_radio_material"
+        android:src="@drawable/maps"
         />
 
     <LinearLayout
