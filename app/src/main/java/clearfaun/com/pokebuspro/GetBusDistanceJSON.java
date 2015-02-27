@@ -45,7 +45,6 @@ public class GetBusDistanceJSON {
 
                 String[] tempDistance = new String[distanceArrayLength];
 
-
                 for (int i = 0 ; i < distanceArrayLength; i ++){
 
                     JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
@@ -64,9 +63,8 @@ public class GetBusDistanceJSON {
 
 
 
-
-
-                MapsActivity.addDistance(tempDistance, z);
+                //puts array distance in businfo
+                busInfo.get(z).setBusDistance(tempDistance);
 
 
                 Log.i("MyGetBusDistanceJSON", " tempBusInfo  " + tempBusInfo.getBusCode());

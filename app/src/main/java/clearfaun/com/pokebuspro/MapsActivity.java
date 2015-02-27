@@ -74,19 +74,10 @@ public class MapsActivity extends FragmentActivity {
 
 
 
-        //updateBusDistance();
+        updateBusDistance();
 
 
     }
-
-
-    public static void addDistance(String[] distance, int index){
-
-        busInfo.get(index).setBusDistance(distance);
-
-    }
-
-
 
     public static void getBusStops(ArrayList<BusInfo> busInfo){
 
