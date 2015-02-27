@@ -72,8 +72,11 @@ public class AddMarkers {
         Log.i("MyAddMarkers", "updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
 
 
-        for (int i = 0; i < busInfo.size(); i++) {
+        for (int i = 0; i < busInfo.size() && i < marker.length; i++) {
             Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getSnippet(): " + marker[i].getSnippet());
+            Log.i("MyAddMarkers", "updateMarkersToMap :  i < busInfo.size(): " + busInfo.size());
+            Log.i("MyAddMarkers", "updateMarkersToMap :  i  " + i);
+
 
             marker[i].setSnippet(busInfo.get(i).getDistance()[0]
                         + "\n" + busInfo.get(i).getDistance()[1]

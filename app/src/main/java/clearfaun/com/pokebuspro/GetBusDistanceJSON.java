@@ -47,18 +47,25 @@ public class GetBusDistanceJSON {
 
                 for (int i = 0 ; i < distanceArrayLength; i ++){
 
-                    JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
-                            .getJSONObject(0)
-                            .getJSONArray("MonitoredStopVisit")
-                            .getJSONObject(i)
-                            .getJSONObject("MonitoredVehicleJourney")
-                            .getJSONObject("MonitoredCall")
-                            .getJSONObject("Extensions")
-                            .getJSONObject("Distances");
+                    try {
+                        JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                                .getJSONObject(0)
+                                .getJSONArray("MonitoredStopVisit")
+                                .getJSONObject(i)
+                                .getJSONObject("MonitoredVehicleJourney")
+                                .getJSONObject("MonitoredCall")
+                                .getJSONObject("Extensions")
+                                .getJSONObject("Distances");
 
-                    tempDistance[i] = sys.get("PresentableDistance").toString();
-                    Log.i("MyGetBusDistanceJSON", " sys  " + sys.get("PresentableDistance").toString());
+                        tempDistance[i] = sys.get("PresentableDistance").toString();
+                        Log.i("MyGetBusDistanceJSON", " sys  " + sys.get("PresentableDistance").toString());
+                    }catch(Exception e){
 
+                        tempDistance[0] = "";
+                        tempDistance[1] = "";
+                        tempDistance[2] = "";
+
+                    }
                 }
 
 
