@@ -35,7 +35,7 @@ public class MapsActivity extends FragmentActivity {
     static Context mContext;
     static GetBusStopJSON obj;
     static GetBusDistanceJSON objTwo;
-    //static BusInfo[] busInfo;
+
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
 
     Timer timer;
@@ -74,7 +74,7 @@ public class MapsActivity extends FragmentActivity {
 
 
 
-        startTimer();
+        //updateBusDistance();
 
 
     }
@@ -82,11 +82,8 @@ public class MapsActivity extends FragmentActivity {
 
     public static void addDistance(String[] distance, int index){
 
+        busInfo.get(index).setBusDistance(distance);
 
-        for(int i = 0; i < distance.length; i ++) {
-            busInfo.get(index).setBusDistance(distance);
-
-        }
     }
 
 
@@ -109,24 +106,16 @@ public class MapsActivity extends FragmentActivity {
 
 
 
-    public static boolean getBusDistance(ArrayList<BusInfo> busInfo){
+    public static void getBusDistance(ArrayList<BusInfo> busInfo){
 
         Log.i("MyMapsActivity", "getBusDistance");
 
-        for( int i = 0; i < busInfo.size(); i ++) {
-
-            objTwo = new GetBusDistanceJSON();
-            objTwo.fetchBusDistanceJson(busInfo, i);
-
-        }
 
 
+        objTwo = new GetBusDistanceJSON();
+        objTwo.fetchBusDistanceJson(busInfo);
 
 
-        Log.i("MyMapsActivity", "getBusDistance: " +  busInfo.get(0).getDistance()[0]);
-
-
-        return false;
     }
 
     @Override
@@ -136,7 +125,7 @@ public class MapsActivity extends FragmentActivity {
         setUpMapIfNeeded();
     }
 
-    public void startTimer() {
+    public void updateBusDistance() {
         //set a new Timer
         timer = new Timer();
 

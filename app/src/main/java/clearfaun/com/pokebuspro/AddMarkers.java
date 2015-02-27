@@ -26,11 +26,13 @@ public class AddMarkers {
         markerLocation = new LatLng[busInfo.size()];
         marker = new Marker[busInfo.size()];
 
-        Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.size(): " + busInfo.size());
-        Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.size(): " + busInfo.size());
-
+      /*  Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.size(): " + busInfo.size());
+        Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(0).getDistance()[0]);
+        Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(0).getDistance()[1]);
+        Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(0).getDistance()[2]);*/
 
         for(int i = 0; i < busInfo.size() ; i++){
+            Log.i("MyAddMarkers", "i is  " + i);
             Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[0]);
             Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[1]);
             Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[2]);
