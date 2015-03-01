@@ -41,6 +41,8 @@ public class MapsActivity extends FragmentActivity {
     Timer timer;
     TimerTask timerTask;
     LatLng currentLocation;
+    static double testLat = 40.6455520;
+    static double testLng = -73.9829084;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +54,14 @@ public class MapsActivity extends FragmentActivity {
         mContext = getApplicationContext();
 
 
-        Location location = getLocation();
+        /*Location location = getLocation();
         latitude = location.getLatitude();
-        longitude = location.getLongitude();
+        longitude = location.getLongitude();*/
 
 
-        currentLocation = new LatLng(latitude, longitude);
+        currentLocation = new LatLng(testLat, testLng);
+
+        //currentLocation = new LatLng(latitude, longitude);
         setUpMapIfNeeded();
 
 
@@ -81,11 +85,11 @@ public class MapsActivity extends FragmentActivity {
 
     public static void getBusStops(ArrayList<BusInfo> busInfo){
 
-        Log.i("MyMapsActivity", "inside getBusStops");
+            Log.i("MyMapsActivity", "inside getBusStops");
 
 
-        obj = new GetBusStopJSON();
-        obj.fetchBusStop(busInfo);
+            obj = new GetBusStopJSON();
+            obj.fetchBusStop(busInfo);
 
         Log.i("MyMapsActivity", "before while");
         while(obj.parsingComplete);

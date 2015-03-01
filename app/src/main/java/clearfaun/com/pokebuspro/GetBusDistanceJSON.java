@@ -28,12 +28,13 @@ public class GetBusDistanceJSON {
     @SuppressLint("NewApi")
     public void readAndParseJSON(String[] in) {
 
+        //in is the stream of data withdistance informatioon. it will be as large as the amount of buis stops in the area
         Log.i("MyGetBusDistanceJSON", "inside readAndParseJSON");
 
 
         try {
 
-            Log.i("MyGetBusDistanceJSON", "inside readAndParseJSON");
+            Log.i("MyGetBusDistanceJSON", "in.length" + in.length);
 
             for (int z = 0 ; z < in.length; z ++) {
                 JSONObject reader = new JSONObject(in[z]);
@@ -46,7 +47,7 @@ public class GetBusDistanceJSON {
                 String[] tempDistance = new String[distanceArrayLength];
 
                 for (int i = 0 ; i < distanceArrayLength; i ++){
-
+                    Log.i("MyGetBusDistanceJSON", "distanceArrayLength " + distanceArrayLength);
                     try {
                         JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
                                 .getJSONObject(0)
@@ -58,9 +59,9 @@ public class GetBusDistanceJSON {
                                 .getJSONObject("Distances");
 
                         tempDistance[i] = sys.get("PresentableDistance").toString();
-                        Log.i("MyGetBusDistanceJSON", " sys  " + sys.get("PresentableDistance").toString());
+                        Log.i("MyGetBusDistanceJSON", " sys  " + sys.get("PresentableDistance").toString() + "i is : " + i);
                     }catch(Exception e){
-
+                        Log.i("MyGetBusDistanceJSON", " Exception e  " + e.toString());
                         tempDistance[0] = "";
                         tempDistance[1] = "";
                         tempDistance[2] = "";
@@ -76,7 +77,7 @@ public class GetBusDistanceJSON {
 
                 Log.i("MyGetBusDistanceJSON", " tempBusInfo  " + tempBusInfo.getBusCode());
                 Log.i("MyGetBusDistanceJSON", " busInfo.size()  " + busInfo.size());
-                Log.i("MyGetBusDistanceJSON", " busInfo  index   " + index);
+
                 }
 
             }catch(Exception e){
@@ -134,17 +135,20 @@ public class GetBusDistanceJSON {
 
             String[] data = new String[busInfo.size()];
 
-            Log.i("MyAsyncTask", "inside AsyncTask");
+            Log.i("MyGetBusDistanceJSONn", "inside AsyncTask");
             try {
 
 
                 for(int i = 0; i < busInfo.size(); i ++) {
+                    Log.i("MyGetBusDistanceJSONn", "busInfo.size(): " + busInfo.size());
+                    Log.i("MyGetBusDistanceJSONn", "busInfo.get(i).getBusCode(): " + busInfo.get(i).getBusCode());
                     stopCode = Integer.parseInt(busInfo.get(i).getBusCode());
 
                     String downloadURLTwo = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&MonitoringRef=MTA_"
                             + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
 
-                    Log.i("MyGetBusDistanceJSON", "inside fetchBusStop");
+                    Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop");
+                    Log.i("MyGetBusDistanceJSONn", "downloadURLTwo:" + downloadURLTwo);
 
                     URL url = new URL(downloadURLTwo);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -159,14 +163,18 @@ public class GetBusDistanceJSON {
                     data[i] = convertStreamToString(stream);
                     stream.close();
                 }
-
+                Log.i("MyGetBusDistanceJSONn", "Pre readAndParseJSON(data); ");
+                Log.i("MyGetBusDistanceJSONn", "Pre data[0]; " + data[0] );
+                Log.i("MyGetBusDistanceJSONn", "Pre data[1]; " + data[1] );
+                Log.i("MyGetBusDistanceJSONn", "Pre data[2]; " + data[2] );
+                Log.i("MyGetBusDistanceJSONn", "Pre data[3]; " + data[3] );
                 readAndParseJSON(data);
 
 
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.i("MyGetBusDistanceJSON", " inside exception" +  e.toString());
+                Log.i("MyGetBusDistanceJSONn", " inside exception" +  e.toString());
             }
 
 
