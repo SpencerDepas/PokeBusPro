@@ -46,7 +46,7 @@ public class BusInfo {
 
 
     public void setBusDistance(String[] busDistance) {
-        distance = new String[busDistance.length];
+        distance = new String[3];
 
         distance[0] = "Not available";
         distance[1] = "Not available";

@@ -74,6 +74,7 @@ public class AddMarkers {
 
         for (int i = 0; i < busInfo.size() && i < marker.length; i++) {
             Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getSnippet(): " + marker[i].getSnippet());
+            Log.i("MyAddMarkers", "updateMarkersToMap :   marker.length: " + marker.length);
             Log.i("MyAddMarkers", "updateMarkersToMap :  i < busInfo.size(): " + busInfo.size());
             Log.i("MyAddMarkers", "updateMarkersToMap :  i  " + i);
 
@@ -82,7 +83,7 @@ public class AddMarkers {
                         + "\n" + busInfo.get(i).getDistance()[1]
                         + "\n" + busInfo.get(i).getDistance()[2]
                     );
-            ;
+
             if(marker[i].isInfoWindowShown()) {
                 marker[i].hideInfoWindow();
                 marker[i].showInfoWindow();
