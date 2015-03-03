@@ -24,7 +24,7 @@ public class GetBusDistanceJSON {
     int stopCode;
     int index;
     ArrayList<BusInfo> busInfo;
-    public volatile boolean parsingComplete = true;
+
 
     @SuppressLint("NewApi")
     public void readAndParseJSON(String[] in) {
@@ -49,9 +49,10 @@ public class GetBusDistanceJSON {
 
                 String[] tempDistance = new String[maxNumberOfBusDistancesAvailable];
                 // Max return of three buses
-                for (int i = 0 ;  i < maxNumberOfBusDistancesAvailable || i < 3; i ++){
+                for (int i = 0 ;  i < maxNumberOfBusDistancesAvailable ; i++ ){
                     // i gets the distances for each stop, up to three
                     Log.i("MyGetBusDistanceJSONt", "z is :  " + z);
+                    Log.i("MyGetBusDistanceJSONt", "i is :  " + i);
                     Log.i("MyGetBusDistanceJSONt", " busInfo.get(z).getBusCode():  " + busInfo.get(z).getBusCode());
                     try {
 

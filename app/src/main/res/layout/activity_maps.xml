@@ -9,7 +9,7 @@
         android:gravity="right"
         android:orientation="vertical" >
 
-        <Button android:id="@+id/button"
+        <Button android:id="@+id/options_button"
             android:layout_width="@dimen/button_size"
             android:layout_height="@dimen/button_size"
             android:src="@android:drawable/ic_menu_search"

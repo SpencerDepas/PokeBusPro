@@ -6,9 +6,13 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,6 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import android.widget.PopupMenu;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,6 +84,37 @@ public class MapsActivity extends FragmentActivity {
 
 
         updateBusDistance();
+
+
+
+
+        Button b = (Button) findViewById(R.id.options_button);
+        b.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                PopupMenu popup = new PopupMenu(getBaseContext(), v);
+
+                popup.getMenuInflater().inflate(R.menu.my_menu, popup.getMenu());
+
+
+
+                popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(getBaseContext(), "You selected the action : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+
+                /** Showing the popup menu */
+                popup.show();
+            }
+        });
+
+
 
 
     }
