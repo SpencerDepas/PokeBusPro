@@ -98,17 +98,7 @@ public class GetBusDistanceJSON {
             Log.i("MyGetBusDistanceJSON", "inside readAndParseJSON  Exception  " + e.toString());
         }
 
-        for(int i = 0; i < busInfo.size() ; i++){
-            Log.i("MyGetBusDistanceJSON", "i is  " + i);
-            Log.i("MyGetBusDistanceJSON", "addMarkersToMap() busInfo.size() " + busInfo.size());
-            Log.i("MyGetBusDistanceJSON", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[0]);
-            Log.i("MyGetBusDistanceJSON", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[1]);
-            Log.i("MyGetBusDistanceJSON", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[2]);
 
-        }
-
-
-            Log.i("MyGetBusDistanceJSON", "inside GetBusStopJSON.busInfo[busInfoIndex].getDistance()  " + busInfo.get(index).getDistance()[2] + " index : " + index);
 
 
             Log.i("MyAsyncTask", "end11:");
