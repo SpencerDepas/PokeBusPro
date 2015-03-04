@@ -237,8 +237,34 @@ public class MapsActivity extends FragmentActivity {
                     public void onMarkerDragEnd(Marker marker) {
 
                         Log.i("MyMapsActivity", "onMarkerDragEnd ");
-                        if (marker.getTitle().equals("PokeBus")) // if marker source is clicked
-                            Log.i("MyMapsActivity", "if(marker.getTitle().equals(\"PokeBus\"))  ");
+                        if (marker.getTitle().equals("PokeBus")) {
+
+                            for(int i = 0 ; i < AddMarkers.marker.length; i ++ ){
+                                //static double testLat = 40.6455520;
+                                int tempLat =  (int)(marker.getPosition().latitude * 10000);
+                                int tempLng = (int)(marker.getPosition().longitude * 10000);
+                                Log.i("MyMapsActivity", "onMarkerDragEnd ");
+
+                                if(tempLat == (int)(AddMarkers.marker[i].getPosition().latitude * 10000)
+                                        && tempLng == (int)(AddMarkers.marker[i].getPosition().longitude * 10000)){
+
+                                    Toast.makeText(getBaseContext(), "on the road", Toast.LENGTH_SHORT).show();
+
+                                }
+
+                                Log.i("MyMapsActivity", "bus stop marker : (int)AddMarkers.marker[i].getPosition().latitude * 1000000 "
+                                        + (int)(AddMarkers.marker[i].getPosition().latitude * 10000));
+                                Log.i("MyMapsActivity", "tempLng" + tempLat);
+                                Log.i("MyMapsActivity", "bus stop marker : tempLng == (int)AddMarkers.marker[i].getPosition().longitude * 1000000 " +
+                                        (int)(AddMarkers.marker[i].getPosition().longitude * 10000));
+                                Log.i("MyMapsActivity", "tempLng" + tempLng);
+
+                             
+
+                            }
+
+
+                        }
 
                         Toast.makeText(getBaseContext(), "Put the circle over desired stop BIATCHHH", Toast.LENGTH_SHORT).show();
 
