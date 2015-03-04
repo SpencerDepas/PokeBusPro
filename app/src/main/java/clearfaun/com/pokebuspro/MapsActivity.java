@@ -151,6 +151,7 @@ public class MapsActivity extends FragmentActivity {
         super.onPause();
         Log.i("MyMapsActivity","onPause()");
         busInfo.clear();
+        AddMarkers.marker = null;
     }
 
     @Override
@@ -171,20 +172,15 @@ public class MapsActivity extends FragmentActivity {
 
         getBusStops(busInfo);
         Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
+
         getBusDistance(busInfo);
+        Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
+        updateBusDistance();
+        Log.i("MyMapsActivity", "after updateBusDistance();");
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-       /* Log.i("MyMapsActivity","onSaveInstanceState()");
-        Log.i("MyMapsActivity","onSaveInstanceState()  pointList : " + pointList.get(0).toString());*/
-        // Adding the pointList arraylist to Bundle
-        outState.putParcelableArrayList("points", pointList);
 
-        // Saving the bundle
-        super.onSaveInstanceState(outState);
-    }
 
     public void updateBusDistance() {
         //set a new Timer
@@ -278,8 +274,6 @@ public class MapsActivity extends FragmentActivity {
 
 
 
-
-
     public Location getLocation() {
 
         Log.i("MyMapsActivity","getLocation()");
@@ -291,22 +285,5 @@ public class MapsActivity extends FragmentActivity {
 
         return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     }
-
-
-
-    /*@Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-
-        // Save UI state changes to the savedInstanceState.
-        // This bundle will be passed to onCreate if the process is
-        // killed and restarted.
-
-        savedInstanceState.putBoolean("MyBoolean", true);
-        savedInstanceState.putDouble("myDouble", 1.9);
-        savedInstanceState.putInt("MyInt", 1);
-        savedInstanceState.putString("MyString", "Welcome back to Android");
-        // etc.
-        super.onSaveInstanceState(savedInstanceState);
-    }*/
 
 }

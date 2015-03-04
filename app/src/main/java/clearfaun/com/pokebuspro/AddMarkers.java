@@ -15,13 +15,12 @@ import java.util.ArrayList;
  */
 public class AddMarkers {
 
-    static boolean markersAdded;
     static LatLng[] markerLocation;
     static Marker[] marker;
 
     public static void addMarkersToMap(ArrayList<BusInfo> busInfo) {
 
-        markersAdded = true;
+
         markerLocation = new LatLng[busInfo.size()];
         marker = new Marker[busInfo.size()];
 

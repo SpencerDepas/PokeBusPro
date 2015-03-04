@@ -202,13 +202,15 @@ public class GetBusDistanceJSON {
 
             Log.i("MyAsyncTask", " AsyncTask  onPostExecute MapsActivity.obtainedAllDistances = true;");
 
-            if(AddMarkers.markersAdded) {
-                //update marker
-                AddMarkers.updateMarkersToMap(busInfo);
 
-            }else{
+            if(AddMarkers.marker == null){
+                Log.i("MyAsyncTask", " AddMarkers.marker == null");
                 //to make markers on first run
                 AddMarkers.addMarkersToMap(busInfo);
+            }else{
+                Log.i("MyAsyncTask", " AsyncTask  AddMarkers.markersAdded");
+                //update marker
+                AddMarkers.updateMarkersToMap(busInfo);
             }
 
 
