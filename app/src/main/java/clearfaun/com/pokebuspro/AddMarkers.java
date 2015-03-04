@@ -63,7 +63,7 @@ public class AddMarkers {
 
     public static void updateMarkersToMap(ArrayList<BusInfo> busInfo) {
 
-        Log.i("MyAddMarkers", "updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
+
 
 
         for (int i = 0; i < busInfo.size() && i < marker.length; i++) {

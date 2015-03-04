@@ -7,6 +7,8 @@ import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,8 +25,11 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import android.widget.PopupMenu;
 
@@ -51,7 +56,7 @@ public class MapsActivity extends FragmentActivity {
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
     static ArrayList<LatLng> pointList = new ArrayList<>();
 
-
+    Marker perth;
     Timer timer;
     TimerTask timerTask;
     LatLng currentLocation;
@@ -67,30 +72,6 @@ public class MapsActivity extends FragmentActivity {
         Log.i("MyMapsActivity", "onCreate");
 
         mContext = getApplicationContext();
-
-
-       /* Location location = getLocation();
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-
-
-        currentLocation = new LatLng(latitude, longitude);
-
-
-        setUpMapIfNeeded();
-
-        getBusStops(busInfo);
-        Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
-        getBusDistance(busInfo);
-        Log.i("MyMapsActivity", "after while (!getBusDistance(busInfo)); " );
-
-        Log.i("MyMapsActivity", "after busDistance  addDistance distance : " + busInfo.get(0).getDistance()[0] );
-        Log.i("MyMapsActivity", "after busDistance addDistance size() : " + busInfo.size() );*/
-
-
-
-        //updateBusDistance();
-
 
 
         Button b = (Button) findViewById(R.id.options_button);
@@ -109,7 +90,21 @@ public class MapsActivity extends FragmentActivity {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(getBaseContext(), "You selected the action : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+
+//                        CircleOptions circleOptions = new CircleOptions()
+//                                .center(new LatLng(40.6455520,-73.9829084))
+//                                .radius(5); // In meters
+
+                        LatLng PERTH = new LatLng(40.6455520,-73.9829081);
+                        perth = mMap.addMarker(new MarkerOptions()
+                                .title("PokeBus")
+                                .position(PERTH)
+                                .draggable(true));
+                        Log.i("MyMapsActivity", "onMenuItemClick marker created");
+
+
+
+                        Toast.makeText(getBaseContext(), "Put the circle over desired stop", Toast.LENGTH_SHORT).show();
                         return true;
                     }
                 });
@@ -122,6 +117,8 @@ public class MapsActivity extends FragmentActivity {
 
 
     }
+
+
 
 
 
@@ -176,7 +173,7 @@ public class MapsActivity extends FragmentActivity {
         getBusDistance(busInfo);
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-        updateBusDistance();
+        //updateBusDistance();
         Log.i("MyMapsActivity", "after updateBusDistance();");
     }
 
@@ -185,10 +182,8 @@ public class MapsActivity extends FragmentActivity {
     public void updateBusDistance() {
         //set a new Timer
         timer = new Timer();
-
         //initialize the TimerTask's job
         initializeTimerTask();
-
         //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
         timer.schedule(timerTask, 5000, 20000); //
     }
@@ -202,36 +197,57 @@ public class MapsActivity extends FragmentActivity {
     }
 
     public void initializeTimerTask() {
-
         timerTask = new TimerTask() {
             public void run() {
                 Log.i("MyMapsActivity","initializeTimerTask    timerTask");
                 getBusDistance(busInfo);
-
-
             }
         };
     }
 
 
 
+
     private void setUpMapIfNeeded() {
         Log.i("MyMapsActivity","setUpMapIfNeeded() ");
-
-
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             Log.i("MyMapsActivity","setUpMapIfNeeded()  mMap == null ");
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
+
+
+                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
+
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+
+                        try {
+                            Log.i("MyMapsActivity", "onInfoWindowClick ");
+                            if (marker.getTitle().equals("PokeBus")) // if marker source is clicked
+                                Log.i("MyMapsActivity", "if(marker.getTitle().equals(\"PokeBus\"))  ");
+
+                            Toast.makeText(getBaseContext(), "Put the circle over desired stop BIATCHHH", Toast.LENGTH_SHORT).show();
+
+
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            Log.e("OutOfBoundsException", " Occured");
+                            Log.i("MyMapsActivity", "onInfoWindowClick ");
+                        }
+
+                        return true;
+                    }
+                });
+
+
+
+
                 Log.i("MyMapsActivity","setUpMapIfNeeded()  mMap != null ");
-
                 mMap.setMyLocationEnabled(true);
-
-
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(currentLocation)    // Sets the center of the map to Mountain View
@@ -240,9 +256,7 @@ public class MapsActivity extends FragmentActivity {
                         .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                         .build();                   // Creates a CameraPosition from the builder
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-                
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
             }
@@ -250,11 +264,7 @@ public class MapsActivity extends FragmentActivity {
             Log.i("MyMapsActivity","setUpMapIfNeeded()  in the else ");
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
-
-
             mMap.setMyLocationEnabled(true);
-
-
             // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(currentLocation)    // Sets the center of the map to Mountain View
@@ -263,11 +273,8 @@ public class MapsActivity extends FragmentActivity {
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
             mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
         }
 
     }

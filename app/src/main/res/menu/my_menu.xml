@@ -6,7 +6,7 @@
         <item android:id="@+id/invisible_item"
             android:visible="false"
             android:alphabeticShortcut="i"
-            android:title="Invisible item" />
+            android:title="Add a BusPoke!" />
 
         <item android:id="@+id/a_item"
             android:alphabeticShortcut="a"
