@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -33,6 +34,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public class MapsActivity extends FragmentActivity {
 
@@ -67,7 +69,7 @@ public class MapsActivity extends FragmentActivity {
         mContext = getApplicationContext();
 
 
-        Location location = getLocation();
+       /* Location location = getLocation();
         latitude = location.getLatitude();
         longitude = location.getLongitude();
 
@@ -83,7 +85,7 @@ public class MapsActivity extends FragmentActivity {
         Log.i("MyMapsActivity", "after while (!getBusDistance(busInfo)); " );
 
         Log.i("MyMapsActivity", "after busDistance  addDistance distance : " + busInfo.get(0).getDistance()[0] );
-        Log.i("MyMapsActivity", "after busDistance addDistance size() : " + busInfo.size() );
+        Log.i("MyMapsActivity", "after busDistance addDistance size() : " + busInfo.size() );*/
 
 
 
@@ -117,40 +119,11 @@ public class MapsActivity extends FragmentActivity {
             }
         });
 
-        if(savedInstanceState!=null){
-            Log.i("MyMapsActivity","onResume()savedInstanceState!=null");
-            if(savedInstanceState.containsKey("points")){
-                pointList = savedInstanceState.getParcelableArrayList("points");
-                if(pointList!=null){
-                    for(int i=0;i<pointList.size();i++){
-                        drawMarker(pointList.get(i));
-                    }
-                }
-            }
-        }else{
-            Log.i("MyMapsActivity","onResume()savedInstanceState==null");
-        }
 
 
     }
 
-    private void drawMarker(LatLng point){
-        Log.i("MyMapsActivity","drawMarker(LatLng point)");
 
-        Log.i("MyMapsActivity","drawMarker point: " + "Lat:"+point.latitude+","+"Lng:"+point.longitude);
-        // Creating an instance of MarkerOptions
-        MarkerOptions markerOptions = new MarkerOptions();
-
-        // Setting latitude and longitude for the marker
-        markerOptions.position(point);
-
-        // Setting a title for this marker
-        markerOptions.title("Lat:"+point.latitude+","+"Lng:"+point.longitude);
-
-        // Adding marker on the Google Map
-        mMap.addMarker(markerOptions);
-        Log.i("MyMapsActivity","after mMap.addMarker(markerOptions);");
-    }
 
     public static void getBusStops(ArrayList<BusInfo> busInfo){
             Log.i("MyMapsActivity", "inside getBusStops");
@@ -177,7 +150,7 @@ public class MapsActivity extends FragmentActivity {
     public void onPause() {
         super.onPause();
         Log.i("MyMapsActivity","onPause()");
-
+        busInfo.clear();
     }
 
     @Override
@@ -186,16 +159,26 @@ public class MapsActivity extends FragmentActivity {
         Log.i("MyMapsActivity","onResume()");
 
 
+        Location location = getLocation();
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+
+        currentLocation = new LatLng(latitude, longitude);
+
+
         setUpMapIfNeeded();
 
-
+        getBusStops(busInfo);
+        Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
+        getBusDistance(busInfo);
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.i("MyMapsActivity","onSaveInstanceState()");
-        Log.i("MyMapsActivity","onSaveInstanceState()  pointList : " + pointList.get(0).toString());
+       /* Log.i("MyMapsActivity","onSaveInstanceState()");
+        Log.i("MyMapsActivity","onSaveInstanceState()  pointList : " + pointList.get(0).toString());*/
         // Adding the pointList arraylist to Bundle
         outState.putParcelableArrayList("points", pointList);
 
@@ -238,6 +221,8 @@ public class MapsActivity extends FragmentActivity {
 
     private void setUpMapIfNeeded() {
         Log.i("MyMapsActivity","setUpMapIfNeeded() ");
+
+
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             Log.i("MyMapsActivity","setUpMapIfNeeded()  mMap == null ");
@@ -261,10 +246,34 @@ public class MapsActivity extends FragmentActivity {
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-
+                
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
             }
+        }else{
+            Log.i("MyMapsActivity","setUpMapIfNeeded()  in the else ");
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                    .getMap();
+
+
+            mMap.setMyLocationEnabled(true);
+
+
+            // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(currentLocation)    // Sets the center of the map to Mountain View
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
         }
+
     }
 
 
@@ -282,6 +291,7 @@ public class MapsActivity extends FragmentActivity {
 
         return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     }
+
 
 
     /*@Override
