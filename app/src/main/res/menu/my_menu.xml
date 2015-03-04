@@ -10,11 +10,11 @@
 
         <item android:id="@+id/a_item"
             android:alphabeticShortcut="a"
-            android:title="Alvin" />
+            android:title="Add a BusPoke!" />
 
         <item android:id="@+id/b_item"
             android:alphabeticShortcut="b"
-            android:title="Bart" />
+            android:title="What is saved PokeBus" />
 
         <item android:id="@+id/c_item"
             android:alphabeticShortcut="c"

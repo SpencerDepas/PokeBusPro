@@ -1,6 +1,8 @@
 package clearfaun.com.pokebuspro;
 
+import android.app.Activity;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -50,6 +52,7 @@ public class AddMarkers {
 
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
             Log.i("MyAddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);
+
 
             //this is for saving latlng for onRoatate
             MapsActivity.pointList.add(markerLocation[i]);

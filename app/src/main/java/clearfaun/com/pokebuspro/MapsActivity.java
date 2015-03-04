@@ -1,6 +1,8 @@
 package clearfaun.com.pokebuspro;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -62,7 +64,7 @@ public class MapsActivity extends FragmentActivity {
     LatLng currentLocation;
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
-
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,37 +82,48 @@ public class MapsActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
 
-                PopupMenu popup = new PopupMenu(getBaseContext(), v);
+                PopupMenu pokeBusMovableMarker = new PopupMenu(getBaseContext(), v);
 
-                popup.getMenuInflater().inflate(R.menu.my_menu, popup.getMenu());
+                pokeBusMovableMarker.getMenuInflater().inflate(R.menu.my_menu, pokeBusMovableMarker.getMenu());
 
 
 
-                popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                pokeBusMovableMarker.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-
-//                        CircleOptions circleOptions = new CircleOptions()
-//                                .center(new LatLng(40.6455520,-73.9829084))
-//                                .radius(5); // In meters
-
-                        LatLng PERTH = new LatLng(40.6455520,-73.9829081);
-                        perth = mMap.addMarker(new MarkerOptions()
-                                .title("PokeBus")
-                                .position(PERTH)
-                                .draggable(true));
-                        Log.i("MyMapsActivity", "onMenuItemClick marker created");
+                        Log.i("MyMapsActivity", "onMenuItemClick");
 
 
+                        Log.i("MyMapsActivity", "onMenuItemClick item.getTitle() : " + item.getTitle());
+                        if(item.getTitle().toString().equals("Add a BusPoke!")) {
 
-                        Toast.makeText(getBaseContext(), "Put the circle over desired stop", Toast.LENGTH_SHORT).show();
+                            LatLng PERTH = new LatLng(40.6455520, -73.9829081);
+                            perth = mMap.addMarker(new MarkerOptions()
+                                    .title("PokeBus")
+                                    .position(PERTH)
+                                    .draggable(true));
+                            Log.i("MyMapsActivity", "onMenuItemClick marker created");
+
+                            Toast.makeText(getBaseContext(), "Put the circle over desired stop", Toast.LENGTH_SHORT).show();
+                        }else if(item.getTitle().toString().equals("What is saved PokeBus")){
+                            SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                            String pokeBusCode = prefs.getString("pokeBusCode", null);
+                            if (pokeBusCode != null){
+
+                                Toast.makeText(getBaseContext(), "Saved PokeBus is " + pokeBusCode, Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        }else {
+                            Toast.makeText(getBaseContext(), "A PokeBus has not yet been saved", Toast.LENGTH_SHORT).show();
+                        }
                         return true;
                     }
                 });
 
-                /** Showing the popup menu */
-                popup.show();
+
+                pokeBusMovableMarker.show();
             }
         });
 
@@ -245,12 +258,31 @@ public class MapsActivity extends FragmentActivity {
                                 int tempLng = (int)(marker.getPosition().longitude * 10000);
                                 Log.i("MyMapsActivity", "onMarkerDragEnd ");
 
-                                if(tempLat == (int)(AddMarkers.marker[i].getPosition().latitude * 10000)
-                                        && tempLng == (int)(AddMarkers.marker[i].getPosition().longitude * 10000)){
 
-                                    Toast.makeText(getBaseContext(), "on the road", Toast.LENGTH_SHORT).show();
+                                if(tempLat == (int)(busInfo.get(i).getBusStopLat() * 10000)
+                                        && tempLng == (int)(busInfo.get(i).getBusStopLng()  * 10000)){
+
+                                    Toast.makeText(getBaseContext(), "You have activated a PokeBus on Bus " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
+
+                                    marker.setVisible(false);
+                                    setPokeBus(busInfo.get(i).getBusCode());
+                                    Log.i("MyMapsActivity", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
 
                                 }
+
+
+
+
+                             /*   if(tempLat == (int)(AddMarkers.marker[i].getPosition().latitude * 10000)
+                                        && tempLng == (int)(AddMarkers.marker[i].getPosition().longitude * 10000)){
+
+                                    Toast.makeText(getBaseContext(), "You have activated a PokeBus" + i, Toast.LENGTH_SHORT).show();
+
+                                    marker.setVisible(false);
+                                    setPokeBus();
+                                    Log.i("MyMapsActivity", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
+
+                                }*/
 
                                 Log.i("MyMapsActivity", "bus stop marker : (int)AddMarkers.marker[i].getPosition().latitude * 1000000 "
                                         + (int)(AddMarkers.marker[i].getPosition().latitude * 10000));
@@ -259,19 +291,17 @@ public class MapsActivity extends FragmentActivity {
                                         (int)(AddMarkers.marker[i].getPosition().longitude * 10000));
                                 Log.i("MyMapsActivity", "tempLng" + tempLng);
 
-                             
+
 
                             }
 
 
                         }
 
-                        Toast.makeText(getBaseContext(), "Put the circle over desired stop BIATCHHH", Toast.LENGTH_SHORT).show();
 
 
                     }
                 });
-
 
 
                 Log.i("MyMapsActivity","setUpMapIfNeeded()  mMap != null ");
@@ -307,9 +337,16 @@ public class MapsActivity extends FragmentActivity {
 
     }
 
+    private void setPokeBus(String busCode) {
+        Log.i("MyMapsActivity","setPokeBus()");
 
+        editor = getPreferences(MODE_PRIVATE).edit();
+        editor.putString("pokeBusCode", busCode);
+        editor.apply();
 
-    public Location getLocation() {
+    }
+
+    private Location getLocation() {
 
         Log.i("MyMapsActivity","getLocation()");
 
