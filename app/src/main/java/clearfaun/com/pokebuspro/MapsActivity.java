@@ -358,4 +358,15 @@ public class MapsActivity extends FragmentActivity {
         return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     }
 
+
+    static void toaster(String string){
+        Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    static void toasterShort(String string){
+        Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
 }
