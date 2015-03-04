@@ -200,9 +200,6 @@ public class GetBusDistanceJSON {
         @Override
         protected void onPostExecute(String result) {
 
-
-
-
             Log.i("MyAsyncTask", " AsyncTask  onPostExecute MapsActivity.obtainedAllDistances = true;");
 
             if(AddMarkers.markersAdded) {

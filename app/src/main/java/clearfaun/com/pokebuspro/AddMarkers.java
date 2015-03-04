@@ -22,26 +22,22 @@ public class AddMarkers {
     public static void addMarkersToMap(ArrayList<BusInfo> busInfo) {
 
         markersAdded = true;
-
         markerLocation = new LatLng[busInfo.size()];
         marker = new Marker[busInfo.size()];
 
-      /*  Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.size(): " + busInfo.size());
-        Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(0).getDistance()[0]);
-        Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(0).getDistance()[1]);
-        Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(0).getDistance()[2]);*/
 
-        for(int i = 0; i < busInfo.size() ; i++){
+/*        for(int i = 0; i < busInfo.size() ; i++){
             Log.i("MyAddMarkers", "i is  " + i);
             Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[0]);
             Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[1]);
             Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[2]);
 
-        }
+        }*/
 
 
 
         for (int i = 0; i < busInfo.size() ; i++) {
+
 
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
@@ -56,11 +52,10 @@ public class AddMarkers {
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
             Log.i("MyAddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);
 
+            //this is for saving latlng for onRoatate
+            MapsActivity.pointList.add(markerLocation[i]);
             
         }
-
-
-
 
 
 

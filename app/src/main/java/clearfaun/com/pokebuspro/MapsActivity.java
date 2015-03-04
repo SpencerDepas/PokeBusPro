@@ -8,8 +8,10 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.PopupMenu.OnMenuItemClickListener;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -35,6 +38,8 @@ public class MapsActivity extends FragmentActivity {
 
     static GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
+
+
     static double latitude;
     static double longitude;
     static Context mContext;
@@ -42,12 +47,15 @@ public class MapsActivity extends FragmentActivity {
     static GetBusDistanceJSON objTwo;
 
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
+    static ArrayList<LatLng> pointList = new ArrayList<>();
+
 
     Timer timer;
     TimerTask timerTask;
     LatLng currentLocation;
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,22 +77,17 @@ public class MapsActivity extends FragmentActivity {
 
         setUpMapIfNeeded();
 
-
-
         getBusStops(busInfo);
         Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
-
-
         getBusDistance(busInfo);
         Log.i("MyMapsActivity", "after while (!getBusDistance(busInfo)); " );
 
-        Log.i("MyMapsActivity", "after busDistance  addDistance distance : " + busInfo.get(0).getDistance() );
+        Log.i("MyMapsActivity", "after busDistance  addDistance distance : " + busInfo.get(0).getDistance()[0] );
         Log.i("MyMapsActivity", "after busDistance addDistance size() : " + busInfo.size() );
 
 
 
-        updateBusDistance();
-
+        //updateBusDistance();
 
 
 
@@ -114,16 +117,43 @@ public class MapsActivity extends FragmentActivity {
             }
         });
 
-
+        if(savedInstanceState!=null){
+            Log.i("MyMapsActivity","onResume()savedInstanceState!=null");
+            if(savedInstanceState.containsKey("points")){
+                pointList = savedInstanceState.getParcelableArrayList("points");
+                if(pointList!=null){
+                    for(int i=0;i<pointList.size();i++){
+                        drawMarker(pointList.get(i));
+                    }
+                }
+            }
+        }else{
+            Log.i("MyMapsActivity","onResume()savedInstanceState==null");
+        }
 
 
     }
 
+    private void drawMarker(LatLng point){
+        Log.i("MyMapsActivity","drawMarker(LatLng point)");
+
+        Log.i("MyMapsActivity","drawMarker point: " + "Lat:"+point.latitude+","+"Lng:"+point.longitude);
+        // Creating an instance of MarkerOptions
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        // Setting latitude and longitude for the marker
+        markerOptions.position(point);
+
+        // Setting a title for this marker
+        markerOptions.title("Lat:"+point.latitude+","+"Lng:"+point.longitude);
+
+        // Adding marker on the Google Map
+        mMap.addMarker(markerOptions);
+        Log.i("MyMapsActivity","after mMap.addMarker(markerOptions);");
+    }
+
     public static void getBusStops(ArrayList<BusInfo> busInfo){
-
             Log.i("MyMapsActivity", "inside getBusStops");
-
-
             obj = new GetBusStopJSON();
             obj.fetchBusStop(busInfo);
 
@@ -138,14 +168,15 @@ public class MapsActivity extends FragmentActivity {
 
 
     public static void getBusDistance(ArrayList<BusInfo> busInfo){
-
         Log.i("MyMapsActivity", "getBusDistance");
-
-
-
         objTwo = new GetBusDistanceJSON();
         objTwo.fetchBusDistanceJson(busInfo);
 
+    }
+
+    public void onPause() {
+        super.onPause();
+        Log.i("MyMapsActivity","onPause()");
 
     }
 
@@ -153,7 +184,23 @@ public class MapsActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         Log.i("MyMapsActivity","onResume()");
+
+
         setUpMapIfNeeded();
+
+
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.i("MyMapsActivity","onSaveInstanceState()");
+        Log.i("MyMapsActivity","onSaveInstanceState()  pointList : " + pointList.get(0).toString());
+        // Adding the pointList arraylist to Bundle
+        outState.putParcelableArrayList("points", pointList);
+
+        // Saving the bundle
+        super.onSaveInstanceState(outState);
     }
 
     public void updateBusDistance() {
@@ -190,18 +237,19 @@ public class MapsActivity extends FragmentActivity {
 
 
     private void setUpMapIfNeeded() {
+        Log.i("MyMapsActivity","setUpMapIfNeeded() ");
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
+            Log.i("MyMapsActivity","setUpMapIfNeeded()  mMap == null ");
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
+                Log.i("MyMapsActivity","setUpMapIfNeeded()  mMap != null ");
 
                 mMap.setMyLocationEnabled(true);
 
-
-                //busInfo = new BusInfo[5];
 
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
                 CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -219,12 +267,7 @@ public class MapsActivity extends FragmentActivity {
         }
     }
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
+
 
 
 
@@ -240,5 +283,20 @@ public class MapsActivity extends FragmentActivity {
         return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     }
 
+
+    /*@Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+
+        savedInstanceState.putBoolean("MyBoolean", true);
+        savedInstanceState.putDouble("myDouble", 1.9);
+        savedInstanceState.putInt("MyInt", 1);
+        savedInstanceState.putString("MyString", "Welcome back to Android");
+        // etc.
+        super.onSaveInstanceState(savedInstanceState);
+    }*/
 
 }
