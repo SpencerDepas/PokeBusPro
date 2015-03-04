@@ -37,7 +37,9 @@
         </activity>
 
         <activity
+            android:theme="@android:style/Theme.NoDisplay"
             android:icon="@mipmap/ic_launcher_black"
+            android:clearTaskOnLaunch="true"
             android:name=".PokeBusNoUI"
             android:label="@string/title_activity_maps"
             android:taskAffinity="clearfaun.com.pokebuspro.PokeBus" >
@@ -47,6 +49,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".Service"
+            android:exported="false"/>
     </application>
 
 </manifest>

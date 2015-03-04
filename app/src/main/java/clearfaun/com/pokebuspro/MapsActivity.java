@@ -107,8 +107,10 @@ public class MapsActivity extends FragmentActivity {
 
                             Toast.makeText(getBaseContext(), "Put the circle over desired stop", Toast.LENGTH_SHORT).show();
                         }else if(item.getTitle().toString().equals("What is saved PokeBus")){
-                            SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+
+                            SharedPreferences prefs = getPreferences(MODE_WORLD_READABLE);
                             String pokeBusCode = prefs.getString("pokeBusCode", null);
+
                             if (pokeBusCode != null){
 
                                 Toast.makeText(getBaseContext(), "Saved PokeBus is " + pokeBusCode, Toast.LENGTH_SHORT).show();
@@ -116,6 +118,7 @@ public class MapsActivity extends FragmentActivity {
                             }
 
                         }else {
+
                             Toast.makeText(getBaseContext(), "A PokeBus has not yet been saved", Toast.LENGTH_SHORT).show();
                         }
                         return true;
