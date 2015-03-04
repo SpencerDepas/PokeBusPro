@@ -221,28 +221,30 @@ public class MapsActivity extends FragmentActivity {
             if (mMap != null) {
 
 
-                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
+                mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
                     @Override
-                    public boolean onMarkerClick(Marker marker) {
+                    public void onMarkerDragStart(Marker marker) {
+                        Log.i("MyMapsActivity","onMarkerDragStart ");
+                    }
 
-                        try {
-                            Log.i("MyMapsActivity", "onInfoWindowClick ");
-                            if (marker.getTitle().equals("PokeBus")) // if marker source is clicked
-                                Log.i("MyMapsActivity", "if(marker.getTitle().equals(\"PokeBus\"))  ");
+                    @Override
+                    public void onMarkerDrag(Marker marker) {
+                        Log.i("MyMapsActivity","onMarkerDrag ");
+                    }
 
-                            Toast.makeText(getBaseContext(), "Put the circle over desired stop BIATCHHH", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onMarkerDragEnd(Marker marker) {
+
+                        Log.i("MyMapsActivity", "onMarkerDragEnd ");
+                        if (marker.getTitle().equals("PokeBus")) // if marker source is clicked
+                            Log.i("MyMapsActivity", "if(marker.getTitle().equals(\"PokeBus\"))  ");
+
+                        Toast.makeText(getBaseContext(), "Put the circle over desired stop BIATCHHH", Toast.LENGTH_SHORT).show();
 
 
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            Log.e("OutOfBoundsException", " Occured");
-                            Log.i("MyMapsActivity", "onInfoWindowClick ");
-                        }
-
-                        return true;
                     }
                 });
-
 
 
 
