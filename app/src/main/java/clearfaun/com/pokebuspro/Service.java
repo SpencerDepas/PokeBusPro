@@ -46,7 +46,7 @@ public class Service extends IntentService {
             businfo.setBusCode(data);
             businfo.setForNoUIToast(true);
             busInfoArrayList.add(0,businfo );
-            new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getBusCode());
+            //new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getBusCode());
 
 
         } catch (Exception e) {
@@ -74,7 +74,9 @@ public class Service extends IntentService {
 
     public static void displayToastDistance(ArrayList<BusInfo> busInfo){
 
-        new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getDistance()[0]);
+        new ToastMessageTask().execute("The Bus you poked is \n" + busInfoArrayList.get(0).getDistance()[0] + "\n"
+        + busInfoArrayList.get(0).getDistance()[1] + "\n"
+                + busInfoArrayList.get(0).getDistance()[2]);
 
     }
 
