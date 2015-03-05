@@ -26,7 +26,7 @@ public class PokeBusNoUI extends Activity {
 
     final static public String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28";
 
-
+    static Context mContext;
 
 
 
@@ -35,7 +35,7 @@ public class PokeBusNoUI extends Activity {
         super.onCreate(savedInstanceState);
         Log.i("MyActivityNOUI", "onCreate");
 
-
+        mContext = getApplicationContext();
     }
 
 
@@ -44,30 +44,16 @@ public class PokeBusNoUI extends Activity {
         super.onResume();
         Log.i("MyActivityNOUI", "onResume");
 
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String pokeBusCode = prefs.getString("pokeBusCode", null);
-        if (pokeBusCode != null){
-
-            toasterShort("Saved PokeBus is " + pokeBusCode);
-
-        }else{
-
-            //toasterShort("A pokeBus has not yet been set." + MapsActivity.busInfo.get(0).getBusCode());
-            toasterShort("A pokeBus has not yet been set.");
-        }
         //makes invisable screen go
+
+        Intent service = new Intent(this, Service.class);
+        startService(service);
         finish();
-        /*Intent service = new Intent(this, Service.class);
-        startService(service);*/
 
     }
 
 
-    void toasterShort(String string){
-        Toast toast = Toast.makeText(this, string, Toast.LENGTH_SHORT);
-        toast.show();
-    }
+
 
 
 }

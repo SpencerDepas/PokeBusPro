@@ -65,6 +65,10 @@ public class MapsActivity extends FragmentActivity {
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
     SharedPreferences.Editor editor;
+    static SharedPreferences prefs;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +112,7 @@ public class MapsActivity extends FragmentActivity {
                             Toast.makeText(getBaseContext(), "Put the circle over desired stop", Toast.LENGTH_SHORT).show();
                         }else if(item.getTitle().toString().equals("What is saved PokeBus")){
 
-                            SharedPreferences prefs = getPreferences(MODE_WORLD_READABLE);
+                            prefs = getPreferences(CONTEXT_IGNORE_SECURITY);
                             String pokeBusCode = prefs.getString("pokeBusCode", null);
 
                             if (pokeBusCode != null){
@@ -275,27 +279,6 @@ public class MapsActivity extends FragmentActivity {
 
 
 
-
-                             /*   if(tempLat == (int)(AddMarkers.marker[i].getPosition().latitude * 10000)
-                                        && tempLng == (int)(AddMarkers.marker[i].getPosition().longitude * 10000)){
-
-                                    Toast.makeText(getBaseContext(), "You have activated a PokeBus" + i, Toast.LENGTH_SHORT).show();
-
-                                    marker.setVisible(false);
-                                    setPokeBus();
-                                    Log.i("MyMapsActivity", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
-
-                                }*/
-
-                                Log.i("MyMapsActivity", "bus stop marker : (int)AddMarkers.marker[i].getPosition().latitude * 1000000 "
-                                        + (int)(AddMarkers.marker[i].getPosition().latitude * 10000));
-                                Log.i("MyMapsActivity", "tempLng" + tempLat);
-                                Log.i("MyMapsActivity", "bus stop marker : tempLng == (int)AddMarkers.marker[i].getPosition().longitude * 1000000 " +
-                                        (int)(AddMarkers.marker[i].getPosition().longitude * 10000));
-                                Log.i("MyMapsActivity", "tempLng" + tempLng);
-
-
-
                             }
 
 
@@ -343,9 +326,19 @@ public class MapsActivity extends FragmentActivity {
     private void setPokeBus(String busCode) {
         Log.i("MyMapsActivity","setPokeBus()");
 
-        editor = getPreferences(MODE_PRIVATE).edit();
+
+        prefs = getSharedPreferences("pokeBusCodePrefs",
+                Context.CONTEXT_IGNORE_SECURITY);
+        SharedPreferences.Editor editor = prefs.edit();
         editor.putString("pokeBusCode", busCode);
         editor.apply();
+
+
+
+
+        /*editor = getPreferences(MODE_WORLD_READABLE).edit();
+        editor.putString("pokeBusCode", busCode);
+        editor.apply();*/
 
     }
 
