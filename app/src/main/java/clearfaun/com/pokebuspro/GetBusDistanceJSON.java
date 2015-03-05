@@ -192,8 +192,11 @@ public class GetBusDistanceJSON {
 
             Log.i("MyAsyncTask", " AsyncTask  onPostExecute MapsActivity.obtainedAllDistances = true;");
 
+            if(busInfo.get(0).forNoUIToast){
 
-            if(AddMarkers.marker == null){
+                Service.displayToastDistance(busInfo);
+
+            }else if(AddMarkers.marker == null){
                 Log.i("MyAsyncTask", " AddMarkers.marker == null");
                 //to make markers on first run
                 AddMarkers.addMarkersToMap(busInfo);

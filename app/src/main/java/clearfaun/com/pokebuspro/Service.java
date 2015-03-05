@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /**
  * Created by spencer on 3/4/2015.
  */
@@ -19,7 +21,8 @@ public class Service extends IntentService {
         super("MyIntentService");
     }
 
-
+    static ArrayList<BusInfo> busInfoArrayList = new ArrayList<>();
+    static GetBusDistanceJSON objTwo;
 
     @Override
     protected void onHandleIntent(Intent intent){
@@ -39,7 +42,11 @@ public class Service extends IntentService {
                     "pokeBusCodePrefs", Context.MODE_PRIVATE);
 
             String data = pref.getString("pokeBusCode", "No Value");
-            new ToastMessageTask().execute("Saved PokeBus is " + data);
+            BusInfo businfo = new BusInfo();
+            businfo.setBusCode(data);
+            businfo.setForNoUIToast(true);
+            busInfoArrayList.add(0,businfo );
+            new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getBusCode());
 
 
         } catch (Exception e) {
@@ -48,23 +55,7 @@ public class Service extends IntentService {
         }
 
 
-
-      /*  Context serviceContext = MapsActivity.mContext;
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(serviceContext);
-        Log.i("MyService", "Service prefs " + prefs.toString());
-        Log.i("MyService", "Service prefs " + prefs.getString("pokeBusCode", null));
-        String pokeBusCode = prefs.getString("pokeBusCode", null);
-        if (pokeBusCode != null){
-
-
-            new ToastMessageTask().execute("Saved PokeBus is " + pokeBusCode);
-        }else{
-
-            //toasterShort("A pokeBus has not yet been set." + MapsActivity.busInfo.get(0).getBusCode());
-            new ToastMessageTask().execute("A pokeBus has not yet been set.");
-
-        }*/
+        getBusDistance(busInfoArrayList);
 
 
 
@@ -73,9 +64,19 @@ public class Service extends IntentService {
 
 
 
+    public static void getBusDistance(ArrayList<BusInfo> busInfo){
+        Log.i("MyMapsActivity", "getBusDistance");
+        objTwo = new GetBusDistanceJSON();
+        objTwo.fetchBusDistanceJson(busInfo);
+
+    }
 
 
+    public static void displayToastDistance(ArrayList<BusInfo> busInfo){
 
+        new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getDistance()[0]);
+
+    }
 
 
 }

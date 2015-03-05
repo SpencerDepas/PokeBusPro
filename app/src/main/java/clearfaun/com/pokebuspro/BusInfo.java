@@ -12,6 +12,7 @@ public class BusInfo {
     public int radiusTaskNumber = 0;
     boolean markerSet = false;
     public String busName = "";
+    public boolean forNoUIToast = false;
     //public String[] distance = {"Not available", "Not available","Not available"};
     public String[] distance = {"Not available", "Not available","Not available"};
     //constructor
@@ -43,19 +44,18 @@ public class BusInfo {
         longitude = longitudeIn;
     }
 
-
+    public void setForNoUIToast(Boolean forUI){
+        forNoUIToast = forUI;
+    }
 
     public void setBusDistance(String[] busDistance) {
         distance = new String[3];
-
         distance[0] = "Not available";
         distance[1] = "Not available";
         distance[2] = "Not available";
-
         for(int i = 0 ; i < busDistance.length; i ++) {
             distance[i] = busDistance[i];
         }
-
     }
 
     public void busRadiusTaskNumber(int TaskNumber) {
@@ -63,9 +63,11 @@ public class BusInfo {
     }
 
 
-    public int getBusCodeInt(){
-        return Integer.parseInt(stopCode);
+    public boolean forNoUIToast(){
+        return forNoUIToast;
     }
+
+
 
     public String getBusCode(){
         return stopCode;
