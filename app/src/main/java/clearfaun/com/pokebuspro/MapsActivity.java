@@ -67,7 +67,7 @@ public class MapsActivity extends FragmentActivity {
     SharedPreferences.Editor editor;
     static SharedPreferences prefs;
 
-
+    static public String API_KEY_MTA ;
 
 
     @Override
@@ -79,6 +79,7 @@ public class MapsActivity extends FragmentActivity {
 
         mContext = getApplicationContext();
 
+        API_KEY_MTA = getString(R.string.API_KEY_MTA);
 
         Button b = (Button) findViewById(R.id.options_button);
         b.setOnClickListener(new View.OnClickListener() {

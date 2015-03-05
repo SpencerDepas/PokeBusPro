@@ -17,16 +17,17 @@ import java.util.List;
  */
 public class GetBusStopJSON {
 
-    final static public String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28";
+
    /* static String testLat = "40.6455520";
     static String testLng = "-73.9829084";*/
 
     int stopRadius = 200;
 
-    String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + API_KEY + "&radius=" + stopRadius + "&lat=" +
+
+    String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + MapsActivity.API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
             MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
 
-    /*String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + API_KEY + "&radius=" + stopRadius + "&lat=" +
+    /*String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
             MapsActivity.testLat + "&lon=" + MapsActivity.testLng;*/
 
     //private String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&lat=40.6455520&lon=-73.9829084&radius=130";

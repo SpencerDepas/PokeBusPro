@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class GetBusDistanceJSON {
 
-    final static public String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28";
+
     int stopCode;
     int index;
     ArrayList<BusInfo> busInfo;
@@ -147,7 +147,7 @@ public class GetBusDistanceJSON {
                     Log.i("MyGetBusDistanceJSONn", "busInfo.get(i).getBusCode(): " + busInfo.get(i).getBusCode());
                     stopCode = Integer.parseInt(busInfo.get(i).getBusCode());
 
-                    String downloadURLTwo = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&MonitoringRef=MTA_"
+                    String downloadURLTwo = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=" + MapsActivity.API_KEY_MTA + "&MonitoringRef=MTA_"
                             + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
 
                     Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop");
@@ -171,8 +171,6 @@ public class GetBusDistanceJSON {
                 for(int y = 0 ; y < data.length; y ++){
                     Log.i("MyGetBusDistanceJSONn", "Pre data[" + y + "]; " + data[y] );
                 }
-
-
 
 
 
