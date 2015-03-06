@@ -23,14 +23,14 @@ public class Service extends IntentService {
 
     static ArrayList<BusInfo> busInfoArrayList = new ArrayList<>();
     static GetBusDistanceJSON objTwo;
+    static public String API_KEY_MTA ;
 
     @Override
     protected void onHandleIntent(Intent intent){
         // Handle events on worker thread here
          Log.i("MyService", "Service onHandleIntent ");
 
-
-
+        API_KEY_MTA = getString(R.string.API_KEY_MTA);
 
 
         try {
@@ -47,7 +47,7 @@ public class Service extends IntentService {
             businfo.setForNoUIToast(true);
             busInfoArrayList.add(0,businfo );
             //new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getBusCode());
-
+            Log.i("MyService", "in busCode " + data );
 
         } catch (Exception e) {
             Log.e("Not data shared", e.toString());
@@ -65,7 +65,7 @@ public class Service extends IntentService {
 
 
     public static void getBusDistance(ArrayList<BusInfo> busInfo){
-        Log.i("MyMapsActivity", "getBusDistance");
+        Log.i("MyService", "getBusDistance");
         objTwo = new GetBusDistanceJSON();
         objTwo.fetchBusDistanceJson(busInfo);
 
@@ -73,7 +73,7 @@ public class Service extends IntentService {
 
 
     public static void displayToastDistance(ArrayList<BusInfo> busInfo){
-
+        Log.i("MyService", "displayToastDistance");
         new ToastMessageTask().execute("The Bus you poked is \n" + busInfoArrayList.get(0).getDistance()[0] + "\n"
         + busInfoArrayList.get(0).getDistance()[1] + "\n"
                 + busInfoArrayList.get(0).getDistance()[2]);

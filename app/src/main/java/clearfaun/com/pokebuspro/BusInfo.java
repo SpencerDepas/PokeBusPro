@@ -63,7 +63,7 @@ public class BusInfo {
     }
 
 
-    public boolean forNoUIToast(){
+    public boolean getForNoUIToast(){
         return forNoUIToast;
     }
 

@@ -276,7 +276,7 @@ public class MapsActivity extends FragmentActivity {
                                 Log.i("MyMapsActivityMarker", "distance  (int)  " + (int) distance);
                                 Log.i("MyMapsActivityMarker", "distance  (int) *10 " + (int) (distance *10) );
 
-                                //activate within a radius of 10 meters
+                                //activate within a radius of 10 meeters
                                 if((int)distance < 10){
 
                                     Log.i("MyMapsActivityMarker", "distance < 6000000. BusCode :" + busInfo.get(i).getBusCode() );

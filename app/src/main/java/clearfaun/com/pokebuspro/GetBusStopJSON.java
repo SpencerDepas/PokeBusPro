@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by spencer on 2/21/2015.
@@ -24,13 +23,12 @@ public class GetBusStopJSON {
     int stopRadius = 200;
 
 
-    String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + MapsActivity.API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
-            MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
 
-    /*String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
+
+    /*String busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
             MapsActivity.testLat + "&lon=" + MapsActivity.testLng;*/
 
-    //private String downloadURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&lat=40.6455520&lon=-73.9829084&radius=130";
+    //private String busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&lat=40.6455520&lon=-73.9829084&radius=130";
 
     BusInfo tempBusInfo;
     ArrayList<BusInfo> busInfo;
@@ -114,7 +112,7 @@ public class GetBusStopJSON {
 
     }
 
-
+    String busStopURL;
     public void fetchBusStop(ArrayList<BusInfo> busInfoIn) {
         busInfo = busInfoIn;
         Thread thread = new Thread(new Runnable() {
@@ -122,9 +120,24 @@ public class GetBusStopJSON {
             public void run() {
                 try {
 
+                    //this is because we want the service to work independently from each other. so depending on what starts this class depends on how we get api key
+                    Log.i("MyGetBusStopJSON", "before decides which URL  ");
+                    Log.i("MyGetBusStopJSON", "before busInfo.size()  " + busInfo.size());
+
+                    if(busInfo.size() == 0) {
+                        busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + MapsActivity.API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
+                                MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
+                    }else{
+                        busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + Service.API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
+                                MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
+                    }
+
+
+                    Log.i("MyGetBusStopJSON", "after decides which URL  ");
+
                     Log.i("MyHandleJSON", "inside fetchBusStop");
 
-                    URL url = new URL(downloadURL);
+                    URL url = new URL(busStopURL);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setReadTimeout(10000 /* milliseconds */);
                     conn.setConnectTimeout(15000 /* milliseconds */);

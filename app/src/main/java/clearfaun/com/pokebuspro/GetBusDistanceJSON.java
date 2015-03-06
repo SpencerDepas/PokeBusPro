@@ -3,11 +3,7 @@ package clearfaun.com.pokebuspro;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
-import com.google.android.gms.internal.in;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -24,7 +20,7 @@ public class GetBusDistanceJSON {
     int stopCode;
     int index;
     ArrayList<BusInfo> busInfo;
-
+    private String API_KEY_MTA ;
 
     @SuppressLint("NewApi")
     public void readAndParseJSON(String[] in) {
@@ -118,7 +114,7 @@ public class GetBusDistanceJSON {
     private class LongOperation extends AsyncTask<String, Void, String> {
 
 
-
+        String busDistanceURL;
         @Override
         protected String doInBackground(String... params) {
             Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop" + params[0]);
@@ -137,13 +133,19 @@ public class GetBusDistanceJSON {
                     Log.i("MyGetBusDistanceJSONn", "busInfo.get(i).getBusCode(): " + busInfo.get(i).getBusCode());
                     stopCode = Integer.parseInt(busInfo.get(i).getBusCode());
 
-                    String downloadURLTwo = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=" + MapsActivity.API_KEY_MTA + "&MonitoringRef=MTA_"
-                            + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+
+                    if(!busInfo.get(0).getForNoUIToast()) {
+                        busDistanceURL = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=" + MapsActivity.API_KEY_MTA + "&MonitoringRef=MTA_"
+                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+                    }else{
+                        busDistanceURL = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=" + Service.API_KEY_MTA + "&MonitoringRef=MTA_"
+                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+                    }
 
                     Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop");
-                    Log.i("MyGetBusDistanceJSONn", "downloadURLTwo:" + downloadURLTwo);
+                    Log.i("MyGetBusDistanceJSONn", "busDistanceURL:" + busDistanceURL);
 
-                    URL url = new URL(downloadURLTwo);
+                    URL url = new URL(busDistanceURL);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setReadTimeout(10000 /* milliseconds */);
                     conn.setConnectTimeout(15000 /* milliseconds */);
