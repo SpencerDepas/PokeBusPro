@@ -1,6 +1,5 @@
 package clearfaun.com.pokebuspro;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Criteria;
@@ -9,36 +8,23 @@ import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import android.widget.PopupMenu;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -58,7 +44,7 @@ public class MapsActivity extends FragmentActivity {
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
     static ArrayList<LatLng> pointList = new ArrayList<>();
 
-    Marker perth;
+    Marker pokeBusMarker;
     Timer timer;
     TimerTask timerTask;
     LatLng currentLocation;
@@ -80,6 +66,17 @@ public class MapsActivity extends FragmentActivity {
         mContext = getApplicationContext();
 
         API_KEY_MTA = getString(R.string.API_KEY_MTA);
+
+
+
+        Location location = getLocation();
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+
+        currentLocation = new LatLng(latitude, longitude);
+
+
 
         Button b = (Button) findViewById(R.id.options_button);
         b.setOnClickListener(new View.OnClickListener() {
@@ -103,17 +100,18 @@ public class MapsActivity extends FragmentActivity {
                         Log.i("MyMapsActivity", "onMenuItemClick item.getTitle() : " + item.getTitle());
                         if(item.getTitle().toString().equals("Add a BusPoke!")) {
 
-                            LatLng PERTH = new LatLng(40.6455520, -73.9829081);
-                            perth = mMap.addMarker(new MarkerOptions()
+
+                            pokeBusMarker = mMap.addMarker(new MarkerOptions()
                                     .title("PokeBus")
-                                    .position(PERTH)
+                                    .position(currentLocation)
                                     .draggable(true));
                             Log.i("MyMapsActivity", "onMenuItemClick marker created");
 
                             Toast.makeText(getBaseContext(), "Put the circle over desired stop", Toast.LENGTH_SHORT).show();
                         }else if(item.getTitle().toString().equals("What is saved PokeBus")){
 
-                            prefs = getPreferences(CONTEXT_IGNORE_SECURITY);
+                            prefs = getSharedPreferences(
+                                    "pokeBusCodePrefs", Context.MODE_PRIVATE);
                             String pokeBusCode = prefs.getString("pokeBusCode", null);
 
                             if (pokeBusCode != null){
@@ -178,12 +176,6 @@ public class MapsActivity extends FragmentActivity {
         Log.i("MyMapsActivity","onResume()");
 
 
-        Location location = getLocation();
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-
-
-        currentLocation = new LatLng(latitude, longitude);
 
 
         setUpMapIfNeeded();
@@ -256,19 +248,24 @@ public class MapsActivity extends FragmentActivity {
 
                     @Override
                     public void onMarkerDragEnd(Marker marker) {
+                        //only one dragable marker, to set a  pokebus
 
                         Log.i("MyMapsActivity", "onMarkerDragEnd ");
                         if (marker.getTitle().equals("PokeBus")) {
 
                             for(int i = 0 ; i < AddMarkers.marker.length; i ++ ){
                                 //static double testLat = 40.6455520;
-                                int tempLat =  (int)(marker.getPosition().latitude * 10000);
-                                int tempLng = (int)(marker.getPosition().longitude * 10000);
-                                Log.i("MyMapsActivity", "onMarkerDragEnd ");
+                                int movableMarkerLat =  (int)(marker.getPosition().latitude * 10000);
+                                int movableMarkerLng = (int)(marker.getPosition().longitude * 10000);
+                                Log.i("MyMapsActivity", "tempLat " + movableMarkerLat);
+                                Log.i("MyMapsActivity", "tempLng " + movableMarkerLng);
 
+                                Log.i("MyMapsActivity", "(int)(busInfo.get(i).getBusStopLat() * 10000 " + (int)(busInfo.get(i).getBusStopLat() * 10000));
+                                Log.i("MyMapsActivity", "(int)(busInfo.get(i).getBusStopLng()  * 10000) " + (int)(busInfo.get(i).getBusStopLng()  * 10000));
 
-                                if(tempLat == (int)(busInfo.get(i).getBusStopLat() * 10000)
-                                        && tempLng == (int)(busInfo.get(i).getBusStopLng()  * 10000)){
+                                Log.i("MyMapsActivity", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
+                                if(movableMarkerLat == (int)(busInfo.get(i).getBusStopLat() * 10000)
+                                        && movableMarkerLng == (int)(busInfo.get(i).getBusStopLng()  * 10000)){
 
                                     Toast.makeText(getBaseContext(), "You have activated a PokeBus on Bus " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
 
@@ -278,6 +275,17 @@ public class MapsActivity extends FragmentActivity {
 
                                 }
 
+
+                                /*if(tempLat == (int)(busInfo.get(i).getBusStopLat() * 10000)
+                                        && tempLng == (int)(busInfo.get(i).getBusStopLng()  * 10000)){
+
+                                    Toast.makeText(getBaseContext(), "You have activated a PokeBus on Bus " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
+
+                                    marker.setVisible(false);
+                                    setPokeBus(busInfo.get(i).getBusCode());
+                                    Log.i("MyMapsActivity", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
+
+                                }*/
 
 
                             }
@@ -326,20 +334,15 @@ public class MapsActivity extends FragmentActivity {
 
     private void setPokeBus(String busCode) {
         Log.i("MyMapsActivity","setPokeBus()");
-
+        Log.i("MyMapsActivity","busCode()" + busCode);
 
         prefs = getSharedPreferences("pokeBusCodePrefs",
                 Context.CONTEXT_IGNORE_SECURITY);
-        SharedPreferences.Editor editor = prefs.edit();
+        editor = prefs.edit();
         editor.putString("pokeBusCode", busCode);
         editor.apply();
 
 
-
-
-        /*editor = getPreferences(MODE_WORLD_READABLE).edit();
-        editor.putString("pokeBusCode", busCode);
-        editor.apply();*/
 
     }
 

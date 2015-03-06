@@ -98,12 +98,7 @@ public class GetBusDistanceJSON {
             Log.i("MyGetBusDistanceJSON", "inside readAndParseJSON  Exception  " + e.toString());
         }
 
-
-
-
             Log.i("MyAsyncTask", "end11:");
-
-
     }
 
 
@@ -111,12 +106,7 @@ public class GetBusDistanceJSON {
     public void fetchBusDistanceJson(ArrayList<BusInfo> busInfoIn) {
 
         busInfo = busInfoIn;
-
-
-
         new LongOperation().execute("");
-
-
 
     }
 
