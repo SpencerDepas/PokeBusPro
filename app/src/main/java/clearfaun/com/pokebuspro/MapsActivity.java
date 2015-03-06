@@ -255,37 +255,39 @@ public class MapsActivity extends FragmentActivity {
 
                             for(int i = 0 ; i < AddMarkers.marker.length; i ++ ){
                                 //static double testLat = 40.6455520;
-                                int movableMarkerLat =  (int)(marker.getPosition().latitude * 10000);
-                                int movableMarkerLng = (int)(marker.getPosition().longitude * 10000);
-                                Log.i("MyMapsActivity", "tempLat " + movableMarkerLat);
-                                Log.i("MyMapsActivity", "tempLng " + movableMarkerLng);
+                                int movableMarkerLat =  (int)(marker.getPosition().latitude * 1000000);
+                                int movableMarkerLng = (int)(marker.getPosition().longitude * 1000000);
 
-                                Log.i("MyMapsActivity", "(int)(busInfo.get(i).getBusStopLat() * 10000 " + (int)(busInfo.get(i).getBusStopLat() * 10000));
-                                Log.i("MyMapsActivity", "(int)(busInfo.get(i).getBusStopLng()  * 10000) " + (int)(busInfo.get(i).getBusStopLng()  * 10000));
+                                int busStopMarkerLat = (int)(busInfo.get(i).getBusStopLat()* 1000000);
+                                int busStopMarkerLng = (int)(busInfo.get(i).getBusStopLng()  * 1000000);
+                                Log.i("MyMapsActivityMarker", "busInfo.get(i).getBusStopLat()  " + busInfo.get(i).getBusStopLat());
+                                Log.i("MyMapsActivityMarker", "tempLat " + movableMarkerLat);
+                                Log.i("MyMapsActivityMarker", "tempLng " + movableMarkerLng);
 
-                                Log.i("MyMapsActivity", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
-                                if(movableMarkerLat == (int)(busInfo.get(i).getBusStopLat() * 10000)
-                                        && movableMarkerLng == (int)(busInfo.get(i).getBusStopLng()  * 10000)){
+                                Log.i("MyMapsActivityMarker", "busStopMarkerLat " + busStopMarkerLat);
+                                Log.i("MyMapsActivityMarker", "busStopMarkerLng " + busStopMarkerLng);
+
+                                Log.i("MyMapsActivityMarker", " busStopMarkerLat - busStopMarkerLng " + (busStopMarkerLat - busStopMarkerLng));
+
+                                Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
+
+                                double distance = distFrom(marker.getPosition().latitude,marker.getPosition().longitude , busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng() );
+                                Log.i("MyMapsActivityMarker", "distance    " + distance);
+                                Log.i("MyMapsActivityMarker", "distance  (int)  " + (int) distance);
+                                Log.i("MyMapsActivityMarker", "distance  (int) *10 " + (int) (distance *10) );
+
+                                //activate within a radius of 10 meters
+                                if((int)distance < 10){
+
+                                    Log.i("MyMapsActivityMarker", "distance < 6000000. BusCode :" + busInfo.get(i).getBusCode() );
 
                                     Toast.makeText(getBaseContext(), "You have activated a PokeBus on Bus " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
 
                                     marker.setVisible(false);
                                     setPokeBus(busInfo.get(i).getBusCode());
-                                    Log.i("MyMapsActivity", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
+                                    Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
 
                                 }
-
-
-                                /*if(tempLat == (int)(busInfo.get(i).getBusStopLat() * 10000)
-                                        && tempLng == (int)(busInfo.get(i).getBusStopLng()  * 10000)){
-
-                                    Toast.makeText(getBaseContext(), "You have activated a PokeBus on Bus " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
-
-                                    marker.setVisible(false);
-                                    setPokeBus(busInfo.get(i).getBusCode());
-                                    Log.i("MyMapsActivity", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
-
-                                }*/
 
 
                             }
@@ -344,6 +346,19 @@ public class MapsActivity extends FragmentActivity {
 
 
 
+    }
+
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+
+        return dist;
     }
 
     private Location getLocation() {
