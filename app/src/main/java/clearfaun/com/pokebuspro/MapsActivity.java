@@ -284,7 +284,7 @@ public class MapsActivity extends FragmentActivity {
                                     Toast.makeText(getBaseContext(), "You have activated a PokeBus on Bus " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
 
                                     marker.setVisible(false);
-                                    setPokeBus(busInfo.get(i).getBusCode());
+                                    setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());
                                     Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
 
                                 }
@@ -334,7 +334,7 @@ public class MapsActivity extends FragmentActivity {
 
     }
 
-    private void setPokeBus(String busCode) {
+    private void setPokeBus(String busCode, String busName) {
         Log.i("MyMapsActivity","setPokeBus()");
         Log.i("MyMapsActivity","busCode()" + busCode);
 
@@ -342,6 +342,7 @@ public class MapsActivity extends FragmentActivity {
                 Context.CONTEXT_IGNORE_SECURITY);
         editor = prefs.edit();
         editor.putString("pokeBusCode", busCode);
+        editor.putString("pokeBusName", busName);
         editor.apply();
 
 

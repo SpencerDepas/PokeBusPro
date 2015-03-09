@@ -41,13 +41,16 @@ public class Service extends IntentService {
             SharedPreferences pref = con.getSharedPreferences(
                     "pokeBusCodePrefs", Context.MODE_PRIVATE);
 
-            String data = pref.getString("pokeBusCode", "No Value");
+            String pokeBusCode = pref.getString("pokeBusCode", "No Value");
+            String pokeBusName = pref.getString("pokeBusName", "No Value");
             BusInfo businfo = new BusInfo();
-            businfo.setBusCode(data);
+            businfo.setBusCode(pokeBusCode);
+            businfo.setBusName(pokeBusName);
             businfo.setForNoUIToast(true);
             busInfoArrayList.add(0,businfo );
             //new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getBusCode());
-            Log.i("MyService", "in busCode " + data );
+            Log.i("MyService", "in busCode " + pokeBusCode );
+            Log.i("MyService", "in pokeBusName " + pokeBusName );
 
         } catch (Exception e) {
             Log.e("Not data shared", e.toString());
@@ -74,8 +77,9 @@ public class Service extends IntentService {
 
     public static void displayToastDistance(ArrayList<BusInfo> busInfo){
         Log.i("MyService", "displayToastDistance");
-        new ToastMessageTask().execute("The Bus you poked is \n" + busInfoArrayList.get(0).getDistance()[0] + "\n"
-        + busInfoArrayList.get(0).getDistance()[1] + "\n"
+        new ToastMessageTask().execute(busInfoArrayList.get(0).getBusName() +  " en-route:  \n"
+                + busInfoArrayList.get(0).getDistance()[0] + "\n"
+                + busInfoArrayList.get(0).getDistance()[1] + "\n"
                 + busInfoArrayList.get(0).getDistance()[2]);
 
     }

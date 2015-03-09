@@ -24,7 +24,7 @@ public class PokeBusNoUI extends Activity {
     //this is for when you have poked a bus and you want to toast it.
 
 
-    final static public String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28";
+
 
     static Context mContext;
 
