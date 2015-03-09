@@ -35,8 +35,18 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         TextView busCode =(TextView)popup.findViewById(R.id.bus_code);
         TextView distances =(TextView)popup.findViewById(R.id.snippet);
 
-        busName.setText(marker.getTitle());
-        busCode.setText("301649");
+        for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
+
+            //if the marker buscode matches the businfo bus code we know what bus it is
+            if(marker.getTitle().equals(MapsActivity.busInfo.get(i).getBusCode())){
+                busName.setText(MapsActivity.busInfo.get(i).busName);
+                break;
+            }
+
+
+        }
+
+        busCode.setText(marker.getTitle());
         distances.setText(marker.getSnippet());
 
 

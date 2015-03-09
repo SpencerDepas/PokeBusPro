@@ -27,15 +27,6 @@ public class AddMarkers {
         marker = new Marker[busInfo.size()];
 
 
-/*        for(int i = 0; i < busInfo.size() ; i++){
-            Log.i("MyAddMarkers", "i is  " + i);
-            Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[0]);
-            Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[1]);
-            Log.i("MyAddMarkers", "addMarkersToMap()  busInfo.get(i).getDistance()[0]: " + busInfo.get(i).getDistance()[2]);
-
-        }*/
-
-
 
         for (int i = 0; i < busInfo.size() ; i++) {
 
@@ -43,7 +34,7 @@ public class AddMarkers {
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
                     .position(markerLocation[i]));
-            marker[i].setTitle(busInfo.get(i).getBusName());
+            marker[i].setTitle(busInfo.get(i).getBusCode());
             marker[i].setSnippet(busInfo.get(i).getDistance()[0]
                     + "\n" + busInfo.get(i).getDistance()[1]
                     + "\n" + busInfo.get(i).getDistance()[2]
