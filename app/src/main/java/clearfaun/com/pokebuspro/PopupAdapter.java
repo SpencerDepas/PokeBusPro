@@ -31,11 +31,14 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
             popup=inflater.inflate(R.layout.popup, null);
         }
 
-        TextView tv=(TextView)popup.findViewById(R.id.title);
+        TextView busName =(TextView)popup.findViewById(R.id.bus_name);
+        TextView busCode =(TextView)popup.findViewById(R.id.bus_code);
+        TextView distances =(TextView)popup.findViewById(R.id.snippet);
 
-        tv.setText(marker.getTitle());
-        tv=(TextView)popup.findViewById(R.id.snippet);
-        tv.setText(marker.getSnippet());
+        busName.setText(marker.getTitle());
+        busCode.setText("301649");
+        distances.setText(marker.getSnippet());
+
 
         return(popup);
     }
