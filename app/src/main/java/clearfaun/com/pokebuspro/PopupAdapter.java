@@ -1,9 +1,14 @@
 package clearfaun.com.pokebuspro;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
@@ -12,7 +17,7 @@ import com.google.android.gms.maps.model.Marker;
  * Created by spencer on 2/25/2015.
  */
 class PopupAdapter implements GoogleMap.InfoWindowAdapter {
-    private View popup=null;
+    private View popup = null;
     private LayoutInflater inflater=null;
 
     PopupAdapter(LayoutInflater inflater) {
@@ -34,6 +39,8 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         TextView busName =(TextView)popup.findViewById(R.id.bus_name);
         TextView busCode =(TextView)popup.findViewById(R.id.bus_code);
         TextView distances =(TextView)popup.findViewById(R.id.snippet);
+        ImageButton image = (ImageButton)popup.findViewById(R.id.icon);
+
 
         for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
 
@@ -52,4 +59,5 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
         return(popup);
     }
+
 }

@@ -18,7 +18,7 @@
 
         <item android:id="@+id/c_item"
             android:alphabeticShortcut="c"
-            android:title="Chris" />
+            android:title="Set Radius" />
 
         <item android:id="@+id/d_item"
             android:alphabeticShortcut="d"

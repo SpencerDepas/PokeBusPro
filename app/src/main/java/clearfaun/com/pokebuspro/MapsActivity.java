@@ -1,10 +1,13 @@
 package clearfaun.com.pokebuspro;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -25,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.widget.PopupMenu;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -84,7 +88,33 @@ public class MapsActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
 
-                PopupMenu pokeBusMovableMarker = new PopupMenu(getBaseContext(), v);
+
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+
+                PrefsFragment prefsFragment = new PrefsFragment();
+                ft.replace(R.id.map, prefsFragment);
+                ft.commit();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                //old menue
+
+                /*PopupMenu pokeBusMovableMarker = new PopupMenu(getBaseContext(), v);
 
                 pokeBusMovableMarker.getMenuInflater().inflate(R.menu.my_menu, pokeBusMovableMarker.getMenu());
 
@@ -120,16 +150,17 @@ public class MapsActivity extends FragmentActivity {
 
                             }
 
-                        }else {
+                        }else if(item.getTitle().toString().equals("Set Radius")){
 
-                            Toast.makeText(getBaseContext(), "A PokeBus has not yet been saved", Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(getBaseContext(), "Set Radius Bitch", Toast.LENGTH_SHORT).show();
                         }
                         return true;
                     }
                 });
 
 
-                pokeBusMovableMarker.show();
+                pokeBusMovableMarker.show();*/
             }
         });
 
@@ -232,7 +263,6 @@ public class MapsActivity extends FragmentActivity {
 
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-
 
                 mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
