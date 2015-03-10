@@ -3,6 +3,7 @@ package clearfaun.com.pokebuspro;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
@@ -58,7 +59,9 @@ public class MapsActivity extends FragmentActivity {
     static SharedPreferences prefs;
 
     static public String API_KEY_MTA ;
-
+    PrefsFragment prefsFragment;
+    FragmentManager fm;
+    FragmentTransaction ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +92,12 @@ public class MapsActivity extends FragmentActivity {
             public void onClick(View v) {
 
 
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
+                fm = getFragmentManager();
+                ft = fm.beginTransaction();
 
-                PrefsFragment prefsFragment = new PrefsFragment();
-                ft.replace(R.id.map, prefsFragment);
+                prefsFragment = new PrefsFragment();
+                ft.add(R.id.map, prefsFragment);
+                ft.addToBackStack("TAG");
                 ft.commit();
 
 
@@ -169,7 +173,17 @@ public class MapsActivity extends FragmentActivity {
     }
 
 
+    @Override
+    public void onBackPressed(){
+        Log.i("MyMapsActivity", "onBackPressed");
 
+
+        ft = fm.beginTransaction();
+        ft.remove(prefsFragment);
+        ft.commit();
+
+
+    }
 
 
     public static void getBusStops(ArrayList<BusInfo> busInfo){
