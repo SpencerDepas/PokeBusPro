@@ -3,19 +3,56 @@
     <string name="title_activity_maps">PokeBus</string>
     <string name="NoUI">Poke á Bus</string>
 
-    <string name="inline_preferences">inline_preferences</string>
+    <!--
+      Map preferences
+      -->
+
+    <string name="map_preferences">Map Settings</string>
+
+    <string name="radius_preference">Set Radius</string>
+    <string name="set_radius">Set the range of PokeBus</string>
+    <string name="auto_refresh_time">Auto Refresh Time</string>
+    <string name="set_bus_update_frequency">Set How frequently to check for buses</string>
+
+    <!--
+         PokeBus preferences
+         -->
+
+    <string name="poke_bus_settings">Poke Bus Settings</string>
+    <string name="current_poke_bus">Current Poke Bus:</string>
+    <string name="get_current_poke_bus">Current PokeBus : 301649</string>
+    <string name="set_pokebus">Set PokeBus</string>
+
+    <!--
+         Other
+         -->
+
+    <string name="other">Other</string>
+    <string name="like_us_on_facebook">Like us on Facebook</string>
+    <string name="about">About</string>
+
+    <!--
+             Alarm
+             -->
+    <string name="alarm">Alarm</string>
+    <string name="set_alarm">Set Alarm</string>
+    <string name="alarm_info">Alarm will activate when bus is at a specific distance</string>
+    <string name="distance_for_alarm">Set distance for alarm</string>
+
+
+    <string name="dialog_title_list_preference">dialog_title_list_preference</string>
+    <string name="title_list_preference">title_list_preference</string>
     <string name="title_checkbox_preference">title_checkbox_preference</string>
     <string name="summary_checkbox_preference">summary_checkbox_preference</string>
-    <string name="dialog_based_preferences">dialog_based_preferences</string>
+
 
     <string name="title_edittext_preference">title_edittext_preference</string>
     <string name="summary_edittext_preference">summary_edittext_preference</string>
-    <string name="title_list_preference">title_list_preference</string>
     <string name="entries_list_preference">entries_list_preference</string>
 
     <string name="entryvalues_list_preference">entryvalues_list_preference</string>
     <string name="launch_preferences">launch_preferences</string>
-    <string name="dialog_title_list_preference">dialog_title_list_preference</string>
+
     <string name="title_screen_preference">title_screen_preference</string>
 
     <string name="summary_screen_preference">summary_screen_preference</string>
@@ -30,6 +67,11 @@
 
     <string name="title_child_preference">title_child_preference</string>
     <string name="summary_child_preference">summary_child_preference</string>
+
+
+    <!--
+     This is for the preference menu
+     -->
 
 
 </resources>

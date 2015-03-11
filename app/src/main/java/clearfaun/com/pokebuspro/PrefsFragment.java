@@ -39,7 +39,7 @@ public class PrefsFragment extends PreferenceFragment {
 
 
         try {
-            getView().setBackgroundColor(Color.GRAY);
+            getView().setBackgroundColor(Color.WHITE);
         }catch (Exception e){
             Log.i("PrefsFragment", "Eception e " + e);
         }
