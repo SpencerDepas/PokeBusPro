@@ -77,10 +77,28 @@ public class Service extends IntentService {
 
     public static void displayToastDistance(ArrayList<BusInfo> busInfo){
         Log.i("MyService", "displayToastDistance");
-        new ToastMessageTask().execute(busInfoArrayList.get(0).getBusName() +  " en-route:  \n"
-                + busInfoArrayList.get(0).getDistance()[0] + "\n"
-                + busInfoArrayList.get(0).getDistance()[1] + "\n"
-                + busInfoArrayList.get(0).getDistance()[2]);
+
+
+        if(busInfoArrayList.get(0).getDistance()[2].equals("Not available")){
+
+            new ToastMessageTask().execute(busInfoArrayList.get(0).getBusName() +  " en-route:  \n"
+                    + busInfoArrayList.get(0).getDistance()[0]+ "\n"
+                    + busInfoArrayList.get(0).getDistance()[1]);
+            
+        }else if(busInfoArrayList.get(0).getDistance()[1].equals("Not available")){
+
+            new ToastMessageTask().execute(busInfoArrayList.get(0).getBusName() +  " en-route:  \n"
+                    + busInfoArrayList.get(0).getDistance()[0]);
+
+        }else{
+
+            new ToastMessageTask().execute(busInfoArrayList.get(0).getBusName() +  " en-route:  \n"
+                    + busInfoArrayList.get(0).getDistance()[0] + "\n"
+                    + busInfoArrayList.get(0).getDistance()[1] + "\n"
+                    + busInfoArrayList.get(0).getDistance()[2]);
+        }
+
+
 
     }
 
