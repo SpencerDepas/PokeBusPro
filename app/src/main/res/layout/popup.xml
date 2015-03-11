@@ -16,11 +16,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:padding="2dip"
-        android:src="@drawable/testicon"
+        android:src="@drawable/mapgreytwo"
         />
 
     <TextView
-        android:id="@+id/bus_name"
+        android:id="@+id/bus_code"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
@@ -35,7 +35,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/bus_code"
+            android:id="@+id/bus_name"
             android:gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
