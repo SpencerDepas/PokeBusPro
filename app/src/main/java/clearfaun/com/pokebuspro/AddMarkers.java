@@ -35,10 +35,28 @@ public class AddMarkers {
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
                     .position(markerLocation[i]));
             marker[i].setTitle(busInfo.get(i).getBusCode());
-            marker[i].setSnippet(busInfo.get(i).getDistance()[0]
-                    + "\n" + busInfo.get(i).getDistance()[1]
-                    + "\n" + busInfo.get(i).getDistance()[2]
-                    );
+
+            if(busInfo.get(i).getDistance()[1].equals("Not available")){
+
+                marker[i].setSnippet(busInfo.get(i).getDistance()[0]);
+
+            }else if (busInfo.get(i).getDistance()[2].equals("Not available")){
+
+                marker[i].setSnippet(busInfo.get(i).getDistance()[0]
+                        + "\n" + busInfo.get(i).getDistance()[1]);
+
+            }else{
+
+                marker[i].setSnippet(busInfo.get(i).getDistance()[0]
+                        + "\n" + busInfo.get(i).getDistance()[1]
+                        + "\n" + busInfo.get(i).getDistance()[2]);
+            }
+
+
+
+
+
+
 
 
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
