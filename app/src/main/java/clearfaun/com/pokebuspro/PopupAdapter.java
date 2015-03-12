@@ -39,7 +39,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         TextView busName =(TextView)popup.findViewById(R.id.bus_name);
         TextView busCode =(TextView)popup.findViewById(R.id.bus_code);
         TextView distances =(TextView)popup.findViewById(R.id.snippet);
-        ImageButton image = (ImageButton)popup.findViewById(R.id.icon);
+        ImageView image = (ImageView)popup.findViewById(R.id.icon);
 
 
         for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
