@@ -56,6 +56,8 @@ public class BusInfo {
         for(int i = 0 ; i < busDistance.length; i ++) {
             distance[i] = busDistance[i];
         }
+
+
     }
 
     public void busRadiusTaskNumber(int TaskNumber) {
