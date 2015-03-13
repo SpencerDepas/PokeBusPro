@@ -63,6 +63,14 @@
     <PreferenceCategory
         android:title="@string/other">
 
+
+        <PreferenceScreen
+            android:title="@string/bus_map"
+            >
+
+        </PreferenceScreen>
+
+
         <PreferenceScreen
             android:title="@string/like_us_on_facebook"
             >

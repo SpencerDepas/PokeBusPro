@@ -1,6 +1,8 @@
 package clearfaun.com.pokebuspro;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -20,7 +22,7 @@ public class GetBusStopJSON {
    /* static String testLat = "40.6455520";
     static String testLng = "-73.9829084";*/
 
-    int stopRadius = 200;
+    int stopRadius;
 
 
 
@@ -115,6 +117,14 @@ public class GetBusStopJSON {
     String busStopURL;
     public void fetchBusStop(ArrayList<BusInfo> busInfoIn) {
         busInfo = busInfoIn;
+        stopRadius = 200;
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
+        String radius= sharedPrefs.getString(MapsActivity.mContext.getString(R.string.radius_key), "200");
+        stopRadius = Integer.parseInt(radius);
+
+        Log.i("tester", "Test Radius: " + stopRadius);
+
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
