@@ -69,10 +69,13 @@ public class PrefsFragment extends PreferenceFragment {
         super.onDestroyView();
 
         Log.i("PrefsFragment", "onDestroyView" );
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
-        String settings= "Radius is: " + sharedPrefs.getString(getString(R.string.radius_key), "NORADIUS");
+        /*SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
+        String settings= "RefreshTime is: " + sharedPrefs.getString(getString(R.string.refresh_time_key), "NOREFRESHTIME");
 
-        MapsActivity.toaster(settings);
+        MapsActivity.toaster(settings);*/
+
+        MapsActivity.stopTimerTask();
+        MapsActivity.updateBusDistance();
 
     }
 

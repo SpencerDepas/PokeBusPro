@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -50,8 +51,8 @@ public class MapsActivity extends FragmentActivity {
     static ArrayList<LatLng> pointList = new ArrayList<>();
 
     Marker pokeBusMarker;
-    Timer timer;
-    TimerTask timerTask;
+    static Timer timer;
+    static TimerTask timerTask;
     LatLng currentLocation;
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
@@ -75,11 +76,7 @@ public class MapsActivity extends FragmentActivity {
         API_KEY_MTA = getString(R.string.API_KEY_MTA);
 
 
-        prefs = getSharedPreferences("pokeBusCodePrefs",
-                Context.CONTEXT_IGNORE_SECURITY);
-        editor = prefs.edit();
-        editor.putString("radius", "200");
-        editor.apply();
+
 
 
         Location location = getLocation();
@@ -207,6 +204,7 @@ public class MapsActivity extends FragmentActivity {
         super.onPause();
         Log.i("MyMapsActivity","onPause()");
         busInfo.clear();
+        //stoptimertask(view);
         AddMarkers.marker = null;
     }
 
@@ -226,22 +224,33 @@ public class MapsActivity extends FragmentActivity {
         getBusDistance(busInfo);
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-        //updateBusDistance();
+        updateBusDistance();
         Log.i("MyMapsActivity", "after updateBusDistance();");
     }
 
 
 
-    public void updateBusDistance() {
-        //set a new Timer
-        timer = new Timer();
-        //initialize the TimerTask's job
-        initializeTimerTask();
-        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-        timer.schedule(timerTask, 5000, 20000); //
+    public static void updateBusDistance() {
+        Log.i("MyMapsActivity", "updateBusDistance()");
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
+        String timeInMSString= sharedPrefs.getString(MapsActivity.mContext.getString(R.string.refresh_time_key), "20000");
+
+        Log.i("MyMapsActivity", "timeInMSString()" + timeInMSString);
+        int timeInMS = Integer.parseInt(timeInMSString) * 1000;
+        Log.i("MyMapsActivity", "timeInMS()" + timeInMS);
+        if(timeInMS != 0) {
+            //set a new Timer
+            timer = new Timer();
+            //initialize the TimerTask's job
+            initializeTimerTask();
+            //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+
+            timer.schedule(timerTask, 5000, timeInMS);
+        }
     }
 
-    public void stoptimertask(View v) {
+    public static void stopTimerTask() {
+        Log.i("MyMapsActivity", "stopTimerTask()" );
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
@@ -249,7 +258,7 @@ public class MapsActivity extends FragmentActivity {
         }
     }
 
-    public void initializeTimerTask() {
+    public static void initializeTimerTask() {
         timerTask = new TimerTask() {
             public void run() {
                 Log.i("MyMapsActivity","initializeTimerTask    timerTask");

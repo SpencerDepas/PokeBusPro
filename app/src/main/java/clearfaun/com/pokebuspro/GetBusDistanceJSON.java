@@ -20,7 +20,7 @@ public class GetBusDistanceJSON {
     int stopCode;
     int index;
     ArrayList<BusInfo> busInfo;
-    private String API_KEY_MTA ;
+
 
     @SuppressLint("NewApi")
     public void readAndParseJSON(String[] in) {
@@ -182,6 +182,11 @@ public class GetBusDistanceJSON {
 
             Log.i("MyAsyncTask", " AsyncTask  onPostExecute MapsActivity.obtainedAllDistances = true;");
 
+            //this needs to be fixed !!!!!!!!!!!!
+            //!!!!!!!!!
+            //!!!!!!!!!
+
+            ///!!!!
             if(busInfo.get(0).forNoUIToast){
 
                 Service.displayToastDistance(busInfo);

@@ -117,12 +117,12 @@ public class GetBusStopJSON {
     String busStopURL;
     public void fetchBusStop(ArrayList<BusInfo> busInfoIn) {
         busInfo = busInfoIn;
-        stopRadius = 200;
+
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
         String radius= sharedPrefs.getString(MapsActivity.mContext.getString(R.string.radius_key), "200");
         stopRadius = Integer.parseInt(radius);
 
-        Log.i("tester", "Test Radius: " + stopRadius);
+
 
 
         Thread thread = new Thread(new Runnable() {
