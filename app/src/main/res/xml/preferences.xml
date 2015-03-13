@@ -5,18 +5,18 @@
         android:title="@string/map_preferences">
 
         <ListPreference
-            android:key="list_preference"
+            android:key="@string/pref_key1"
             android:title="@string/radius_preference"
             android:entries="@array/radius_entries"
-            android:entryValues="@array/entryvalues_list_preference"
+            android:entryValues="@array/test"
             android:dialogTitle="@string/set_radius" />
 
 
         <ListPreference
-            android:key="list_preference"
+            android:key="@string/pref_key2"
             android:title="@string/auto_refresh_time"
             android:entries="@array/time_entries_for_auto_refresh"
-            android:entryValues="@array/entryvalues_list_preference"
+            android:entryValues="@array/time_entries_list_preference"
             android:dialogTitle="@string/set_bus_update_frequency" />
 
     </PreferenceCategory>
@@ -26,7 +26,7 @@
 
 
         <EditTextPreference
-            android:key="edittext_preference"
+            android:key="@string/pref_key3"
             android:title="@string/set_pokebus"
             android:summary="@string/get_current_poke_bus"
             />
@@ -40,20 +40,22 @@
         android:title="@string/alarm">
 
         <CheckBoxPreference
-            android:key="parent_checkbox_preference"
+            android:key="@string/pref_key4"
             android:title="@string/set_alarm"
             android:summary="@string/alarm_info" />
 
-        <!-- The visual style of a child is defined by this styled theme attribute. -->
+        <!--
 
         <ListPreference
-            android:key="list_preference"
+            android:key="@string/pref_key4"
             android:dependency="parent_checkbox_preference"
             android:layout="?android:attr/preferenceLayoutChild"
             android:title="@string/distance_for_alarm"
             android:entries="@array/distance_for_alarm"
             android:entryValues="@array/entryvalues_list_preference"
             android:dialogTitle="@string/set_radius" />
+
+            The visual style of a child is defined by this styled theme attribute. -->
 
     </PreferenceCategory>
 

@@ -9,6 +9,12 @@
         <item>"400 feet"</item>
     </string-array>
 
+
+
+
+
+
+
     <string-array name="time_entries_for_auto_refresh">
         <item>"20 Seconds"</item>
         <item>"30 Seconds"</item>
@@ -17,19 +23,19 @@
     </string-array>
 
 
-    <string-array name="entries_list_preference">
+    <string-array name="time_entries_list_preference">
         <item>"20"</item>
         <item>"30"</item>
         <item>"60"</item>
         <item>"Off"</item>
     </string-array>
 
-    <integer-array name="entryvalues_list_preference">
-        <item >0</item>
-        <item >1</item>
-        <item >2</item>
-    </integer-array>
-
+    <string-array name="test">
+        <item>"20"</item>
+        <item>"30"</item>
+        <item>"60"</item>
+        <item>"Off"</item>
+    </string-array>
 
 
     <string-array name="distance_for_alarm">

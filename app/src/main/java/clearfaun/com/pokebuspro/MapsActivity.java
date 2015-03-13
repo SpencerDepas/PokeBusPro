@@ -75,6 +75,12 @@ public class MapsActivity extends FragmentActivity {
         API_KEY_MTA = getString(R.string.API_KEY_MTA);
 
 
+        prefs = getSharedPreferences("pokeBusCodePrefs",
+                Context.CONTEXT_IGNORE_SECURITY);
+        editor = prefs.edit();
+        editor.putString("radius", "200");
+        editor.apply();
+
 
         Location location = getLocation();
         latitude = location.getLatitude();
@@ -99,17 +105,6 @@ public class MapsActivity extends FragmentActivity {
                 ft.add(R.id.map, prefsFragment);
                 ft.addToBackStack("TAG");
                 ft.commit();
-
-
-
-
-
-
-
-
-
-
-
 
 
 

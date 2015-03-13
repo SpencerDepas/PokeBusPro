@@ -7,6 +7,16 @@
       Map preferences
       -->
 
+    <string name="pref_key1">KEY1</string>
+    <string name="pref_key2">KEY2</string>
+    <string name="pref_key3">KEY3</string>
+    <string name="pref_key4">KEY4</string>
+    <string name="pref_key5">KEY5</string>
+    <string name="pref_key6">KEY6</string>
+
+
+
+
     <string name="map_preferences">Map Settings</string>
 
     <string name="radius_preference">Set Radius</string>
