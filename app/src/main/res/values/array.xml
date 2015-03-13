@@ -9,13 +9,15 @@
         <item>"400 feet"</item>
     </string-array>
 
+    <string-array name="radius_entries_values">
+        <item>"200"</item>
+        <item>"300"</item>
+        <item>"400"</item>
+    </string-array>
 
 
 
-
-
-
-    <string-array name="time_entries_for_auto_refresh">
+    <string-array name="auto_refresh_entries">
         <item>"20 Seconds"</item>
         <item>"30 Seconds"</item>
         <item>"60 Seconds"</item>
@@ -23,26 +25,27 @@
     </string-array>
 
 
-    <string-array name="time_entries_list_preference">
+    <string-array name="auto_refresh_entries_values">
         <item>"20"</item>
         <item>"30"</item>
         <item>"60"</item>
-        <item>"Off"</item>
-    </string-array>
-
-    <string-array name="test">
-        <item>"20"</item>
-        <item>"30"</item>
-        <item>"60"</item>
-        <item>"Off"</item>
+        <item>"0"</item>
     </string-array>
 
 
     <string-array name="distance_for_alarm">
         <item>"1 mile"</item>
-        <item>"2 miles"</item>
-        <item>"3 miles"</item>
+        <item>"2 mile"</item>
+        <item>"3 mile"</item>
     </string-array>
+
+    <string-array name="distance_for_alarm_entries_values">
+        <item>"1"</item>
+        <item>"2"</item>
+        <item>"3"</item>
+    </string-array>
+
+
 
 
 </resources>

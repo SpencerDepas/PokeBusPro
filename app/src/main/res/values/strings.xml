@@ -7,11 +7,9 @@
       Map preferences
       -->
 
-    <string name="pref_key1">KEY1</string>
-    <string name="pref_key2">KEY2</string>
-    <string name="pref_key3">KEY3</string>
-    <string name="pref_key4">KEY4</string>
-    <string name="pref_key5">KEY5</string>
+    <string name="radius_key">KEY1</string>
+    <string name="refresh_time_key">KEY2</string>
+    <string name="pokebus_key">KEY3</string>
     <string name="pref_key6">KEY6</string>
 
 
@@ -28,10 +26,12 @@
          PokeBus preferences
          -->
 
-    <string name="poke_bus_settings">Poke Bus Settings</string>
+    <string name="poke_bus_settings">Create a PokeBus</string>
     <string name="current_poke_bus">Current Poke Bus:</string>
+    <string name="place_pokebus_marker">Make a PokeBus with a marker</string>
     <string name="get_current_poke_bus">Current PokeBus : 301649</string>
-    <string name="set_pokebus">Set PokeBus</string>
+    <string name="pokebus_placement_info">Place marker over desired stop</string>
+    <string name="set_pokebus">Enter 5 digit busCode to set a PokeBus</string>
 
     <!--
          Other
