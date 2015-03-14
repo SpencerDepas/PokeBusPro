@@ -2,6 +2,8 @@ package clearfaun.com.pokebuspro;
 
 
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -52,6 +54,11 @@ public class PrefsFragment extends PreferenceFragment {
         if (preference.getKey().equals("KEY41")) {
             Log.i("PrefsFragment", "preference == markerUI");
             MapsActivity.addPokeBusMarker();
+
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.remove(this);
+            ft.commit();
         }
 
 
