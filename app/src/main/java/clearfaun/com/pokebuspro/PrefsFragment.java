@@ -9,6 +9,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ public class PrefsFragment extends PreferenceFragment {
 
     SharedPreferences.Editor editor;
     SharedPreferences prefs;
+    private ListPreference markerUI;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,17 +34,30 @@ public class PrefsFragment extends PreferenceFragment {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
+        PreferenceScreen prefSet = getPreferenceScreen();
 
-
-
-
-
-
-
-
+        markerUI = (ListPreference) prefSet.findPreference("pokebus_key_marker");
 
 
     }
+
+
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        Log.i("PrefsFragment", "onPreferenceTreeClick");
+
+
+        Log.i("PrefsFragment", "onPreferenceTreeClick preference " + preference.getKey());
+
+        if (preference.getKey().equals("KEY41")) {
+            Log.i("PrefsFragment", "preference == markerUI");
+            MapsActivity.addPokeBusMarker();
+        }
+
+
+        return true;
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -69,10 +84,10 @@ public class PrefsFragment extends PreferenceFragment {
         super.onDestroyView();
 
         Log.i("PrefsFragment", "onDestroyView" );
-        /*SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
         String settings= "RefreshTime is: " + sharedPrefs.getString(getString(R.string.refresh_time_key), "NOREFRESHTIME");
 
-        MapsActivity.toaster(settings);*/
+        //MapsActivity.toaster(settings);
 
         MapsActivity.stopTimerTask();
         MapsActivity.updateBusDistance();

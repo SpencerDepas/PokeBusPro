@@ -10,6 +10,7 @@
     <string name="radius_key">KEY1</string>
     <string name="refresh_time_key">KEY2</string>
     <string name="pokebus_key">KEY3</string>
+    <string name="pokebus_key_marker">KEY41</string>
     <string name="pref_key6">KEY6</string>
 
 

@@ -32,6 +32,7 @@
             />
 
         <PreferenceScreen
+            android:key="@string/pokebus_key_marker"
             android:title="@string/place_pokebus_marker"
             android:summary="@string/pokebus_placement_info"
             >

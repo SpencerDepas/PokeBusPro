@@ -50,10 +50,10 @@ public class MapsActivity extends FragmentActivity {
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
     static ArrayList<LatLng> pointList = new ArrayList<>();
 
-    Marker pokeBusMarker;
+    static Marker pokeBusMarker;
     static Timer timer;
     static TimerTask timerTask;
-    LatLng currentLocation;
+    static LatLng currentLocation;
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
     SharedPreferences.Editor editor;
@@ -104,7 +104,7 @@ public class MapsActivity extends FragmentActivity {
                 ft.commit();
 
 
-
+                PopupMenu pokeBusMovableMarker = new PopupMenu(getBaseContext(), v);
 
 
 
@@ -163,6 +163,15 @@ public class MapsActivity extends FragmentActivity {
 
 
     }
+
+    public static void addPokeBusMarker(){
+        pokeBusMarker = mMap.addMarker(new MarkerOptions()
+                .title("PokeBus")
+                .position(currentLocation)
+                .draggable(true));
+        Log.i("MyMapsActivity", "onMenuItemClick marker created");
+    }
+
 
 
     @Override
