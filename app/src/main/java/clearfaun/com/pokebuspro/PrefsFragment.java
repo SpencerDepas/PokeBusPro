@@ -4,17 +4,23 @@ package clearfaun.com.pokebuspro;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
 import android.util.Log;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 /**
@@ -22,12 +28,7 @@ import android.util.Log;
  */
 public class PrefsFragment extends PreferenceFragment {
 
-    private ListPreference mListPreference;
 
-
-    SharedPreferences.Editor editor;
-    SharedPreferences prefs;
-    private ListPreference markerUI;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,12 +37,17 @@ public class PrefsFragment extends PreferenceFragment {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
-        PreferenceScreen prefSet = getPreferenceScreen();
+        Log.i("PrefsFragment", "getPokeBus() : " +  MapsActivity.getPokeBus());
 
-        markerUI = (ListPreference) prefSet.findPreference("pokebus_key_marker");
+        PreferenceScreen prefSum =
+                (PreferenceScreen) findPreference("KEY41");
+        prefSum.setSummary("Current PokeBus: " + MapsActivity.getPokeBus());
+
+
 
 
     }
+
 
 
     @Override
@@ -72,6 +78,10 @@ public class PrefsFragment extends PreferenceFragment {
         Log.i("PrefsFragment", "onActivityCreated");
 
 
+
+
+
+
         try {
             getView().setBackgroundColor(Color.WHITE);
         }catch (Exception e){
@@ -100,7 +110,6 @@ public class PrefsFragment extends PreferenceFragment {
         MapsActivity.updateBusDistance();
 
     }
-
 
 
 }

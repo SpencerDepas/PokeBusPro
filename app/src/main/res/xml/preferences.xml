@@ -25,40 +25,16 @@
         android:title="@string/poke_bus_settings">
 
 
-        <EditTextPreference
-            android:key="@string/pokebus_key"
-            android:title="@string/set_pokebus"
-            android:summary="@string/get_current_poke_bus"
-            />
-
         <PreferenceScreen
             android:key="@string/pokebus_key_marker"
             android:title="@string/place_pokebus_marker"
-            android:summary="@string/pokebus_placement_info"
+            android:summary="@string/get_current_poke_bus"
             >
-
         </PreferenceScreen>
 
 
     </PreferenceCategory>
 
-
-    <PreferenceCategory
-        android:title="@string/alarm">
-
-
-
-
-        <ListPreference
-            android:key="@string/pref_key6"
-            android:title="@string/set_alarm"
-            android:entries="@array/distance_for_alarm"
-            android:entryValues="@array/distance_for_alarm_entries_values"
-            android:dialogTitle="@string/set_radius" />
-
-
-
-    </PreferenceCategory>
 
 
     <PreferenceCategory
