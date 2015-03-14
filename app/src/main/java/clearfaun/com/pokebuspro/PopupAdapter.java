@@ -36,26 +36,49 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
             popup=inflater.inflate(R.layout.popup, null);
         }
 
+        Log.i("PopupAdapter", "addMarkersToMap() " );
+
+
         TextView busName =(TextView)popup.findViewById(R.id.bus_name);
         TextView busCode =(TextView)popup.findViewById(R.id.bus_code);
         TextView distances =(TextView)popup.findViewById(R.id.snippet);
         ImageView image = (ImageView)popup.findViewById(R.id.icon);
 
 
-        for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
-
+       /* for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
+            Log.i("PopupAdapter", "getInfoWindow MapsActivity.busInfo.get(i).getBusCode() " + MapsActivity.busInfo.get(i).getBusCode());
             //if the marker buscode matches the businfo bus code we know what bus it is
             if(marker.getTitle().equals(MapsActivity.busInfo.get(i).getBusCode())){
                 busName.setText(MapsActivity.busInfo.get(i).busName);
+                Log.i("PopupAdapter", "marker.getTitle() " + marker.getTitle());
+                Log.i("PopupAdapter", "marker.getSnippet()" + marker.getSnippet());
+                busCode.setText(MapsActivity.busInfo.get(i).getBusCode());
+                distances.setText(marker.getSnippet());
+                break;
+            }
+
+
+        }*/
+
+        for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
+            Log.i("PopupAdapter", "getInfoWindow MapsActivity.busInfo.get(i).getBusCode() " + MapsActivity.busInfo.get(i).getBusCode());
+            //if the marker buscode matches the businfo bus code we know what bus it is
+            Log.i("PopupAdapter", "are they equl");
+            Log.i("PopupAdapter", "marker.getTitle() " + marker.getTitle());
+            Log.i("PopupAdapter", "MapsActivity.busInfo.get(i).getBusCode() " + MapsActivity.busInfo.get(i).getBusCode());
+            if(marker.getTitle().equals(MapsActivity.busInfo.get(i).getBusCode())){
+                Log.i("PopupAdapter", "=========== " );
+                busName.setText(MapsActivity.busInfo.get(i).busName);
+                Log.i("PopupAdapter", "marker.getTitle() " + marker.getTitle());
+                Log.i("PopupAdapter", "marker.getSnippet()" + marker.getSnippet());
+                busCode.setText( marker.getTitle());
+
+                distances.setText(marker.getSnippet());
                 break;
             }
 
 
         }
-
-        busCode.setText(marker.getTitle());
-        distances.setText(marker.getSnippet());
-
 
         return(popup);
     }

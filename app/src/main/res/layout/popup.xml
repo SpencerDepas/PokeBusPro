@@ -12,7 +12,7 @@
             android:id="@+id/bus_code"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="11sp"
             android:gravity="center"
             android:textStyle="bold"/>
 

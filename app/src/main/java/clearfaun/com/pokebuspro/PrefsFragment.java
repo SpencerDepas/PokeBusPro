@@ -12,7 +12,7 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.widget.TextView;
+
 
 
 /**

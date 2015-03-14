@@ -1,10 +1,7 @@
 package clearfaun.com.pokebuspro;
 
-import android.app.Activity;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.TextView;
 
+import android.util.Log;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -35,7 +32,14 @@ public class AddMarkers {
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
                     .position(markerLocation[i]));
             marker[i].setTitle(busInfo.get(i).getBusCode());
+            Log.i("AddMarkers", "addMarkersToMap() " + busInfo.get(i).getBusCode() + " i is " + i);
 
+
+
+
+
+
+            //distance
             if(busInfo.get(i).getDistance()[1].equals("Not available")){
 
                 marker[i].setSnippet(busInfo.get(i).getDistance()[0]);
