@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
@@ -96,7 +97,7 @@ public class MapsActivity extends FragmentActivity {
 
 
 
-        Button b = (Button) findViewById(R.id.options_button);
+        ImageButton b = (ImageButton) findViewById(R.id.options_button);
         b.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -243,7 +244,7 @@ public class MapsActivity extends FragmentActivity {
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             mMap.getUiSettings().setMapToolbarEnabled(false);
-
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
 
@@ -325,7 +326,7 @@ public class MapsActivity extends FragmentActivity {
                         .build();                   // Creates a CameraPosition from the builder
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
 
             }
         }else{
@@ -342,7 +343,7 @@ public class MapsActivity extends FragmentActivity {
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
         }
 
     }
