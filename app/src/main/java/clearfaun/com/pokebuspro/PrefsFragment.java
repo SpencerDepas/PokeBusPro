@@ -4,7 +4,9 @@ package clearfaun.com.pokebuspro;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -65,6 +67,11 @@ public class PrefsFragment extends PreferenceFragment {
             FragmentTransaction ft = fm.beginTransaction();
             ft.remove(this);
             ft.commit();
+        }else if(preference.getKey().equals("KEY32")){
+            Log.i("PrefsFragment", "preference == aboutscreen");
+            Intent intent = new Intent(MapsActivity.mContext , AboutScreen.class);
+            startActivity(intent);
+
         }
 
 

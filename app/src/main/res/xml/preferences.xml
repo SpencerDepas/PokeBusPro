@@ -58,6 +58,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
+            android:key="@string/about_page_key"
             android:title="@string/about"
             >
 

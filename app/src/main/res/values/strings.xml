@@ -3,6 +3,12 @@
     <string name="title_activity_maps">PokeBus</string>
     <string name="NoUI">Poke á Bus</string>
 
+    <string name="about_page_info">This app was made Clear Faun. It is an opon source free app.
+                                    It is licensed by the MTA.</string>
+
+
+
+
     <!--
       Map preferences
       -->
@@ -11,6 +17,7 @@
     <string name="refresh_time_key">KEY2</string>
     <string name="pokebus_key">KEY3</string>
     <string name="pokebus_key_marker">KEY41</string>
+    <string name="about_page_key">KEY32</string>
     <string name="pref_key6">KEY6</string>
 
 
