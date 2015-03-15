@@ -60,7 +60,7 @@ public class PokeBusNoUI extends Activity {
 
             Intent service = new Intent(this, Service.class);
             startService(service);
-           
+
         }
 
         finish();

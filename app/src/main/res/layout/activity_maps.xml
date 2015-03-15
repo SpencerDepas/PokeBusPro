@@ -3,21 +3,34 @@
     android:layout_height="match_parent" android:id="@+id/map" tools:context=".MapsActivity"
     android:name="com.google.android.gms.maps.SupportMapFragment" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="right"
         android:orientation="vertical" >
 
+        <Button android:id="@+id/dummy"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:visibility="invisible"
+            android:src="@android:drawable/ic_menu_search"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="7dp"
+
+            />
+
+
         <Button android:id="@+id/options_button"
+            android:layout_below="@id/dummy"
             android:layout_width="@dimen/button_size"
             android:layout_height="@dimen/button_size"
             android:src="@android:drawable/ic_menu_search"
             android:layout_marginTop="7dp"
             android:layout_marginRight="7dp"
+
             />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 
