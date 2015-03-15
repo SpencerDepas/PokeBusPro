@@ -293,7 +293,7 @@ public class MapsActivity extends FragmentActivity {
 
                                     Log.i("MyMapsActivityMarker", "distance < 6000000. BusCode :" + busInfo.get(i).getBusCode() );
 
-                                    Toast.makeText(getBaseContext(), "You have activated a PokeBus on Bus " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getBaseContext(), "PokeBus set to: " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
 
                                     marker.setVisible(false);
                                     setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());

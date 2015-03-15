@@ -31,15 +31,19 @@ public class Service extends IntentService {
          Log.i("MyService", "Service onHandleIntent ");
 
         API_KEY_MTA = getString(R.string.API_KEY_MTA);
+        SharedPreferences pref;
+
+
 
 
         try {
 
-            Log.i("MyService", "in try " );
+            Log.i("MyService", "in try ");
 
             Context con = createPackageContext("clearfaun.com.pokebuspro", 0);
-            SharedPreferences pref = con.getSharedPreferences(
+            pref = con.getSharedPreferences(
                     "pokeBusCodePrefs", Context.MODE_PRIVATE);
+
 
             String pokeBusCode = pref.getString("pokeBusCode", "No Value");
             String pokeBusName = pref.getString("pokeBusName", "No Value");
@@ -47,18 +51,19 @@ public class Service extends IntentService {
             businfo.setBusCode(pokeBusCode);
             businfo.setBusName(pokeBusName);
             businfo.setForNoUIToast(true);
-            busInfoArrayList.add(0,businfo );
+            busInfoArrayList.add(0, businfo);
             //new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getBusCode());
-            Log.i("MyService", "in busCode " + pokeBusCode );
-            Log.i("MyService", "in pokeBusName " + pokeBusName );
+            Log.i("MyService", "in busCode " + pokeBusCode);
+            Log.i("MyService", "in pokeBusName " + pokeBusName);
+
 
         } catch (Exception e) {
             Log.e("Not data shared", e.toString());
-            Log.i("MyService", "in catch " );
+            Log.i("MyService", "in catch ");
         }
 
-
         getBusDistance(busInfoArrayList);
+
 
 
 

@@ -46,10 +46,24 @@ public class PokeBusNoUI extends Activity {
 
         //makes invisable screen go
 
-        Intent service = new Intent(this, Service.class);
-        startService(service);
-        finish();
 
+        SharedPreferences sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+
+        long timeStamp = System.currentTimeMillis();
+        long limitPresses = sharedpreferences.getLong("limit_presses", 0);
+        //only press ever 3 seconds
+        if (limitPresses == 0 || limitPresses + 3000 <= timeStamp) {
+            Log.i("MyService", "limited presses");
+            editor.putLong("limit_presses", timeStamp);
+            editor.apply();
+
+            Intent service = new Intent(this, Service.class);
+            startService(service);
+           
+        }
+
+        finish();
     }
 
 
