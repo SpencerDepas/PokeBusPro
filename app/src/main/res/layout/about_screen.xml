@@ -21,4 +21,16 @@
         android:id="@+id/textView" />
 
 
+
+    <ImageView
+        android:layout_below="@+id/textView"
+        android:paddingTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mtalicneced"
+        android:id="@+id/imageViewMta" />
+
+
+
 </RelativeLayout>

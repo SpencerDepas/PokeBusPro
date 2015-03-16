@@ -79,6 +79,12 @@ public class PrefsFragment extends PreferenceFragment {
             MapsActivity.stopTimerTask();
             MapsActivity.updateBusDistance();
 
+        }else if(preference.getKey().equals("KEY4888")){
+            //about screen
+            Log.i("PrefsFragment", "preference == aboutscreen");
+            Intent intent = new Intent(MapsActivity.mContext , BusMap.class);
+            startActivity(intent);
+
         }
 
 

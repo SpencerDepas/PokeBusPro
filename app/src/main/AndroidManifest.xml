@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity android:label="@string/app_name" android:name="AboutScreen"/>
-
+        <activity android:label="@string/app_name" android:name="BusMap"/>
 
         <activity
             android:theme="@android:style/Theme.NoDisplay"

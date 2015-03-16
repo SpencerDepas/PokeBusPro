@@ -43,6 +43,7 @@
 
         <PreferenceScreen
             android:title="@string/bus_map"
+            android:key="@string/bus_map_key"
             >
 
         </PreferenceScreen>
