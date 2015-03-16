@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import android.widget.PopupMenu;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Timer;
@@ -69,6 +71,7 @@ public class MapsActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_maps);
 
         Log.i("MyMapsActivity", "onCreate");
@@ -76,7 +79,6 @@ public class MapsActivity extends FragmentActivity {
         mContext = getApplicationContext();
 
         API_KEY_MTA = getString(R.string.API_KEY_MTA);
-
 
 
 

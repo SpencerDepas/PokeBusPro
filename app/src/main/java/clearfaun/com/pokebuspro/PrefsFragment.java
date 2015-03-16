@@ -68,9 +68,16 @@ public class PrefsFragment extends PreferenceFragment {
             ft.remove(this);
             ft.commit();
         }else if(preference.getKey().equals("KEY32")){
+            //about screen
             Log.i("PrefsFragment", "preference == aboutscreen");
             Intent intent = new Intent(MapsActivity.mContext , AboutScreen.class);
             startActivity(intent);
+
+        }else if(preference.getKey().equals("KEY2")){
+            //make auto refresh kick in
+
+            MapsActivity.stopTimerTask();
+            MapsActivity.updateBusDistance();
 
         }
 
