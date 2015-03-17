@@ -80,10 +80,15 @@ public class PrefsFragment extends PreferenceFragment {
             MapsActivity.updateBusDistance();
 
         }else if(preference.getKey().equals("KEY4888")){
-            //about screen
+            //bus map
             Log.i("PrefsFragment", "preference == aboutscreen");
-            Intent intent = new Intent(MapsActivity.mContext , BusMap.class);
+            Intent intent = new Intent(MapsActivity.mContext , DeepZoomSample.class);
             startActivity(intent);
+
+        }else if(preference.getKey().equals("KEY1")){
+            //set radius
+            Log.i("PrefsFragment", "preference == aboutscreen");
+
 
         }
 
