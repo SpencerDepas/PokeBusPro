@@ -82,7 +82,7 @@ public class PrefsFragment extends PreferenceFragment {
         }else if(preference.getKey().equals("KEY4888")){
             //bus map
             Log.i("PrefsFragment", "preference == aboutscreen");
-            Intent intent = new Intent(MapsActivity.mContext , DeepZoomSample.class);
+            Intent intent = new Intent(MapsActivity.mContext , BusMap.class);
             startActivity(intent);
 
         }else if(preference.getKey().equals("KEY1")){
