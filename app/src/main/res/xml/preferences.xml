@@ -60,10 +60,9 @@
 
         <PreferenceScreen
             android:title="@string/like_us_on_facebook"
+            android:key="@string/facebook_key"
             >
 
-            <intent android:action="android.intent.action.VIEW"
-                android:data="https://www.facebook.com/ClearFaun?ref=bookmarks" />
 
         </PreferenceScreen>
 

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -131,8 +132,11 @@ public class PrefsFragment extends PreferenceFragment {
             //set radius
 
 
-        }else if(preference.getKey().equals("KEY99")){
-            //null
+        }else if(preference.getKey().equals("KEY001")){
+            String url = "https://www.facebook.com/ClearFaun?ref=bookmarks";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
 
 
         }

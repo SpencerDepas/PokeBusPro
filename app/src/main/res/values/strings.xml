@@ -20,7 +20,7 @@
     <string name="about_page_key">KEY32</string>
     <string name="pref_key6">KEY6</string>
     <string name="bus_map_key">KEY4888</string>
-
+    <string name="facebook_key">KEY001</string>
 
 
     <string name="map_preferences">Map Settings</string>
