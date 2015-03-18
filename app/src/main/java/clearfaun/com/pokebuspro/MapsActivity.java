@@ -124,11 +124,14 @@ public class MapsActivity extends FragmentActivity {
     }
 
     public static void addPokeBusMarker(){
-        pokeBusMarker = mMap.addMarker(new MarkerOptions()
-                .title("PokeBus")
-                .position(currentLocation)
-                .draggable(true));
-        Log.i("MyMapsActivity", "onMenuItemClick marker created");
+
+        if(pokeBusMarker == null) {
+            pokeBusMarker = mMap.addMarker(new MarkerOptions()
+                    .title("PokeBus")
+                    .position(currentLocation)
+                    .draggable(true));
+            Log.i("MyMapsActivity", "onMenuItemClick marker created");
+        }
     }
 
 
@@ -277,21 +280,10 @@ public class MapsActivity extends FragmentActivity {
 
                                 int busStopMarkerLat = (int)(busInfo.get(i).getBusStopLat()* 1000000);
                                 int busStopMarkerLng = (int)(busInfo.get(i).getBusStopLng()  * 1000000);
-                                Log.i("MyMapsActivityMarker", "busInfo.get(i).getBusStopLat()  " + busInfo.get(i).getBusStopLat());
-                                Log.i("MyMapsActivityMarker", "tempLat " + movableMarkerLat);
-                                Log.i("MyMapsActivityMarker", "tempLng " + movableMarkerLng);
 
-                                Log.i("MyMapsActivityMarker", "busStopMarkerLat " + busStopMarkerLat);
-                                Log.i("MyMapsActivityMarker", "busStopMarkerLng " + busStopMarkerLng);
 
-                                Log.i("MyMapsActivityMarker", " busStopMarkerLat - busStopMarkerLng " + (busStopMarkerLat - busStopMarkerLng));
-
-                                Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
-
-                                double distance = distFrom(marker.getPosition().latitude,marker.getPosition().longitude , busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng() );
-                                Log.i("MyMapsActivityMarker", "distance    " + distance);
-                                Log.i("MyMapsActivityMarker", "distance  (int)  " + (int) distance);
-                                Log.i("MyMapsActivityMarker", "distance  (int) *10 " + (int) (distance *10) );
+                                double distance = distFrom(marker.getPosition().latitude,marker.getPosition()
+                                        .longitude , busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng() );
 
                                 //activate within a radius of 10 meeters
                                 if((int)distance < 10){
@@ -299,8 +291,8 @@ public class MapsActivity extends FragmentActivity {
                                     Log.i("MyMapsActivityMarker", "distance < 6000000. BusCode :" + busInfo.get(i).getBusCode() );
 
                                     Toast.makeText(getBaseContext(), "PokeBus set to: " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
-
                                     marker.setVisible(false);
+                                    pokeBusMarker = null;
                                     setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());
                                     Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
 

@@ -101,6 +101,7 @@ public class PrefsFragment extends PreferenceFragment {
 
         if (preference.getKey().equals("KEY41")) {
             Log.i("PrefsFragment", "preference == markerUI");
+
             MapsActivity.addPokeBusMarker();
 
             FragmentManager fm = getFragmentManager();
