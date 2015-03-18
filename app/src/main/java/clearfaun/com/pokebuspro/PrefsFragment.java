@@ -17,12 +17,14 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 /**
@@ -50,10 +52,27 @@ public class PrefsFragment extends PreferenceFragment {
 
         ListPreference prefSumBusMap =
                 (ListPreference) findPreference("KEY99");
-
         prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue() );
 
 
+
+
+
+
+
+        prefSumBusMap.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                Log.i("PrefsFragment", "onPreferenceChange map");
+                Log.i("PrefsFragment", "onPreferenceChange map newValue" + newValue.toString() );
+                Log.i("PrefsFragment", "onPreferenceChange map preference" + preference.toString() );
+                ListPreference prefSumBusMap =
+                        (ListPreference) findPreference("KEY99");
+
+                prefSumBusMap.setSummary("Current Map is: " + newValue );
+                return true;
+            }
+        });
     }
 
 
@@ -98,11 +117,7 @@ public class PrefsFragment extends PreferenceFragment {
 
         }else if(preference.getKey().equals("KEY99")){
             //TO CHANGE BUS MAP SUMMERY
-            Log.i("PrefsFragment", "preference == aboutscreen");
-            ListPreference prefSumBusMap =
-                    (ListPreference) findPreference("KEY99");
-
-            prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue() );
+            
 
         }
 
