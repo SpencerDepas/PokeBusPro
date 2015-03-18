@@ -12,7 +12,7 @@ public class BusInfo {
     public int radiusTaskNumber = 0;
     boolean markerSet = false;
     public String busName = "";
-    public boolean forNoUIToast;
+    public boolean forNoUIToast = false;
     //public String[] distance = {"Not available", "Not available","Not available"};
     public String[] distance;
     //constructor
@@ -24,7 +24,7 @@ public class BusInfo {
         distance[1] = "Not available";
         distance[2] = "Not available";
 
-        forNoUIToast = false;
+
     }
 
 

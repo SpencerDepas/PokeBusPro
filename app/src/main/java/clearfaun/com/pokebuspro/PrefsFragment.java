@@ -113,7 +113,7 @@ public class PrefsFragment extends PreferenceFragment {
 
         }else if(preference.getKey().equals("KEY1")){
             //set radius
-            Log.i("PrefsFragment", "preference == aboutscreen");
+            Log.i("PrefsFragment", "radius");
 
 
         }else if(preference.getKey().equals("KEY99")){

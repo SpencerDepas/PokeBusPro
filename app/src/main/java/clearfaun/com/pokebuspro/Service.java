@@ -114,7 +114,7 @@ public class Service extends IntentService {
         }
 
 
-
+        busInfoArrayList.clear();
     }
 
 

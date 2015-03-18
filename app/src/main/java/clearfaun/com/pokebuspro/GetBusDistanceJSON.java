@@ -180,16 +180,20 @@ public class GetBusDistanceJSON {
         @Override
         protected void onPostExecute(String result) {
 
-            Log.i("MyAsyncTask", " AsyncTask  onPostExecute MapsActivity.obtainedAllDistances = true;");
+            Log.i("MyAsyncTask", " onPostExecute");
 
-            //this needs to be fixed !!!!!!!!!!!!
-            //!!!!!!!!!
-            //!!!!!!!!!
+            boolean fromService =  false;
+            try{
+                fromService =  Service.busInfoArrayList.size() > 0;
+            }catch(Exception e){
+                Log.i("MyAsyncTask", " Exception e " + e);
+            }
 
-            ///!!!!
-            if(busInfo.get(0).forNoUIToast){
-
+            Log.i("MyAsyncTask", " fromService " + fromService);
+            if(fromService){
+                Log.i("MyAsyncTask", " fromService");
                 Service.displayToastDistance(busInfo);
+
 
             }else if(AddMarkers.marker == null){
                 Log.i("MyAsyncTask", " AddMarkers.marker == null");
