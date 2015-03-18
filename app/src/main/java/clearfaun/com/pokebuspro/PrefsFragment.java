@@ -34,6 +34,7 @@ public class PrefsFragment extends PreferenceFragment {
 
 
     ListPreference prefSumBusMap;
+    ListPreference prefRadius;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +61,7 @@ public class PrefsFragment extends PreferenceFragment {
 
 
 
+
         prefSumBusMap.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
 
@@ -73,6 +75,19 @@ public class PrefsFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        prefRadius = (ListPreference) findPreference("KEY1");
+        prefRadius.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                MapsActivity.mMap.clear();
+                Log.i("PrefsFragment", "radius");
+                Intent intent = new Intent(MapsActivity.mContext , MapsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+
     }
 
 
@@ -113,7 +128,6 @@ public class PrefsFragment extends PreferenceFragment {
 
         }else if(preference.getKey().equals("KEY1")){
             //set radius
-            Log.i("PrefsFragment", "radius");
 
 
         }else if(preference.getKey().equals("KEY99")){
