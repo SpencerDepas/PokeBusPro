@@ -101,7 +101,7 @@ public class AddMarkers {
 
         }
         //+ "\n" + busInfo.get(i).getDistance()[2])
-        Log.i("MyAddMarkers", " after updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
+        //Log.i("MyAddMarkers", " after updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
 
     }
 

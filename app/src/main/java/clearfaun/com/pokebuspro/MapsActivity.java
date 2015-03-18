@@ -329,6 +329,8 @@ public class MapsActivity extends FragmentActivity {
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMapToolbarEnabled(false);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(currentLocation)    // Sets the center of the map to Mountain View
