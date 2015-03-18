@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -32,25 +35,39 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class BusMap extends Activity {
 
-
+    private ProgressBar spinner;
+    SubsamplingScaleImageView imageView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bus_map);
+        Log.i("BusMap", "onCreate");
+
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(Color.WHITE);
+
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
 
 
 
 
-
-        //ImageView imageView = (ImageView)findViewById(R.id.bus_map);
-        Uri uri = Uri.parse("android.resource://" + this.getPackageName() + "/" + R.drawable.busbkln_map);
-        File auxFile = new File(uri.getPath());
-
-        SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
+        imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
         imageView.setImage(ImageSource.resource(R.drawable.busbkln_map));
 
 
+
+
+
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+
+
 }
