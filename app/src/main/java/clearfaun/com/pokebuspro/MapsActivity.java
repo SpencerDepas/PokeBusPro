@@ -49,6 +49,7 @@ public class MapsActivity extends FragmentActivity {
     static Context mContext;
     static GetBusStopJSON obj;
     static GetBusDistanceJSON objTwo;
+    static String preferredMap;
 
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
     static ArrayList<LatLng> pointList = new ArrayList<>();
@@ -96,7 +97,7 @@ public class MapsActivity extends FragmentActivity {
 
 
         pokeBusBusCode = Integer.parseInt(pref.getString("pokeBusCode", "0"));
-
+        preferredMap = pref.getString("KEY99", "BK");
 
 
         ImageButton b = (ImageButton) findViewById(R.id.options_button);
@@ -369,7 +370,9 @@ public class MapsActivity extends FragmentActivity {
     public static int getPokeBus(){
         return pokeBusBusCode;
     }
-
+    public static String getPreferedMap(){
+        return preferredMap;
+    }
 
 
     public static double distFrom(double lat1, double lng1, double lat2, double lng2) {

@@ -39,13 +39,19 @@ public class PrefsFragment extends PreferenceFragment {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
-        Log.i("PrefsFragment", "getPokeBus() : " +  MapsActivity.getPokeBus());
 
-        PreferenceScreen prefSum =
+
+
+
+
+        PreferenceScreen prefSumPokeBus =
                 (PreferenceScreen) findPreference("KEY41");
-        prefSum.setSummary("Current PokeBus: " + MapsActivity.getPokeBus());
+        prefSumPokeBus.setSummary("Current PokeBus: " + MapsActivity.getPokeBus());
 
+        ListPreference prefSumBusMap =
+                (ListPreference) findPreference("KEY99");
 
+        prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue() );
 
 
     }
@@ -89,6 +95,14 @@ public class PrefsFragment extends PreferenceFragment {
             //set radius
             Log.i("PrefsFragment", "preference == aboutscreen");
 
+
+        }else if(preference.getKey().equals("KEY99")){
+            //TO CHANGE BUS MAP SUMMERY
+            Log.i("PrefsFragment", "preference == aboutscreen");
+            ListPreference prefSumBusMap =
+                    (ListPreference) findPreference("KEY99");
+
+            prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue() );
 
         }
 

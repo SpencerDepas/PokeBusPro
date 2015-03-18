@@ -41,6 +41,14 @@
     <string name="pokebus_placement_info">Place marker over desired stop</string>
     <string name="set_pokebus">Enter 5 digit busCode to set a PokeBus</string>
 
+
+    <!--
+         BUS MAPS
+         -->
+    <string name="map_preference">Choose Bus Map</string>
+    <string name="bus_maps_key">KEY99</string>
+    <string name="bus_maps">Bus Map</string>
+    <string name="current_map">Current map :Brooklyn</string>
     <!--
          Other
          -->

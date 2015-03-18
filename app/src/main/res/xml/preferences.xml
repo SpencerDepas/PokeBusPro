@@ -35,11 +35,15 @@
 
     </PreferenceCategory>
 
-
-
     <PreferenceCategory
-        android:title="@string/other">
+        android:title="@string/bus_maps">
 
+        <ListPreference
+            android:key="@string/bus_maps_key"
+            android:title="@string/map_preference"
+            android:entries="@array/map_entries"
+            android:entryValues="@array/map_entries_values"
+            android:summary="@string/current_map" />
 
         <PreferenceScreen
             android:title="@string/bus_map"
@@ -47,6 +51,11 @@
             >
 
         </PreferenceScreen>
+
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/other">
 
 
         <PreferenceScreen
