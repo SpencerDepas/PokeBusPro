@@ -33,7 +33,7 @@ import android.widget.Toast;
 public class PrefsFragment extends PreferenceFragment {
 
 
-
+    ListPreference prefSumBusMap;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +50,7 @@ public class PrefsFragment extends PreferenceFragment {
                 (PreferenceScreen) findPreference("KEY41");
         prefSumPokeBus.setSummary("Current PokeBus: " + MapsActivity.getPokeBus());
 
-        ListPreference prefSumBusMap =
+        prefSumBusMap =
                 (ListPreference) findPreference("KEY99");
         prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue() );
 
@@ -108,6 +108,7 @@ public class PrefsFragment extends PreferenceFragment {
             //bus map
             Log.i("PrefsFragment", "preference == aboutscreen");
             Intent intent = new Intent(MapsActivity.mContext , BusMap.class);
+            intent.putExtra("maptype", prefSumBusMap.getSummary());
             startActivity(intent);
 
         }else if(preference.getKey().equals("KEY1")){
@@ -116,8 +117,8 @@ public class PrefsFragment extends PreferenceFragment {
 
 
         }else if(preference.getKey().equals("KEY99")){
-            //TO CHANGE BUS MAP SUMMERY
-            
+            //null
+
 
         }
 
