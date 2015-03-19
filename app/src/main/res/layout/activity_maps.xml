@@ -16,7 +16,16 @@
             android:background="@android:drawable/dialog_holo_light_frame"
             android:layout_width="@dimen/button_size"
             android:layout_height="@dimen/button_size"
-            android:src="@drawable/ic_action"
+            android:src="@drawable/settings49"
+
+            />
+
+        <ImageButton android:id="@+id/refresh_location_button"
+            android:layout_below="@+id/options_button"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:src="@drawable/refresh69"
             android:layout_marginTop="7dp"
 
 

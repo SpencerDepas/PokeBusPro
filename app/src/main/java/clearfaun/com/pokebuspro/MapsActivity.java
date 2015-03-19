@@ -119,6 +119,26 @@ public class MapsActivity extends FragmentActivity {
             }
         });
 
+        ImageButton refreshLocation = (ImageButton) findViewById(R.id.refresh_location_button);
+        refreshLocation.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.i("MyMapsActivity", "onClick refreshLocation");
+                mMap.setMyLocationEnabled(true);
+                // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(currentLocation)    // Sets the center of the map to Mountain View
+                        .zoom(17)                   // Sets the zoom
+                        .bearing(90)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
+            }
+        });
+
 
 
     }
