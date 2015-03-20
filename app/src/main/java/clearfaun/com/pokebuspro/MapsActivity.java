@@ -3,25 +3,25 @@ package clearfaun.com.pokebuspro;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+
+
+
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -29,21 +29,21 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import android.widget.PopupMenu;
+
 
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity implements
+        LocationProvider.LocationCallback  {
 
-    static GoogleMap mMap; // Might be null if Google Play services APK is not available.
+static GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
 
-
+    private LocationProvider mLocationProvider;
     static double latitude;
     static double longitude;
     static Context mContext;
@@ -69,6 +69,10 @@ public class MapsActivity extends FragmentActivity {
     FragmentManager fm;
     FragmentTransaction ft;
 
+    public static final String TAG = MapsActivity.class.getSimpleName();
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,15 +85,21 @@ public class MapsActivity extends FragmentActivity {
 
         API_KEY_MTA = getString(R.string.API_KEY_MTA);
 
+        mLocationProvider = new LocationProvider(this, this);
 
+        mLocationProvider.connect();
 
+        Log.i("MyMapsActivity", "latitude" + latitude);
+        Log.i("MyMapsActivity", "longitude" + longitude);
 
+/*
         Location location = getLocation();
         latitude = location.getLatitude();
         longitude = location.getLongitude();
 
 
-        currentLocation = new LatLng(latitude, longitude);
+        currentLocation = new LatLng(latitude, longitude);*/
+
 
 
         SharedPreferences pref = getSharedPreferences(
@@ -128,7 +138,7 @@ public class MapsActivity extends FragmentActivity {
                 mMap.setMyLocationEnabled(true);
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(currentLocation)    // Sets the center of the map to Mountain View
+                        .target(latLng)    // Sets the center of the map to Mountain View
                         .zoom(17)                   // Sets the zoom
                         .bearing(90)                // Sets the orientation of the camera to east
                         .tilt(30)                   // Sets the tilt of the camera to 30 degrees
@@ -148,7 +158,7 @@ public class MapsActivity extends FragmentActivity {
         if(pokeBusMarker == null) {
             pokeBusMarker = mMap.addMarker(new MarkerOptions()
                     .title("PokeBus")
-                    .position(currentLocation)
+                    .position(latLng)
                     .draggable(true));
             Log.i("MyMapsActivity", "onMenuItemClick marker created");
         }
@@ -194,6 +204,7 @@ public class MapsActivity extends FragmentActivity {
     public void onPause() {
         super.onPause();
         Log.i("MyMapsActivity","onPause()");
+        mLocationProvider.disconnect();
         busInfo.clear();
         //stoptimertask(view);
         AddMarkers.marker = null;
@@ -209,13 +220,13 @@ public class MapsActivity extends FragmentActivity {
 
         setUpMapIfNeeded();
 
-        getBusStops(busInfo);
+        /*getBusStops(busInfo);
         Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
 
         getBusDistance(busInfo);
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-        updateBusDistance();
+        updateBusDistance();*/
         Log.i("MyMapsActivity", "after updateBusDistance();");
     }
 
@@ -333,14 +344,7 @@ public class MapsActivity extends FragmentActivity {
                 Log.i("MyMapsActivity","setUpMapIfNeeded()  mMap != null ");
                 mMap.setMyLocationEnabled(true);
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(currentLocation)    // Sets the center of the map to Mountain View
-                        .zoom(17)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
 
 
             }
@@ -352,14 +356,7 @@ public class MapsActivity extends FragmentActivity {
             mMap.getUiSettings().setMapToolbarEnabled(false);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(currentLocation)    // Sets the center of the map to Mountain View
-                    .zoom(17)                   // Sets the zoom
-                    .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
 
         }
 
@@ -384,9 +381,7 @@ public class MapsActivity extends FragmentActivity {
     public static int getPokeBus(){
         return pokeBusBusCode;
     }
-    public static String getPreferedMap(){
-        return preferredMap;
-    }
+
 
 
     public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
@@ -415,6 +410,7 @@ public class MapsActivity extends FragmentActivity {
     }
 
 
+
     static void toaster(String string){
         Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_LONG);
         toast.show();
@@ -425,4 +421,38 @@ public class MapsActivity extends FragmentActivity {
         toast.show();
     }
 
+    static LatLng latLng;
+    @Override
+    public void handleNewLocation(Location location) {
+
+        Log.i("MyMapsActivity","handleNewLocation -----------");
+
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        latLng = new LatLng(latitude, longitude);
+
+        mMap.setMyLocationEnabled(true);
+        // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)    // Sets the center of the map to Mountain View
+                .zoom(17)                   // Sets the zoom
+                .bearing(90)                // Sets the orientation of the camera to east
+                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
+        Log.i("MyMapsActivity", "latitude" + latitude);
+        Log.i("MyMapsActivity", "longitude" + longitude);
+
+
+        getBusStops(busInfo);
+        Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
+
+        getBusDistance(busInfo);
+        Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
+
+        updateBusDistance();
+
+    }
 }

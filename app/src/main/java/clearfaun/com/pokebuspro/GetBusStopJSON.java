@@ -23,15 +23,6 @@ public class GetBusStopJSON {
     static String testLng = "-73.9829084";*/
 
     int stopRadius;
-
-
-
-
-    /*String busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
-            MapsActivity.testLat + "&lon=" + MapsActivity.testLng;*/
-
-    //private String busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=05a5c2c8-432a-47bd-8f50-ece9382b4b28&lat=40.6455520&lon=-73.9829084&radius=130";
-
     BusInfo tempBusInfo;
     ArrayList<BusInfo> busInfo;
 

@@ -23,10 +23,10 @@ public class AddMarkers {
         markerLocation = new LatLng[busInfo.size()];
         marker = new Marker[busInfo.size()];
 
-
-
+        Log.i("AddMarkers", "befire int i = 0; i < busInfo.size() " );
+        Log.i("AddMarkers", "busInfo.size() " + busInfo.size() );
         for (int i = 0; i < busInfo.size() ; i++) {
-
+            Log.i("AddMarkers", "in befire int i = 0; i < busInfo.size()" );
 
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
@@ -64,7 +64,7 @@ public class AddMarkers {
 
 
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
-            Log.i("MyAddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);
+            Log.i("AddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);
 
 
             //this is for saving latlng for onRoatate
