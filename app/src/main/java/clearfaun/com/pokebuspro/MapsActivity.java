@@ -68,6 +68,8 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
     PrefsFragment prefsFragment;
     FragmentManager fm;
     FragmentTransaction ft;
+    int firstBoot = 0;
+
 
     public static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -78,6 +80,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_maps);
+
 
         Log.i("MyMapsActivity", "onCreate");
 
@@ -101,7 +104,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
 
         pokeBusBusCode = Integer.parseInt(pref.getString("pokeBusCode", "0"));
-        preferredMap = pref.getString("KEY99", "BK");
+
 
 
         ImageButton b = (ImageButton) findViewById(R.id.options_button);
@@ -133,7 +136,9 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
 
 
-                // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+
+                refreshMarkers();
+
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(latLng)    // Sets the center of the map to Mountain View
                         .zoom(17)                   // Sets the zoom
@@ -142,9 +147,6 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
                         .build();                   // Creates a CameraPosition from the builder
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-
-                refreshMarkers();
-
             }
         });
 
@@ -164,6 +166,8 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
         getBusStops(busInfo);
         Log.i("MyMapsActivity", "after getBusStops(busInfo) refresh " );
+        Log.i("MyMapsActivity", "after busInfo " + busInfo.size());
+        Log.i("MyMapsActivity", "after busInfo " +  busInfo.get(0).getBusCode());
 
         getBusDistance(busInfo);
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
@@ -451,25 +455,29 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         longitude = location.getLongitude();
         latLng = new LatLng(latitude, longitude);
 
-        mMap.setMyLocationEnabled(true);
-        // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLng)    // Sets the center of the map to Mountain View
-                .zoom(17)                   // Sets the zoom
-                .bearing(90)                // Sets the orientation of the camera to east
-                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                .build();                   // Creates a CameraPosition from the builder
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+        //only want location this to run on first time. Not activate on every location update
+        if(firstBoot == 0) {
+            firstBoot++;
+            mMap.setMyLocationEnabled(true);
+            // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)    // Sets the center of the map to Mountain View
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
 
-        getBusStops(busInfo);
-        Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
+            getBusStops(busInfo);
+            Log.i("MyMapsActivity", "after getBusStops(busInfo);: ");
 
-        getBusDistance(busInfo);
-        Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
+            getBusDistance(busInfo);
+            Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-        updateBusDistance();
-        Log.i("MyMapsActivity", "after updateBusDistance();");
+            updateBusDistance();
+            Log.i("MyMapsActivity", "after updateBusDistance();");
 
+        }
     }
 }

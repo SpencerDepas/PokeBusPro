@@ -95,7 +95,7 @@ public class GetBusStopJSON {
 
 
             parsingComplete = false;
-
+            tempBusInfo = null;
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
