@@ -80,10 +80,8 @@ public class PrefsFragment extends PreferenceFragment {
         prefRadius = (ListPreference) findPreference("KEY1");
         prefRadius.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                MapsActivity.mMap.clear();
-                Log.i("PrefsFragment", "radius");
-                Intent intent = new Intent(MapsActivity.mContext , MapsActivity.class);
-                startActivity(intent);
+
+                MapsActivity.refreshMarkers();
                 return true;
             }
         });

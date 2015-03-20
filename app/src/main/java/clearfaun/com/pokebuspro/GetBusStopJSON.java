@@ -40,7 +40,7 @@ public class GetBusStopJSON {
 
             Log.i("MyGetBusStopJSON", "inside readAndParseJSON");
             JSONObject reader = new JSONObject(in);
-            Log.i("MyGetBusStopJSON", "after JSONObject reader = new JSONObject(in);" + reader.toString());
+            //Log.i("MyGetBusStopJSON", "after JSONObject reader = new JSONObject(in);" + reader.toString());
 
 
 

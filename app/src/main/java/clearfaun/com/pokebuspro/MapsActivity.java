@@ -92,13 +92,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         Log.i("MyMapsActivity", "latitude" + latitude);
         Log.i("MyMapsActivity", "longitude" + longitude);
 
-/*
-        Location location = getLocation();
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
 
-
-        currentLocation = new LatLng(latitude, longitude);*/
 
 
 
@@ -115,7 +109,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
             @Override
             public void onClick(View v) {
-
+        //settings
 
                 fm = getFragmentManager();
                 ft = fm.beginTransaction();
@@ -135,7 +129,10 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             @Override
             public void onClick(View v) {
                 Log.i("MyMapsActivity", "onClick refreshLocation");
-                mMap.setMyLocationEnabled(true);
+                //refresh button
+
+
+
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(latLng)    // Sets the center of the map to Mountain View
@@ -146,10 +143,33 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
 
+                refreshMarkers();
+
             }
         });
 
 
+
+    }
+
+    public static void refreshMarkers(){
+        Log.i("MyMapsActivity", "refreshMarkers");
+
+        busInfo.clear();
+        stopTimerTask();
+        AddMarkers.marker = null;
+        mMap.clear();
+
+
+
+        getBusStops(busInfo);
+        Log.i("MyMapsActivity", "after getBusStops(busInfo) refresh " );
+
+        getBusDistance(busInfo);
+        Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
+
+        //updateBusDistance();
+        Log.i("MyMapsActivity", "after updateBusDistance();");
 
     }
 
@@ -220,14 +240,14 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
         setUpMapIfNeeded();
 
-        /*getBusStops(busInfo);
+      /*  getBusStops(busInfo);
         Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
 
         getBusDistance(busInfo);
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-        updateBusDistance();*/
-        Log.i("MyMapsActivity", "after updateBusDistance();");
+        updateBusDistance();
+        Log.i("MyMapsActivity", "after updateBusDistance();");*/
     }
 
 
@@ -442,10 +462,6 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
 
-        Log.i("MyMapsActivity", "latitude" + latitude);
-        Log.i("MyMapsActivity", "longitude" + longitude);
-
-
         getBusStops(busInfo);
         Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
 
@@ -453,6 +469,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
         updateBusDistance();
+        Log.i("MyMapsActivity", "after updateBusDistance();");
 
     }
 }
