@@ -42,7 +42,7 @@ public class MapsActivity extends FragmentActivity implements
 
 static GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
-
+    static LatLng latLng;
     private LocationProvider mLocationProvider;
     static double latitude;
     static double longitude;
@@ -229,9 +229,9 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         super.onPause();
         Log.i("MyMapsActivity","onPause()");
         mLocationProvider.disconnect();
-        busInfo.clear();
+        //busInfo.clear();
         //stoptimertask(view);
-        AddMarkers.marker = null;
+        //AddMarkers.marker = null;
     }
 
     @Override
@@ -244,14 +244,17 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
         setUpMapIfNeeded();
 
-      /*  getBusStops(busInfo);
-        Log.i("MyMapsActivity", "after getBusStops(busInfo);: " );
+        if(firstBoot != 0) {
+            Log.i("MyMapsActivity", "firstBoot != 0");
+            getBusStops(busInfo);
+            Log.i("MyMapsActivity", "after getBusStops(busInfo);: ");
 
-        getBusDistance(busInfo);
-        Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
+            getBusDistance(busInfo);
+            Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-        updateBusDistance();
-        Log.i("MyMapsActivity", "after updateBusDistance();");*/
+            //updateBusDistance();
+            Log.i("MyMapsActivity", "after updateBusDistance();");
+        }
     }
 
 
@@ -421,19 +424,6 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         return dist;
     }
 
-    private Location getLocation() {
-
-        Log.i("MyMapsActivity","getLocation()");
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        locationManager.getBestProvider(criteria,true);
-
-        return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-    }
-
-
 
     static void toaster(String string){
         Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_LONG);
@@ -445,7 +435,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         toast.show();
     }
 
-    static LatLng latLng;
+
     @Override
     public void handleNewLocation(Location location) {
 
@@ -475,7 +465,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             getBusDistance(busInfo);
             Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-            updateBusDistance();
+            //updateBusDistance();
             Log.i("MyMapsActivity", "after updateBusDistance();");
 
         }

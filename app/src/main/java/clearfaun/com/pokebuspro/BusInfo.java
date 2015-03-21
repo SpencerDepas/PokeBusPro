@@ -9,7 +9,7 @@ public class BusInfo {
     public String busNameId = "";
     public String latitude = "";
     public String longitude = "";
-    public int radiusTaskNumber = 0;
+    public String  radius = "200";
     boolean markerSet = false;
     public String busName = "";
     public boolean forNoUIToast = false;
@@ -65,8 +65,8 @@ public class BusInfo {
 
     }
 
-    public void busRadiusTaskNumber(int TaskNumber) {
-        radiusTaskNumber = TaskNumber;
+    public void setBusRadius(String TaskNumber) {
+        radius = TaskNumber;
     }
 
 
@@ -104,8 +104,8 @@ public class BusInfo {
         return longitude;
     }
 
-    public int getBusRadiusTaskNumber(){
-        return radiusTaskNumber;
+    public String getBusRadius(){
+        return radius;
     }
 
     public String getBusId(){

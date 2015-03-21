@@ -33,9 +33,10 @@ import android.widget.Toast;
  */
 public class PrefsFragment extends PreferenceFragment {
 
-
+    static String radius;
     ListPreference prefSumBusMap;
     ListPreference prefRadius;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,15 +78,18 @@ public class PrefsFragment extends PreferenceFragment {
             }
         });
 
-        prefRadius = (ListPreference) findPreference("KEY1");
-        prefRadius.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-                MapsActivity.refreshMarkers();
-                return true;
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
+
+        sp.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                Log.i("PrefsFragment", "onSharedPreferenceChanged");
+                if(key.equals("KEY1")){
+                    Log.i("PrefsFragment", "KEY1");
+                    MapsActivity.refreshMarkers();
+                }
             }
         });
-
 
     }
 
@@ -116,8 +120,8 @@ public class PrefsFragment extends PreferenceFragment {
         }else if(preference.getKey().equals("KEY2")){
             //make auto refresh kick in
 
-            MapsActivity.stopTimerTask();
-            MapsActivity.updateBusDistance();
+           /* MapsActivity.stopTimerTask();
+            MapsActivity.updateBusDistance();*/
 
         }else if(preference.getKey().equals("KEY4888")){
             //bus map
@@ -178,8 +182,8 @@ public class PrefsFragment extends PreferenceFragment {
 
         //MapsActivity.toaster(settings);
 
-        MapsActivity.stopTimerTask();
-        MapsActivity.updateBusDistance();
+       /* MapsActivity.stopTimerTask();
+        MapsActivity.updateBusDistance();*/
 
     }
 

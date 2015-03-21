@@ -95,7 +95,7 @@ public class GetBusStopJSON {
 
 
             parsingComplete = false;
-            tempBusInfo = null;
+
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -110,9 +110,11 @@ public class GetBusStopJSON {
         busInfo = busInfoIn;
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
+        Log.i("MyGetBusStopJSON", "prefradius:" + PrefsFragment.radius);
         String radius= sharedPrefs.getString(MapsActivity.mContext.getString(R.string.radius_key), "200");
         stopRadius = Integer.parseInt(radius);
-
+        Log.i("MyGetBusStopJSON", "stopRadius:" + stopRadius);
+        Log.i("MyGetBusStopJSON", "prefradius:" + PrefsFragment.radius);
 
 
 
