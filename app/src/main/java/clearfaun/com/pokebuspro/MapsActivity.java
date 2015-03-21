@@ -90,8 +90,8 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
         mLocationProvider = new LocationProvider(this, this);
 
-        mLocationProvider.connect();
 
+        Log.i("MyMapsActivity", "after mLocationProvider.connect();");
         Log.i("MyMapsActivity", "latitude" + latitude);
         Log.i("MyMapsActivity", "longitude" + longitude);
 
@@ -134,19 +134,13 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
                 Log.i("MyMapsActivity", "onClick refreshLocation");
                 //refresh button
 
+                mLocationProvider.disconnect();
+                mLocationProvider.connect();
 
 
 
-                refreshMarkers();
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(17)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
             }
         });
 
@@ -158,7 +152,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         Log.i("MyMapsActivity", "refreshMarkers");
 
         busInfo.clear();
-        stopTimerTask();
+        //stopTimerTask();
         AddMarkers.marker = null;
         mMap.clear();
 
@@ -239,12 +233,13 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         super.onResume();
         Log.i("MyMapsActivity","onResume()");
 
-
+        mLocationProvider.connect();
 
 
         setUpMapIfNeeded();
 
-        if(firstBoot != 0) {
+
+        /*if(firstBoot != 0) {
             Log.i("MyMapsActivity", "firstBoot != 0");
             getBusStops(busInfo);
             Log.i("MyMapsActivity", "after getBusStops(busInfo);: ");
@@ -254,7 +249,50 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
             //updateBusDistance();
             Log.i("MyMapsActivity", "after updateBusDistance();");
-        }
+        }*/
+
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                Log.i("MyMapsActivity","onMarkerDragStart ");
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                Log.i("MyMapsActivity","onMarkerDrag ");
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                //only one dragable marker, to set a  pokebus
+
+                Log.i("MyMapsActivity", "onMarkerDragEnd ");
+                if (marker.getTitle().equals("PokeBus")) {
+
+                    for(int i = 0 ; i < AddMarkers.marker.length; i ++ ){
+                        //static double testLat = 40.6455520;
+
+                        double distance = distFrom(marker.getPosition().latitude,marker.getPosition()
+                                .longitude , busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng() );
+
+                        //activate within a radius of 10 meeters
+                        if((int)distance < 10){
+
+                            Log.i("MyMapsActivityMarker", "distance < 6000000. BusCode :" + busInfo.get(i).getBusCode() );
+
+                            Toast.makeText(getBaseContext(), "PokeBus set to: " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
+                            marker.setVisible(false);
+                            pokeBusMarker = null;
+                            setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());
+                            Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
+
+                        }
+                    }
+                }
+            }
+        });
+
     }
 
 
@@ -300,93 +338,35 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
 
     private void setUpMapIfNeeded() {
-        Log.i("MyMapsActivity","setUpMapIfNeeded() ");
+        Log.i("MyMapsActivity", "setUpMapIfNeeded() ");
+
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
-            Log.i("MyMapsActivity","setUpMapIfNeeded()  mMap == null ");
+            Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             mMap.getUiSettings().setMapToolbarEnabled(false);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             // Check if we were successful in obtaining the map.
-            if (mMap != null) {
+            /*if (mMap != null && latLng != null) {
 
-                mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-
-                    @Override
-                    public void onMarkerDragStart(Marker marker) {
-                        Log.i("MyMapsActivity","onMarkerDragStart ");
-                    }
-
-                    @Override
-                    public void onMarkerDrag(Marker marker) {
-                        Log.i("MyMapsActivity","onMarkerDrag ");
-                    }
-
-                    @Override
-                    public void onMarkerDragEnd(Marker marker) {
-                        //only one dragable marker, to set a  pokebus
-
-                        Log.i("MyMapsActivity", "onMarkerDragEnd ");
-                        if (marker.getTitle().equals("PokeBus")) {
-
-                            for(int i = 0 ; i < AddMarkers.marker.length; i ++ ){
-                                //static double testLat = 40.6455520;
-                                int movableMarkerLat =  (int)(marker.getPosition().latitude * 1000000);
-                                int movableMarkerLng = (int)(marker.getPosition().longitude * 1000000);
-
-                                int busStopMarkerLat = (int)(busInfo.get(i).getBusStopLat()* 1000000);
-                                int busStopMarkerLng = (int)(busInfo.get(i).getBusStopLng()  * 1000000);
-
-
-                                double distance = distFrom(marker.getPosition().latitude,marker.getPosition()
-                                        .longitude , busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng() );
-
-                                //activate within a radius of 10 meeters
-                                if((int)distance < 10){
-
-                                    Log.i("MyMapsActivityMarker", "distance < 6000000. BusCode :" + busInfo.get(i).getBusCode() );
-
-                                    Toast.makeText(getBaseContext(), "PokeBus set to: " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
-                                    marker.setVisible(false);
-                                    pokeBusMarker = null;
-                                    setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());
-                                    Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
-
-                                }
-
-
-                            }
-
-
-                        }
-
-
-
-                    }
-                });
-
-
-                Log.i("MyMapsActivity","setUpMapIfNeeded()  mMap != null ");
+                Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap != null ");
                 mMap.setMyLocationEnabled(true);
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(currentLocation)    // Sets the center of the map to Mountain View
+                        .zoom(17)                   // Sets the zoom
+                        .bearing(90)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
 
 
-
-            }
-        }else{
-            Log.i("MyMapsActivity","setUpMapIfNeeded()  in the else ");
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMapToolbarEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-
+            }*/
 
         }
-
     }
 
 
@@ -436,6 +416,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
     }
 
 
+
     @Override
     public void handleNewLocation(Location location) {
 
@@ -445,6 +426,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         longitude = location.getLongitude();
         latLng = new LatLng(latitude, longitude);
 
+        Log.i("MyMapsActivity","handleNewLocation ----------latitude " + latitude);
         //only want location this to run on first time. Not activate on every location update
         if(firstBoot == 0) {
             firstBoot++;
@@ -469,5 +451,18 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             Log.i("MyMapsActivity", "after updateBusDistance();");
 
         }
+
+        mMap.setMyLocationEnabled(true);
+        // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)    // Sets the center of the map to Mountain View
+                .zoom(17)                   // Sets the zoom
+                .bearing(90)                // Sets the orientation of the camera to east
+                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
+        refreshMarkers();
     }
 }
