@@ -46,37 +46,11 @@ public class PrefsFragment extends PreferenceFragment {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
 
-
-
-
-        PreferenceScreen prefSumPokeBus =
-                (PreferenceScreen) findPreference("KEY41");
+        PreferenceScreen prefSumPokeBus = (PreferenceScreen) findPreference("KEY41");
         prefSumPokeBus.setSummary("Current PokeBus: " + MapsActivity.getPokeBus());
 
-        prefSumBusMap =
-                (ListPreference) findPreference("KEY99");
+        prefSumBusMap = (ListPreference) findPreference("KEY99");
         prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue() );
-
-
-
-
-
-
-
-
-        prefSumBusMap.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-
-                Log.i("PrefsFragment", "onPreferenceChange map");
-                Log.i("PrefsFragment", "onPreferenceChange map newValue" + newValue.toString() );
-                Log.i("PrefsFragment", "onPreferenceChange map preference" + preference.toString() );
-                ListPreference prefSumBusMap =
-                        (ListPreference) findPreference("KEY99");
-
-                prefSumBusMap.setSummary("Current Map is: " + newValue );
-                return true;
-            }
-        });
 
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -84,25 +58,21 @@ public class PrefsFragment extends PreferenceFragment {
                 // Implementation
                 Log.i("PrefsFragment", "onSharedPreferenceChanged");
                 if (key.equals("KEY1")) {
+                    //for changing radius
                     Log.i("PrefsFragment", "KEY1");
                     MapsActivity.refreshMarkers();
-                }/*else if(key.equals("KEY1")){
+                }else if(key.equals("KEY99")){
+                    //changing summery to siaplay current bus map
+                    ListPreference prefSumBusMap = (ListPreference) findPreference("KEY99");
 
-                }*/
+                    prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue());
+                }
             }
         };
 
         sp.registerOnSharedPreferenceChangeListener(listener);
 
-        /*sp.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                Log.i("PrefsFragment", "onSharedPreferenceChanged");
-                if (key.equals("KEY1")) {
-                    Log.i("PrefsFragment", "KEY1");
-                    MapsActivity.refreshMarkers();
-                }
-            }
-        });*/
+
 
     }
 
