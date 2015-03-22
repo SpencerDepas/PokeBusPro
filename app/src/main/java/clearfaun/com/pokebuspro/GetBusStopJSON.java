@@ -42,13 +42,13 @@ public class GetBusStopJSON {
             JSONObject reader = new JSONObject(in);
             //Log.i("MyGetBusStopJSON", "after JSONObject reader = new JSONObject(in);" + reader.toString());
 
-
-
             JSONObject sys = reader.getJSONObject("data");
             JSONArray stopsArray= (JSONArray) sys.get("stops");
 
             tempBusInfo = new BusInfo();
-
+            Log.i("MyGetBusStopJSON", "reader" + reader.length());
+            Log.i("MyGetBusStopJSON", "sys " + sys.length());
+            Log.i("MyGetBusStopJSON", "stopsArray " + stopsArray.length());
 
 
             Log.i("MyGetBusStopJSON", "stopsArray.length()   " + stopsArray.length());
@@ -93,7 +93,7 @@ public class GetBusStopJSON {
 
 
 
-
+            tempBusInfo = null;
             parsingComplete = false;
 
 
@@ -110,12 +110,12 @@ public class GetBusStopJSON {
         busInfo = busInfoIn;
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
-        Log.i("MyGetBusStopJSON", "prefradius:" + PrefsFragment.radius);
+
         String radius= sharedPrefs.getString(MapsActivity.mContext.getString(R.string.radius_key), "200");
         stopRadius = Integer.parseInt(radius);
         Log.i("MyGetBusStopJSON", "stopRadius:" + stopRadius);
         Log.i("MyGetBusStopJSON", "prefradius:" + PrefsFragment.radius);
-
+        Log.i("MyGetBusStopJSON", "busInfoIn:" + busInfo.size());
 
 
         Thread thread = new Thread(new Runnable() {
@@ -128,9 +128,11 @@ public class GetBusStopJSON {
                     Log.i("MyGetBusStopJSON", "before busInfo.size()  " + busInfo.size());
 
                     if(busInfo.size() == 0) {
+                        Log.i("MyGetBusStopJSON", "Correct for MAPZS ACTIVTY ");
                         busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + MapsActivity.API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
                                 MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
                     }else{
+                        Log.i("MyGetBusStopJSON", "Correct for service");
                         busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + Service.API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
                                 MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
                     }

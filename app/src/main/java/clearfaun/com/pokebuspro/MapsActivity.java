@@ -138,9 +138,6 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
                 mLocationProvider.connect();
 
 
-
-
-
             }
         });
 
@@ -155,7 +152,6 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         //stopTimerTask();
         AddMarkers.marker = null;
         mMap.clear();
-
 
 
         getBusStops(busInfo);
@@ -348,23 +344,8 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
                     .getMap();
             mMap.getUiSettings().setMapToolbarEnabled(false);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            // Check if we were successful in obtaining the map.
-            /*if (mMap != null && latLng != null) {
-
-                Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap != null ");
-                mMap.setMyLocationEnabled(true);
-                // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(currentLocation)    // Sets the center of the map to Mountain View
-                        .zoom(17)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
 
 
-            }*/
 
         }
     }
@@ -391,7 +372,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
 
 
-    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+    double distFrom(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2-lat1);
         double dLng = Math.toRadians(lng2-lng1);
@@ -450,19 +431,19 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             //updateBusDistance();
             Log.i("MyMapsActivity", "after updateBusDistance();");
 
+        }else {
+            mMap.setMyLocationEnabled(true);
+            // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)    // Sets the center of the map to Mountain View
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
+            refreshMarkers();
         }
-
-        mMap.setMyLocationEnabled(true);
-        // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLng)    // Sets the center of the map to Mountain View
-                .zoom(17)                   // Sets the zoom
-                .bearing(90)                // Sets the orientation of the camera to east
-                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                .build();                   // Creates a CameraPosition from the builder
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-
-        refreshMarkers();
     }
 }

@@ -18,7 +18,6 @@ public class GetBusDistanceJSON {
 
 
     int stopCode;
-    int index;
     ArrayList<BusInfo> busInfo;
 
 
@@ -102,6 +101,7 @@ public class GetBusDistanceJSON {
     public void fetchBusDistanceJson(ArrayList<BusInfo> busInfoIn) {
 
         busInfo = busInfoIn;
+        Log.i("fetchBusDistanceJson", "busInfo" + busInfo.size());
         new LongOperation().execute("");
 
     }
