@@ -35,7 +35,7 @@ public class PrefsFragment extends PreferenceFragment {
 
     static String radius;
     ListPreference prefSumBusMap;
-    ListPreference prefRadius;
+    SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class PrefsFragment extends PreferenceFragment {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
-
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
 
 
 
@@ -79,17 +79,30 @@ public class PrefsFragment extends PreferenceFragment {
         });
 
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                // Implementation
+                Log.i("PrefsFragment", "onSharedPreferenceChanged");
+                if (key.equals("KEY1")) {
+                    Log.i("PrefsFragment", "KEY1");
+                    MapsActivity.refreshMarkers();
+                }/*else if(key.equals("KEY1")){
 
-        sp.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+                }*/
+            }
+        };
+
+        sp.registerOnSharedPreferenceChangeListener(listener);
+
+        /*sp.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 Log.i("PrefsFragment", "onSharedPreferenceChanged");
-                if(key.equals("KEY1")){
+                if (key.equals("KEY1")) {
                     Log.i("PrefsFragment", "KEY1");
                     MapsActivity.refreshMarkers();
                 }
             }
-        });
+        });*/
 
     }
 

@@ -135,6 +135,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
                 Log.i("MyMapsActivity", "onClick refreshLocation");
                 //refresh button
 
+
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
 
@@ -192,30 +193,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
 
     }
-    /*private class CombinedNestTask extends AsyncTask<String, Void, String> {
 
-        @Override
-        protected String doInBackground(String... params) {
-            Log.i("MyCombinedNestTask", "refreshMarkers");
-
-
-            Log.i("MyCombinedNestTask", "before getBusStops(busInfo) refresh " );
-            getBusStops(busInfo);
-            Log.i("MyCombinedNestTask", "after getBusStops(busInfo) refresh " );
-            Log.i("MyCombinedNestTask", "after busInfo " + busInfo.size());
-            Log.i("MyCombinedNestTask", "after busInfo " +  busInfo.get(0).getBusCode());
-
-            getBusDistance(busInfo);
-            Log.i("MyCombinedNestTask", "after getBusDistance(busInfo); ");
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.i("MyCombinedNestTask", "KUNA MATATATATTATATATATATTATTATATATATTA________________------------ ");
-        }
-    }*/
 
     public static void getBusStops(ArrayList<BusInfo> busInfo){
             Log.i("MyMapsActivity", "inside getBusStops");
