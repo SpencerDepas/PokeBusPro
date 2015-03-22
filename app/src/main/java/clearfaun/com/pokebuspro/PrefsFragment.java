@@ -66,6 +66,12 @@ public class PrefsFragment extends PreferenceFragment {
                     ListPreference prefSumBusMap = (ListPreference) findPreference("KEY99");
 
                     prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue());
+                }else if(key.equals("KEY2")){
+                    //this is to change auto refresh
+
+                    MapsActivity.refreshMarkers();
+
+
                 }
             }
         };
@@ -75,7 +81,6 @@ public class PrefsFragment extends PreferenceFragment {
 
 
     }
-
 
 
     @Override
@@ -100,12 +105,6 @@ public class PrefsFragment extends PreferenceFragment {
             Intent intent = new Intent(MapsActivity.mContext , AboutScreen.class);
             startActivity(intent);
 
-        }else if(preference.getKey().equals("KEY2")){
-            //make auto refresh kick in
-
-           /* MapsActivity.stopTimerTask();
-            MapsActivity.updateBusDistance();*/
-
         }else if(preference.getKey().equals("KEY4888")){
             //bus map
             Log.i("PrefsFragment", "preference == aboutscreen");
@@ -113,16 +112,11 @@ public class PrefsFragment extends PreferenceFragment {
             intent.putExtra("maptype", prefSumBusMap.getSummary());
             startActivity(intent);
 
-        }else if(preference.getKey().equals("KEY1")){
-            //set radius
-
-
         }else if(preference.getKey().equals("KEY001")){
             String url = "https://www.facebook.com/ClearFaun?ref=bookmarks";
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(url));
             startActivity(i);
-
 
         }
 

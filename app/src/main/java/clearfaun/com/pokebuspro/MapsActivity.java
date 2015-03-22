@@ -151,7 +151,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         Log.i("MyMapsActivity", "refreshMarkers");
 
         busInfo.clear();
-        //stopTimerTask();
+        stopTimerTask();
         AddMarkers.marker = null;
         mMap.clear();
 
@@ -164,7 +164,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         getBusDistance(busInfo);
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-        //updateBusDistance();
+        updateBusDistance();
         Log.i("MyMapsActivity", "after updateBusDistance();");
 
     }
@@ -230,6 +230,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         super.onPause();
         Log.i("MyMapsActivity","onPause()");
         mLocationProvider.disconnect();
+        stopTimerTask();
         //busInfo.clear();
         //stoptimertask(view);
         //AddMarkers.marker = null;
@@ -439,7 +440,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             getBusDistance(busInfo);
             Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-            //updateBusDistance();
+            updateBusDistance();
             Log.i("MyMapsActivity", "after updateBusDistance();");
 
         }else {
