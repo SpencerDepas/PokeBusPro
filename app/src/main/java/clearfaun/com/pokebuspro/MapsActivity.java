@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -191,7 +192,30 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
 
     }
+    /*private class CombinedNestTask extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i("MyCombinedNestTask", "refreshMarkers");
+
+
+            Log.i("MyCombinedNestTask", "before getBusStops(busInfo) refresh " );
+            getBusStops(busInfo);
+            Log.i("MyCombinedNestTask", "after getBusStops(busInfo) refresh " );
+            Log.i("MyCombinedNestTask", "after busInfo " + busInfo.size());
+            Log.i("MyCombinedNestTask", "after busInfo " +  busInfo.get(0).getBusCode());
+
+            getBusDistance(busInfo);
+            Log.i("MyCombinedNestTask", "after getBusDistance(busInfo); ");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.i("MyCombinedNestTask", "KUNA MATATATATTATATATATATTATTATATATATTA________________------------ ");
+        }
+    }*/
 
     public static void getBusStops(ArrayList<BusInfo> busInfo){
             Log.i("MyMapsActivity", "inside getBusStops");
@@ -199,7 +223,16 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             obj.fetchBusStop(busInfo);
 
         Log.i("MyMapsActivity", "before while");
-        while(obj.parsingComplete);
+
+        while (obj.parsingComplete){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            continue;
+        }
 
         Log.i("MyMapsActivity", "after while while(obj.parsingComplete);    busInfo.size():" + busInfo.size());
 
@@ -432,7 +465,9 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             Log.i("MyMapsActivity", "after updateBusDistance();");
 
         }else {
+            Log.i("MyMapsActivity", "handleNewLocation for refresh ");
             mMap.setMyLocationEnabled(true);
+
             // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
@@ -444,6 +479,9 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
 
             refreshMarkers();
+
+            //new CombinedNestTask().execute("");
+
         }
     }
 }
