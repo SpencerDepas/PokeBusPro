@@ -113,7 +113,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
         }else if(!enabledGPS){
             Log.i("MyMapsActivity", "!enabledGPS");
-            toaster("App works best with GPS on");
+            toaster("Tern GPS on for best results");
         }
 
 
@@ -156,14 +156,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(17)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
 
                 refreshMarkers();
 
@@ -259,7 +252,6 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         mLocationProvider.disconnect();
         stopTimerTask();
         //busInfo.clear();
-        //stoptimertask(view);
         //AddMarkers.marker = null;
     }
 
@@ -472,11 +464,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             updateBusDistance();
             Log.i("MyMapsActivity", "after updateBusDistance();");
 
-        }/*else {
-            Log.i("MyMapsActivity", "handleNewLocation for refresh ");
-            mMap.setMyLocationEnabled(true);
-
-            // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+        }else{
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
                     .zoom(17)                   // Sets the zoom
@@ -485,11 +473,8 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+        }
 
-            refreshMarkers();
 
-            //new CombinedNestTask().execute("");
-
-        }*/
     }
 }

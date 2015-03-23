@@ -52,7 +52,7 @@
             android:icon="@mipmap/ic_launcher_black"
             android:clearTaskOnLaunch="true"
             android:name=".PokeBusNoUI"
-            android:label="@string/title_activity_maps"
+            android:label="@string/NoUI"
             android:taskAffinity="clearfaun.com.pokebuspro.PokeBus" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
