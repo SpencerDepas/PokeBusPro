@@ -44,7 +44,7 @@ import java.util.TimerTask;
 public class MapsActivity extends FragmentActivity implements
         LocationProvider.LocationCallback  {
 
-static GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    static GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     static LatLng latLng;
     private LocationProvider mLocationProvider;
@@ -94,10 +94,6 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
         mLocationProvider = new LocationProvider(this, this);
 
-
-        Log.i("MyMapsActivity", "after mLocationProvider.connect();");
-        Log.i("MyMapsActivity", "latitude" + latitude);
-        Log.i("MyMapsActivity", "longitude" + longitude);
 
 
         LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -251,8 +247,8 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         Log.i("MyMapsActivity","onPause()");
         mLocationProvider.disconnect();
         stopTimerTask();
-        //busInfo.clear();
-        //AddMarkers.marker = null;
+        busInfo.clear();
+        AddMarkers.marker = null;
     }
 
     @Override
@@ -264,6 +260,8 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
 
         setUpMapIfNeeded();
+
+
 
 
 
@@ -312,18 +310,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
     }
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public static boolean isAirplaneModeOn(Context context) {
-        Log.i("MyMapsActivity", "isAirplaneModeOn");
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return Settings.System.getInt(context.getContentResolver(),
-                    Settings.System.AIRPLANE_MODE_ON, 0) != 0;
-        } else {
-            return Settings.Global.getInt(context.getContentResolver(),
-                    Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
-        }
-    }
+
 
 
     public static void updateBusDistance() {
@@ -370,17 +357,17 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         Log.i("MyMapsActivity", "setUpMapIfNeeded() ");
 
         // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            mMap.getUiSettings().setMapToolbarEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+        Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
+        // Try to obtain the map from the SupportMapFragment.
+        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                .getMap();
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
 
 
-        }
+
     }
 
 
@@ -442,7 +429,13 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
         Log.i("MyMapsActivity","handleNewLocation ----------latitude " + latitude);
         //only want location this to run on first time. Not activate on every location update
-        if(firstBoot == 0) {
+      /*  if(pointList.size() > 0){
+            Log.i("MyMapsActivity", "afterpointList.size() > 0");
+
+            AddMarkers.addMarkersToMap(busInfo);
+
+        }else */if(firstBoot == 0) {
+            Log.i("MyMapsActivity","in first boot " );
             firstBoot++;
             mMap.setMyLocationEnabled(true);
             // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
@@ -477,4 +470,17 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
 
 
     }
+
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public static boolean isAirplaneModeOn(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return Settings.System.getInt(context.getContentResolver(),
+                    Settings.System.AIRPLANE_MODE_ON, 0) != 0;
+        } else {
+            return Settings.Global.getInt(context.getContentResolver(),
+                    Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+        }
+    }
+
 }

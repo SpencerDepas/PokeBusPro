@@ -22,11 +22,17 @@ public class AddMarkers {
 
         markerLocation = new LatLng[busInfo.size()];
         marker = new Marker[busInfo.size()];
+        Log.i("AddMarkers", "markerLocation: " + markerLocation.length );
+        Log.i("AddMarkers", "marker " + marker.length );
+        Log.i("AddMarkers", "pointList " + MapsActivity.pointList.size() );
 
         Log.i("AddMarkers", "befire int i = 0; i < busInfo.size() " );
         Log.i("AddMarkers", "busInfo.size() " + busInfo.size() );
-        for (int i = 0; i < busInfo.size() ; i++) {
-            Log.i("AddMarkers", "in befire int i = 0; i < busInfo.size()" );
+
+
+
+        for (int i = 0; i < busInfo.size(); i++) {
+            Log.i("AddMarkers", "in befire int i = 0; i < busInfo.size()");
 
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
@@ -35,32 +41,22 @@ public class AddMarkers {
             Log.i("AddMarkers", "addMarkersToMap() " + busInfo.get(i).getBusCode() + " i is " + i);
 
 
-
-
-
-
             //distance
-            if(busInfo.get(i).getDistance()[1].equals("Not available")){
+            if (busInfo.get(i).getDistance()[1].equals("Not available")) {
 
                 marker[i].setSnippet(busInfo.get(i).getDistance()[0]);
 
-            }else if (busInfo.get(i).getDistance()[2].equals("Not available")){
+            } else if (busInfo.get(i).getDistance()[2].equals("Not available")) {
 
                 marker[i].setSnippet(busInfo.get(i).getDistance()[0]
                         + "\n" + busInfo.get(i).getDistance()[1]);
 
-            }else{
+            } else {
 
                 marker[i].setSnippet(busInfo.get(i).getDistance()[0]
                         + "\n" + busInfo.get(i).getDistance()[1]
                         + "\n" + busInfo.get(i).getDistance()[2]);
             }
-
-
-
-
-
-
 
 
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
@@ -69,8 +65,9 @@ public class AddMarkers {
 
             //this is for saving latlng for onRoatate
             MapsActivity.pointList.add(markerLocation[i]);
-            
+
         }
+
 
 
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
@@ -102,7 +99,7 @@ public class AddMarkers {
         }
         //+ "\n" + busInfo.get(i).getDistance()[2])
         //Log.i("MyAddMarkers", " after updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
-        Log.i("AddMarkers", "updateMarkersToMap  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
+        Log.i("MyAddMarkers", "updateMarkersToMap  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
 
 
