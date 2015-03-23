@@ -1,15 +1,18 @@
 package clearfaun.com.pokebuspro;
 
+import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.IntentSender;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -50,7 +53,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
     static Context mContext;
     static GetBusStopJSON obj;
     static GetBusDistanceJSON objTwo;
-    static String preferredMap;
+
 
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
     static ArrayList<LatLng> pointList = new ArrayList<>();
@@ -58,7 +61,7 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
     static Marker pokeBusMarker;
     static Timer timer;
     static TimerTask timerTask;
-    static LatLng currentLocation;
+
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
     SharedPreferences.Editor editor;
@@ -97,7 +100,21 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
         Log.i("MyMapsActivity", "longitude" + longitude);
 
 
+        LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
+        if(enabledAirplaneMode){
+            Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
+
+            Intent intent = new Intent(MapsActivity.mContext , AirplaneMode.class);
+            startActivity(intent);
+            this.finish();
+
+        }else if(!enabledGPS){
+            Log.i("MyMapsActivity", "!enabledGPS");
+            toaster("App works best with GPS on");
+        }
 
 
         SharedPreferences pref = getSharedPreferences(
@@ -300,8 +317,21 @@ static GoogleMap mMap; // Might be null if Google Play services APK is not avail
             }
         });
 
+
     }
 
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public static boolean isAirplaneModeOn(Context context) {
+        Log.i("MyMapsActivity", "isAirplaneModeOn");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return Settings.System.getInt(context.getContentResolver(),
+                    Settings.System.AIRPLANE_MODE_ON, 0) != 0;
+        } else {
+            return Settings.Global.getInt(context.getContentResolver(),
+                    Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+        }
+    }
 
 
     public static void updateBusDistance() {
