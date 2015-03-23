@@ -435,7 +435,7 @@ public class MapsActivity extends FragmentActivity implements
 
             AddMarkers.addMarkersToMap(busInfo);
             mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-
+            mMap.setMyLocationEnabled(true);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
                     .zoom(17)                   // Sets the zoom
