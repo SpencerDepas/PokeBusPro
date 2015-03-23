@@ -435,6 +435,15 @@ public class MapsActivity extends FragmentActivity implements
 
             AddMarkers.addMarkersToMap(busInfo);
             mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)    // Sets the center of the map to Mountain View
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
         }else if(firstBoot == 0) {
             Log.i("MyMapsActivity","in first boot " );
             firstBoot++;
@@ -459,6 +468,7 @@ public class MapsActivity extends FragmentActivity implements
             Log.i("MyMapsActivity", "after updateBusDistance();");
 
         }else{
+            Log.i("MyMapsActivity", "in the else");
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
                     .zoom(17)                   // Sets the zoom
