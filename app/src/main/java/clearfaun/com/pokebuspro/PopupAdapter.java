@@ -18,7 +18,7 @@ import com.google.android.gms.maps.model.Marker;
  */
 class PopupAdapter implements GoogleMap.InfoWindowAdapter {
     private View popup = null;
-    private LayoutInflater inflater=null;
+    private LayoutInflater inflater = null;
 
     PopupAdapter(LayoutInflater inflater) {
         this.inflater=inflater;
@@ -28,6 +28,9 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoWindow(Marker marker) {
         return(null);
     }
+
+
+
 
     @SuppressLint("InflateParams")
     @Override
@@ -42,7 +45,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         TextView busName =(TextView)popup.findViewById(R.id.bus_name);
         TextView busCode =(TextView)popup.findViewById(R.id.bus_code);
         TextView distances =(TextView)popup.findViewById(R.id.snippet);
-        ImageView image = (ImageView)popup.findViewById(R.id.icon);
+        //ImageView image = (ImageView)popup.findViewById(R.id.icon);
 
 
         for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){

@@ -247,8 +247,8 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity","onPause()");
         mLocationProvider.disconnect();
         stopTimerTask();
-        busInfo.clear();
-        AddMarkers.marker = null;
+        //busInfo.clear();
+        //AddMarkers.marker = null;
     }
 
     @Override
@@ -429,12 +429,13 @@ public class MapsActivity extends FragmentActivity implements
 
         Log.i("MyMapsActivity","handleNewLocation ----------latitude " + latitude);
         //only want location this to run on first time. Not activate on every location update
-      /*  if(pointList.size() > 0){
+        if(pointList.size() > 0){
             Log.i("MyMapsActivity", "afterpointList.size() > 0");
 
-            AddMarkers.addMarkersToMap(busInfo);
 
-        }else */if(firstBoot == 0) {
+            AddMarkers.addMarkersToMap(busInfo);
+            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+        }else if(firstBoot == 0) {
             Log.i("MyMapsActivity","in first boot " );
             firstBoot++;
             mMap.setMyLocationEnabled(true);
