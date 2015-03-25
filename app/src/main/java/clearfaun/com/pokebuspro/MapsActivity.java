@@ -150,7 +150,7 @@ public class MapsActivity extends FragmentActivity implements
                 Log.i("MyMapsActivity", "onClick refreshLocation");
                 //refresh button
 
-
+                zoom = mMap.getCameraPosition().zoom;
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
 
@@ -418,7 +418,7 @@ public class MapsActivity extends FragmentActivity implements
         toast.show();
     }
 
-
+    float zoom;
 
     @Override
     public void handleNewLocation(Location location) {
@@ -441,8 +441,8 @@ public class MapsActivity extends FragmentActivity implements
             mMap.setMyLocationEnabled(true);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
-                    .zoom(17)                   // Sets the zoom
                     .bearing(90)                // Sets the orientation of the camera to east
+                    .zoom(zoom)                   // keeps zoom
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
