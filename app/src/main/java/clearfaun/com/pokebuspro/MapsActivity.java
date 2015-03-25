@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -119,16 +120,17 @@ public class MapsActivity extends FragmentActivity implements
                 "pokeBusCodePrefs", Context.MODE_PRIVATE);
 
 
+
         pokeBusBusCode = Integer.parseInt(pref.getString("pokeBusCode", "0"));
 
 
 
-        ImageButton b = (ImageButton) findViewById(R.id.options_button);
-        b.setOnClickListener(new View.OnClickListener() {
+        ImageButton optionsButton = (ImageButton) findViewById(R.id.options_button);
+        optionsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-        //settings
+                //settings
 
                 fm = getFragmentManager();
                 ft = fm.beginTransaction();
@@ -160,8 +162,26 @@ public class MapsActivity extends FragmentActivity implements
 
             }
         });
+        ImageButton mapButton = (ImageButton) findViewById(R.id.map_button);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.i("MyMapsActivity", "onClick busmap");
+                //go to map
+                //bus map
+                SharedPreferences mapPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+                String prefBusMap = mapPref.getString("KEY99", "Brooklyn");
+                zoom = mMap.getCameraPosition().zoom;
+                Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
+
+                Intent intent = new Intent(MapsActivity.mContext , BusMap.class);
+                intent.putExtra("maptype", "Current Map is: " + prefBusMap);
+                startActivity(intent);
 
 
+            }
+        });
 
     }
 

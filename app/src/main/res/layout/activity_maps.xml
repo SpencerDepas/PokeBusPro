@@ -24,13 +24,22 @@
             android:gravity="right"
             android:orientation="vertical" >
 
-
-            <ImageButton android:id="@+id/options_button"
+            <ImageButton android:id="@+id/map_button"
+                android:layout_above="@+id/options_button"
                 android:layout_centerVertical="true"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:layout_width="@dimen/button_size"
                 android:layout_height="@dimen/button_size"
-                android:src="@drawable/settings49"
+                android:src="@drawable/ic_action_map"
+                />
+
+            <ImageButton android:id="@+id/options_button"
+                android:layout_marginTop="7dp"
+                android:layout_centerVertical="true"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:src="@drawable/ic_action_settings"
 
                 />
 
@@ -39,7 +48,7 @@
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:layout_width="@dimen/button_size"
                 android:layout_height="@dimen/button_size"
-                android:src="@drawable/refresh69"
+                android:src="@drawable/ic_action_location_found"
                 android:layout_marginTop="7dp"
 
 
