@@ -151,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements
             public void onClick(View v) {
                 Log.i("MyMapsActivity", "onClick refreshLocation");
                 //refresh button
-
+                bearing = mMap.getCameraPosition().bearing;
                 zoom = mMap.getCameraPosition().zoom;
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
@@ -173,6 +173,7 @@ public class MapsActivity extends FragmentActivity implements
                 SharedPreferences mapPref = PreferenceManager.getDefaultSharedPreferences(mContext);
                 String prefBusMap = mapPref.getString("KEY99", "Brooklyn");
                 zoom = mMap.getCameraPosition().zoom;
+                bearing = mMap.getCameraPosition().bearing;
                 Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
 
                 Intent intent = new Intent(MapsActivity.mContext , BusMap.class);
@@ -439,6 +440,7 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     float zoom;
+    float bearing;
 
     @Override
     public void handleNewLocation(Location location) {
@@ -461,7 +463,7 @@ public class MapsActivity extends FragmentActivity implements
             mMap.setMyLocationEnabled(true);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
-                    .bearing(90)                // Sets the orientation of the camera to east
+                    .bearing(bearing)                // Sets the orientation of the camera to east
                     .zoom(zoom)                   // keeps zoom
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
