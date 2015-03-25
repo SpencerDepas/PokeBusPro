@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -76,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-
+    private ProgressBar spinner;
 
 
     @Override
@@ -86,6 +87,7 @@ public class MapsActivity extends FragmentActivity implements
         setContentView(R.layout.activity_maps);
 
 
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
         Log.i("MyMapsActivity", "onCreate");
 
         mContext = getApplicationContext();
@@ -421,6 +423,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void handleNewLocation(Location location) {
 
+        //spinner.setVisibility(View.INVISIBLE);
         Log.i("MyMapsActivity","handleNewLocation -----------");
 
         latitude = location.getLatitude();
