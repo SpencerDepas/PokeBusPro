@@ -394,7 +394,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-    double distFrom(double lat1, double lng1, double lat2, double lng2) {
+    static double distFrom(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2-lat1);
         double dLng = Math.toRadians(lng2-lng1);
@@ -470,18 +470,7 @@ public class MapsActivity extends FragmentActivity implements
             updateBusDistance();
             Log.i("MyMapsActivity", "after updateBusDistance();");
 
-        }else{
-            Log.i("MyMapsActivity", "in the else");
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLng)    // Sets the center of the map to Mountain View
-                    .zoom(17)                   // Sets the zoom
-                    .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
         }
-
 
     }
 

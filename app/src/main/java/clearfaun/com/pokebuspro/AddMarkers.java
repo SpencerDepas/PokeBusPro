@@ -70,12 +70,33 @@ public class AddMarkers {
             MapsActivity.pointList.add(markerLocation[i]);
 
         }
+        //to find closest marker to you
+        int busInfoIndex = 0;
+        double closestSnippet = 0;
+        for(int i = 0 ; i < busInfo.size(); i ++){
+
+
+            if(closestSnippet == 0 || closestSnippet > MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
+                    busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng())){
+
+                closestSnippet = MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
+                        busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
+                busInfoIndex = i;
+
+            }
+        }
+
+        marker[busInfoIndex].showInfoWindow();
+
         Log.i("AddMarkers", "  Remove spinner " );
         MapsActivity.spinner.setVisibility(View.INVISIBLE);
 
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
 
+    public static void displayClosestSnippet(int markerIndex){
+        marker[markerIndex].showInfoWindow();
+    }
 
     public static void updateMarkersToMap(ArrayList<BusInfo> busInfo) {
 
