@@ -77,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-    private ProgressBar spinner;
+    static ProgressBar spinner;
 
 
     @Override
@@ -423,7 +423,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void handleNewLocation(Location location) {
 
-        //spinner.setVisibility(View.INVISIBLE);
+
         Log.i("MyMapsActivity","handleNewLocation -----------");
 
         latitude = location.getLatitude();

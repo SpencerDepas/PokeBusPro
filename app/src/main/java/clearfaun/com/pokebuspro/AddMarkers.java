@@ -2,6 +2,8 @@ package clearfaun.com.pokebuspro;
 
 
 import android.util.Log;
+import android.view.View;
+
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -68,8 +70,8 @@ public class AddMarkers {
             MapsActivity.pointList.add(markerLocation[i]);
 
         }
-
-
+        Log.i("AddMarkers", "  Remove spinner " );
+        MapsActivity.spinner.setVisibility(View.INVISIBLE);
 
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
