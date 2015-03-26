@@ -172,8 +172,7 @@ public class MapsActivity extends FragmentActivity implements
                 //bus map
                 SharedPreferences mapPref = PreferenceManager.getDefaultSharedPreferences(mContext);
                 String prefBusMap = mapPref.getString("KEY99", "Brooklyn");
-                zoom = mMap.getCameraPosition().zoom;
-                bearing = mMap.getCameraPosition().bearing;
+
                 Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
 
                 Intent intent = new Intent(MapsActivity.mContext , BusMap.class);
@@ -268,6 +267,8 @@ public class MapsActivity extends FragmentActivity implements
     public void onPause() {
         super.onPause();
         Log.i("MyMapsActivity","onPause()");
+        zoom = mMap.getCameraPosition().zoom;
+        bearing = mMap.getCameraPosition().bearing;
         mLocationProvider.disconnect();
         stopTimerTask();
         //busInfo.clear();
@@ -387,8 +388,6 @@ public class MapsActivity extends FragmentActivity implements
                 .getMap();
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-
 
 
     }
