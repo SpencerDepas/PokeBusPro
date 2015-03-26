@@ -80,8 +80,17 @@ public class AddMarkers {
         //to find closest marker to you
         int busInfoIndex = 0;
         double closestSnippet = 0;
+
+
+
+
         for(int i = 0 ; i < busInfo.size(); i ++){
 
+            if(busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusBusCode +"")){
+                //if a poke bus is in range then it will opon in stead of the closest bus stop
+                busInfoIndex = i;
+                break;
+            }
 
             if(closestSnippet == 0 || closestSnippet > MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
                     busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng())){
