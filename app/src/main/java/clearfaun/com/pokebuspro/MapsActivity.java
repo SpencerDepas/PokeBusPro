@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.melnykov.fab.FloatingActionButton;
 
 
 import io.fabric.sdk.android.Fabric;
@@ -99,6 +101,9 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
+
+
+
         LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
         boolean enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
@@ -141,6 +146,7 @@ public class MapsActivity extends FragmentActivity implements
                 ft.commit();
 
 
+
             }
         });
 
@@ -153,12 +159,27 @@ public class MapsActivity extends FragmentActivity implements
                 //refresh button
                 bearing = mMap.getCameraPosition().bearing;
                 zoom = mMap.getCameraPosition().zoom;
+
+                mMap.setMyLocationEnabled(true);
+                // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .zoom(zoom)                   // Sets the zoom
+                        .bearing(bearing)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
+
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
 
 
 
                 refreshMarkers();
+
+
 
             }
         });
@@ -281,7 +302,6 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity","onResume()");
 
         mLocationProvider.connect();
-
 
         setUpMapIfNeeded();
 
@@ -467,6 +487,7 @@ public class MapsActivity extends FragmentActivity implements
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
 
         }else if(firstBoot == 0) {
             Log.i("MyMapsActivity","in first boot " );

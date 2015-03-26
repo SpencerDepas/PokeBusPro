@@ -13,6 +13,7 @@
 
 
 
+
         <ProgressBar
             android:id="@+id/progressBar1"
             style="?android:attr/progressBarStyleLarge"
@@ -30,6 +31,7 @@
             android:orientation="vertical" >
 
 
+
             <com.melnykov.fab.FloatingActionButton
                 android:id="@+id/map_button"
                 android:layout_above="@+id/options_button"
@@ -37,12 +39,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_margin="16dp"
-                android:src="@drawable/ic_action_web_site"
-                fab:fab_colorNormal="@color/DeepSkyBlue"
-                fab:fab_colorPressed="@color/teal"
+                android:src="@drawable/ic_action_web_site_black"
+                fab:fab_colorNormal="@color/white"
+                fab:fab_colorPressed="@color/yellow"
                 fab:fab_colorRipple="@color/translucent_red"
                 fab:fab_type="mini"
                 />
+
+
 
             <com.melnykov.fab.FloatingActionButton
                 android:id="@+id/options_button"
@@ -53,7 +57,7 @@
                 android:layout_margin="16dp"
                 android:src="@drawable/ic_action_settings"
                 fab:fab_colorNormal="@color/DeepSkyBlue"
-                fab:fab_colorPressed="@color/teal"
+                fab:fab_colorPressed="@color/yellow"
                 fab:fab_colorRipple="@color/translucent_red"
                 fab:fab_type="mini"
                 />
@@ -66,16 +70,18 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_margin="16dp"
-                android:src="@drawable/ic_action_location_found"
-                fab:fab_colorNormal="@color/DeepSkyBlue"
-                fab:fab_colorPressed="@color/teal"
+                android:src="@drawable/ic_action_location_found_black"
+                fab:fab_colorNormal="@color/white"
+                fab:fab_colorPressed="@color/yellow"
                 fab:fab_colorRipple="@color/translucent_red"
                 fab:fab_type="mini"
                 />
 
+
+
+
         </RelativeLayout>
 
     </RelativeLayout>
-
 
     </fragment>

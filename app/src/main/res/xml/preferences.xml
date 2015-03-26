@@ -45,12 +45,7 @@
             android:entryValues="@array/map_entries_values"
             android:summary="@string/current_map" />
 
-        <PreferenceScreen
-            android:title="@string/bus_map"
-            android:key="@string/bus_map_key"
-            >
-
-        </PreferenceScreen>
+       
 
 
     </PreferenceCategory>

@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:paddingBottom="3dp"/>
+            android:paddingBottom="5dp"/>
     </LinearLayout>
 
 
@@ -49,7 +49,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/mapgreytwo"
-            android:paddingBottom="3dp"
             android:paddingLeft="6dp"
             />
 

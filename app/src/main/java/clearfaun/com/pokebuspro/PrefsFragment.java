@@ -55,24 +55,24 @@ public class PrefsFragment extends PreferenceFragment {
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                // Implementation
-                Log.i("PrefsFragment", "onSharedPreferenceChanged");
-                if (key.equals("KEY1")) {
-                    //for changing radius
-                    Log.i("PrefsFragment", "KEY1");
-                    MapsActivity.refreshMarkers();
-                }else if(key.equals("KEY99")){
-                    //changing summery to siaplay current bus map
-                    ListPreference prefSumBusMap = (ListPreference) findPreference("KEY99");
+            // Implementation
+            Log.i("PrefsFragment", "onSharedPreferenceChanged");
+            if (key.equals("KEY1")) {
+                //for changing radius
+                Log.i("PrefsFragment", "KEY1");
+                MapsActivity.refreshMarkers();
+            }else if(key.equals("KEY99")){
+                //changing summery to siaplay current bus map
+                ListPreference prefSumBusMap = (ListPreference) findPreference("KEY99");
 
-                    prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue());
-                }else if(key.equals("KEY2")){
-                    //this is to change auto refresh
+                prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue());
+            }else if(key.equals("KEY2")){
+                //this is to change auto refresh
 
-                    MapsActivity.refreshMarkers();
+                MapsActivity.refreshMarkers();
 
 
-                }
+            }
             }
         };
 
