@@ -1,6 +1,5 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/map"
@@ -24,41 +23,54 @@
 
 
         <RelativeLayout
+            xmlns:fab="http://schemas.android.com/apk/res-auto"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="right"
             android:orientation="vertical" >
 
-            <ImageButton android:id="@+id/map_button"
+
+            <com.melnykov.fab.FloatingActionButton
+                android:id="@+id/map_button"
                 android:layout_above="@+id/options_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:layout_width="@dimen/button_size"
-                android:layout_height="@dimen/button_size"
-                android:src="@drawable/ic_action_map"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_action_web_site"
+                fab:fab_colorNormal="@color/Blue"
+                fab:fab_colorPressed="@color/teal"
+                fab:fab_colorRipple="@color/translucent_red"
+                fab:fab_type="mini"
                 />
 
-            <ImageButton android:id="@+id/options_button"
-                android:layout_marginTop="7dp"
+            <com.melnykov.fab.FloatingActionButton
+                android:id="@+id/options_button"
+                android:layout_above="@+id/options_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:layout_width="@dimen/button_size"
-                android:layout_height="@dimen/button_size"
+                android:layout_margin="16dp"
                 android:src="@drawable/ic_action_settings"
-
+                fab:fab_colorNormal="@color/Blue"
+                fab:fab_colorPressed="@color/teal"
+                fab:fab_colorRipple="@color/translucent_red"
+                fab:fab_type="mini"
                 />
 
 
-
-            <ImageButton android:id="@+id/refresh_location_button"
+            <com.melnykov.fab.FloatingActionButton
+                android:id="@+id/refresh_location_button"
                 android:layout_below="@+id/options_button"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:layout_width="@dimen/button_size"
-                android:layout_height="@dimen/button_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
                 android:src="@drawable/ic_action_location_found"
-                android:layout_marginTop="7dp"
-
-
+                fab:fab_colorNormal="@color/Blue"
+                fab:fab_colorPressed="@color/teal"
+                fab:fab_colorRipple="@color/translucent_red"
+                fab:fab_type="mini"
                 />
 
         </RelativeLayout>
