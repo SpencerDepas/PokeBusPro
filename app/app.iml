@@ -91,6 +91,7 @@
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="subsampling-scale-image-view-3.1.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
+    <orderEntry type="library" exported="" name="MaterialDesign-1.4" level="project" />
     <orderEntry type="library" exported="" name="crashlytics-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="answers-1.1.2" level="project" />
     <orderEntry type="library" exported="" name="beta-1.1.2" level="project" />

@@ -62,7 +62,14 @@ public class AddMarkers {
             }
 
 
-            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
+            if(busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusBusCode + "")){
+                //to distinqush a pokebus
+                marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspostfour));
+            }else{
+                marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
+            }
+
+
             Log.i("AddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);
 
 
