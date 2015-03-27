@@ -6,10 +6,8 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -19,7 +17,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -35,12 +32,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.melnykov.fab.FloatingActionButton;
 
 
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -70,7 +66,8 @@ public class MapsActivity extends FragmentActivity implements
     static double testLng = -73.9829084;*/
     SharedPreferences.Editor editor;
     static SharedPreferences prefs;
-    static int pokeBusBusCode;
+    static int prefPokeBusBusCode;
+    static List<Integer> listPokeBusCode;
 
     static public String API_KEY_MTA ;
     PrefsFragment prefsFragment;
@@ -89,6 +86,7 @@ public class MapsActivity extends FragmentActivity implements
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_maps);
 
+        listPokeBusCode = new ArrayList<>();
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         Log.i("MyMapsActivity", "onCreate");
@@ -126,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-        pokeBusBusCode = Integer.parseInt(pref.getString("pokeBusCode", "0"));
+        prefPokeBusBusCode = Integer.parseInt(pref.getString("pokeBusCode", "0"));
 
 
 
@@ -230,13 +228,23 @@ public class MapsActivity extends FragmentActivity implements
 
     public static void addPokeBusMarker(){
 
-        if(pokeBusMarker == null) {
+
+        pokeBusMarker = mMap.addMarker(new MarkerOptions()
+                .title("PokeBus")
+                .position(latLng)
+                .draggable(true));
+        Log.i("MyMapsActivity", "onMenuItemClick marker created");
+
+
+
+
+      /*  if(pokeBusMarker == null) {
             pokeBusMarker = mMap.addMarker(new MarkerOptions()
                     .title("PokeBus")
                     .position(latLng)
                     .draggable(true));
             Log.i("MyMapsActivity", "onMenuItemClick marker created");
-        }
+        }*/
     }
 
 
@@ -338,12 +346,14 @@ public class MapsActivity extends FragmentActivity implements
                         if((int)distance < 10){
 
                             Log.i("MyMapsActivityMarker", "distance < 6000000. BusCode :" + busInfo.get(i).getBusCode() );
-
                             Toast.makeText(getBaseContext(), "PokeBus set to: " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
                             marker.setVisible(false);
                             pokeBusMarker = null;
                             setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());
+                            listPokeBusCode.add(Integer.parseInt(busInfo.get(i).getBusCode()));
+                            Log.i("MyMapsActivityMarker", "listPokeBusCode " + listPokeBusCode.size());
                             Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
+
 
                         }
                     }
@@ -424,12 +434,12 @@ public class MapsActivity extends FragmentActivity implements
         editor.putString("pokeBusName", busName);
         editor.apply();
 
-        pokeBusBusCode = Integer.parseInt(prefs.getString("pokeBusCode", "0"));
+        prefPokeBusBusCode = Integer.parseInt(prefs.getString("pokeBusCode", "0"));
 
     }
 
     public static int getPokeBus(){
-        return pokeBusBusCode;
+        return prefPokeBusBusCode;
     }
 
 

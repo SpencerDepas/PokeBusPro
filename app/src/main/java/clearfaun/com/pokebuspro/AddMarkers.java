@@ -61,13 +61,32 @@ public class AddMarkers {
                         + "\n" + busInfo.get(i).getDistance()[2]);
             }
 
+            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
+            Log.i("AddMarkers", "pre color poke bus : ");
+            for(int z = 0;z < MapsActivity.listPokeBusCode.size(); z ++){
 
-            if(busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusBusCode + "")){
+                Log.i("AddMarkers", " color poke bus : " + z);
+
+                if(busInfo.get(i).getBusCode().equals(MapsActivity.listPokeBusCode.get(z) + "")){
+                    Log.i("AddMarkers", " int condiition color poke bus : " + busInfo.get(i).getBusCode());
+                    //to distinqush a pokebus
+                    marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspostfour));
+                }
+
+            }
+
+
+
+
+
+
+
+            /*if(busInfo.get(i).getBusCode().equals(MapsActivity.prefPokeBusBusCode + "")){
                 //to distinqush a pokebus
                 marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspostfour));
             }else{
                 marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
-            }
+            }*/
 
 
             Log.i("AddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);
@@ -86,7 +105,7 @@ public class AddMarkers {
 
         for(int i = 0 ; i < busInfo.size(); i ++){
 
-            if(busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusBusCode +"")){
+            if(busInfo.get(i).getBusCode().equals(MapsActivity.prefPokeBusBusCode +"")){
                 //if a poke bus is in range then it will opon in stead of the closest bus stop
                 busInfoIndex = i;
                 break;
