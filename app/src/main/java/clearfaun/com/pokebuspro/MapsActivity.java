@@ -23,8 +23,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 
 
-
-
+import com.google.android.gms.internal.ge;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -88,6 +87,12 @@ public class MapsActivity extends FragmentActivity implements
 
         listPokeBusCode = new ArrayList<>();
 
+        //loadArray("savedPokeBuses", mContext);
+
+       /* for(int i = 0 ; i < savedPokeBusArray.length; i ++){
+            Log.i("MyMapsActivity", "savedPokeBusArray : " + savedPokeBusArray[i]);
+        }*/
+
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         Log.i("MyMapsActivity", "onCreate");
 
@@ -121,9 +126,6 @@ public class MapsActivity extends FragmentActivity implements
 
         SharedPreferences pref = getSharedPreferences(
                 "pokeBusCodePrefs", Context.MODE_PRIVATE);
-
-
-
         prefPokeBusBusCode = Integer.parseInt(pref.getString("pokeBusCode", "0"));
 
 
@@ -236,15 +238,6 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "onMenuItemClick marker created");
 
 
-
-
-      /*  if(pokeBusMarker == null) {
-            pokeBusMarker = mMap.addMarker(new MarkerOptions()
-                    .title("PokeBus")
-                    .position(latLng)
-                    .draggable(true));
-            Log.i("MyMapsActivity", "onMenuItemClick marker created");
-        }*/
     }
 
 
@@ -351,6 +344,22 @@ public class MapsActivity extends FragmentActivity implements
                             pokeBusMarker = null;
                             setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());
                             listPokeBusCode.add(Integer.parseInt(busInfo.get(i).getBusCode()));
+                            String[] tempPokeBusArray = new String[listPokeBusCode.size()];
+                            for(int z = 0; z < listPokeBusCode.size(); z ++){
+                                tempPokeBusArray[z] = listPokeBusCode.get(z) + "";
+                                Log.i("MyMapsActivityMarker", "tempPokeBusArray[z] " + tempPokeBusArray[z]);
+                            }
+                            Log.i("MyMapsActivityMarker", "saveArray ");
+                            saveArray(tempPokeBusArray, "savedPokeBuses", mContext);
+                            Log.i("MyMapsActivityMarker", "loadArray ");
+                            String[] tempPokeBusArrayTwo = loadArray("savedPokeBuses");
+
+                            for(int z = 0 ; z < tempPokeBusArrayTwo.length; z ++){
+                                Log.i("MyMapsActivityMarker", "tempPokeBusArrayTwo: " + tempPokeBusArrayTwo[z]);
+                            }
+
+                            Log.i("MyMapsActivityMarker", " after load array " );
+
                             Log.i("MyMapsActivityMarker", "listPokeBusCode " + listPokeBusCode.size());
                             Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
 
@@ -364,7 +373,37 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
+    public String[] loadArray(String arrayName) {
+        Log.i("MyMapsActivityMarker", "Load ARRAY " );
 
+
+        SharedPreferences prefs = getSharedPreferences(
+                "pokeBusCodePrefs", Context.MODE_PRIVATE);
+        int size = prefs.getInt(arrayName + "_size", 0);
+        String array[] = new String[size];
+        Log.i("MyMapsActivityMarker", "Loadarray[]  size" + array.length );
+        for(int i=0;i<size;i++) {
+            array[i] = prefs.getString(arrayName + "_" + i, null);
+        }
+        return array;
+
+    }
+
+    public boolean saveArray(String[] array, String arrayName, Context mContext) {
+        Log.i("MyMapsActivityMarker", "saveArray length " + array.length);
+
+        prefs = getSharedPreferences("pokeBusCodePrefs",
+                Context.CONTEXT_IGNORE_SECURITY);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(arrayName +"_size", array.length);
+        for(int i=0;i<array.length;i++) {
+            editor.putString(arrayName + "_" + i, array[i]);
+        }
+        Log.i("MyMapsActivityMarker", "saveArray length " + prefs.getString(arrayName + "_" + 0, "9999"));
+        Log.i("MyMapsActivityMarker", "saveArray length " + prefs.getString(arrayName + "_" + 1, "9999"));
+        return editor.commit();
+
+    }
 
 
     public static void updateBusDistance() {
@@ -423,9 +462,16 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
+
+
+
     private void setPokeBus(String busCode, String busName) {
         Log.i("MyMapsActivity","setPokeBus()");
         Log.i("MyMapsActivity","busCode()" + busCode);
+
+
+
+
 
         prefs = getSharedPreferences("pokeBusCodePrefs",
                 Context.CONTEXT_IGNORE_SECURITY);
