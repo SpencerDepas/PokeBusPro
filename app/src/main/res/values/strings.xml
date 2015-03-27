@@ -2,6 +2,8 @@
     <string name="app_name">Poke Bus</string>
     <string name="title_activity_maps">Poke Bus</string>
     <string name="NoUI">Poke á Bus</string>
+    <string name="action_settings">Settings</string>
+
 
     <string name="about_page_info">This app was made Clear Faun. It is an opon source free app.
                                     It is licensed by the MTA.</string>

@@ -14,17 +14,20 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.IntentCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
@@ -42,6 +45,9 @@ public class PrefsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         Log.i("PrefsFragment", "onCreate");
         // Load the preferences from an XML resource
+
+
+
         addPreferencesFromResource(R.xml.preferences);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);

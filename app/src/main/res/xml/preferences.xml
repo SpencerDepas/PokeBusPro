@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <PreferenceCategory
-        android:title="@string/map_preferences">
+        android:title="@string/map_preferences"
+        >
 
         <ListPreference
             android:key="@string/radius_key"
+            android:textColor="@color/DeepSkyBlue"
             android:title="@string/radius_preference"
             android:entries="@array/radius_entries"
             android:entryValues="@array/radius_entries_values"
@@ -45,7 +48,7 @@
             android:entryValues="@array/map_entries_values"
             android:summary="@string/current_map" />
 
-       
+
 
 
     </PreferenceCategory>
