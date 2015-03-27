@@ -26,7 +26,7 @@
     <string name="pref_key6">KEY6</string>
     <string name="bus_map_key">KEY4888</string>
     <string name="facebook_key">KEY001</string>
-
+    <string name="remove_poke_bus_key">KEY033</string>
 
     <string name="map_preferences">Map Settings</string>
 
@@ -38,7 +38,7 @@
     <!--
          PokeBus preferences
          -->
-
+    <string name="remove_all_poke_bus">Remove all saved poke Buses</string>
     <string name="poke_bus_settings">Create a PokeBus</string>
     <string name="current_poke_bus">Current Poke Bus:</string>
     <string name="place_pokebus_marker">Make a PokeBus with a marker</string>

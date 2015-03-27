@@ -23,12 +23,7 @@ import android.support.v4.content.IntentCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+
 
 
 /**
@@ -124,6 +119,10 @@ public class PrefsFragment extends PreferenceFragment {
             i.setData(Uri.parse(url));
             startActivity(i);
 
+        }else if(preference.getKey().equals("KEY033")){
+            Log.i("PrefsFragment", "Remove all pokebuses");
+            MapsActivity.listPokeBusCode.clear();
+            MapsActivity.toaster("Poke Buses deleted");
         }
 
 
@@ -163,7 +162,7 @@ public class PrefsFragment extends PreferenceFragment {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
         String settings= "RefreshTime is: " + sharedPrefs.getString(getString(R.string.refresh_time_key), "NOREFRESHTIME");
 
-        //MapsActivity.toaster(settings);
+
 
        /* MapsActivity.stopTimerTask();
         MapsActivity.updateBusDistance();*/

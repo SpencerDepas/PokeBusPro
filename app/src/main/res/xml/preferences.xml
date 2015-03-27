@@ -35,6 +35,10 @@
             >
         </PreferenceScreen>
 
+        <PreferenceScreen
+            android:title="@string/remove_all_poke_bus"
+            android:key="@string/remove_poke_bus_key" >
+        </PreferenceScreen>
 
     </PreferenceCategory>
 
@@ -60,7 +64,6 @@
             android:title="@string/like_us_on_facebook"
             android:key="@string/facebook_key"
             >
-
         </PreferenceScreen>
 
         <PreferenceScreen
