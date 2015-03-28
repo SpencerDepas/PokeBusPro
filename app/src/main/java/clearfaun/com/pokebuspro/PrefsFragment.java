@@ -125,6 +125,8 @@ public class PrefsFragment extends PreferenceFragment {
             MapsActivity.toaster("Poke Buses deleted");
 
             MapsActivity.deletePrefs();
+            //removes change of color from icon color
+            AddMarkers.removePokeBusColor();
 
         }
 
@@ -137,10 +139,6 @@ public class PrefsFragment extends PreferenceFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.i("PrefsFragment", "onActivityCreated");
-
-
-
-
 
 
         try {

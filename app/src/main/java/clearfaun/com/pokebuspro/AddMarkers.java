@@ -79,16 +79,7 @@ public class AddMarkers {
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
 
 
-            if(MapsActivity.listPokeBusCode != null){
 
-                for(int q = 0; q < MapsActivity.listPokeBusCode.size(); q++){
-
-                    if(busInfo.get(i).getBusCode().equals(MapsActivity.listPokeBusCode.get(q) + "")){
-                        //to distinqush a pokebus
-                        marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspostfour));
-                    }
-                }
-            }
 
 
             Log.i("AddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);
@@ -98,6 +89,8 @@ public class AddMarkers {
             MapsActivity.pointList.add(markerLocation[i]);
 
         }
+
+        addPokeBusColor();
         //to find closest marker to you
         int busInfoIndex = 0;
         double closestSnippet = 0;
@@ -131,8 +124,28 @@ public class AddMarkers {
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
 
-    public static void displayClosestSnippet(int markerIndex){
-        marker[markerIndex].showInfoWindow();
+    public static void addPokeBusColor(){
+        if(MapsActivity.listPokeBusCode != null){
+
+            for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++) {
+                for (int q = 0; q < MapsActivity.listPokeBusCode.size(); q++) {
+
+                    if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.listPokeBusCode.get(q) + "")) {
+                        //to distinqush a pokebus
+                        marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspostfour));
+                    }
+                }
+            }
+        }
+    }
+
+    public static void removePokeBusColor(){
+        if(MapsActivity.listPokeBusCode != null){
+
+            for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++) {
+                marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
+            }
+        }
     }
 
     public static void updateMarkersToMap(ArrayList<BusInfo> busInfo) {

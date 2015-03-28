@@ -11,10 +11,12 @@
 
         <TextView
             android:id="@+id/bus_name"
+            android:textColor="@color/DeepSkyBlue"
             android:gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textSize="19sp"
+            android:paddingBottom="8dp"
+            android:textSize="24sp"
             android:textStyle="bold"/>
 
         <TextView
@@ -38,7 +40,7 @@
             android:id="@+id/bus_code"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textSize="11sp"
+            android:textSize="15sp"
             android:gravity="center"
             android:textStyle="bold"
             android:paddingLeft="6dp"/>
@@ -48,7 +50,7 @@
             android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/mapgreytwo"
+            android:src="@drawable/bus_two_two"
             android:paddingLeft="6dp"
             />
 

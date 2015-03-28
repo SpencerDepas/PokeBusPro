@@ -84,7 +84,7 @@ public class MapsActivity extends FragmentActivity implements
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_maps);
 
-        
+
         prefs = getSharedPreferences(
                 "pokeBusCodePrefs", Context.MODE_PRIVATE);
         listPokeBusCode = new ArrayList<>();
@@ -356,7 +356,7 @@ public class MapsActivity extends FragmentActivity implements
                             }
                             Log.i("MyMapsActivityMarker", "saveArray ");
                             saveArray(tempPokeBusArray, "savedPokeBuses", mContext);
-
+                            AddMarkers.addPokeBusColor();
 
 
 
