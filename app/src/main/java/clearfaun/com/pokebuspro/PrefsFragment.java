@@ -123,6 +123,9 @@ public class PrefsFragment extends PreferenceFragment {
             Log.i("PrefsFragment", "Remove all pokebuses");
             MapsActivity.listPokeBusCode.clear();
             MapsActivity.toaster("Poke Buses deleted");
+
+            MapsActivity.deletePrefs();
+
         }
 
 

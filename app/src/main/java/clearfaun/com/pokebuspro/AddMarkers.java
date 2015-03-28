@@ -76,17 +76,19 @@ public class AddMarkers {
             }
 
 
+            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
 
 
+            if(MapsActivity.listPokeBusCode != null){
 
+                for(int q = 0; q < MapsActivity.listPokeBusCode.size(); q++){
 
-
-            /*if(busInfo.get(i).getBusCode().equals(MapsActivity.prefPokeBusBusCode + "")){
-                //to distinqush a pokebus
-                marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspostfour));
-            }else{
-                marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
-            }*/
+                    if(busInfo.get(i).getBusCode().equals(MapsActivity.listPokeBusCode.get(q) + "")){
+                        //to distinqush a pokebus
+                        marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspostfour));
+                    }
+                }
+            }
 
 
             Log.i("AddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);

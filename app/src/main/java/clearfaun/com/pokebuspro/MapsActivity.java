@@ -64,7 +64,6 @@ public class MapsActivity extends FragmentActivity implements
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
     SharedPreferences.Editor editor;
-    static SharedPreferences prefs;
     static int prefPokeBusBusCode;
     static List<Integer> listPokeBusCode;
 
@@ -73,11 +72,11 @@ public class MapsActivity extends FragmentActivity implements
     FragmentManager fm;
     FragmentTransaction ft;
     int firstBoot = 0;
-
+    static SharedPreferences prefs;
 
     public static final String TAG = MapsActivity.class.getSimpleName();
     static ProgressBar spinner;
-
+    static String[] tempPokeBusArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +84,18 @@ public class MapsActivity extends FragmentActivity implements
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_maps);
 
+        
+        prefs = getSharedPreferences(
+                "pokeBusCodePrefs", Context.MODE_PRIVATE);
         listPokeBusCode = new ArrayList<>();
+        tempPokeBusArray = loadArray("savedPokeBuses");
 
-        //loadArray("savedPokeBuses", mContext);
+        for(int i = 0 ; i < tempPokeBusArray.length; i ++){
+            listPokeBusCode.add(Integer.parseInt(tempPokeBusArray[i]));
+        }
 
-       /* for(int i = 0 ; i < savedPokeBusArray.length; i ++){
-            Log.i("MyMapsActivity", "savedPokeBusArray : " + savedPokeBusArray[i]);
-        }*/
+
+
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         Log.i("MyMapsActivity", "onCreate");
@@ -124,9 +128,7 @@ public class MapsActivity extends FragmentActivity implements
         }
 
 
-        SharedPreferences pref = getSharedPreferences(
-                "pokeBusCodePrefs", Context.MODE_PRIVATE);
-        prefPokeBusBusCode = Integer.parseInt(pref.getString("pokeBusCode", "0"));
+
 
 
 
@@ -205,6 +207,9 @@ public class MapsActivity extends FragmentActivity implements
         });
 
     }
+
+
+
 
     public static void refreshMarkers(){
         Log.i("MyMapsActivity", "refreshMarkers");
@@ -344,21 +349,16 @@ public class MapsActivity extends FragmentActivity implements
                             pokeBusMarker = null;
                             setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());
                             listPokeBusCode.add(Integer.parseInt(busInfo.get(i).getBusCode()));
-                            String[] tempPokeBusArray = new String[listPokeBusCode.size()];
+                            String [] tempPokeBusArray = new String[listPokeBusCode.size()];
                             for(int z = 0; z < listPokeBusCode.size(); z ++){
                                 tempPokeBusArray[z] = listPokeBusCode.get(z) + "";
                                 Log.i("MyMapsActivityMarker", "tempPokeBusArray[z] " + tempPokeBusArray[z]);
                             }
                             Log.i("MyMapsActivityMarker", "saveArray ");
                             saveArray(tempPokeBusArray, "savedPokeBuses", mContext);
-                            Log.i("MyMapsActivityMarker", "loadArray ");
-                            String[] tempPokeBusArrayTwo = loadArray("savedPokeBuses");
 
-                            for(int z = 0 ; z < tempPokeBusArrayTwo.length; z ++){
-                                Log.i("MyMapsActivityMarker", "tempPokeBusArrayTwo: " + tempPokeBusArrayTwo[z]);
-                            }
 
-                            Log.i("MyMapsActivityMarker", " after load array " );
+
 
                             Log.i("MyMapsActivityMarker", "listPokeBusCode " + listPokeBusCode.size());
                             Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
@@ -369,16 +369,19 @@ public class MapsActivity extends FragmentActivity implements
                 }
             }
         });
-
-
     }
+
+    public static void deletePrefs(){
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.commit();
+    }
+
 
     public String[] loadArray(String arrayName) {
         Log.i("MyMapsActivityMarker", "Load ARRAY " );
 
-
-        SharedPreferences prefs = getSharedPreferences(
-                "pokeBusCodePrefs", Context.MODE_PRIVATE);
         int size = prefs.getInt(arrayName + "_size", 0);
         String array[] = new String[size];
         Log.i("MyMapsActivityMarker", "Loadarray[]  size" + array.length );
@@ -391,6 +394,7 @@ public class MapsActivity extends FragmentActivity implements
 
     public boolean saveArray(String[] array, String arrayName, Context mContext) {
         Log.i("MyMapsActivityMarker", "saveArray length " + array.length);
+
 
         prefs = getSharedPreferences("pokeBusCodePrefs",
                 Context.CONTEXT_IGNORE_SECURITY);
