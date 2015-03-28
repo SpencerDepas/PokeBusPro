@@ -61,22 +61,12 @@ public class AddMarkers {
                         + "\n" + busInfo.get(i).getDistance()[2]);
             }
 
-            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
+            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
             Log.i("AddMarkers", "pre color poke bus : ");
-            for(int z = 0;z < MapsActivity.listPokeBusCode.size(); z ++){
-
-                Log.i("AddMarkers", " color poke bus : " + z);
-
-                if(busInfo.get(i).getBusCode().equals(MapsActivity.listPokeBusCode.get(z) + "")){
-                    Log.i("AddMarkers", " int condiition color poke bus : " + busInfo.get(i).getBusCode());
-                    //to distinqush a pokebus
-                    marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspostfour));
-                }
-
-            }
 
 
-            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
+
+
 
 
 
@@ -95,23 +85,28 @@ public class AddMarkers {
         int busInfoIndex = 0;
         double closestSnippet = 0;
 
-
-
-
+        //first onpons the closet snippet
         for(int i = 0 ; i < busInfo.size(); i ++){
-
-            if(busInfo.get(i).getBusCode().equals(MapsActivity.prefPokeBusBusCode +"")){
-                //if a poke bus is in range then it will opon in stead of the closest bus stop
-                busInfoIndex = i;
-                break;
-            }
-
             if(closestSnippet == 0 || closestSnippet > MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
                     busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng())){
 
                 closestSnippet = MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
                         busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
                 busInfoIndex = i;
+
+            }
+        }
+
+        //if pokebus is in ranneg then opons pokebus snippet
+        for(int i = 0 ; i < busInfo.size(); i ++){
+
+            for(int z = 0 ; z < MapsActivity.listPokeBusCode.size(); z ++){
+
+                if(busInfo.get(i).getBusCode().equals(MapsActivity.listPokeBusCode.get(z) +"")){
+                    //if a poke bus is in range then it will opon in stead of the closest bus stop
+                    busInfoIndex = i;
+                    break;
+                }
 
             }
         }
@@ -132,7 +127,7 @@ public class AddMarkers {
 
                     if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.listPokeBusCode.get(q) + "")) {
                         //to distinqush a pokebus
-                        marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspostfour));
+                        marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueab));
                     }
                 }
             }
@@ -143,7 +138,7 @@ public class AddMarkers {
         if(MapsActivity.listPokeBusCode != null){
 
             for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++) {
-                marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.smallbuspost));
+                marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
             }
         }
     }
