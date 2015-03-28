@@ -36,6 +36,13 @@ public class Service extends IntentService {
 
 
 
+
+
+
+
+
+
+
         try {
 
             Log.i("MyService", "in try ");
@@ -45,7 +52,7 @@ public class Service extends IntentService {
                     "pokeBusCodePrefs", Context.MODE_PRIVATE);
 
 
-            String pokeBusCode = pref.getString("pokeBusCode", "No Value");
+            String pokeBusCode = pref.getString("savedPokeBuses" + "_" + 0, null);
             String pokeBusName = pref.getString("pokeBusName", "No Value");
             BusInfo businfo = new BusInfo();
             businfo.setBusCode(pokeBusCode);
@@ -70,6 +77,18 @@ public class Service extends IntentService {
     }
 
 
+   /* public String[] loadArray(String arrayName) {
+        Log.i("MyMapsActivityMarker", "Load ARRAY " );
+
+        int size = prefs.getInt(arrayName + "_size", 0);
+        String array[] = new String[size];
+        Log.i("MyMapsActivityMarker", "Loadarray[]  size" + array.length );
+        for(int i=0;i<size;i++) {
+            array[i] = prefs.getString(arrayName + "_" + i, null);
+        }
+        return array;
+
+    }*/
 
 
     public static void getBusDistance(ArrayList<BusInfo> busInfo){
