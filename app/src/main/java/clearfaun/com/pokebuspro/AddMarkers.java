@@ -100,14 +100,16 @@ public class AddMarkers {
         //if pokebus is in ranneg then opons pokebus snippet
         for(int i = 0 ; i < busInfo.size(); i ++){
 
-            for(int z = 0 ; z < MapsActivity.listPokeBusCode.size(); z ++){
+            if(MapsActivity.pokeBusbusInfo != null) {
+                for (int z = 0; z < MapsActivity.pokeBusbusInfo.size(); z++) {
 
-                if(busInfo.get(i).getBusCode().equals(MapsActivity.listPokeBusCode.get(z) +"")){
-                    //if a poke bus is in range then it will opon in stead of the closest bus stop
-                    busInfoIndex = i;
-                    break;
+                    if (busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() + "")) {
+                        //if a poke bus is in range then it will opon in stead of the closest bus stop
+                        busInfoIndex = i;
+                        break;
+                    }
+
                 }
-
             }
         }
 
@@ -120,14 +122,16 @@ public class AddMarkers {
     }
 
     public static void addPokeBusColor(){
-        if(MapsActivity.listPokeBusCode != null){
+        if(MapsActivity.pokeBusbusInfo != null) {
+            if (MapsActivity.pokeBusbusInfo.size() > 0) {
 
-            for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++) {
-                for (int q = 0; q < MapsActivity.listPokeBusCode.size(); q++) {
+                for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
+                    for (int q = 0; q < MapsActivity.pokeBusbusInfo.size(); q++) {
 
-                    if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.listPokeBusCode.get(q) + "")) {
-                        //to distinqush a pokebus
-                        marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueab));
+                        if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(q).getBusCode() + "")) {
+                            //to distinqush a pokebus
+                            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueab));
+                        }
                     }
                 }
             }
@@ -135,7 +139,7 @@ public class AddMarkers {
     }
 
     public static void removePokeBusColor(){
-        if(MapsActivity.listPokeBusCode != null){
+        if(MapsActivity.pokeBusbusInfo.size() > 0){
 
             for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++) {
                 marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));

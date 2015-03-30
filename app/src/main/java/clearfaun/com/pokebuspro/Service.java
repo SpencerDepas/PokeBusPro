@@ -43,7 +43,7 @@ public class Service extends IntentService {
 
         Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
 
-        String[] pokeBusCode = loadArray("savedPokeBuses");
+      /*  String[] pokeBusCode = loadArray("savedPokeBuses");
         for(int i=0;i<pokeBusCode.length;i++) {
             Log.i("MyService", "Service pokeBusCode: " + pokeBusCode[i]);
             BusInfo businfo = new BusInfo();
@@ -54,7 +54,7 @@ public class Service extends IntentService {
 
 
 
-        getBusDistance(busInfoArrayList);
+        getBusDistance(busInfoArrayList);*/
 
 
 

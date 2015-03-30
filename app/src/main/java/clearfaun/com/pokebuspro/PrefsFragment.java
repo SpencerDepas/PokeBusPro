@@ -48,7 +48,7 @@ public class PrefsFragment extends PreferenceFragment {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
 
         PreferenceScreen prefSumPokeBus = (PreferenceScreen) findPreference("KEY41");
-        prefSumPokeBus.setSummary("Current PokeBus: " + MapsActivity.getPokeBus());
+
 
         prefSumBusMap = (ListPreference) findPreference("KEY99");
         prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue() );
@@ -121,7 +121,7 @@ public class PrefsFragment extends PreferenceFragment {
 
         }else if(preference.getKey().equals("KEY033")){
             Log.i("PrefsFragment", "Remove all pokebuses");
-            MapsActivity.listPokeBusCode.clear();
+
             MapsActivity.toaster("Poke Buses deleted");
 
             MapsActivity.deletePrefs();
