@@ -30,7 +30,7 @@ public class Service extends IntentService {
     static GetBusDistanceJSON objTwo;
     static public String API_KEY_MTA ;
     SharedPreferences pref;
-    SaveObject saveObject;
+
 
     @Override
     protected void onHandleIntent(Intent intent){
@@ -39,9 +39,9 @@ public class Service extends IntentService {
 
         API_KEY_MTA = getString(R.string.API_KEY_MTA);
 
-        BusInfo loadedBusInfo = loadBusInfo();
+        ArrayList<BusInfo> busInfoArrayList = loadBusInfo();
 
-        Log.i("MyService", "loaded object: " + loadedBusInfo.getBusStopLng());
+        Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
 
         String[] pokeBusCode = loadArray("savedPokeBuses");
         for(int i=0;i<pokeBusCode.length;i++) {
@@ -62,12 +62,13 @@ public class Service extends IntentService {
 
     }
 
-    private BusInfo loadBusInfo(){
+    private ArrayList<BusInfo> loadBusInfo(){
         Log.i("MyService", "loadBusInfo " );
         try{
             FileInputStream fis = PokeBusNoUI.mContext.openFileInput("BUSINFO");
             ObjectInputStream is = new ObjectInputStream(fis);
-            BusInfo busInfo = (BusInfo) is.readObject();
+            //BusInfo busInfo = (BusInfo) is.readObject();
+            ArrayList<BusInfo> busInfo = (ArrayList)  is.readObject();
             is.close();
             fis.close();
             return busInfo;

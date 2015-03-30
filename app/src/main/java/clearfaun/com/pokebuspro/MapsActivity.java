@@ -56,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements
     static Context mContext;
     static GetBusStopJSON obj;
     static GetBusDistanceJSON objTwo;
-    SaveObject saveObject;
+
 
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
     static ArrayList<LatLng> pointList = new ArrayList<>();
@@ -479,13 +479,12 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity","setPokeBus()");
         Log.i("MyMapsActivity","busCode()" + busCode);
 
-       /* saveObject = new SaveObject();
-        saveObject.saveObject(busInfo.get(0));*/
+
 
         try{
             FileOutputStream fos = mContext.openFileOutput("BUSINFO", Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(busInfo.get(0));
+            os.writeObject(busInfo);
             os.close();
             fos.close();
 
