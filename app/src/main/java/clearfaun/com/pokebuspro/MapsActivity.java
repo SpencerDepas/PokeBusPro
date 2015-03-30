@@ -315,60 +315,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-                Log.i("MyMapsActivity","onMarkerDragStart ");
-            }
-
-            @Override
-            public void onMarkerDrag(Marker marker) {
-                Log.i("MyMapsActivity","onMarkerDrag ");
-            }
-
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
-                //only one dragable marker, to set a  pokebus
-
-                Log.i("MyMapsActivity", "onMarkerDragEnd ");
-                if (marker.getTitle().equals("PokeBus")) {
-
-                    for(int i = 0 ; i < AddMarkers.marker.length; i ++ ){
-                        //static double testLat = 40.6455520;
-
-                        double distance = distFrom(marker.getPosition().latitude,marker.getPosition()
-                                .longitude , busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng() );
-
-                        //activate within a radius of 10 meeters
-                        if((int)distance < 10){
-
-                            Log.i("MyMapsActivityMarker", "distance < 6000000. BusCode :" + busInfo.get(i).getBusCode() );
-                            Toast.makeText(getBaseContext(), "PokeBus set to: " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
-                            marker.setVisible(false);
-                            pokeBusMarker = null;
-                            setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());
-                            listPokeBusCode.add(Integer.parseInt(busInfo.get(i).getBusCode()));
-                            String [] tempPokeBusArray = new String[listPokeBusCode.size()];
-                            for(int z = 0; z < listPokeBusCode.size(); z ++){
-                                tempPokeBusArray[z] = listPokeBusCode.get(z) + "";
-                                Log.i("MyMapsActivityMarker", "tempPokeBusArray[z] " + tempPokeBusArray[z]);
-                            }
-                            Log.i("MyMapsActivityMarker", "saveArray ");
-                            saveArray(tempPokeBusArray, "savedPokeBuses", mContext);
-                            AddMarkers.addPokeBusColor();
-
-
-
-                            Log.i("MyMapsActivityMarker", "listPokeBusCode " + listPokeBusCode.size());
-                            Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
-
-
-                        }
-                    }
-                }
-            }
-        });
     }
 
     public static void deletePrefs(){
@@ -462,6 +409,61 @@ public class MapsActivity extends FragmentActivity implements
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                Log.i("MyMapsActivity","onMarkerDragStart ");
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                Log.i("MyMapsActivity","onMarkerDrag ");
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                //only one dragable marker, to set a  pokebus
+
+                Log.i("MyMapsActivity", "onMarkerDragEnd ");
+                if (marker.getTitle().equals("PokeBus")) {
+
+                    for(int i = 0 ; i < AddMarkers.marker.length; i ++ ){
+                        //static double testLat = 40.6455520;
+
+                        double distance = distFrom(marker.getPosition().latitude,marker.getPosition()
+                                .longitude , busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng() );
+
+                        //activate within a radius of 10 meeters
+                        if((int)distance < 10){
+
+                            Log.i("MyMapsActivityMarker", "distance < 6000000. BusCode :" + busInfo.get(i).getBusCode() );
+                            Toast.makeText(getBaseContext(), "PokeBus set to: " + busInfo.get(i).getBusCode(), Toast.LENGTH_SHORT).show();
+                            marker.setVisible(false);
+                            pokeBusMarker = null;
+                            setPokeBus(busInfo.get(i).getBusCode(), busInfo.get(i).getBusName());
+                            listPokeBusCode.add(Integer.parseInt(busInfo.get(i).getBusCode()));
+                            String [] tempPokeBusArray = new String[listPokeBusCode.size()];
+                            for(int z = 0; z < listPokeBusCode.size(); z ++){
+                                tempPokeBusArray[z] = listPokeBusCode.get(z) + "";
+                                Log.i("MyMapsActivityMarker", "tempPokeBusArray[z] " + tempPokeBusArray[z]);
+                            }
+                            Log.i("MyMapsActivityMarker", "saveArray ");
+                            saveArray(tempPokeBusArray, "savedPokeBuses", mContext);
+                            AddMarkers.addPokeBusColor();
+
+
+
+                            Log.i("MyMapsActivityMarker", "listPokeBusCode " + listPokeBusCode.size());
+                            Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
+
+
+                        }
+                    }
+                }
+            }
+        });
 
     }
 

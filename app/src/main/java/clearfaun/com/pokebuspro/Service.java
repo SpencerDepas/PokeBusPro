@@ -24,6 +24,7 @@ public class Service extends IntentService {
     static ArrayList<BusInfo> busInfoArrayList = new ArrayList<>();
     static GetBusDistanceJSON objTwo;
     static public String API_KEY_MTA ;
+    SharedPreferences pref;
 
     @Override
     protected void onHandleIntent(Intent intent){
@@ -31,17 +32,37 @@ public class Service extends IntentService {
          Log.i("MyService", "Service onHandleIntent ");
 
         API_KEY_MTA = getString(R.string.API_KEY_MTA);
-        SharedPreferences pref;
 
 
 
 
+        String[] pokeBusCode = loadArray("savedPokeBuses");
+        for(int i=0;i<pokeBusCode.length;i++) {
+            Log.i("MyService", "Service pokeBusCode: " + pokeBusCode[i]);
+        }
 
 
 
 
+    /*    getBusDistance(busInfoArrayList);
+        String pokeBusCode = pref.getString("savedPokeBuses" + "_" + 0, null);
+        String pokeBusName = pref.getString("pokeBusName", "No Value");
+        BusInfo businfo = new BusInfo();
+        businfo.setBusCode(pokeBusCode);
+        businfo.setBusName(pokeBusName);
+        businfo.setForNoUIToast(true);
+        busInfoArrayList.add(0, businfo);
+        //new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getBusCode());
+        Log.i("MyService", "in busCode " + pokeBusCode);
+        Log.i("MyService", "in pokeBusName " + pokeBusName);*/
 
 
+    }
+
+
+    public String[] loadArray(String arrayName) {
+        Log.i("MyMapsActivityMarker", "Load ARRAY " );
+        String array[];
 
         try {
 
@@ -52,43 +73,26 @@ public class Service extends IntentService {
                     "pokeBusCodePrefs", Context.MODE_PRIVATE);
 
 
-            String pokeBusCode = pref.getString("savedPokeBuses" + "_" + 0, null);
-            String pokeBusName = pref.getString("pokeBusName", "No Value");
-            BusInfo businfo = new BusInfo();
-            businfo.setBusCode(pokeBusCode);
-            businfo.setBusName(pokeBusName);
-            businfo.setForNoUIToast(true);
-            busInfoArrayList.add(0, businfo);
-            //new ToastMessageTask().execute("Saved PokeBus is " + busInfoArrayList.get(0).getBusCode());
-            Log.i("MyService", "in busCode " + pokeBusCode);
-            Log.i("MyService", "in pokeBusName " + pokeBusName);
+            int size = pref.getInt(arrayName + "_size", 0);
+            array = new String[size];
 
+            Log.i("MyMapsActivityMarker", "Loadarray[]  size" + array.length );
+            for(int i=0;i<size;i++) {
+                array[i] = pref.getString(arrayName + "_" + i, null);
+            }
+
+            return array;
 
         } catch (Exception e) {
             Log.e("Not data shared", e.toString());
             Log.i("MyService", "in catch ");
         }
 
-        getBusDistance(busInfoArrayList);
 
 
 
-
+        return null;
     }
-
-
-   /* public String[] loadArray(String arrayName) {
-        Log.i("MyMapsActivityMarker", "Load ARRAY " );
-
-        int size = prefs.getInt(arrayName + "_size", 0);
-        String array[] = new String[size];
-        Log.i("MyMapsActivityMarker", "Loadarray[]  size" + array.length );
-        for(int i=0;i<size;i++) {
-            array[i] = prefs.getString(arrayName + "_" + i, null);
-        }
-        return array;
-
-    }*/
 
 
     public static void getBusDistance(ArrayList<BusInfo> busInfo){
