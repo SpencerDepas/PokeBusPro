@@ -1,9 +1,11 @@
 package clearfaun.com.pokebuspro;
 
+import java.io.Serializable;
+
 /**
  * Created by spencer on 2/21/2015.
  */
-public class BusInfo {
+public class BusInfo implements Serializable {
 
     public String stopCode = "";
     public String busNameId = "";

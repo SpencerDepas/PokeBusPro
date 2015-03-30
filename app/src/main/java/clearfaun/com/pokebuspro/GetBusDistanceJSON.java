@@ -64,6 +64,9 @@ public class GetBusDistanceJSON {
                                 .getJSONObject("Extensions")
                                 .getJSONObject("Distances");
 
+                        Log.i("MyGetBusDistanceJSONt", "sys :" + sys);
+
+
                         tempDistance[i] = sys.get("PresentableDistance").toString();
                         Log.i("MyGetBusDistanceJSONt", " sys  " + sys.get("PresentableDistance").toString() + ". i is : " + i);
 

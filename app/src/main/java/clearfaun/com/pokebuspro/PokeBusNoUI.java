@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,20 +15,24 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 import android.preference.PreferenceManager;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Properties;
 
 /**
  * Created by spencer on 3/4/2015.
  */
-public class PokeBusNoUI extends Activity {
-
+public class PokeBusNoUI extends Activity implements
+        LocationProvider.LocationCallback  {
     //this is for when you have poked a bus and you want to toast it.
 
 
-
-
+    double latitude;
+    double longitude;
+    static LatLng latLng;
     static Context mContext;
-
+    private LocationProvider mLocationProvider;
 
 
     @Override
@@ -36,6 +41,11 @@ public class PokeBusNoUI extends Activity {
         Log.i("MyActivityNOUI", "onCreate");
 
         mContext = getApplicationContext();
+        mLocationProvider = new LocationProvider(this, this);
+
+
+
+
     }
 
 
@@ -44,6 +54,7 @@ public class PokeBusNoUI extends Activity {
         super.onResume();
         Log.i("MyActivityNOUI", "onResume");
 
+        mLocationProvider.connect();
         //makes invisable screen go
 
 
@@ -67,7 +78,11 @@ public class PokeBusNoUI extends Activity {
     }
 
 
+    @Override
+    public void handleNewLocation(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        latLng = new LatLng(latitude, longitude);
 
-
-
+    }
 }
