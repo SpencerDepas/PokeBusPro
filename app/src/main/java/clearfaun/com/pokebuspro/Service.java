@@ -42,6 +42,7 @@ public class Service extends IntentService {
         ArrayList<BusInfo> busInfoArrayList = loadBusInfo();
 
         Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
+        Log.i("MyService", "loaded object: " + busInfoArrayList.size());
 
       /*  String[] pokeBusCode = loadArray("savedPokeBuses");
         for(int i=0;i<pokeBusCode.length;i++) {
@@ -67,7 +68,6 @@ public class Service extends IntentService {
         try{
             FileInputStream fis = PokeBusNoUI.mContext.openFileInput("BUSINFO");
             ObjectInputStream is = new ObjectInputStream(fis);
-            //BusInfo busInfo = (BusInfo) is.readObject();
             ArrayList<BusInfo> busInfo = (ArrayList)  is.readObject();
             is.close();
             fis.close();
@@ -80,39 +80,7 @@ public class Service extends IntentService {
         return null;
     }
 
-    public String[] loadArray(String arrayName) {
-        Log.i("MyMapsActivityMarker", "Load ARRAY " );
-        String array[];
-
-        try {
-
-            Log.i("MyService", "in try ");
-
-            Context con = createPackageContext("clearfaun.com.pokebuspro", 0);
-            pref = con.getSharedPreferences(
-                    "pokeBusCodePrefs", Context.MODE_PRIVATE);
-
-
-            int size = pref.getInt(arrayName + "_size", 0);
-            array = new String[size];
-
-            Log.i("MyMapsActivityMarker", "Loadarray[]  size" + array.length );
-            for(int i=0;i<size;i++) {
-                array[i] = pref.getString(arrayName + "_" + i, null);
-            }
-
-            return array;
-
-        } catch (Exception e) {
-            Log.e("Not data shared", e.toString());
-            Log.i("MyService", "in catch ");
-        }
-
-
-
-
-        return null;
-    }
+    
 
 
     public static void getBusDistance(ArrayList<BusInfo> busInfo){

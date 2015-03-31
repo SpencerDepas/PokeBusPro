@@ -90,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_maps);
-
+        Log.i("MyMapsActivity", "onCreate");
 
         prefs = getSharedPreferences(
                 "pokeBusCodePrefs", Context.MODE_PRIVATE);
@@ -98,8 +98,13 @@ public class MapsActivity extends FragmentActivity implements
         //this loads in businfo of saved bus stops
         pokeBusbusInfo = loadPokeBus();
 
+        Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
+
+
+
+
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
-        Log.i("MyMapsActivity", "onCreate");
+
 
         mContext = getApplicationContext();
 
@@ -414,7 +419,6 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-
                             AddMarkers.addPokeBusColor();
                             //this saves pokebuses for nouitoast to read
                             pokeBusbusInfo.add(busInfo.get(i));
@@ -460,19 +464,20 @@ public class MapsActivity extends FragmentActivity implements
     private ArrayList<BusInfo> loadPokeBus() {
         Log.i("MyMapsActivity","loadPokeBus");
 
-
         try{
-            FileInputStream fis = PokeBusNoUI.mContext.openFileInput("BUSINFO");
+            FileInputStream fis = this.openFileInput("BUSINFO");
             ObjectInputStream is = new ObjectInputStream(fis);
             ArrayList<BusInfo> busInfo = (ArrayList)  is.readObject();
             is.close();
             fis.close();
+            Log.i("MyMapsActivity","loadPokeBus return 1 :)");
             return busInfo;
 
         }catch(Exception e) {
-            Log.i("MyService", "e : " + e );
+            Log.i("MyMapsActivity", "e : " + e );
             e.printStackTrace();
         }
+        Log.i("MyMapsActivity","loadPokeBus return dud");
         return new ArrayList<BusInfo>();
 
 
