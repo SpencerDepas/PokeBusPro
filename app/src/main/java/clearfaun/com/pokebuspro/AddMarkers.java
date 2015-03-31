@@ -1,9 +1,16 @@
 package clearfaun.com.pokebuspro;
 
 
+import android.content.Intent;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -38,9 +45,17 @@ public class AddMarkers {
             Log.i("AddMarkers", "in befire int i = 0; i < busInfo.size()");
 
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
-            marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions()
-                    .position(markerLocation[i]));
+            marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions() .position(markerLocation[i]));
             marker[i].setTitle(busInfo.get(i).getBusCode());
+            MapsActivity.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker Pin) {
+
+
+                    MapsActivity.popupForPokebus(MapsActivity.optionsButton);
+
+                }
+            });
             Log.i("AddMarkers", "addMarkersToMap() " + busInfo.get(i).getBusCode() + " i is " + i);
 
 
@@ -62,6 +77,7 @@ public class AddMarkers {
             }
 
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
+
             Log.i("AddMarkers", "pre color poke bus : ");
 
 

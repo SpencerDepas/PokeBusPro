@@ -4,11 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
@@ -36,7 +32,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
     @Override
     public View getInfoContents(Marker marker) {
         if (popup == null) {
-            popup=inflater.inflate(R.layout.popup, null);
+            popup=inflater.inflate(R.layout.popup_snippet, null);
         }
 
         Log.i("PopupAdapter", "addMarkersToMap() " );
@@ -45,7 +41,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         TextView busName =(TextView)popup.findViewById(R.id.bus_name);
         TextView busCode =(TextView)popup.findViewById(R.id.bus_code);
         TextView distances =(TextView)popup.findViewById(R.id.snippet);
-        //ImageView image = (ImageView)popup.findViewById(R.id.icon);
+        //ImageView image = (ImageView)popup_snippet.findViewById(R.id.icon);
 
 
         for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
@@ -55,6 +51,8 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
                 busName.setText(MapsActivity.busInfo.get(i).busName);
                 busCode.setText( marker.getTitle());
                 distances.setText(marker.getSnippet());
+
+
                 break;
             }
 

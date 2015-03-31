@@ -15,9 +15,17 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -83,7 +91,9 @@ public class MapsActivity extends FragmentActivity implements
 
     public static final String TAG = MapsActivity.class.getSimpleName();
     static ProgressBar spinner;
+    static ImageButton optionsButton;
 
+    static RelativeLayout back_dim_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements
         pokeBusbusInfo = loadPokeBus();
 
         Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
-
+        back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
 
 
 
@@ -135,7 +145,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-        ImageButton optionsButton = (ImageButton) findViewById(R.id.options_button);
+        optionsButton = (ImageButton) findViewById(R.id.options_button);
         optionsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -154,6 +164,8 @@ public class MapsActivity extends FragmentActivity implements
 
             }
         });
+
+
 
         ImageButton refreshLocation = (ImageButton) findViewById(R.id.refresh_location_button);
         refreshLocation.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +220,41 @@ public class MapsActivity extends FragmentActivity implements
 
             }
         });
+
+    }
+
+    static void popupForPokebus(ImageButton optionsButton) {
+
+        LayoutInflater layoutInflater = LayoutInflater.from(MapsActivity.mContext);
+        View popupView = layoutInflater.inflate(R.layout.popup_set_pokebus, null);
+
+        back_dim_layout.setVisibility(View.VISIBLE);
+
+
+
+
+        final PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+
+
+        popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
+
+        Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
+        btnDismiss.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                popupWindow.dismiss();
+                back_dim_layout.setVisibility(View.GONE);
+                MapsActivity.toasterShort("PokeBus set");
+
+            }
+        });
+
+
 
     }
 
@@ -381,7 +428,6 @@ public class MapsActivity extends FragmentActivity implements
                 .getMap();
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
