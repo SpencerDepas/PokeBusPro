@@ -87,21 +87,22 @@ public class Service extends IntentService {
     }
 
     static int findClosestPokeBus(ArrayList<BusInfo> busInfo){
-
+        Log.i("MyService", "findClosestPokeBus");
         double tempDistanceOfBusStop = 0;
         int indexOfClosestBus = 0;
         if(busInfo.size() > 1) {
-            for (int i = 0; i < busInfoArrayList.size(); i++) {
-
-
+            for (int i = 0; i < busInfo.size(); i++) {
+                Log.i("MyService", "busInfo.size():" + busInfo.size());
+                Log.i("MyService", "tempDistanceOfBusStop:" + tempDistanceOfBusStop);
                 //first one allways goes in. then goes in only if lower.
                 if (tempDistanceOfBusStop == 0 ||
                         distFrom(PokeBusNoUI.latLng.latitude, PokeBusNoUI.latLng.longitude,
-                                busInfoArrayList.get(i).getBusStopLat(), busInfoArrayList.get(i).getBusStopLng())
+                                busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng())
                                 < tempDistanceOfBusStop) {
+
                     indexOfClosestBus = i;
                     tempDistanceOfBusStop = distFrom(PokeBusNoUI.latLng.latitude, PokeBusNoUI.latLng.longitude,
-                            busInfoArrayList.get(i).getBusStopLat(), busInfoArrayList.get(i).getBusStopLng());
+                            busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
                 }
 
             }
