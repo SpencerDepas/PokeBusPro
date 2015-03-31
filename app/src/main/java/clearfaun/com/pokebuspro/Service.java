@@ -80,7 +80,7 @@ public class Service extends IntentService {
         return null;
     }
 
-    
+
 
 
     public static void getBusDistance(ArrayList<BusInfo> busInfo){

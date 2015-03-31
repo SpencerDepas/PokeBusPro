@@ -138,13 +138,12 @@ public class AddMarkers {
         }
     }
 
-    public static void removePokeBusColor(){
-        if(MapsActivity.pokeBusbusInfo.size() > 0){
+    public static void removePokeBusColor() {
 
-            for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++) {
-                marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
-            }
+        for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
+            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
         }
+
     }
 
     public static void updateMarkersToMap(ArrayList<BusInfo> busInfo) {

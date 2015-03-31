@@ -317,11 +317,11 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     public static void deletePrefs(){
-
+        pokeBusbusInfo.clear();
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.commit();
-        pokeBusbusInfo.clear();
+
     }
 
 
@@ -416,13 +416,13 @@ public class MapsActivity extends FragmentActivity implements
                             marker.setVisible(false);
                             pokeBusMarker = null;
 
-
-
-
-                            AddMarkers.addPokeBusColor();
                             //this saves pokebuses for nouitoast to read
                             pokeBusbusInfo.add(busInfo.get(i));
                             savePokeBus();
+
+                            AddMarkers.addPokeBusColor();
+
+
 
 
                             Log.i("MyMapsActivityMarker", "AddMarkers.marker[i].getId(); " + AddMarkers.marker[i].getId());
