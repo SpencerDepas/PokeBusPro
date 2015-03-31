@@ -187,7 +187,7 @@ public class GetBusDistanceJSON {
 
             boolean fromService =  false;
             try{
-                fromService =  Service.busInfoArrayList.size() > 0;
+                fromService =  busInfo.get(0).forNoUIToast;
             }catch(Exception e){
                 Log.i("MyAsyncTask", " Exception e " + e);
             }

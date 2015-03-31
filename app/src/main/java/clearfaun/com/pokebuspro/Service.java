@@ -44,18 +44,14 @@ public class Service extends IntentService {
         Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
         Log.i("MyService", "loaded object: " + busInfoArrayList.size());
 
-      /*  String[] pokeBusCode = loadArray("savedPokeBuses");
-        for(int i=0;i<pokeBusCode.length;i++) {
-            Log.i("MyService", "Service pokeBusCode: " + pokeBusCode[i]);
-            BusInfo businfo = new BusInfo();
-            businfo.setBusCode(pokeBusCode[i]);
-            businfo.setForNoUIToast(true);
-            busInfoArrayList.add(i, businfo);
+
+        //so get bus distance knows where we are coming from. API key stuff
+        for(int i = 0; i < busInfoArrayList.size(); i ++){
+            busInfoArrayList.get(i).setForNoUIToast(true);
         }
 
 
-
-        getBusDistance(busInfoArrayList);*/
+        getBusDistance(busInfoArrayList);
 
 
 
@@ -90,59 +86,48 @@ public class Service extends IntentService {
 
     }
 
-
-    public static void displayToastDistance(ArrayList<BusInfo> busInfo){
-        Log.i("MyService", "displayToastDistance");
-        Log.i("MyService", "busInfoArrayList size : " + busInfoArrayList.size());
-        Log.i("MyService", "PokeBusNoUI.latLng.toString() : " + PokeBusNoUI.latLng.toString());
-
+    static int findClosestPokeBus(ArrayList<BusInfo> busInfo){
 
         double tempDistanceOfBusStop = 0;
         int indexOfClosestBus = 0;
-        /*for(int i = 0 ; i < busInfoArrayList.size(); i ++){
+        if(busInfo.size() > 1) {
+            for (int i = 0; i < busInfoArrayList.size(); i++) {
 
 
-            //first one allways goes in. then goes in only if lower.
-            if(tempDistanceOfBusStop == 0 ||
-                    distFrom(PokeBusNoUI.latLng.latitude, PokeBusNoUI.latLng.longitude,
-                    busInfoArrayList.get(i).getBusStopLat(), busInfoArrayList.get(i).getBusStopLng())
-                            < tempDistanceOfBusStop){
-                indexOfClosestBus = i;
-                tempDistanceOfBusStop = distFrom(PokeBusNoUI.latLng.latitude, PokeBusNoUI.latLng.longitude,
-                        busInfoArrayList.get(i).getBusStopLat(), busInfoArrayList.get(i).getBusStopLng());
+                //first one allways goes in. then goes in only if lower.
+                if (tempDistanceOfBusStop == 0 ||
+                        distFrom(PokeBusNoUI.latLng.latitude, PokeBusNoUI.latLng.longitude,
+                                busInfoArrayList.get(i).getBusStopLat(), busInfoArrayList.get(i).getBusStopLng())
+                                < tempDistanceOfBusStop) {
+                    indexOfClosestBus = i;
+                    tempDistanceOfBusStop = distFrom(PokeBusNoUI.latLng.latitude, PokeBusNoUI.latLng.longitude,
+                            busInfoArrayList.get(i).getBusStopLat(), busInfoArrayList.get(i).getBusStopLng());
+                }
+
             }
-
+            return indexOfClosestBus;
+        }else{
+            return 0;
         }
 
 
-        if(busInfoArrayList.get(indexOfClosestBus).getDistance()[2].equals("Not available")){
+    }
 
-            new ToastMessageTask().execute(busInfoArrayList.get(indexOfClosestBus).getBusName() +  "'s en-route:  \n"
-                    + busInfoArrayList.get(indexOfClosestBus).getDistance()[0]+ "\n"
-                    + busInfoArrayList.get(indexOfClosestBus).getDistance()[1]);
-
-        }else if(busInfoArrayList.get(indexOfClosestBus).getDistance()[1].equals("Not available")){
-
-            new ToastMessageTask().execute(busInfoArrayList.get(indexOfClosestBus).getBusName() +  "'s en-route:  \n"
-                    + busInfoArrayList.get(indexOfClosestBus).getDistance()[0]);
+    public static void displayToastDistance(ArrayList<BusInfo> busInfo){
+        Log.i("MyService", "displayToastDistance");
+        Log.i("MyService", "busInfoArrayList size : " + busInfo.size());
 
 
-        }else{
-
-
-            if(busInfoArrayList.get(indexOfClosestBus).getDistance()[indexOfClosestBus].equals("Not available")){
-                new ToastMessageTask().execute("No " + busInfoArrayList.get(0).getBusName() +  "'s currently en-route.");
-            }else{
-                new ToastMessageTask().execute(busInfoArrayList.get(indexOfClosestBus).getBusName() +  "'s en-route:  \n"
-                        + busInfoArrayList.get(indexOfClosestBus).getDistance()[0] + "\n"
-                        + busInfoArrayList.get(indexOfClosestBus).getDistance()[1] + "\n"
-                        + busInfoArrayList.get(indexOfClosestBus).getDistance()[2]);
-            }
+        int indexOfClosestBus = findClosestPokeBus(busInfo);
 
 
 
 
-        }*/
+        new ToastMessageTask().execute(busInfo.get(indexOfClosestBus).getBusName() +  "'s en-route:  \n"
+                + busInfo.get(indexOfClosestBus).getDistance()[0] + "\n"
+                + busInfo.get(indexOfClosestBus).getDistance()[1] + "\n"
+                + busInfo.get(indexOfClosestBus).getDistance()[2]);
+
 
 
         busInfoArrayList.clear();
