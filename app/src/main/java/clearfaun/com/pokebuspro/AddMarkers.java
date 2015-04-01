@@ -83,7 +83,7 @@ public class AddMarkers {
             }
 
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
-
+            //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
             Log.i("AddMarkers", "pre color poke bus : ");
 
 
@@ -155,7 +155,10 @@ public class AddMarkers {
 
                         if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(q).getBusCode() + "")) {
                             //to distinqush a pokebus
+
                             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueab));
+                            //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
                         }
                     }
                 }

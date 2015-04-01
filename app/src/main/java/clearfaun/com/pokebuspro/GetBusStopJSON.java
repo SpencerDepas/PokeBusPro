@@ -132,15 +132,12 @@ public class GetBusStopJSON {
                     Log.i("MyGetBusStopJSON", "before decides which URL  ");
                     Log.i("MyGetBusStopJSON", "before busInfo.size()  " + busInfo.size());
 
-                    if(busInfo.size() == 0) {
-                        Log.i("MyGetBusStopJSON", "Correct for MAPZS ACTIVTY ");
-                        busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + MapsActivity.API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
-                                MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
-                    }else{
-                        Log.i("MyGetBusStopJSON", "Correct for service");
-                        busStopURL = "http://bustime.mta.info/api/where/stops-for-location.json?key=" + Service.API_KEY_MTA + "&radius=" + stopRadius + "&lat=" +
-                                MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
-                    }
+
+                    Log.i("MyGetBusStopJSON", "Correct for MAPZS ACTIVTY ");
+
+                    busStopURL = "http://pokebuspro-api.herokuapp.com/bus_time/where/stops-for-location.json?radius=" + stopRadius + "&lat=" +
+                            MapsActivity.latitude + "&lon=" + MapsActivity.longitude;
+
 
 
                     Log.i("MyGetBusStopJSON", "after decides which URL  ");

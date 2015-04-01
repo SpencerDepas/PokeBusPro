@@ -137,13 +137,13 @@ public class GetBusDistanceJSON {
                     stopCode = Integer.parseInt(busInfo.get(i).getBusCode());
 
 
-                    if(!busInfo.get(0).getForNoUIToast()) {
-                        busDistanceURL = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=" + MapsActivity.API_KEY_MTA + "&MonitoringRef=MTA_"
-                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
-                    }else{
-                        busDistanceURL = "http://bustime.mta.info/api/siri/stop-monitoring.json?key=" + Service.API_KEY_MTA + "&MonitoringRef=MTA_"
-                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
-                    }
+
+
+
+                    busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
+                            + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+
+
 
                     Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop");
                     Log.i("MyGetBusDistanceJSONn", "busDistanceURL:" + busDistanceURL);

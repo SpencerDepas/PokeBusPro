@@ -33,6 +33,7 @@ import com.crashlytics.android.Crashlytics;
 
 
 import com.gc.materialdesign.views.ButtonFlat;
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesign.widgets.Dialog;
 import com.google.android.gms.internal.ge;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -93,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements
     static SharedPreferences prefs;
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-    static ProgressBar spinner;
+    static ProgressBarCircularIndeterminate spinner;
     static ImageButton optionsButton;
     static RelativeLayout back_dim_layout;
 
@@ -116,7 +117,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner = (ProgressBarCircularIndeterminate)findViewById(R.id.progressBar1);
 
 
         mContext = getApplicationContext();
