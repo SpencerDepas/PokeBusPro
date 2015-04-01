@@ -27,6 +27,7 @@ public class AddMarkers {
 
     static LatLng[] markerLocation;
     static Marker[] marker;
+    static boolean dialogOpon = false;
 
     public static void addMarkersToMap(ArrayList<BusInfo> busInfo) {
 
@@ -49,12 +50,14 @@ public class AddMarkers {
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions() .position(markerLocation[i]));
             marker[i].setTitle(busInfo.get(i).getBusCode());
+
             MapsActivity.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker Pin) {
 
+                    dialogOpon = true;
+                    MapsActivity.popupForPokebus(MapsActivity.optionsButton, Pin.getTitle());
 
-                MapsActivity.myObject.showDialog("TEST");
 
 
                 }

@@ -96,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements
     static ProgressBar spinner;
     static ImageButton optionsButton;
     static RelativeLayout back_dim_layout;
-    static MyCustomObject myObject;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,8 +113,7 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
         back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
 
-        myObject = new MyCustomObject();
-        myObject.MyCustomObject(this);
+
 
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
@@ -227,11 +226,70 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
-    static void popupForPokebus() {
+    static void popupForPokebus(ImageButton optionsButton, String buscode) {
+
+        LayoutInflater layoutInflater = LayoutInflater.from(MapsActivity.mContext);
+        View popupView = layoutInflater.inflate(R.layout.popup_set_pokebus, null);
+
+        back_dim_layout.setVisibility(View.VISIBLE);
+
+        final String finalBuscode = buscode;
 
 
+        final PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+
+
+        popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
+
+        ButtonFlat btnDismiss = (ButtonFlat) popupView.findViewById(R.id.dismiss);
+        btnDismiss.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                popupWindow.dismiss();
+                back_dim_layout.setVisibility(View.GONE);
+                AddMarkers.dialogOpon = false;
+
+            }
+        });
+
+        ButtonFlat btnSetPokeBus = (ButtonFlat) popupView.findViewById(R.id.set_pokebus);
+        btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                popupWindow.dismiss();
+                back_dim_layout.setVisibility(View.GONE);
+
+                AddMarkers.dialogOpon = false;
+
+
+                for(int i = 0; i <busInfo.size(); i ++ ){
+
+                    if(busInfo.get(i).getBusCode().equals(finalBuscode)){
+                        pokeBusbusInfo.add(busInfo.get(i));
+                        MapsActivity.toasterShort("PokeBus set: " + finalBuscode);
+                        break;
+                    }
+
+                }
+
+
+
+
+                AddMarkers.addPokeBusColor();
+
+
+            }
+        });
 
     }
+
 
 
 
@@ -276,10 +334,14 @@ public class MapsActivity extends FragmentActivity implements
     public void onBackPressed(){
         Log.i("MyMapsActivity", "onBackPressed");
 
-        ft = fm.beginTransaction();
-        ft.remove(prefsFragment);
-        ft.commit();
+        if(AddMarkers.dialogOpon){
 
+        }else {
+
+            ft = fm.beginTransaction();
+            ft.remove(prefsFragment);
+            ft.commit();
+        }
 
     }
 
