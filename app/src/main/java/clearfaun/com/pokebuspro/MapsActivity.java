@@ -384,6 +384,7 @@ public class MapsActivity extends FragmentActivity implements
         bearing = mMap.getCameraPosition().bearing;
         mLocationProvider.disconnect();
         stopTimerTask();
+        savePokeBus();
         //busInfo.clear();
         //AddMarkers.marker = null;
     }
