@@ -1,6 +1,7 @@
 package clearfaun.com.pokebuspro;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -32,6 +33,7 @@ import com.crashlytics.android.Crashlytics;
 
 
 import com.gc.materialdesign.views.ButtonFlat;
+import com.gc.materialdesign.widgets.Dialog;
 import com.google.android.gms.internal.ge;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -94,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements
     static ProgressBar spinner;
     static ImageButton optionsButton;
     static RelativeLayout back_dim_layout;
-
+    static MyCustomObject myObject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +113,8 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
         back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
 
+        myObject = new MyCustomObject();
+        myObject.MyCustomObject(this);
 
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
@@ -223,49 +227,9 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
-    static void popupForPokebus(ImageButton optionsButton) {
-
-        LayoutInflater layoutInflater = LayoutInflater.from(MapsActivity.mContext);
-        View popupView = layoutInflater.inflate(R.layout.popup_set_pokebus, null);
-
-        back_dim_layout.setVisibility(View.VISIBLE);
+    static void popupForPokebus() {
 
 
-
-
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT);
-
-
-        popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
-
-        ButtonFlat btnDismiss = (ButtonFlat) popupView.findViewById(R.id.dismiss);
-        btnDismiss.setOnClickListener(new Button.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                popupWindow.dismiss();
-                back_dim_layout.setVisibility(View.GONE);
-
-
-            }
-        });
-
-        ButtonFlat btnSetPokeBus = (ButtonFlat) popupView.findViewById(R.id.set_pokebus);
-        btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                popupWindow.dismiss();
-                back_dim_layout.setVisibility(View.GONE);
-                MapsActivity.toasterShort("PokeBus set");
-
-            }
-        });
 
     }
 
@@ -635,4 +599,9 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
+
+
+
 }
+
+

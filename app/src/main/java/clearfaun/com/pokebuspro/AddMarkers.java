@@ -1,6 +1,7 @@
 package clearfaun.com.pokebuspro;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 
+import com.gc.materialdesign.widgets.Dialog;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -52,7 +54,8 @@ public class AddMarkers {
                 public void onInfoWindowClick(Marker Pin) {
 
 
-                    MapsActivity.popupForPokebus(MapsActivity.optionsButton);
+                MapsActivity.myObject.showDialog("TEST");
+
 
                 }
             });
@@ -136,6 +139,9 @@ public class AddMarkers {
 
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
+
+
+
 
     public static void addPokeBusColor(){
         if(MapsActivity.pokeBusbusInfo != null) {
