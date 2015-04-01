@@ -3,6 +3,13 @@ package clearfaun.com.pokebuspro;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,8 +89,12 @@ public class AddMarkers {
                         + "\n" + busInfo.get(i).getDistance()[2]);
             }
 
-            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
-            //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+
+
+
+
+            //marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
+            marker[i].setIcon(BitmapDescriptorFactory.defaultMarker((float)355));
             Log.i("AddMarkers", "pre color poke bus : ");
 
 

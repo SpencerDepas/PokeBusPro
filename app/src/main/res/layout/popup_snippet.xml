@@ -11,13 +11,20 @@
 
         <TextView
             android:id="@+id/bus_name"
-            android:textColor="@color/DeepSkyBlue"
-            android:gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
+            android:paddingTop="10sp"
+            android:paddingLeft="15sp"
             android:textSize="24sp"
             android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/bus_code"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:paddingLeft="15sp"
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/snippet"
@@ -25,39 +32,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:padding="15sp"
-            android:paddingBottom="5dp"/>
+            android:paddingTop="5sp"
+            android:paddingBottom="15sp"
+            android:paddingLeft="15sp"
+            android:paddingRight="15sp"/>
     </LinearLayout>
 
 
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bus_code"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:paddingLeft="6dp"/>
-
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/busionxblue"
-            android:paddingLeft="6dp"
-            android:padding="10dp"
-            />
-
-
-    </LinearLayout>
 
 
 
