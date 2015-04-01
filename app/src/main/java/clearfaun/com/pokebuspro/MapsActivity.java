@@ -249,12 +249,23 @@ public class MapsActivity extends FragmentActivity implements
                 // TODO Auto-generated method stub
                 popupWindow.dismiss();
                 back_dim_layout.setVisibility(View.GONE);
-                MapsActivity.toasterShort("PokeBus set");
+
 
             }
         });
 
+        Button btnSetPokeBus = (Button) popupView.findViewById(R.id.set_pokebus);
+        btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                popupWindow.dismiss();
+                back_dim_layout.setVisibility(View.GONE);
+                MapsActivity.toasterShort("PokeBus set");
+
+            }
+        });
 
     }
 

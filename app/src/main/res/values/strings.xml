@@ -102,8 +102,12 @@
 
 
     <!--
-     This is for the preference menu
+     This is for pokebus setting popup
      -->
-
-
+    <string name="set_pokebus_title">PokeBus</string>
+    <string name="set_pokebus_body">Bus: B16 \nStopeCode: 36148 \nbody of information i like to write a lot of garbage \njusdt for a
+        test giberish is my tone of
+        just  \ndude infoprmations a wall  of text</string>
+    <string name="confirm">SET</string>
+    <string name="dismiss">CANCEL</string>
 </resources>
