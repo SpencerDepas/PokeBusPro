@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 
 
+import com.gc.materialdesign.views.ButtonFlat;
 import com.google.android.gms.internal.ge;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -92,7 +93,6 @@ public class MapsActivity extends FragmentActivity implements
     public static final String TAG = MapsActivity.class.getSimpleName();
     static ProgressBar spinner;
     static ImageButton optionsButton;
-
     static RelativeLayout back_dim_layout;
 
     @Override
@@ -241,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements
 
         popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
 
-        Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
+        ButtonFlat btnDismiss = (ButtonFlat) popupView.findViewById(R.id.dismiss);
         btnDismiss.setOnClickListener(new Button.OnClickListener() {
 
             @Override
@@ -254,7 +254,7 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
 
-        Button btnSetPokeBus = (Button) popupView.findViewById(R.id.set_pokebus);
+        ButtonFlat btnSetPokeBus = (ButtonFlat) popupView.findViewById(R.id.set_pokebus);
         btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
 
             @Override
@@ -311,7 +311,6 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onBackPressed(){
         Log.i("MyMapsActivity", "onBackPressed");
-
 
         ft = fm.beginTransaction();
         ft.remove(prefsFragment);

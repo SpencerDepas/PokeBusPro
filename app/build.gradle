@@ -12,6 +12,7 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    jcenter()
 }
 
 
@@ -41,6 +42,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.1.2'
     compile 'com.melnykov:floatingactionbutton:1.2.0'
+    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.2.2@aar') {
         transitive = true;
