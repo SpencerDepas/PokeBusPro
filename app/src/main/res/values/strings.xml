@@ -5,14 +5,14 @@
     <string name="action_settings">Settings</string>
 
 
-    <string name="about_page_info">This app was made Clear Faun. It is an opon source free app.
+    <string name="about_page_info">This app was made by Clear Faun.
                                     It is licensed by the MTA.</string>
 
     <!--
      Air Plane Mode
      -->
 
-    <string name="air_plane_mode_button">Remove Airplane Mode</string>
+    <string name="air_plane_mode">Please disable Airplane Mode</string>
 
     <!--
       Map preferences

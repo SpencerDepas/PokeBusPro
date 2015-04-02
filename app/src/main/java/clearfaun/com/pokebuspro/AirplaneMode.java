@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.melnykov.fab.FloatingActionButton;
+
 /**
  * Created by spencer on 3/23/2015.
  */
@@ -29,7 +31,7 @@ public class AirplaneMode extends Activity {
         view.setBackgroundColor(Color.WHITE);
 
 
-        Button b = (Button) findViewById(R.id.button);
+        FloatingActionButton b = (FloatingActionButton) findViewById(R.id.button);
         b.setOnClickListener(new View.OnClickListener() {
 
             @Override

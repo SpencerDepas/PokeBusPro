@@ -609,15 +609,10 @@ public class MapsActivity extends FragmentActivity implements
         if(pointList.size() > 0){
             Log.i("MyMapsActivity", "afterpointList.size() > 0");
 
-            //TEST DATA
-            //
-            //
-            //
-          
 
 
             mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-            //mMap.setMyLocationEnabled(true);
+            mMap.setMyLocationEnabled(true);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
                     .bearing(bearing)                // Sets the orientation of the camera to east
