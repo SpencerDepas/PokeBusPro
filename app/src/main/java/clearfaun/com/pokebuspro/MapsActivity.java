@@ -1,7 +1,7 @@
 package clearfaun.com.pokebuspro;
 
+
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -97,6 +97,10 @@ public class MapsActivity extends FragmentActivity implements
     static ProgressBarCircularIndeterminate spinner;
     static ImageButton optionsButton;
     static RelativeLayout back_dim_layout;
+    //EMPIRE STATE BUILDING
+    static double testLat = 40.748441;
+    static double testLng = -73.985664;
+    static LatLng latLngEMPIRE ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,15 +118,14 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
         back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
 
-
-
+        latLngEMPIRE = new LatLng(testLat, testLng);
 
         spinner = (ProgressBarCircularIndeterminate)findViewById(R.id.progressBar1);
 
 
         mContext = getApplicationContext();
 
-        API_KEY_MTA = getString(R.string.API_KEY_MTA);
+
 
         mLocationProvider = new LocationProvider(this, this);
 
@@ -183,14 +186,8 @@ public class MapsActivity extends FragmentActivity implements
 
                 mMap.setMyLocationEnabled(true);
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(zoom)                   // Sets the zoom
-                        .bearing(bearing)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
+
 
 
                 mLocationProvider.disconnect();
@@ -198,7 +195,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-                refreshMarkers();
+
 
 
 
@@ -229,65 +226,66 @@ public class MapsActivity extends FragmentActivity implements
 
     static void popupForPokebus(ImageButton optionsButton, String buscode) {
 
-        LayoutInflater layoutInflater = LayoutInflater.from(MapsActivity.mContext);
-        View popupView = layoutInflater.inflate(R.layout.popup_set_pokebus, null);
+        //to prevent null pouinter
+        if(optionsButton != null) {
+            LayoutInflater layoutInflater = LayoutInflater.from(MapsActivity.mContext);
+            View popupView = layoutInflater.inflate(R.layout.popup_set_pokebus, null);
 
-        back_dim_layout.setVisibility(View.VISIBLE);
+            back_dim_layout.setVisibility(View.VISIBLE);
 
-        final String finalBuscode = buscode;
-
-
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT);
+            final String finalBuscode = buscode;
 
 
-        popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
-
-        ButtonFlat btnDismiss = (ButtonFlat) popupView.findViewById(R.id.dismiss);
-        btnDismiss.setOnClickListener(new Button.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                popupWindow.dismiss();
-                back_dim_layout.setVisibility(View.GONE);
-                AddMarkers.dialogOpon = false;
-
-            }
-        });
-
-        ButtonFlat btnSetPokeBus = (ButtonFlat) popupView.findViewById(R.id.set_pokebus);
-        btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                popupWindow.dismiss();
-                back_dim_layout.setVisibility(View.GONE);
-
-                AddMarkers.dialogOpon = false;
+            final PopupWindow popupWindow = new PopupWindow(
+                    popupView,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT);
 
 
-                for(int i = 0; i <busInfo.size(); i ++ ){
+            popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
 
-                    if(busInfo.get(i).getBusCode().equals(finalBuscode)){
-                        pokeBusbusInfo.add(busInfo.get(i));
-                        MapsActivity.toasterShort("PokeBus set: " + finalBuscode);
-                        break;
-                    }
+            ButtonFlat btnDismiss = (ButtonFlat) popupView.findViewById(R.id.dismiss);
+            btnDismiss.setOnClickListener(new Button.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    popupWindow.dismiss();
+                    back_dim_layout.setVisibility(View.GONE);
+                    AddMarkers.dialogOpon = false;
 
                 }
+            });
+
+            ButtonFlat btnSetPokeBus = (ButtonFlat) popupView.findViewById(R.id.set_pokebus);
+            btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    popupWindow.dismiss();
+                    back_dim_layout.setVisibility(View.GONE);
+
+                    AddMarkers.dialogOpon = false;
 
 
+                    for (int i = 0; i < busInfo.size(); i++) {
+
+                        if (busInfo.get(i).getBusCode().equals(finalBuscode)) {
+                            pokeBusbusInfo.add(busInfo.get(i));
+                            MapsActivity.toasterShort("PokeBus set: " + finalBuscode);
+                            break;
+                        }
+
+                    }
 
 
-                AddMarkers.addPokeBusColor();
+                    AddMarkers.addPokeBusColor();
 
 
-            }
-        });
+                }
+            });
+        }
 
     }
 
@@ -611,10 +609,15 @@ public class MapsActivity extends FragmentActivity implements
         if(pointList.size() > 0){
             Log.i("MyMapsActivity", "afterpointList.size() > 0");
 
+            //TEST DATA
+            //
+            //
+            //
+          
 
-            AddMarkers.addMarkersToMap(busInfo);
+
             mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-            mMap.setMyLocationEnabled(true);
+            //mMap.setMyLocationEnabled(true);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
                     .bearing(bearing)                // Sets the orientation of the camera to east
@@ -622,7 +625,8 @@ public class MapsActivity extends FragmentActivity implements
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+            refreshMarkers();
+            AddMarkers.addMarkersToMap(busInfo);
 
         }else if(firstBoot == 0) {
             Log.i("MyMapsActivity","in first boot " );
