@@ -93,8 +93,8 @@ public class AddMarkers {
 
 
 
-            //marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
-            marker[i].setIcon(BitmapDescriptorFactory.defaultMarker((float)355));
+            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+            //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker((float)355));
             Log.i("AddMarkers", "pre color poke bus : ");
 
 
@@ -180,7 +180,8 @@ public class AddMarkers {
     public static void removePokeBusColor() {
 
         for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
-            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
+            //marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
+            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
         }
 
     }
