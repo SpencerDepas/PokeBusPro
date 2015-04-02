@@ -167,7 +167,7 @@ public class AddMarkers {
                         if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(q).getBusCode() + "")) {
                             //to distinqush a pokebus
 
-                            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueab));
+                            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white__blue36dptwo));
                             //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
                         }
