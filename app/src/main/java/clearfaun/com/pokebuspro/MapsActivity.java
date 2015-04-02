@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -135,12 +137,23 @@ public class MapsActivity extends FragmentActivity implements
         boolean enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
-        if(enabledAirplaneMode){
-            Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
+        if(!isOnline()){
 
-            Intent intent = new Intent(MapsActivity.mContext , AirplaneMode.class);
+            Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
             startActivity(intent);
             this.finish();
+
+        }if(enabledAirplaneMode){
+            Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
+
+
+            Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
+            startActivity(intent);
+            this.finish();
+
+           /* Intent intent = new Intent(MapsActivity.mContext , AirplaneMode.class);
+            startActivity(intent);
+            this.finish();*/
 
         }else if(!enabledGPS){
             Log.i("MyMapsActivity", "!enabledGPS");
@@ -290,7 +303,12 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
-
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 
 
     public static void refreshMarkers(){
