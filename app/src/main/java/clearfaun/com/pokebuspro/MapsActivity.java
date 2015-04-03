@@ -50,12 +50,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -231,6 +229,9 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
 
+        mLocationProvider.connect();
+
+
     }
 
     static void popupForPokebus(ImageButton optionsButton, String buscode) {
@@ -395,9 +396,11 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity","onPause()");
         zoom = mMap.getCameraPosition().zoom;
         bearing = mMap.getCameraPosition().bearing;
-        mLocationProvider.disconnect();
+
         stopTimerTask();
         savePokeBus();
+
+        //mLocationProvider.disconnect();
         //busInfo.clear();
         //AddMarkers.marker = null;
     }
@@ -407,7 +410,7 @@ public class MapsActivity extends FragmentActivity implements
         super.onResume();
         Log.i("MyMapsActivity","onResume()");
 
-        mLocationProvider.connect();
+        //mLocationProvider.connect();
 
         setUpMapIfNeeded();
 

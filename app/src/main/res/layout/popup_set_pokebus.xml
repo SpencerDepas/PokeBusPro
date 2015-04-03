@@ -27,7 +27,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/set_pokebus_body"
+                android:text="@string/set_pokebus_body_two"
                 android:layout_marginBottom="10dp"/>
 
 
