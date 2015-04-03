@@ -2,6 +2,7 @@ package clearfaun.com.pokebuspro;
 
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -37,6 +38,7 @@ import com.crashlytics.android.Crashlytics;
 import com.gc.materialdesign.views.ButtonFlat;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesign.widgets.Dialog;
+import com.gc.materialdesign.widgets.SnackBar;
 import com.google.android.gms.internal.ge;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -230,6 +232,21 @@ public class MapsActivity extends FragmentActivity implements
         });
 
         mLocationProvider.connect();
+
+
+
+
+        SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
+            public void onClick(View v) {
+                // it was the 1st button
+
+
+
+            }
+        });
+        snackbar.setDismissTimer(8000);
+        snackbar.show();
+
 
 
     }
