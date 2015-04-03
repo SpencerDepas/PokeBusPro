@@ -172,7 +172,7 @@ public class MapsActivity extends FragmentActivity implements
                 ft = fm.beginTransaction();
 
                 prefsFragment = new PrefsFragment();
-                ft.add(R.id.map, prefsFragment);
+                ft.add(R.id.map, prefsFragment, "fragmentid");
                 ft.addToBackStack("TAG");
                 ft.commit();
 
@@ -365,13 +365,19 @@ public class MapsActivity extends FragmentActivity implements
     public void onBackPressed(){
         Log.i("MyMapsActivity", "onBackPressed");
 
+
+
         if(AddMarkers.dialogOpon){
 
-        }else {
-
+        }if(prefsFragment != null){
             ft = fm.beginTransaction();
             ft.remove(prefsFragment);
             ft.commit();
+        }else{
+            Intent startMain = new Intent(Intent.ACTION_MAIN);
+            startMain.addCategory(Intent.CATEGORY_HOME);
+            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startMain);
         }
 
     }

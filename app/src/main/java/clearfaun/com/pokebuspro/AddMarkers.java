@@ -116,13 +116,7 @@ public class AddMarkers {
         double closestSnippet = 0;
         boolean snippetOpen = false;
 
-        for(int i = 0 ; i < marker.length; i++){
-            if(marker[i].isInfoWindowShown()){
-                Log.i("AddMarkers", "  snippetOpen: " + snippetOpen );
-                snippetOpen = true;
-                break;
-            }
-        }
+
 
         //for lifecycle
         if(!snippetOpen) {
