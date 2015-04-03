@@ -100,38 +100,8 @@ public class AddMarkers {
 
         addPokeBusColor();
         //to find closest marker to you
-        int busInfoIndex = 0;
-        double closestSnippet = 0;
 
-        //first onpons the closet snippet
-        for(int i = 0 ; i < busInfo.size(); i ++){
-            if(closestSnippet == 0 || closestSnippet > MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                    busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng())){
-
-                closestSnippet = MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                        busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
-                busInfoIndex = i;
-
-            }
-        }
-
-        //if pokebus is in ranneg then opons pokebus snippet
-        for(int i = 0 ; i < busInfo.size(); i ++){
-
-            if(MapsActivity.pokeBusbusInfo != null) {
-                for (int z = 0; z < MapsActivity.pokeBusbusInfo.size(); z++) {
-
-                    if (busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() + "")) {
-                        //if a poke bus is in range then it will opon in stead of the closest bus stop
-                        busInfoIndex = i;
-                        break;
-                    }
-
-                }
-            }
-        }
-
-        marker[busInfoIndex].showInfoWindow();
+        openClosestSnippet(busInfo);
 
         Log.i("AddMarkers", "  Remove spinner " );
         MapsActivity.spinner.setVisibility(View.INVISIBLE);
@@ -139,7 +109,55 @@ public class AddMarkers {
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
 
+    static boolean snippetOpen = false;
+    public static void openClosestSnippet(ArrayList<BusInfo> busInfo){
+        Log.i("AddMarkers", "  openClosestSnippet " );
+        int busInfoIndex = 0;
+        double closestSnippet = 0;
 
+
+        for(int i = 0 ; i < marker.length; i++){
+            if(marker[i].isInfoWindowShown()){
+                Log.i("AddMarkers", "  snippetOpen: " + snippetOpen );
+                snippetOpen = true;
+                break;
+            }
+        }
+
+        //for lifecycle
+        if(!snippetOpen) {
+            Log.i("AddMarkers", "  in !snippetOpen: "  );
+            //first onpons the closet snippet
+            for (int i = 0; i < busInfo.size(); i++) {
+                if (closestSnippet == 0 || closestSnippet > MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
+                        busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng())) {
+
+                    closestSnippet = MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
+                            busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
+                    busInfoIndex = i;
+
+                }
+            }
+
+            //if pokebus is in ranneg then opons pokebus snippet
+            for (int i = 0; i < busInfo.size(); i++) {
+
+                if (MapsActivity.pokeBusbusInfo != null) {
+                    for (int z = 0; z < MapsActivity.pokeBusbusInfo.size(); z++) {
+
+                        if (busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() + "")) {
+                            //if a poke bus is in range then it will opon in stead of the closest bus stop
+                            busInfoIndex = i;
+                            break;
+                        }
+
+                    }
+                }
+            }
+
+            marker[busInfoIndex].showInfoWindow();
+        }
+    }
 
 
     public static void addPokeBusColor(){

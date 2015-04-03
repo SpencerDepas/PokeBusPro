@@ -27,13 +27,6 @@
     <PreferenceCategory
         android:title="@string/poke_bus_settings">
 
-
-        <PreferenceScreen
-            android:key="@string/pokebus_key_marker"
-            android:title="@string/place_pokebus_marker"
-            >
-        </PreferenceScreen>
-
         <PreferenceScreen
             android:title="@string/remove_all_poke_bus"
             android:key="@string/remove_poke_bus_key" >

@@ -44,7 +44,7 @@
          PokeBus preferences
          -->
     <string name="remove_all_poke_bus">Remove all saved poke Buses</string>
-    <string name="poke_bus_settings">Create a PokeBus</string>
+    <string name="poke_bus_settings">PokeBus Settings</string>
     <string name="current_poke_bus">Current Poke Bus:</string>
     <string name="place_pokebus_marker">Make a PokeBus with a marker</string>
     <string name="get_current_poke_bus">Current PokeBus : 301649</string>
