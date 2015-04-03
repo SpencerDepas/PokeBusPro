@@ -41,20 +41,27 @@ public class Service extends IntentService {
 
         ArrayList<BusInfo> busInfoArrayList = loadBusInfo();
 
-        Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
-        Log.i("MyService", "loaded object: " + busInfoArrayList.size());
+        if(busInfoArrayList.size() == 0){
+
+            new ToastMessageTask().execute("Please set a PokeBus in the app");
+
+        }else {
 
 
-        //so get bus distance knows where we are coming from. API key stuff
-        for(int i = 0; i < busInfoArrayList.size(); i ++){
-            busInfoArrayList.get(i).setForNoUIToast(true);
+            Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
+            Log.i("MyService", "loaded object: " + busInfoArrayList.size());
+
+
+            //so get bus distance knows where we are coming from. API key stuff
+            for (int i = 0; i < busInfoArrayList.size(); i++) {
+                busInfoArrayList.get(i).setForNoUIToast(true);
+            }
+
+
+            getBusDistance(busInfoArrayList);
+
+
         }
-
-
-        getBusDistance(busInfoArrayList);
-
-
-
 
 
     }
