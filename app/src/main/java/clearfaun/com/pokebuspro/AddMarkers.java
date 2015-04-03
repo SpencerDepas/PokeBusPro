@@ -109,12 +109,12 @@ public class AddMarkers {
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
 
-    static boolean snippetOpen = false;
+
     public static void openClosestSnippet(ArrayList<BusInfo> busInfo){
         Log.i("AddMarkers", "  openClosestSnippet " );
         int busInfoIndex = 0;
         double closestSnippet = 0;
-
+        boolean snippetOpen = false;
 
         for(int i = 0 ; i < marker.length; i++){
             if(marker[i].isInfoWindowShown()){
