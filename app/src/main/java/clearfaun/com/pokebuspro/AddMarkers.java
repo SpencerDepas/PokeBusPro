@@ -1,24 +1,9 @@
 package clearfaun.com.pokebuspro;
 
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.PopupWindow;
 
-import com.gc.materialdesign.widgets.Dialog;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -167,7 +152,7 @@ public class AddMarkers {
                         if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(q).getBusCode() + "")) {
                             //to distinqush a pokebus
 
-                            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white__blue36dptwo));
+                            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white__blue36dp));
                             //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
                         }

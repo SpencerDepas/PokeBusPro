@@ -138,7 +138,7 @@ public class MapsActivity extends FragmentActivity implements
         boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
         if(!isOnline()){
-
+            Log.i("MyMapsActivity", "!isOnline()");
             Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
             startActivity(intent);
             this.finish();
@@ -147,13 +147,9 @@ public class MapsActivity extends FragmentActivity implements
             Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
 
 
-            Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
+            Intent intent = new Intent(MapsActivity.mContext , AirplaneMode.class);
             startActivity(intent);
             this.finish();
-
-           /* Intent intent = new Intent(MapsActivity.mContext , AirplaneMode.class);
-            startActivity(intent);
-            this.finish();*/
 
         }else if(!enabledGPS){
             Log.i("MyMapsActivity", "!enabledGPS");
