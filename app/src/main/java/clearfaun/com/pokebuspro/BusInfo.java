@@ -29,6 +29,12 @@ public class BusInfo implements Serializable {
 
     }
 
+    public void setDistanceNotAvailable(){
+        distance[0] = "Not available";
+        distance[1] = "Not available";
+        distance[2] = "Not available";
+    }
+
 
     public void setBusCode(String codeForStop) {
         stopCode = codeForStop;

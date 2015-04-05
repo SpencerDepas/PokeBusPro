@@ -526,6 +526,11 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity","busCode()" );
         Log.i("MyMapsActivity","pokeBusbusInfo,size" + pokeBusbusInfo.size());
 
+        //when a poke bus is called we dont want old information saved
+        for(BusInfo businfo: pokeBusbusInfo){
+            businfo.setDistanceNotAvailable();
+        }
+
 
         try{
             FileOutputStream fos = mContext.openFileOutput("BUSINFO", Context.MODE_PRIVATE);

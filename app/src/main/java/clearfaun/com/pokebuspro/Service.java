@@ -55,7 +55,7 @@ public class Service extends IntentService {
             //so get bus distance knows where we are coming from. API key stuff
             for (int i = 0; i < busInfoArrayList.size(); i++) {
                 busInfoArrayList.get(i).setForNoUIToast(true);
-                busInfoArrayList.get(i).setBusDistance(null);
+                //busInfoArrayList.get(i).setBusDistance([""],[""],[""]);
             }
 
 
