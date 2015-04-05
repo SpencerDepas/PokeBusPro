@@ -65,8 +65,8 @@
         </PreferenceScreen>
 
         <PreferenceScreen
-            android:key="@string/license"
-            android:title="@string/about"
+            android:key="@string/license_key"
+            android:title="@string/license"
             >
         </PreferenceScreen>
 

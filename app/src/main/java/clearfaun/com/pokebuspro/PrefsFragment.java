@@ -47,7 +47,7 @@ public class PrefsFragment extends PreferenceFragment {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
 
-        PreferenceScreen prefSumPokeBus = (PreferenceScreen) findPreference("KEY41");
+
 
 
         prefSumBusMap = (ListPreference) findPreference("KEY99");
@@ -93,7 +93,8 @@ public class PrefsFragment extends PreferenceFragment {
 
         if (preference.getKey().equals("KEY44")) {
             Log.i("PrefsFragment", "license");
-
+            Intent intent = new Intent(MapsActivity.mContext , LicenseActivity.class);
+            startActivity(intent);
 
 
         }else if(preference.getKey().equals("KEY32")){

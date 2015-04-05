@@ -48,6 +48,8 @@
         <activity android:label="@string/app_name" android:name="BusMap"/>
         <activity android:label="@string/app_name" android:name="AirplaneMode"/>
         <activity android:label="@string/app_name" android:name="NoConnection"/>
+        <activity android:label="@string/app_name" android:name="LicenseActivity"/>
+
 
 
         <activity
