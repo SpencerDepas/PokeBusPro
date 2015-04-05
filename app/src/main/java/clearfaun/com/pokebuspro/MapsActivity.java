@@ -328,6 +328,8 @@ public class MapsActivity extends FragmentActivity implements
     public static void refreshMarkers(){
         Log.i("MyMapsActivity", "refreshMarkers");
 
+        AddMarkers.whatSnippetIsOpen();
+
         busInfo.clear();
         stopTimerTask();
         AddMarkers.marker = null;

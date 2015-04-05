@@ -109,42 +109,70 @@ public class AddMarkers {
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
 
+    static String lastOpenSnippet;
+
+    public static void whatSnippetIsOpen(){
+        Log.i("AddMarkers", "  whatSnippetIsOpen() " );
+        lastOpenSnippet = null;
+        for(Marker marker: AddMarkers.marker ){
+
+            if(marker.isInfoWindowShown()){
+                lastOpenSnippet =  marker.getTitle();
+                Log.i("AddMarkers", "  lastOpenSnippet " + lastOpenSnippet );
+                break;
+            }
+        }
+
+    }
+
+
 
     public static void openClosestSnippet(ArrayList<BusInfo> busInfo){
         Log.i("AddMarkers", "  openClosestSnippet " );
         int busInfoIndex = 0;
         double closestSnippet = 0;
 
-
-
-        Log.i("AddMarkers", "  in !snippetOpen: "  );
-        //first onpons the closet snippet
-        for (int i = 0; i < busInfo.size(); i++) {
-            if (closestSnippet == 0 || closestSnippet > MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                    busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng())) {
-
-                closestSnippet = MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                        busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
-                busInfoIndex = i;
-
+        if(lastOpenSnippet != null){
+            Log.i("AddMarkers", "  lastOpenSnippet != null " );
+            for(int i = 0; i < marker.length; i ++){
+                if(lastOpenSnippet.equals(marker[i].getTitle())){
+                    Log.i("AddMarkers", "  lastOpenSnippet.equals(marker[i].getTitle()" );
+                    busInfoIndex = i;
+                }
             }
-        }
 
-        //if pokebus is in ranneg then opons pokebus snippet
-        for (int i = 0; i < busInfo.size(); i++) {
+        }else {
 
-            if (MapsActivity.pokeBusbusInfo != null) {
-                for (int z = 0; z < MapsActivity.pokeBusbusInfo.size(); z++) {
+            Log.i("AddMarkers", "  in !snippetOpen: ");
+            //first onpons the closet snippet
+            for (int i = 0; i < busInfo.size(); i++) {
+                if (closestSnippet == 0 || closestSnippet > MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
+                        busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng())) {
 
-                    if (busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() + "")) {
-                        //if a poke bus is in range then it will opon in stead of the closest bus stop
-                        busInfoIndex = i;
-                        break;
-                    }
+                    closestSnippet = MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
+                            busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
+                    busInfoIndex = i;
 
                 }
             }
+
+            //if pokebus is in ranneg then opons pokebus snippet
+            for (int i = 0; i < busInfo.size(); i++) {
+
+                if (MapsActivity.pokeBusbusInfo != null) {
+                    for (int z = 0; z < MapsActivity.pokeBusbusInfo.size(); z++) {
+
+                        if (busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() + "")) {
+                            //if a poke bus is in range then it will opon in stead of the closest bus stop
+                            busInfoIndex = i;
+                            break;
+                        }
+
+                    }
+                }
+            }
         }
+
 
         marker[busInfoIndex].showInfoWindow();
 
