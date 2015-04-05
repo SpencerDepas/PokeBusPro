@@ -78,6 +78,14 @@
     <string name="alarm_info">Alarm will activate when bus is at a specific distance</string>
     <string name="distance_for_alarm">Set distance for alarm</string>
 
+    <!--
+            License
+                 -->
+
+    <string name="license_one_header">FloatingActionButton</string>
+    <string name="license_two_header">Material Design Elements Of Android L</string>
+    <string name="license_three_header">Subsampling Scale Image View</string>
+
 
     <string name="dialog_title_list_preference">dialog_title_list_preference</string>
     <string name="title_list_preference">title_list_preference</string>
