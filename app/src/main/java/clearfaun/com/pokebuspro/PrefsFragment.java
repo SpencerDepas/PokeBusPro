@@ -91,15 +91,11 @@ public class PrefsFragment extends PreferenceFragment {
 
         Log.i("PrefsFragment", "onPreferenceTreeClick preference " + preference.getKey());
 
-        if (preference.getKey().equals("KEY41")) {
-            Log.i("PrefsFragment", "preference == markerUI");
+        if (preference.getKey().equals("KEY44")) {
+            Log.i("PrefsFragment", "license");
 
-            MapsActivity.addPokeBusMarker();
 
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.remove(this);
-            ft.commit();
+
         }else if(preference.getKey().equals("KEY32")){
             //about screen
             Log.i("PrefsFragment", "preference == aboutscreen");

@@ -32,6 +32,7 @@
     <string name="bus_map_key">KEY4888</string>
     <string name="facebook_key">KEY001</string>
     <string name="remove_poke_bus_key">KEY033</string>
+    <string name="license_key">KEY44</string>
 
     <string name="map_preferences">Map Settings</string>
 
@@ -67,6 +68,7 @@
     <string name="like_us_on_facebook">Like us on Facebook</string>
     <string name="bus_map">Select your preferred Bus Map</string>
     <string name="about">About</string>
+    <string name="license">Licenses</string>
 
     <!--
              Alarm

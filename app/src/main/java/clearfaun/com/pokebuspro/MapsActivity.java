@@ -368,12 +368,15 @@ public class MapsActivity extends FragmentActivity implements
 
 
         if(AddMarkers.dialogOpon){
-
+            Log.i("MyMapsActivity", "AddMarkers.dialogOpon");
         }if(prefsFragment != null){
             ft = fm.beginTransaction();
             ft.remove(prefsFragment);
             ft.commit();
+            prefsFragment = null;
+            Log.i("MyMapsActivity", "prefsFragment != null");
         }else{
+            Log.i("MyMapsActivity", "startMain");
             Intent startMain = new Intent(Intent.ACTION_MAIN);
             startMain.addCategory(Intent.CATEGORY_HOME);
             startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

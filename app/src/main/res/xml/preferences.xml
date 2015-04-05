@@ -62,7 +62,12 @@
             android:key="@string/about_page_key"
             android:title="@string/about"
             >
+        </PreferenceScreen>
 
+        <PreferenceScreen
+            android:key="@string/license"
+            android:title="@string/about"
+            >
         </PreferenceScreen>
 
         <!-- This PreferenceScreen tag serves as a screen break (similar to page break
