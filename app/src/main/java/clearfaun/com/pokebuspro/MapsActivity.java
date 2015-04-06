@@ -66,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements
     static GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     static LatLng latLng;
-    private LocationProvider mLocationProvider;
+    static private LocationProvider mLocationProvider;
     static double latitude;
     static double longitude;
     static Context mContext;
@@ -191,10 +191,12 @@ public class MapsActivity extends FragmentActivity implements
                 Log.i("MyMapsActivity", "onClick refreshLocation");
                 //refresh button
 
+                //spinner.setVisibility(View.VISIBLE);
+
                 bearing = mMap.getCameraPosition().bearing;
                 zoom = mMap.getCameraPosition().zoom;
 
-                mMap.setMyLocationEnabled(true);
+
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
 
 
@@ -345,7 +347,7 @@ public class MapsActivity extends FragmentActivity implements
         getBusStops(busInfo);
         Log.i("MyMapsActivity", "after getBusStops(busInfo) refresh ");
         Log.i("MyMapsActivity", "after busInfo " + busInfo.size());
-        Log.i("MyMapsActivity", "after busInfo " +  busInfo.get(0).getBusCode());
+        Log.i("MyMapsActivity", "after busInfo " + busInfo.get(0).getBusCode());
 
         getBusDistance(busInfo);
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
@@ -482,7 +484,10 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
+    public void acuracyTimerTask(){
 
+
+    }
 
 
 
@@ -501,8 +506,9 @@ public class MapsActivity extends FragmentActivity implements
             //initialize the TimerTask's job
             initializeTimerTask();
             //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-
             timer.schedule(timerTask, 5000, timeInMS);
+
+
         }
     }
 
@@ -515,11 +521,35 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
+    public static void stopAcuracyTimerTask() {
+        Log.i("MyMapsActivity", "stopTimerTask()" );
+        //stop the timer, if it's not already null
+        if (acuracyTimerTask != null) {
+            acuracyTimerTask.cancel();
+            acuracyTimerTask = null;
+        }
+    }
+
     public static void initializeTimerTask() {
         timerTask = new TimerTask() {
             public void run() {
                 Log.i("MyMapsActivity","initializeTimerTask    timerTask");
                 getBusDistance(busInfo);
+            }
+        };
+    }
+
+
+    static TimerTask acuracyTimerTask;
+
+    public static void initializeAcuracyTimerTask() {
+        acuracyTimerTask = new TimerTask() {
+            public void run() {
+
+                Log.i("MyMapsActivity","acuracyTimerTask");
+                mLocationProvider.disconnect();
+                mLocationProvider.connect();
+
             }
         };
     }
@@ -625,20 +655,28 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void handleNewLocation(Location location) {
 
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        latLng = new LatLng(latitude, longitude);
+
         Log.i("MyMapsActivity", "handleNewLocation()zoom:" + zoom);
         Log.i("MyMapsActivity","handleNewLocation -----------");
+        Log.i("MyMapsActivity","handleNewLocation -----------location.getAccuracy():" +  location.getAccuracy());
+        if(location.getAccuracy() > 5){
+            Log.i("MyMapsActivity", "handleNewLocation -----------location.getAccuracy() > 30");
+            stopAcuracyTimerTask();
+            Timer acuracyTimer = new Timer();
 
-        if(location.getAccuracy() > 30){
-
+            initializeAcuracyTimerTask();
+            Log.i("MyMapsActivity", "handleNewLocation after initializeAcuracyTimerTask();");
+            acuracyTimer.schedule(acuracyTimerTask, 30000, (30 * 1000));
             mLocationProvider.disconnect();
             mLocationProvider.connect();
-            
+
         }else {
 
+            //stopAcuracyTimerTask();
 
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            latLng = new LatLng(latitude, longitude);
 
             Log.i("MyMapsActivity", "handleNewLocation ----------latitude " + latitude);
             //only want location this to run on first time. Not activate on every location update
