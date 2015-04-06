@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Poke Bus</string>
-    <string name="title_activity_maps">Poke Bus</string>
-    <string name="NoUI">Poke á Bus</string>
+    <string name="app_name">Native Speed</string>
+    <string name="title_activity_maps">Native Speed</string>
+    <string name="NoUI">Poke Bus</string>
     <string name="action_settings">Settings</string>
 
 
