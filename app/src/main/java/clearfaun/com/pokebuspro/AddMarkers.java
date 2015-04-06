@@ -51,7 +51,6 @@ public class AddMarkers {
                     MapsActivity.popupForPokebus(MapsActivity.optionsButton, Pin.getTitle());
 
 
-
                 }
             });
             Log.i("AddMarkers", "addMarkersToMap() " + busInfo.get(i).getBusCode() + " i is " + i);
@@ -106,6 +105,8 @@ public class AddMarkers {
         Log.i("AddMarkers", "  Remove spinner " );
         MapsActivity.spinner.setVisibility(View.INVISIBLE);
 
+
+
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
 
@@ -132,6 +133,11 @@ public class AddMarkers {
 
 
     public static void openClosestSnippet(ArrayList<BusInfo> busInfo){
+        //this should open
+        //1 last open snippet
+        //2 closest pokebus
+        //3 closet snippet
+
         Log.i("AddMarkers", "  openClosestSnippet " );
         int busInfoIndex = 0;
         double closestSnippet = 0;

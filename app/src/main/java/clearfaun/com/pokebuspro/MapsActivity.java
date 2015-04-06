@@ -73,6 +73,9 @@ public class MapsActivity extends FragmentActivity implements
     static GetBusStopJSON obj;
     static GetBusDistanceJSON objTwo;
 
+    float zoom;
+    float bearing;
+
 
     static ArrayList<BusInfo> busInfo = new ArrayList<>();
     static ArrayList<BusInfo> pokeBusbusInfo;
@@ -84,11 +87,8 @@ public class MapsActivity extends FragmentActivity implements
 
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
-    SharedPreferences.Editor editor;
 
 
-
-    static public String API_KEY_MTA ;
     PrefsFragment prefsFragment;
     FragmentManager fm;
     FragmentTransaction ft;
@@ -100,9 +100,9 @@ public class MapsActivity extends FragmentActivity implements
     static ImageButton optionsButton;
     static RelativeLayout back_dim_layout;
     //EMPIRE STATE BUILDING
-    static double testLat = 40.748441;
+  /*  static double testLat = 40.748441;
     static double testLng = -73.985664;
-    static LatLng latLngEMPIRE ;
+    static LatLng latLngEMPIRE ;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
         back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
 
-        latLngEMPIRE = new LatLng(testLat, testLng);
+        //latLngEMPIRE = new LatLng(testLat, testLng);
 
         spinner = (ProgressBarCircularIndeterminate)findViewById(R.id.progressBar1);
 
@@ -190,6 +190,7 @@ public class MapsActivity extends FragmentActivity implements
             public void onClick(View v) {
                 Log.i("MyMapsActivity", "onClick refreshLocation");
                 //refresh button
+
                 bearing = mMap.getCameraPosition().bearing;
                 zoom = mMap.getCameraPosition().zoom;
 
@@ -197,15 +198,8 @@ public class MapsActivity extends FragmentActivity implements
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
 
 
-
-
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
-
-
-
-
-
 
 
             }
@@ -223,7 +217,7 @@ public class MapsActivity extends FragmentActivity implements
 
                 Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
 
-                Intent intent = new Intent(MapsActivity.mContext , BusMap.class);
+                Intent intent = new Intent(MapsActivity.mContext, BusMap.class);
                 intent.putExtra("maptype", "Current Map is: " + prefBusMap);
                 startActivity(intent);
 
@@ -234,19 +228,13 @@ public class MapsActivity extends FragmentActivity implements
         mLocationProvider.connect();
 
 
+        if( savedInstanceState != null ) {
+            //Then the application is being reloaded
+
+        }
 
 
-        SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
-            public void onClick(View v) {
-                // it was the 1st button
-
-
-
-            }
-        });
-        snackbar.setDismissTimer(8000);
-        snackbar.show();
-
+        Log.i("MyMapsActivity", "oncreate()zoom:" + zoom);
 
 
     }
@@ -330,6 +318,9 @@ public class MapsActivity extends FragmentActivity implements
 
         AddMarkers.whatSnippetIsOpen();
 
+        //pointlist is to save info for onrotate
+        pointList.clear();
+
         busInfo.clear();
         stopTimerTask();
         AddMarkers.marker = null;
@@ -337,7 +328,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
         getBusStops(busInfo);
-        Log.i("MyMapsActivity", "after getBusStops(busInfo) refresh " );
+        Log.i("MyMapsActivity", "after getBusStops(busInfo) refresh ");
         Log.i("MyMapsActivity", "after busInfo " + busInfo.size());
         Log.i("MyMapsActivity", "after busInfo " +  busInfo.get(0).getBusCode());
 
@@ -349,17 +340,6 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
-    public static void addPokeBusMarker(){
-
-
-        pokeBusMarker = mMap.addMarker(new MarkerOptions()
-                .title("PokeBus")
-                .position(latLng)
-                .draggable(true));
-        Log.i("MyMapsActivity", "onMenuItemClick marker created");
-
-
-    }
 
 
 
@@ -391,7 +371,7 @@ public class MapsActivity extends FragmentActivity implements
     public static void getBusStops(ArrayList<BusInfo> busInfo){
             Log.i("MyMapsActivity", "inside getBusStops");
             obj = new GetBusStopJSON();
-            obj.fetchBusStop(busInfo);
+        obj.fetchBusStop(busInfo);
 
         Log.i("MyMapsActivity", "before while");
 
@@ -421,9 +401,11 @@ public class MapsActivity extends FragmentActivity implements
 
     public void onPause() {
         super.onPause();
-        Log.i("MyMapsActivity","onPause()");
+        Log.i("MyMapsActivity", "onPause()");
         zoom = mMap.getCameraPosition().zoom;
         bearing = mMap.getCameraPosition().bearing;
+
+        Log.i("MyMapsActivity", "onPause()zoom:" + zoom);
 
         stopTimerTask();
         savePokeBus();
@@ -434,9 +416,39 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        savedInstanceState.putFloat("zoom", zoom);
+        savedInstanceState.putFloat("bearing", bearing);
+      /*  savedInstanceState.putBoolean("MyBoolean", true);
+        savedInstanceState.putDouble("myDouble", 1.9);
+        savedInstanceState.putInt("MyInt", 1);
+        savedInstanceState.putString("MyString", "Welcome back to Android");*/
+        // etc.
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    //onRestoreInstanceState
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Restore UI state from the savedInstanceState.
+        // This bundle has also been passed to onCreate.
+        zoom = savedInstanceState.getFloat("zoom");
+        bearing = savedInstanceState.getFloat("bearing");
+        /*boolean myBoolean = savedInstanceState.getBoolean("MyBoolean");
+        double myDouble = savedInstanceState.getDouble("myDouble");
+        int myInt = savedInstanceState.getInt("MyInt");
+        String myString = savedInstanceState.getString("MyString");*/
+    }
+
+
+    @Override
     protected void onResume() {
         super.onResume();
-        Log.i("MyMapsActivity","onResume()");
+        Log.i("MyMapsActivity", "onResume()");
 
         //mLocationProvider.connect();
 
@@ -504,17 +516,13 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "setUpMapIfNeeded() ");
 
         // Do a null check to confirm that we have not already instantiated the map.
+        Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
+        // Try to obtain the map from the SupportMapFragment.
+        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                .getMap();
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-        if(mMap == null) {
-            Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            mMap.getUiSettings().setMapToolbarEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        }else{
-            AddMarkers.openClosestSnippet(busInfo);
-        }
 
 
     }
@@ -597,13 +605,12 @@ public class MapsActivity extends FragmentActivity implements
         toast.show();
     }
 
-    float zoom;
-    float bearing;
+
 
     @Override
     public void handleNewLocation(Location location) {
 
-
+        Log.i("MyMapsActivity", "handleNewLocation()zoom:" + zoom);
         Log.i("MyMapsActivity","handleNewLocation -----------");
 
         latitude = location.getLatitude();
@@ -614,7 +621,7 @@ public class MapsActivity extends FragmentActivity implements
         //only want location this to run on first time. Not activate on every location update
         if(pointList.size() > 0){
             Log.i("MyMapsActivity", "afterpointList.size() > 0");
-
+            //for onrotate
 
 
             mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
@@ -627,7 +634,7 @@ public class MapsActivity extends FragmentActivity implements
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             refreshMarkers();
-            AddMarkers.addMarkersToMap(busInfo);
+            //AddMarkers.addMarkersToMap(busInfo);
 
         }else if(firstBoot == 0) {
             Log.i("MyMapsActivity","in first boot " );
@@ -651,6 +658,17 @@ public class MapsActivity extends FragmentActivity implements
 
             updateBusDistance();
             Log.i("MyMapsActivity", "after updateBusDistance();");
+
+            SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
+                public void onClick(View v) {
+                    // it was the 1st button
+
+
+
+                }
+            });
+            snackbar.setDismissTimer(8000);
+            snackbar.show();
 
         }
 
