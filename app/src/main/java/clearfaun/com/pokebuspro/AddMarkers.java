@@ -113,13 +113,17 @@ public class AddMarkers {
 
     public static void whatSnippetIsOpen(){
         Log.i("AddMarkers", "  whatSnippetIsOpen() " );
-        lastOpenSnippet = null;
-        for(Marker marker: AddMarkers.marker ){
 
-            if(marker.isInfoWindowShown()){
-                lastOpenSnippet =  marker.getTitle();
-                Log.i("AddMarkers", "  lastOpenSnippet " + lastOpenSnippet );
-                break;
+        lastOpenSnippet = null;
+        if(marker != null) {
+            Log.i("AddMarkers", "  AddMarkers.marker() length" + AddMarkers.marker.length );
+            for (Marker marker : AddMarkers.marker) {
+
+                if (marker.isInfoWindowShown()) {
+                    lastOpenSnippet = marker.getTitle();
+                    Log.i("AddMarkers", "  lastOpenSnippet " + lastOpenSnippet);
+                    break;
+                }
             }
         }
 

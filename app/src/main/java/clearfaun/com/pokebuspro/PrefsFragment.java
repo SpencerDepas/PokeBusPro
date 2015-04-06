@@ -61,6 +61,7 @@ public class PrefsFragment extends PreferenceFragment {
             if (key.equals("KEY1")) {
                 //for changing radius
                 Log.i("PrefsFragment", "KEY1");
+
                 MapsActivity.refreshMarkers();
             }else if(key.equals("KEY99")){
                 //changing summery to siaplay current bus map
