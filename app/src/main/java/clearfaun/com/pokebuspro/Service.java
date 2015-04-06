@@ -43,7 +43,7 @@ public class Service extends IntentService {
 
         if(busInfoArrayList.size() == 0){
 
-            new ToastMessageTask().execute("Please set a PokeBus in the app");
+            new ToastMessageTask().execute("Please set a PokeBus in the main application");
 
         }else {
 

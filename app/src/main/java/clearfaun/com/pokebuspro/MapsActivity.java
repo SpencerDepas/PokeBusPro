@@ -231,6 +231,21 @@ public class MapsActivity extends FragmentActivity implements
         if( savedInstanceState != null ) {
             //Then the application is being reloaded
 
+        }else{
+
+            if(pokeBusbusInfo.size() == 0) {
+
+                SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
+                    public void onClick(View v) {
+                        // it was the 1st button
+
+
+                    }
+                });
+                snackbar.setDismissTimer(8000);
+                snackbar.show();
+            }
+
         }
 
 
@@ -659,16 +674,7 @@ public class MapsActivity extends FragmentActivity implements
             updateBusDistance();
             Log.i("MyMapsActivity", "after updateBusDistance();");
 
-            SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
-                public void onClick(View v) {
-                    // it was the 1st button
 
-
-
-                }
-            });
-            snackbar.setDismissTimer(8000);
-            snackbar.show();
 
         }
 
