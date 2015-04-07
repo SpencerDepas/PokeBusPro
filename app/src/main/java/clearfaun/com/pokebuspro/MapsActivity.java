@@ -191,7 +191,7 @@ public class MapsActivity extends FragmentActivity implements
                 Log.i("MyMapsActivity", "onClick refreshLocation");
                 //refresh button
 
-                //spinner.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.VISIBLE);
 
                 bearing = mMap.getCameraPosition().bearing;
                 zoom = mMap.getCameraPosition().zoom;
@@ -200,8 +200,23 @@ public class MapsActivity extends FragmentActivity implements
                 // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
 
 
-                mLocationProvider.disconnect();
-                mLocationProvider.connect();
+                latitude = LocationProvider.lPLocation.getLatitude();
+                longitude = LocationProvider.lPLocation.getLongitude();
+                latLng = new LatLng(latitude, longitude);
+
+
+                Log.i("MyMapsActivity", "onClick LocationProvider.lPLocation" + LocationProvider.lPLocation.getAccuracy());
+
+                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+                mMap.setMyLocationEnabled(true);
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .bearing(bearing)                // Sets the orientation of the camera to east
+                        .zoom(zoom)                   // keeps zoom
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                refreshMarkers();
 
 
             }
@@ -662,67 +677,57 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "handleNewLocation()zoom:" + zoom);
         Log.i("MyMapsActivity","handleNewLocation -----------");
         Log.i("MyMapsActivity","handleNewLocation -----------location.getAccuracy():" +  location.getAccuracy());
-        if(location.getAccuracy() > 5){
-            Log.i("MyMapsActivity", "handleNewLocation -----------location.getAccuracy() > 30");
-            stopAcuracyTimerTask();
-            Timer acuracyTimer = new Timer();
-
-            initializeAcuracyTimerTask();
-            Log.i("MyMapsActivity", "handleNewLocation after initializeAcuracyTimerTask();");
-            acuracyTimer.schedule(acuracyTimerTask, 30000, (30 * 1000));
-            mLocationProvider.disconnect();
-            mLocationProvider.connect();
-
-        }else {
-
-            //stopAcuracyTimerTask();
 
 
-            Log.i("MyMapsActivity", "handleNewLocation ----------latitude " + latitude);
-            //only want location this to run on first time. Not activate on every location update
-            if (pointList.size() > 0) {
-                Log.i("MyMapsActivity", "afterpointList.size() > 0");
-                //for onrotate
+
+        //stopAcuracyTimerTask();
 
 
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-                mMap.setMyLocationEnabled(true);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .bearing(bearing)                // Sets the orientation of the camera to east
-                        .zoom(zoom)                   // keeps zoom
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                refreshMarkers();
-                //AddMarkers.addMarkersToMap(busInfo);
-
-            } else if (firstBoot == 0) {
-                Log.i("MyMapsActivity", "in first boot ");
-                firstBoot++;
-                mMap.setMyLocationEnabled(true);
-                // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(17)                   // Sets the zoom
-                        .bearing(40)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-
-                getBusStops(busInfo);
-                Log.i("MyMapsActivity", "after getBusStops(busInfo);: ");
-
-                getBusDistance(busInfo);
-                Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
-
-                updateBusDistance();
-                Log.i("MyMapsActivity", "after updateBusDistance();");
+        Log.i("MyMapsActivity", "handleNewLocation ----------latitude " + latitude);
+        //only want location this to run on first time. Not activate on every location update
+        if (pointList.size() > 0) {
+            Log.i("MyMapsActivity", "afterpointList.size() > 0");
+            //for onrotate
 
 
-            }
+            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+            mMap.setMyLocationEnabled(true);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)    // Sets the center of the map to Mountain View
+                    .bearing(bearing)                // Sets the orientation of the camera to east
+                    .zoom(zoom)                   // keeps zoom
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            refreshMarkers();
+            //AddMarkers.addMarkersToMap(busInfo);
+
+        } else if (firstBoot == 0) {
+            Log.i("MyMapsActivity", "in first boot ");
+            firstBoot++;
+            mMap.setMyLocationEnabled(true);
+            // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)    // Sets the center of the map to Mountain View
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(40)                // Sets the orientation of the camera to east
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+
+            getBusStops(busInfo);
+            Log.i("MyMapsActivity", "after getBusStops(busInfo);: ");
+
+            getBusDistance(busInfo);
+            Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
+
+            updateBusDistance();
+            Log.i("MyMapsActivity", "after updateBusDistance();");
+
+
         }
+
 
     }
 

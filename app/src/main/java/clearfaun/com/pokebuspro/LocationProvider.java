@@ -40,7 +40,7 @@ public class LocationProvider implements
     private LocationRequest mLocationRequest;
 
     public LocationProvider(Context context, LocationCallback callback) {
-        Log.i(TAG, "LocationProvider.");
+        Log.i("LocationProvider", "LocationProvider.");
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -68,18 +68,18 @@ public class LocationProvider implements
             mGoogleApiClient.disconnect();
         }
     }
-
+    static Location lPLocation;
     @Override
     public void onConnected(Bundle bundle) {
-        Log.i(TAG, "Location services connected.");
+        Log.i("LocationProvider", "Location services connected.");
 
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (location == null) {
+        lPLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (lPLocation == null) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         else {
-            mLocationCallback.handleNewLocation(location);
-            Log.i(TAG, "Location services connected have location.");
+            mLocationCallback.handleNewLocation(lPLocation);
+            Log.i("LocationProvider", "Location services connected have location.");
         }
     }
 
@@ -114,13 +114,13 @@ public class LocationProvider implements
              * If no resolution is available, display a dialog to the
              * user with the error.
              */
-            Log.i(TAG, "Location services connection failed with code " + connectionResult.getErrorCode());
+            Log.i("LocationProvider", "Location services connection failed with code " + connectionResult.getErrorCode());
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i(TAG, "onLocationChanged.");
+        Log.i("LocationProvider", "onLocationChanged.");
         mLocationCallback.handleNewLocation(location);
     }
 }

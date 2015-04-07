@@ -102,8 +102,12 @@ public class AddMarkers {
 
         openClosestSnippet(busInfo);
 
-        Log.i("AddMarkers", "  Remove spinner " );
-        MapsActivity.spinner.setVisibility(View.INVISIBLE);
+        Log.i("AddMarkers", "  Remove spinner ");
+        Log.i("AddMarkers", "  MapsActivity.spinner.getVisibility(): " + MapsActivity.spinner.getVisibility());
+        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
+            MapsActivity.spinner.setVisibility(View.INVISIBLE);
+        }
+
 
 
 
