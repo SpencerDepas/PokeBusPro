@@ -145,9 +145,11 @@ public class AddMarkers {
         Log.i("AddMarkers", "  openClosestSnippet " );
         int busInfoIndex = 0;
         double closestSnippet = 0;
+        Log.i("AddMarkers", "  lastOpenSnippet  " + lastOpenSnippet );
 
         if(lastOpenSnippet != null){
             Log.i("AddMarkers", "  lastOpenSnippet != null " );
+            Log.i("AddMarkers", "  lastOpenSnippet  " + lastOpenSnippet );
             for(int i = 0; i < marker.length; i ++){
                 if(lastOpenSnippet.equals(marker[i].getTitle())){
                     Log.i("AddMarkers", "  lastOpenSnippet.equals(marker[i].getTitle()" );

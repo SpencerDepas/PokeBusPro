@@ -434,6 +434,7 @@ public class MapsActivity extends FragmentActivity implements
     public void onPause() {
         super.onPause();
         Log.i("MyMapsActivity", "onPause()");
+        AddMarkers.whatSnippetIsOpen();
         zoom = mMap.getCameraPosition().zoom;
         bearing = mMap.getCameraPosition().bearing;
 
@@ -483,7 +484,9 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "onResume()");
 
         //mLocationProvider.connect();
-
+        if(AddMarkers.marker != null){
+            AddMarkers.openClosestSnippet(busInfo);
+        }
 
         setUpMapIfNeeded();
 

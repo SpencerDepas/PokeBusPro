@@ -123,9 +123,9 @@
     <string name="set_pokebus_body">Bus: B16 \nStopeCode: 36148 \nbody of information i like to write a lot of garbage \njusdt for a
         test giberish is my tone of
         just  \ndude infoprmations a wall  of text</string>
-    <string name="set_pokebus_body_two">Setting a Pokebus enables the fastest way to know information about a specific stop.
+    <string name="set_pokebus_body_two">Setting a Pokebus enables the fastest way to know when a bus is approaching a specific stop.
     Set the stop and use the included black launcher. A Pokebus stop is blue. You can enable multiple Pokebuses. The bus stop that is
-        closer to you will be chosen. You can remove your Pokebuses in the settings menue.</string>
+        closest to you will be chosen. You can remove your Pokebuses in the settings menu.</string>
     <string name="confirm">SET</string>
     <string name="dismiss">CANCEL</string>
 </resources>

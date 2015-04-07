@@ -63,9 +63,19 @@ public class GetBusDistanceJSON {
                                 .getJSONObject("MonitoredCall")
                                 .getJSONObject("Extensions")
                                 .getJSONObject("Distances");
-
                         Log.i("MyGetBusDistanceJSONt", "sys :" + sys);
+                        Log.i("MyGetBusDistanceJSONt", "sys :\n\n");
 
+                        JSONObject busNameObject = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                                .getJSONObject(0)
+                                .getJSONArray("MonitoredStopVisit")
+                                .getJSONObject(i)
+                                .getJSONObject("MonitoredVehicleJourney");
+
+                        Log.i("MyGetBusDistanceJSONt", "testForMultipleStops :" + busNameObject);
+
+                        String callBusName = busNameObject.get("PublishedLineName").toString();
+                        Log.i("MyGetBusDistanceJSONt", "testForMultipleStops :" + callBusName);
 
                         tempDistance[i] = sys.get("PresentableDistance").toString();
                         Log.i("MyGetBusDistanceJSONt", " sys  " + sys.get("PresentableDistance").toString() + ". i is : " + i);

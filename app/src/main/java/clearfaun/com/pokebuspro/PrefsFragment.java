@@ -23,7 +23,7 @@ import android.support.v4.content.IntentCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
-
+import android.view.View;
 
 
 /**
@@ -61,7 +61,7 @@ public class PrefsFragment extends PreferenceFragment {
             if (key.equals("KEY1")) {
                 //for changing radius
                 Log.i("PrefsFragment", "KEY1");
-
+                MapsActivity.spinner.setVisibility(View.VISIBLE);
                 MapsActivity.refreshMarkers();
             }else if(key.equals("KEY99")){
                 //changing summery to siaplay current bus map
@@ -70,7 +70,7 @@ public class PrefsFragment extends PreferenceFragment {
                 prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue());
             }else if(key.equals("KEY2")){
                 //this is to change auto refresh
-
+                MapsActivity.spinner.setVisibility(View.VISIBLE);
                 MapsActivity.refreshMarkers();
 
 
