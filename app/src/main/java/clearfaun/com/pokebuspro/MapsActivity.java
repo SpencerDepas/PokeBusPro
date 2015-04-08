@@ -193,30 +193,10 @@ public class MapsActivity extends FragmentActivity implements
 
                 spinner.setVisibility(View.VISIBLE);
 
-                bearing = mMap.getCameraPosition().bearing;
-                zoom = mMap.getCameraPosition().zoom;
-
-
-                // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-
-
-                latitude = LocationProvider.lPLocation.getLatitude();
-                longitude = LocationProvider.lPLocation.getLongitude();
-                latLng = new LatLng(latitude, longitude);
-
-
-                Log.i("MyMapsActivity", "onClick LocationProvider.lPLocation" + LocationProvider.lPLocation.getAccuracy());
-
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-                mMap.setMyLocationEnabled(true);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .bearing(bearing)                // Sets the orientation of the camera to east
-                        .zoom(zoom)                   // keeps zoom
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                mLocationProvider.disconnect();
+                mLocationProvider.connect();
                 refreshMarkers();
+
 
 
             }
@@ -264,9 +244,7 @@ public class MapsActivity extends FragmentActivity implements
             }
 
         }
-
-
-        Log.i("MyMapsActivity", "oncreate()zoom:" + zoom);
+        
 
 
     }
