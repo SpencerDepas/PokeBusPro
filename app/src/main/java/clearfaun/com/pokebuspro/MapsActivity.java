@@ -110,27 +110,20 @@ public class MapsActivity extends FragmentActivity implements
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_maps);
         Log.i("MyMapsActivity", "onCreate");
+        back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
 
-        prefs = getSharedPreferences(
-                "pokeBusCodePrefs", Context.MODE_PRIVATE);
+        prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
         //this loads in businfo of saved bus stops
         pokeBusbusInfo = loadPokeBus();
 
         Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
-        back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
-
-        //latLngEMPIRE = new LatLng(testLat, testLng);
 
         spinner = (ProgressBarCircularIndeterminate)findViewById(R.id.progressBar1);
 
 
         mContext = getApplicationContext();
-
-
-
         mLocationProvider = new LocationProvider(this, this);
-
 
 
         LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -190,7 +183,7 @@ public class MapsActivity extends FragmentActivity implements
             public void onClick(View v) {
                 Log.i("MyMapsActivity", "onClick refreshLocation");
                 //refresh button
-
+                fromOnResume = false;
                 spinner.setVisibility(View.VISIBLE);
 
                 mLocationProvider.disconnect();
@@ -244,7 +237,7 @@ public class MapsActivity extends FragmentActivity implements
             }
 
         }
-        
+
 
 
     }
@@ -455,13 +448,15 @@ public class MapsActivity extends FragmentActivity implements
         String myString = savedInstanceState.getString("MyString");*/
     }
 
-
+    boolean fromOnResume = false;
     @Override
     protected void onResume() {
         super.onResume();
         Log.i("MyMapsActivity", "onResume()");
 
-        //mLocationProvider.connect();
+        fromOnResume = true;
+        mLocationProvider.disconnect();
+        mLocationProvider.connect();
         if(AddMarkers.marker != null){
             AddMarkers.openClosestSnippet(busInfo);
         }
@@ -480,10 +475,6 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
-    public void acuracyTimerTask(){
-
-
-    }
 
 
 
@@ -517,14 +508,6 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
-    public static void stopAcuracyTimerTask() {
-        Log.i("MyMapsActivity", "stopTimerTask()" );
-        //stop the timer, if it's not already null
-        if (acuracyTimerTask != null) {
-            acuracyTimerTask.cancel();
-            acuracyTimerTask = null;
-        }
-    }
 
     public static void initializeTimerTask() {
         timerTask = new TimerTask() {
@@ -536,19 +519,7 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
-    static TimerTask acuracyTimerTask;
 
-    public static void initializeAcuracyTimerTask() {
-        acuracyTimerTask = new TimerTask() {
-            public void run() {
-
-                Log.i("MyMapsActivity","acuracyTimerTask");
-                mLocationProvider.disconnect();
-                mLocationProvider.connect();
-
-            }
-        };
-    }
 
 
 
@@ -563,8 +534,6 @@ public class MapsActivity extends FragmentActivity implements
                 .getMap();
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-
 
     }
 
@@ -650,7 +619,6 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void handleNewLocation(Location location) {
-
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         latLng = new LatLng(latitude, longitude);
@@ -658,57 +626,57 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "handleNewLocation()zoom:" + zoom);
         Log.i("MyMapsActivity","handleNewLocation -----------");
         Log.i("MyMapsActivity","handleNewLocation -----------location.getAccuracy():" +  location.getAccuracy());
+        Log.i("MyMapsActivity","fromOnResume :" + fromOnResume);
+        //we want it from onresume to update location but not refresh
+        if(!fromOnResume || firstBoot == 0) {
+            //stopAcuracyTimerTask();
 
 
-
-        //stopAcuracyTimerTask();
-
-
-        Log.i("MyMapsActivity", "handleNewLocation ----------latitude " + latitude);
-        //only want location this to run on first time. Not activate on every location update
-        if (pointList.size() > 0) {
-            Log.i("MyMapsActivity", "afterpointList.size() > 0");
-            //for onrotate
+            Log.i("MyMapsActivity", "handleNewLocation ----------latitude " + latitude);
+            //only want location this to run on first time. Not activate on every location update
+            if (pointList.size() > 0) {
+                Log.i("MyMapsActivity", "afterpointList.size() > 0");
+                //for onrotate
 
 
-            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
-            mMap.setMyLocationEnabled(true);
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLng)    // Sets the center of the map to Mountain View
-                    .bearing(bearing)                // Sets the orientation of the camera to east
-                    .zoom(zoom)                   // keeps zoom
-                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            refreshMarkers();
-            //AddMarkers.addMarkersToMap(busInfo);
+                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+                mMap.setMyLocationEnabled(true);
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .bearing(bearing)                // Sets the orientation of the camera to east
+                        .zoom(zoom)                   // keeps zoom
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                refreshMarkers();
+                //AddMarkers.addMarkersToMap(busInfo);
 
-        } else if (firstBoot == 0) {
-            Log.i("MyMapsActivity", "in first boot ");
-            firstBoot++;
-            mMap.setMyLocationEnabled(true);
-            // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLng)    // Sets the center of the map to Mountain View
-                    .zoom(17)                   // Sets the zoom
-                    .bearing(40)                // Sets the orientation of the camera to east
-                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+            } else if (firstBoot == 0) {
+                Log.i("MyMapsActivity", "in first boot ");
+                firstBoot++;
+                mMap.setMyLocationEnabled(true);
+                // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .zoom(17)                   // Sets the zoom
+                        .bearing(40)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
 
-            getBusStops(busInfo);
-            Log.i("MyMapsActivity", "after getBusStops(busInfo);: ");
+                getBusStops(busInfo);
+                Log.i("MyMapsActivity", "after getBusStops(busInfo);: ");
 
-            getBusDistance(busInfo);
-            Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
+                getBusDistance(busInfo);
+                Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
-            updateBusDistance();
-            Log.i("MyMapsActivity", "after updateBusDistance();");
+                updateBusDistance();
+                Log.i("MyMapsActivity", "after updateBusDistance();");
 
 
+            }
         }
-
 
     }
 

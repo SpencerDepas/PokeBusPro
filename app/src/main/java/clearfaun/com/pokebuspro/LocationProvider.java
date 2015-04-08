@@ -58,6 +58,7 @@ public class LocationProvider implements
         mContext = context;
     }
 
+    boolean fromOnResume;
     public void connect() {
         mGoogleApiClient.connect();
     }
