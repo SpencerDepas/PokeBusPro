@@ -136,7 +136,7 @@ public class MapsActivity extends FragmentActivity implements
             startActivity(intent);
             this.finish();
 
-        }if(enabledAirplaneMode){
+        }else if(enabledAirplaneMode){
             Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
 
 
@@ -147,6 +147,9 @@ public class MapsActivity extends FragmentActivity implements
         }else if(!enabledGPS){
             Log.i("MyMapsActivity", "!enabledGPS");
             toaster("Tern GPS on for best results");
+            mLocationProvider.connect();
+        }else{
+            mLocationProvider.connect();
         }
 
 
@@ -215,7 +218,7 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
 
-        mLocationProvider.connect();
+
 
 
         if( savedInstanceState != null ) {
