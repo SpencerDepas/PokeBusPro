@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -19,7 +20,7 @@ public class GetBusDistanceJSON {
 
     int stopCode;
     ArrayList<BusInfo> busInfo;
-
+    JSONObject busNameObject;
 
     @SuppressLint("NewApi")
     public void readAndParseJSON(String[] in) {
@@ -54,6 +55,10 @@ public class GetBusDistanceJSON {
 
                         Log.i("MyGetBusDistanceJSONt", "maxNumberOfBusDistancesAvailable :" + maxNumberOfBusDistancesAvailable);
 
+                        int sysLength = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                                .getJSONObject(0).length();
+
+                        Log.i("MyGetBusDistanceJSONt", "maxNumberOfBusDistancesAvailable :" + sysLength);
 
                         JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
                                 .getJSONObject(0)
@@ -66,16 +71,37 @@ public class GetBusDistanceJSON {
                         Log.i("MyGetBusDistanceJSONt", "sys :" + sys);
                         Log.i("MyGetBusDistanceJSONt", "sys :\n\n");
 
-                        JSONObject busNameObject = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+
+                        //z is for stop
+                        String busNameObject = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
                                 .getJSONObject(0)
                                 .getJSONArray("MonitoredStopVisit")
                                 .getJSONObject(i)
-                                .getJSONObject("MonitoredVehicleJourney");
+                                .getJSONObject("MonitoredVehicleJourney")
+                                .get("PublishedLineName").toString();
 
-                        Log.i("MyGetBusDistanceJSONt", "testForMultipleStops :" + busNameObject);
+                        String busCodeObject = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                                .getJSONObject(0)
+                                .getJSONArray("MonitoredStopVisit")
+                                .getJSONObject(i)
+                                .getJSONObject("MonitoredVehicleJourney")
+                                .getJSONObject("MonitoredCall")
+                                .getString("StopPointRef");
 
-                        String callBusName = busNameObject.get("PublishedLineName").toString();
-                        Log.i("MyGetBusDistanceJSONt", "testForMultipleStops :" + callBusName);
+
+
+                        //String callBusName = busNameObject.get("PublishedLineName").toString();
+                        //=Log.i("MyGetBusDistanceJSONt", "testForMultipleStops :" + callBusName);
+
+
+                        Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject);
+                        Log.i("MyGetBusStopJSONy", "busNameObject " + busCodeObject);
+                        Log.i("MyGetBusStopJSONy", "PresentableDistance " +sys.get("PresentableDistance").toString());
+                        Log.i("MyGetBusStopJSONy", "i: " + i);
+                        Log.i("MyGetBusStopJSONy", "z: " + z);
+
+
+
 
                         tempDistance[i] = sys.get("PresentableDistance").toString();
                         Log.i("MyGetBusDistanceJSONt", " sys  " + sys.get("PresentableDistance").toString() + ". i is : " + i);
@@ -91,6 +117,8 @@ public class GetBusDistanceJSON {
 
 
 
+
+
                 //puts array distance in businfo
                 busInfo.get(z).setBusDistance(tempDistance);
 
@@ -99,6 +127,16 @@ public class GetBusDistanceJSON {
                 Log.i("MyGetBusDistanceJSONt", " busInfo.size()  " + busInfo.size());
 
             }
+
+            for(int i = 0 ; i < busInfo.size(); i ++){
+                Log.i("MyGetBusDistanceJSONo", " name  " + busInfo.get(i).getBusName());
+                Log.i("MyGetBusDistanceJSONo", " bus code  " + busInfo.get(i).getBusCode());
+                Log.i("MyGetBusDistanceJSONo", " distance 1:  " + busInfo.get(i).getDistance()[0]);
+                Log.i("MyGetBusDistanceJSONo", " distance 2:  " + busInfo.get(i).getDistance()[1]);
+                Log.i("MyGetBusDistanceJSONo", " distance 3:  " + busInfo.get(i).getDistance()[2]);
+                Log.i("MyGetBusDistanceJSONo", "  \n  ");
+            }
+
 
         }catch(Exception e){
             // TODO Auto-generated catch block
@@ -131,7 +169,7 @@ public class GetBusDistanceJSON {
         @Override
         protected String doInBackground(String... params) {
             Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop" + params[0]);
-            String howManyBusesPerStop = "3";
+            String howManyBusesPerStop = "15";
 
             String[] data = new String[busInfo.size()];
 

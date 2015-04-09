@@ -34,7 +34,7 @@ public class GetBusStopJSON {
     public void readAndParseJSON(String in, ArrayList<BusInfo> busInfo) {
 
 
-
+        int totalBuses = 0;
 
         try {
 
@@ -60,24 +60,41 @@ public class GetBusStopJSON {
                     JSONObject tlt = stopsArray.getJSONObject(i);
                     Log.i("MyGetBusStopJSON", stopsArray.getJSONObject(i).toString());
                     Log.i("MyGetBusStopJSON", "tlt" + tlt.getJSONArray("routes")
-                                    .getJSONObject(0)
-                                    .getString("shortName"));
-
-                    Log.i("MyGetBusStopJSON", " number of shortnames " + tlt.getJSONArray("routes")
-                            .getJSONObject(0));
-
-
-                    tempBusInfo = new BusInfo();
-                    tempBusInfo.setBusName(tlt.getJSONArray("routes")
                             .getJSONObject(0)
                             .getString("shortName"));
+                    tlt.getJSONArray("routes")
+                            .getJSONObject(0);
+                    //Log.i("MyGetBusStopJSONy", "tlt.getJSONArray(\"routes\") " + tlt.getJSONArray("routes") );
 
-                    tempBusInfo.setBusCode(tlt.getString("code"));
-                    tempBusInfo.setBusId(tlt.getString("id"));
-                    tempBusInfo.setBusStopLat(tlt.getString("lat"));
-                    tempBusInfo.setBusStopLng(tlt.getString("lon"));
 
-                    busInfo.add(tempBusInfo);
+                    for(int y = 0 ; y < tlt.getJSONArray("routes").length(); y++){
+                        totalBuses ++;
+                        Log.i("MyGetBusStopJSONy", "tlt.getJSONArray(\"routes\").getJSONObject(y) " + tlt.getJSONArray("routes").getJSONObject(y) );
+
+                        Log.i("MyGetBusStopJSONy", "BusName " + tlt.getJSONArray("routes")
+                                .getJSONObject(y)
+                                .getString("shortName") + " y = " + y);
+
+
+                        tempBusInfo = new BusInfo();
+                        tempBusInfo.setBusName(tlt.getJSONArray("routes")
+                                .getJSONObject(y)
+                                .getString("shortName"));
+
+                        tempBusInfo.setBusCode(tlt.getString("code"));
+                        tempBusInfo.setBusId(tlt.getString("id"));
+                        tempBusInfo.setBusStopLat(tlt.getString("lat"));
+                        tempBusInfo.setBusStopLng(tlt.getString("lon"));
+                        busInfo.add(tempBusInfo);
+
+                    }
+
+                    Log.i("MyGetBusStopJSONy", " number of shortnames " + tlt.getJSONArray("routes"));
+
+
+
+
+
 
                     Log.i("MyGetBusStopJSON", " tempBusInfo.getBusName()::  " + tempBusInfo.getBusName());
                 }
@@ -86,7 +103,7 @@ public class GetBusStopJSON {
 
                 new ToastMessageTask().execute("No Bus Stops in range");
             }
-
+            Log.i("MyGetBusStopJSONy", " number of totalBuses " + totalBuses );
 
 
             tempBusInfo = null;
