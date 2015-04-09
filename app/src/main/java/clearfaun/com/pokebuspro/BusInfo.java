@@ -18,14 +18,14 @@ public class BusInfo implements Serializable {
     //public String[] distance = {"Not available", "Not available","Not available"};
     public String[] distance;
     //constructor
-
+    int busDistanceArrayIndex;
 
     public BusInfo(){
         distance = new String[3];
         distance[0] = "Not available";
         distance[1] = "Not available";
         distance[2] = "Not available";
-
+        busDistanceArrayIndex = 0;
 
     }
 
@@ -64,11 +64,14 @@ public class BusInfo implements Serializable {
         forNoUIToast = forUI;
     }
 
-    public void setBusDistance(String[] busDistance) {
+    public void setBusDistance(String busDistance) {
 
-        for(int i = 0 ; i < busDistance.length; i ++) {
-            distance[i] = busDistance[i];
-        }
+        //made so you can put in one at a time
+
+       if(busDistanceArrayIndex < 3) {
+           distance[busDistanceArrayIndex] = busDistance;
+           busDistanceArrayIndex++;
+       }
 
 
     }

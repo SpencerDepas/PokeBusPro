@@ -93,17 +93,34 @@ public class GetBusDistanceJSON {
                         //String callBusName = busNameObject.get("PublishedLineName").toString();
                         //=Log.i("MyGetBusDistanceJSONt", "testForMultipleStops :" + callBusName);
 
-
-                        Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject);
-                        Log.i("MyGetBusStopJSONy", "busNameObject " + busCodeObject);
+                        /*Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject);
+                        Log.i("MyGetBusStopJSONy", "busNameObject " + busCodeObject.substring(4));
                         Log.i("MyGetBusStopJSONy", "PresentableDistance " +sys.get("PresentableDistance").toString());
                         Log.i("MyGetBusStopJSONy", "i: " + i);
-                        Log.i("MyGetBusStopJSONy", "z: " + z);
+                        Log.i("MyGetBusStopJSONy", "z: " + z);*/
+
+
+
+                            //if the bus code is the same
+                        if(busInfo.get(z).getBusCode().equals(busCodeObject.substring(4))){
+                            //if the bus name is the same
+
+                            if(busInfo.get(z).getBusName().equals(busNameObject)){
+                                Log.i("MyGetBusStopJSONy", "z: ) " + z );
+                                Log.i("MyGetBusStopJSONy", "i: busInfo.get(q).getBusCode() " + busInfo.get(z).getBusCode() );
+                                Log.i("MyGetBusStopJSONy", "IN " + busNameObject);
+                                Log.i("MyGetBusStopJSONy", "PresentableDistance " +sys.get("PresentableDistance").toString());
+
+
+                                busInfo.get(z).setBusDistance(sys.get("PresentableDistance").toString());
+
+                            }
+                        }
 
 
 
 
-                        tempDistance[i] = sys.get("PresentableDistance").toString();
+                        //tempDistance[i] = sys.get("PresentableDistance").toString();
                         Log.i("MyGetBusDistanceJSONt", " sys  " + sys.get("PresentableDistance").toString() + ". i is : " + i);
 
                     }catch(Exception e){
@@ -120,7 +137,7 @@ public class GetBusDistanceJSON {
 
 
                 //puts array distance in businfo
-                busInfo.get(z).setBusDistance(tempDistance);
+                //busInfo.get(z).setBusDistance(tempDistance);
 
 
                 Log.i("MyGetBusDistanceJSONt", " tempBusInfo  " + busInfo.get(z).getBusCode());
@@ -233,7 +250,7 @@ public class GetBusDistanceJSON {
 
             Log.i("MyAsyncTask", " onPostExecute");
 
-            boolean fromService =  false;
+           /* boolean fromService =  false;
             try{
                 fromService =  busInfo.get(0).forNoUIToast;
             }catch(Exception e){
@@ -254,7 +271,7 @@ public class GetBusDistanceJSON {
                 Log.i("MyAsyncTask", " AsyncTask  AddMarkers.markersAdded");
                 //update marker
                 AddMarkers.updateMarkersToMap(busInfo);
-            }
+            }*/
 
 
         }
