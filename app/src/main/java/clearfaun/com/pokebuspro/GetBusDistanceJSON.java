@@ -135,11 +135,6 @@ public class GetBusDistanceJSON {
 
 
 
-
-                //puts array distance in businfo
-                //busInfo.get(z).setBusDistance(tempDistance);
-
-
                 Log.i("MyGetBusDistanceJSONt", " tempBusInfo  " + busInfo.get(z).getBusCode());
                 Log.i("MyGetBusDistanceJSONt", " busInfo.size()  " + busInfo.size());
 
@@ -250,7 +245,7 @@ public class GetBusDistanceJSON {
 
             Log.i("MyAsyncTask", " onPostExecute");
 
-           /* boolean fromService =  false;
+            boolean fromService =  false;
             try{
                 fromService =  busInfo.get(0).forNoUIToast;
             }catch(Exception e){
@@ -271,7 +266,7 @@ public class GetBusDistanceJSON {
                 Log.i("MyAsyncTask", " AsyncTask  AddMarkers.markersAdded");
                 //update marker
                 AddMarkers.updateMarkersToMap(busInfo);
-            }*/
+            }
 
 
         }
