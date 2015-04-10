@@ -20,9 +20,12 @@ public class AddMarkers {
     static LatLng[] markerLocation;
     static Marker[] marker;
     static boolean dialogOpon = false;
+    static ArrayList<String> overlappingMarkersIndex;
+
 
     public static void addMarkersToMap(ArrayList<BusInfo> busInfo) {
 
+        overlappingMarkersIndex = new ArrayList<String>();
 
         markerLocation = new LatLng[busInfo.size()];
         marker = new Marker[busInfo.size()];
@@ -42,13 +45,19 @@ public class AddMarkers {
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions() .position(markerLocation[i]));
             marker[i].setTitle(busInfo.get(i).getBusCode());
+            //this is to save what stops have multiple buses
+            /*for(int q = 0; q < markerLocation.length; q ++){
+                if(markerLocation[q] == markerLocation[i]){
+                    overlappingMarkersIndex.add(marker[i].getId());
+                }
+            }*/
 
             MapsActivity.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker Pin) {
 
                     dialogOpon = true;
-                    MapsActivity.popupForPokebus(MapsActivity.optionsButton, Pin.getTitle());
+                    MapsActivity.popupForPokebus(MapsActivity.optionsButton, Pin.getTitle(), Pin.getId());
 
 
                 }
@@ -74,19 +83,9 @@ public class AddMarkers {
             }
 
 
-
-
-
             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
             //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker((float)355));
             Log.i("AddMarkers", "pre color poke bus : ");
-
-
-
-
-
-
-
 
 
             Log.i("AddMarkers", "addMarkersToMap() GetBusStopJSON.busInfo[i].getDistance() : " + busInfo.get(i).getDistance()[0]);
@@ -94,6 +93,10 @@ public class AddMarkers {
 
             //this is for saving latlng for onRoatate
             MapsActivity.pointList.add(markerLocation[i]);
+
+
+
+
 
         }
 

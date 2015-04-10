@@ -181,7 +181,7 @@ public class GetBusDistanceJSON {
         @Override
         protected String doInBackground(String... params) {
             Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop" + params[0]);
-            String howManyBusesPerStop = "15";
+            String howManyBusesPerStop = "25";
 
             String[] data = new String[busInfo.size()];
 

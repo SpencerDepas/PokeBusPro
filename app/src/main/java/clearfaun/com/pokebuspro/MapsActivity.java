@@ -98,6 +98,7 @@ public class MapsActivity extends FragmentActivity implements
     public static final String TAG = MapsActivity.class.getSimpleName();
     static ProgressBarCircularIndeterminate spinner;
     static ImageButton optionsButton;
+    ImageButton changeSelectedBus;
     static RelativeLayout back_dim_layout;
     //EMPIRE STATE BUILDING
   /*  static double testLat = 40.748441;
@@ -219,6 +220,26 @@ public class MapsActivity extends FragmentActivity implements
         });
 
 
+        changeSelectedBus = (ImageButton) findViewById(R.id.change_selected_bus);
+        changeSelectedBus.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //settings
+
+            for(int i = 0; i < AddMarkers.marker.length; i ++){
+                if(AddMarkers.marker[i].isVisible()){
+                    AddMarkers.marker[i].setVisible(false);
+                    break;
+                }
+            }
+
+            /*toaster( AddMarkers.marker[5].getId());
+            AddMarkers.marker[Integer.parseInt(AddMarkers.overlappingMarkersIndex.get(plusOneMe))].setVisible(false);*/
+
+
+            }
+        });
 
 
         if( savedInstanceState != null ) {
@@ -245,7 +266,11 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
-    static void popupForPokebus(ImageButton optionsButton, String buscode) {
+    static void popupForPokebus(ImageButton optionsButton, String buscode, String id) {
+
+        Log.i("MyMapsActivity ", "popupForPokebus buscode " + buscode);
+        Log.i("MyMapsActivity ", "popupForPokebus buscode " + id);
+
 
         //to prevent null pouinter
         if(optionsButton != null) {
@@ -302,6 +327,9 @@ public class MapsActivity extends FragmentActivity implements
 
 
                     AddMarkers.addPokeBusColor();
+
+
+
 
 
                 }

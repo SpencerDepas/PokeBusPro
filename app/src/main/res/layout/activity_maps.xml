@@ -30,6 +30,19 @@
             android:gravity="right"
             android:orientation="vertical" >
 
+            <com.melnykov.fab.FloatingActionButton
+                android:id="@+id/change_selected_bus"
+                android:layout_above="@+id/map_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_plusone_standard_off_client"
+                fab:fab_colorNormal="@color/white"
+                fab:fab_colorPressed="@color/yellow"
+                fab:fab_colorRipple="@color/translucent_red"
+                fab:fab_type="mini"
+                />
 
 
             <com.melnykov.fab.FloatingActionButton
