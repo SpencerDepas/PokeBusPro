@@ -31,7 +31,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
     }
 
 
-
+    static String tempPopupBusCode;
 
     @SuppressLint("InflateParams")
     @Override

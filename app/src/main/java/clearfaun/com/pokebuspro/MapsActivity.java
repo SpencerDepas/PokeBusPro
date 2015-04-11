@@ -105,6 +105,8 @@ public class MapsActivity extends FragmentActivity implements
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
 
+    int indexForBringSnippetToForground = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,15 +229,30 @@ public class MapsActivity extends FragmentActivity implements
             public void onClick(View v) {
                 //settings
 
-            for(int i = 0; i < AddMarkers.marker.length; i ++){
+         /*   for(int i = 0; i < AddMarkers.marker.length; i ++){
                 if(AddMarkers.marker[i].isVisible()){
                     AddMarkers.marker[i].setVisible(false);
                     break;
                 }
+            }*/
+
+
+
+            AddMarkers.whatSnippetIsOpen();
+
+            for(int i = indexForBringSnippetToForground ; i < AddMarkers.marker.length; i ++){
+
+
+                if(AddMarkers.marker[i].getTitle().equals(AddMarkers.lastOpenSnippet)){
+                    AddMarkers.marker[i].showInfoWindow();
+                    indexForBringSnippetToForground = i;
+                    break;
+                }
+
             }
 
-            /*toaster( AddMarkers.marker[5].getId());
-            AddMarkers.marker[Integer.parseInt(AddMarkers.overlappingMarkersIndex.get(plusOneMe))].setVisible(false);*/
+
+            //AddMarkers.marker[Integer.parseInt(AddMarkers.overlappingMarkersIndex.get(plusOneMe))].setVisible(false);
 
 
             }
@@ -266,7 +283,10 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
+
     static void popupForPokebus(ImageButton optionsButton, String buscode, String id) {
+
+
 
         Log.i("MyMapsActivity ", "popupForPokebus buscode " + buscode);
         Log.i("MyMapsActivity ", "popupForPokebus buscode " + id);
@@ -349,7 +369,7 @@ public class MapsActivity extends FragmentActivity implements
 
     public static void refreshMarkers(){
         Log.i("MyMapsActivity", "refreshMarkers");
-
+        //saves last open snippet
         AddMarkers.whatSnippetIsOpen();
 
         //pointlist is to save info for onrotate
