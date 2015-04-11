@@ -244,6 +244,9 @@ public class MapsActivity extends FragmentActivity implements
 
 
                 if(AddMarkers.marker[i].getTitle().equals(AddMarkers.lastOpenSnippet)){
+                    //AddMarkers.marker[i].showInfoWindow();
+                    AddMarkers.marker[i].setVisible(false);
+                    AddMarkers.marker[i].setVisible(true);
                     AddMarkers.marker[i].showInfoWindow();
                     indexForBringSnippetToForground = i;
                     break;

@@ -43,14 +43,10 @@ public class AddMarkers {
             Log.i("AddMarkers", "in befire int i = 0; i < busInfo.size()");
 
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
-            marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions() .position(markerLocation[i]));
+            marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions().position(markerLocation[i]));
             marker[i].setTitle(busInfo.get(i).getBusCode());
-            //this is to save what stops have multiple buses
-            /*for(int q = 0; q < markerLocation.length; q ++){
-                if(markerLocation[q] == markerLocation[i]){
-                    overlappingMarkersIndex.add(marker[i].getId());
-                }
-            }*/
+
+
 
             MapsActivity.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override

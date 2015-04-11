@@ -31,7 +31,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
     }
 
 
-    static String tempPopupBusCode;
+
 
     @SuppressLint("InflateParams")
     @Override
@@ -58,7 +58,9 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
                 busName.setText(MapsActivity.busInfo.get(i).busName);
                 busCode.setText(marker.getTitle());
-                distances.setText(marker.getSnippet());
+                distances.setText(MapsActivity.busInfo.get(i).distance[0]
+                + "\n" + MapsActivity.busInfo.get(i).distance[1]
+                + "\n" + MapsActivity.busInfo.get(i).distance[2]);
                 MapsActivity.busInfo.get(i).setAddedToPopup(true);
 
                 break;
