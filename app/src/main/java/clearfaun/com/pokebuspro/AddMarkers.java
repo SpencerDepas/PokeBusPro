@@ -148,11 +148,11 @@ public class AddMarkers {
 
         if(lastOpenSnippet != null){
             Log.i("AddMarkers", "  lastOpenSnippet != null " );
-            Log.i("AddMarkers", "  lastOpenSnippet  " + lastOpenSnippet );
             for(int i = 0; i < marker.length; i ++){
                 if(lastOpenSnippet.equals(marker[i].getTitle())){
                     Log.i("AddMarkers", "  lastOpenSnippet.equals(marker[i].getTitle()" );
                     busInfoIndex = i;
+                    Log.i("AddMarkers", "  busInfoIndex: "+  busInfoIndex);
                 }
             }
 

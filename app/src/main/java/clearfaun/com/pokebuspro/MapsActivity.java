@@ -56,6 +56,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -106,6 +107,7 @@ public class MapsActivity extends FragmentActivity implements
     static LatLng latLngEMPIRE ;*/
 
     int indexForBringSnippetToForground = 0;
+    ArrayList<String> busIndexForBusStopCycle = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,33 +231,56 @@ public class MapsActivity extends FragmentActivity implements
             public void onClick(View v) {
                 //settings
 
-         /*   for(int i = 0; i < AddMarkers.marker.length; i ++){
-                if(AddMarkers.marker[i].isVisible()){
-                    AddMarkers.marker[i].setVisible(false);
-                    break;
-                }
-            }*/
 
+                AddMarkers.whatSnippetIsOpen();
 
+                //gets buses for each bus stop
+                Log.i("MyMapsActivity", "AddMarkers.lastOpenSnippet " + AddMarkers.lastOpenSnippet);
+                if(busIndexForBusStopCycle.size() == 0) {
+                    if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
+                        for (int i = 0; i < busInfo.size(); i++) {
 
-            AddMarkers.whatSnippetIsOpen();
+                            //find marker index of all buses for stop
+                            if (AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[i].getTitle())) {
+                                busIndexForBusStopCycle.add(i + "");
+                            }
 
-            for(int i = indexForBringSnippetToForground ; i < AddMarkers.marker.length; i ++){
-
-
-                if(AddMarkers.marker[i].getTitle().equals(AddMarkers.lastOpenSnippet)){
-                    //AddMarkers.marker[i].showInfoWindow();
-                    AddMarkers.marker[i].setVisible(false);
-                    AddMarkers.marker[i].setVisible(true);
-                    AddMarkers.marker[i].showInfoWindow();
-                    indexForBringSnippetToForground = i;
-                    break;
+                        }
+                    }
                 }
 
-            }
 
 
-            //AddMarkers.marker[Integer.parseInt(AddMarkers.overlappingMarkersIndex.get(plusOneMe))].setVisible(false);
+                Log.i("MyMapsActivityy", "indexForBringSnippetToForground ==  " + indexForBringSnippetToForground);
+                Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() ==  " + busIndexForBusStopCycle.size());
+
+                //resets which to select if iuts got to the last one
+                if(indexForBringSnippetToForground >= busIndexForBusStopCycle.size() ) {
+                    Log.i("MyMapsActivityy", "in indexForBringSnippetToForground >= busIndexForBusStopCycle.size() ");
+                    indexForBringSnippetToForground = 0;
+                    for (int i = 0; i < AddMarkers.marker.length; i++) {
+                        for(int t = 0; t < busIndexForBusStopCycle.size(); t++) {
+                            if (AddMarkers.marker[i].getTitle().equals(AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(t))].getTitle())) {
+                                t++;
+                                //all markers with the same buscode
+
+                                AddMarkers.marker[i].setVisible(false);
+                                MapsActivity.busInfo.get(i).setAddedToPopup(false);
+                                Log.i("MyMapsActivityy", "setting invisable marker: " + i);
+                            }
+                        }
+                    }
+                }
+
+                //makes all at stop invisable
+
+                //display next bus in cycle
+                Log.i("MyMapsActivityy", "marker index set visable : " + Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground)));
+                AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].setVisible(true);
+                AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].showInfoWindow();
+                indexForBringSnippetToForground++;
+
+
 
 
             }

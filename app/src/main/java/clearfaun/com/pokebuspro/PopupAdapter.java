@@ -47,11 +47,14 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         TextView busCode =(TextView)popup.findViewById(R.id.bus_code);
         TextView distances =(TextView)popup.findViewById(R.id.snippet);
         //ImageView image = (ImageView)popup_snippet.findViewById(R.id.icon);
-        overlappingMarkersIndex = new ArrayList<String>();
+
 
         for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
             Log.i("PopupAdapter", "getInfoWindow MapsActivity.busInfo.get(i).getBusCode() " + MapsActivity.busInfo.get(i).getBusCode());
             //if the marker buscode matches the businfo bus code we know what bus it is
+
+
+
 
             if(marker.getTitle().equals(MapsActivity.busInfo.get(i).getBusCode()) && !MapsActivity.busInfo.get(i).isAddedToPopup()){
 
