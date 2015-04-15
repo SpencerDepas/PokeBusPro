@@ -235,8 +235,24 @@ public class MapsActivity extends FragmentActivity implements
                 AddMarkers.whatSnippetIsOpen();
 
                 //gets buses for each bus stop
-                Log.i("MyMapsActivity", "AddMarkers.lastOpenSnippet " + AddMarkers.lastOpenSnippet);
-                if(busIndexForBusStopCycle.size() == 0) {
+                Log.i("MyMapsActivityy", "AddMarkers.lastOpenSnippet " + AddMarkers.lastOpenSnippet);
+
+                if(busIndexForBusStopCycle.size() == 0 ) {
+                    if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
+                        for (int i = 0; i < busInfo.size(); i++) {
+
+                            //find marker index of all buses for stop
+                            if (AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[i].getTitle())) {
+                                busIndexForBusStopCycle.add(i + "");
+                            }
+
+                        }
+                    }
+                }else if (!AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(0))].getTitle())){
+                    Log.i("MyMapsActivityy", "else if  " + AddMarkers.lastOpenSnippet);
+                    //if its not the same snippet open as the last time button was pressed
+                    indexForBringSnippetToForground = 0;
+                    busIndexForBusStopCycle.clear();
                     if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
                         for (int i = 0; i < busInfo.size(); i++) {
 
@@ -251,13 +267,14 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
+
                 Log.i("MyMapsActivityy", "indexForBringSnippetToForground ==  " + indexForBringSnippetToForground);
                 Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() ==  " + busIndexForBusStopCycle.size());
 
                 //resets which to select if iuts got to the last one
                 if(indexForBringSnippetToForground >= busIndexForBusStopCycle.size() ) {
                     Log.i("MyMapsActivityy", "in indexForBringSnippetToForground >= busIndexForBusStopCycle.size() ");
-                    indexForBringSnippetToForground = 0;
+                    indexForBringSnippetToForground = 1;
                     for (int i = 0; i < AddMarkers.marker.length; i++) {
                         for(int t = 0; t < busIndexForBusStopCycle.size(); t++) {
                             if (AddMarkers.marker[i].getTitle().equals(AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(t))].getTitle())) {
