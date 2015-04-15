@@ -106,7 +106,7 @@ public class MapsActivity extends FragmentActivity implements
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
 
-    int indexForBringSnippetToForground = 0;
+    int indexForBringSnippetToForground = 1;
     ArrayList<String> busIndexForBusStopCycle = new ArrayList<String>();
 
     @Override
