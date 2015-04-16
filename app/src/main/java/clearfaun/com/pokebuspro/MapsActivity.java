@@ -306,9 +306,10 @@ public class MapsActivity extends FragmentActivity implements
 
         if( savedInstanceState != null ) {
             //Then the application is being reloaded
+            Log.i("MyMapsActivity ", "savedInstanceState != null ");
 
         }else{
-
+            Log.i("MyMapsActivity ", "savedInstanceState == null ");
             if(pokeBusbusInfo.size() == 0) {
 
                 SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
@@ -726,15 +727,15 @@ public class MapsActivity extends FragmentActivity implements
         //we want it from onresume to update location but not refresh
         if(!fromOnResume || firstBoot == 0) {
             //stopAcuracyTimerTask();
+            Log.i("MyMapsActivity", "firstBoot ==  " + firstBoot );
+            Log.i("MyMapsActivity", "!fromOnResume ==  " + fromOnResume );
 
-
-            Log.i("MyMapsActivity", "handleNewLocation ----------latitude " + latitude);
+            Log.i("MyMapsActivity", "in !fromOnResume || firstBoot == 0 " );
             //only want location this to run on first time. Not activate on every location update
             if (pointList.size() > 0) {
                 Log.i("MyMapsActivity", "afterpointList.size() > 0");
                 //for onrotate
-
-
+                firstBoot++;
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
                 mMap.setMyLocationEnabled(true);
                 CameraPosition cameraPosition = new CameraPosition.Builder()
