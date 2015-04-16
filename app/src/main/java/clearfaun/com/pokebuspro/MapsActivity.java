@@ -734,7 +734,7 @@ public class MapsActivity extends FragmentActivity implements
             //only want location this to run on first time. Not activate on every location update
             if (pointList.size() > 0) {
                 Log.i("MyMapsActivity", "afterpointList.size() > 0");
-                //for onrotate
+                //for after onrotate
                 firstBoot++;
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
                 mMap.setMyLocationEnabled(true);
@@ -773,6 +773,16 @@ public class MapsActivity extends FragmentActivity implements
 
 
             }
+        }else{
+            //this is for standard onresume
+            mMap.setMyLocationEnabled(true);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)    // Sets the center of the map to Mountain View
+                    .bearing(bearing)                // Sets the orientation of the camera to east
+                    .zoom(zoom)                   // keeps zoom
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
 
     }
