@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class GetBusDistanceJSON {
 
-
+    boolean fromService =  false;
     int stopCode;
     ArrayList<BusInfo> busInfo;
     JSONObject busNameObject;
@@ -99,10 +99,12 @@ public class GetBusDistanceJSON {
                         Log.i("MyGetBusStopJSONy", "i: " + i);
                         Log.i("MyGetBusStopJSONy", "z: " + z);*/
 
-
-
+                        if(fromService){
+                            busInfo.get(0).setBusDistance(sys.get("PresentableDistance").toString());
+                            Log.i("MyGetBusStopJSONy", "sys.get(\"PresentableDistance\").toString() " + sys.get("PresentableDistance").toString());
+                            Log.i("MyGetBusStopJSONy", "busInfo.get(0)." + busInfo.get(0).getDistance()[0]);
+                        }else if(busInfo.get(z).getBusCode().equals(busCodeObject.substring(4))){
                             //if the bus code is the same
-                        if(busInfo.get(z).getBusCode().equals(busCodeObject.substring(4))){
                             //if the bus name is the same
 
                             if(busInfo.get(z).getBusName().equals(busNameObject)){
@@ -197,11 +199,17 @@ public class GetBusDistanceJSON {
                     stopCode = Integer.parseInt(busInfo.get(i).getBusCode());
 
 
+                    if(fromService){
+
+                        busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
+                                + stopCode + "&MaximumStopVisits=" + 3;
+                    }else{
+
+                        busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
+                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+                    }
 
 
-
-                    busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
-                            + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
 
 
 
@@ -245,12 +253,7 @@ public class GetBusDistanceJSON {
 
             Log.i("MyAsyncTask", " onPostExecute");
 
-            boolean fromService =  false;
-            try{
-                fromService =  busInfo.get(0).forNoUIToast;
-            }catch(Exception e){
-                Log.i("MyAsyncTask", " Exception e " + e);
-            }
+
 
             Log.i("MyAsyncTask", " fromService " + fromService);
             if(fromService){
@@ -272,7 +275,15 @@ public class GetBusDistanceJSON {
         }
 
         @Override
-        protected void onPreExecute() {}
+        protected void onPreExecute() {
+            Log.i("MyAsyncTask", " onPreExecute" );
+            fromService =  false;
+            try{
+                fromService =  busInfo.get(0).forNoUIToast;
+            }catch(Exception e){
+                Log.i("MyAsyncTask", " Exception e " + e);
+            }
+        }
 
         @Override
         protected void onProgressUpdate(Void... values) {}

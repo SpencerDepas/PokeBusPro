@@ -37,7 +37,7 @@ public class Service extends IntentService {
         // Handle events on worker thread here
          Log.i("MyService", "Service onHandleIntent ");
 
-        API_KEY_MTA = getString(R.string.API_KEY_MTA);
+
 
         ArrayList<BusInfo> busInfoArrayList = loadBusInfo();
 
@@ -52,9 +52,11 @@ public class Service extends IntentService {
             Log.i("MyService", "loaded object: " + busInfoArrayList.size());
 
 
+
             //so get bus distance knows where we are coming from. API key stuff
             for (int i = 0; i < busInfoArrayList.size(); i++) {
                 busInfoArrayList.get(i).setForNoUIToast(true);
+                busInfoArrayList.get(i).busDistanceArrayIndex = 0;
                 //busInfoArrayList.get(i).setBusDistance([""],[""],[""]);
             }
 
