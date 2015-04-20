@@ -1,9 +1,13 @@
 package clearfaun.com.pokebuspro;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -49,6 +53,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         //ImageView image = (ImageView)popup_snippet.findViewById(R.id.icon);
 
 
+
         for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
             Log.i("PopupAdapter", "getInfoWindow MapsActivity.busInfo.get(i).getBusCode() " + MapsActivity.busInfo.get(i).getBusCode());
             //if the marker buscode matches the businfo bus code we know what bus it is
@@ -66,6 +71,19 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
                 + "\n" + MapsActivity.busInfo.get(i).distance[2]);
                 MapsActivity.busInfo.get(i).setAddedToPopup(true);
 
+
+                for(int z = 0 ; z < MapsActivity.busInfo.size(); z ++){
+
+                    if(z == i){
+                        //skip
+                    }else if(MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.busInfo.get(z).getBusCode())){
+                        //make button visable
+                        MapsActivity.changeSelectedBus.setVisibility(View.VISIBLE);
+                    }
+
+                }
+
+
                 break;
 
             }
@@ -73,7 +91,14 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
         }
 
+
+
+
+
+
         return(popup);
     }
+
+
 
 }

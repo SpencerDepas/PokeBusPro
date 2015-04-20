@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -99,7 +100,7 @@ public class MapsActivity extends FragmentActivity implements
     public static final String TAG = MapsActivity.class.getSimpleName();
     static ProgressBarCircularIndeterminate spinner;
     static ImageButton optionsButton;
-    ImageButton changeSelectedBus;
+    static ImageButton changeSelectedBus;
     static RelativeLayout back_dim_layout;
     //EMPIRE STATE BUILDING
   /*  static double testLat = 40.748441;
@@ -168,7 +169,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 //settings
-
+                MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
                 fm = getFragmentManager();
                 ft = fm.beginTransaction();
 
@@ -190,6 +191,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 Log.i("MyMapsActivity", "onClick refreshLocation");
+                MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
                 //refresh button
                 fromOnResume = false;
                 spinner.setVisibility(View.VISIBLE);
@@ -198,6 +200,18 @@ public class MapsActivity extends FragmentActivity implements
                 mLocationProvider.connect();
                 refreshMarkers();
 
+
+                zoom = mMap.getCameraPosition().zoom;
+                bearing = mMap.getCameraPosition().bearing;
+
+                mMap.setMyLocationEnabled(true);
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .bearing(bearing)                // Sets the orientation of the camera to east
+                        .zoom(zoom)                   // keeps zoom
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 
             }
@@ -208,6 +222,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 Log.i("MyMapsActivity", "onClick busmap");
+                MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
                 //go to map
                 //bus map
                 SharedPreferences mapPref = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -225,6 +240,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
         changeSelectedBus = (ImageButton) findViewById(R.id.change_selected_bus);
+        changeSelectedBus.setVisibility(View.GONE);
         changeSelectedBus.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -355,6 +371,8 @@ public class MapsActivity extends FragmentActivity implements
 
 
             popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
+
+
 
             ButtonFlat btnDismiss = (ButtonFlat) popupView.findViewById(R.id.dismiss);
             btnDismiss.setOnClickListener(new Button.OnClickListener() {
@@ -631,6 +649,14 @@ public class MapsActivity extends FragmentActivity implements
                 .getMap();
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng point) {
+                Log.d("MyMapsActivity", "Map clicked");
+                MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+            }
+        });
 
     }
 
