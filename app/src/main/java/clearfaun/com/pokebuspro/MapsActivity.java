@@ -134,29 +134,16 @@ public class MapsActivity extends FragmentActivity implements
 
         LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
         boolean enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
-        if(!isOnline()){
-            Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
-            startActivity(intent);
-            this.finish();
-
-        }else if(enabledAirplaneMode){
-            Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
-
-
-            Intent intent = new Intent(MapsActivity.mContext , AirplaneMode.class);
-            startActivity(intent);
-            this.finish();
-
-        }else if(!enabledGPS){
+        if(!enabledGPS) {
             Log.i("MyMapsActivity", "!enabledGPS");
             toaster("Tern GPS on for best results");
-            mLocationProvider.connect();
-        }else{
-            mLocationProvider.connect();
         }
+
+        mLocationProvider.connect();
+
+
+
 
 
 
@@ -579,7 +566,26 @@ public class MapsActivity extends FragmentActivity implements
         super.onResume();
         Log.i("MyMapsActivity", "onResume()");
 
-        fromOnResume = true;
+        boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
+
+        if(!isOnline()){
+            Log.i("MyMapsActivity", "!isOnline()");
+            Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
+            startActivity(intent);
+            this.finish();
+
+        }else if(enabledAirplaneMode){
+            Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
+
+
+            Intent intent = new Intent(MapsActivity.mContext , AirplaneMode.class);
+            startActivity(intent);
+            this.finish();
+
+        }
+
+
+            fromOnResume = true;
         mLocationProvider.disconnect();
         mLocationProvider.connect();
         if(AddMarkers.marker != null){
