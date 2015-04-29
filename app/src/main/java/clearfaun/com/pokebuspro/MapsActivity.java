@@ -644,6 +644,7 @@ public class MapsActivity extends FragmentActivity implements
         timerTask = new TimerTask() {
             public void run() {
                 Log.i("MyMapsActivity","initializeTimerTask    timerTask");
+
                 getBusDistance(busInfo);
             }
         };

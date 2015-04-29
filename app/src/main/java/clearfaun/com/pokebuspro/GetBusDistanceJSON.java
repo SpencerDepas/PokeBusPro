@@ -25,6 +25,14 @@ public class GetBusDistanceJSON {
     @SuppressLint("NewApi")
     public void readAndParseJSON(String[] in) {
 
+        for(int i = 0 ; i < busInfo.size(); i++){
+            //each distance is put in one at a time
+            //this resets the counter
+            //must be done in order to put new distances in
+            busInfo.get(i).resetbusDistanceCounter();
+        }
+
+
         //in is the stream of data withdistance informatioon. it will be as large as the amount of buis stops in the area
         Log.i("MyGetBusDistanceJSONt", "inside readAndParseJSON");
 
@@ -36,6 +44,7 @@ public class GetBusDistanceJSON {
             for (int z = 0 ; z < in.length; z ++) {
                 JSONObject reader = new JSONObject(in[z]);
                 //z changes the bus stop we are choosing.
+
 
                 int maxNumberOfBusDistancesAvailable = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
                         .getJSONObject(0)
@@ -108,10 +117,12 @@ public class GetBusDistanceJSON {
                             //if the bus name is the same
 
                             if(busInfo.get(z).getBusName().equals(busNameObject)){
+                                Log.i("MyGetBusStopJSONy", "busInfo.get(z).getBusName() " + busInfo.get(z).getBusName() );
+                                Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject );
                                 Log.i("MyGetBusStopJSONy", "z: ) " + z );
                                 Log.i("MyGetBusStopJSONy", "i: busInfo.get(q).getBusCode() " + busInfo.get(z).getBusCode() );
                                 Log.i("MyGetBusStopJSONy", "IN " + busNameObject);
-                                Log.i("MyGetBusStopJSONy", "PresentableDistance " +sys.get("PresentableDistance").toString());
+                                Log.i("MyGetBusStopJSONy", "PresentableDistance " + sys.get("PresentableDistance").toString());
 
 
                                 busInfo.get(z).setBusDistance(sys.get("PresentableDistance").toString());
@@ -142,14 +153,19 @@ public class GetBusDistanceJSON {
 
             }
 
-            for(int i = 0 ; i < busInfo.size(); i ++){
+
+            //just to read data
+            //
+            //
+            //
+           /* for(int i = 0 ; i < busInfo.size(); i ++){
                 Log.i("MyGetBusDistanceJSONo", " name  " + busInfo.get(i).getBusName());
                 Log.i("MyGetBusDistanceJSONo", " bus code  " + busInfo.get(i).getBusCode());
                 Log.i("MyGetBusDistanceJSONo", " distance 1:  " + busInfo.get(i).getDistance()[0]);
                 Log.i("MyGetBusDistanceJSONo", " distance 2:  " + busInfo.get(i).getDistance()[1]);
                 Log.i("MyGetBusDistanceJSONo", " distance 3:  " + busInfo.get(i).getDistance()[2]);
                 Log.i("MyGetBusDistanceJSONo", "  \n  ");
-            }
+            }*/
 
 
         }catch(Exception e){
@@ -231,9 +247,9 @@ public class GetBusDistanceJSON {
                 }
                 Log.i("MyGetBusDistanceJSONn", "Pre readAndParseJSON(data); ");
 
-                for(int y = 0 ; y < data.length; y ++){
+                /*for(int y = 0 ; y < data.length; y ++){
                     Log.i("MyGetBusDistanceJSONn", "Pre data[" + y + "]; " + data[y] );
-                }
+                }*/
 
 
 

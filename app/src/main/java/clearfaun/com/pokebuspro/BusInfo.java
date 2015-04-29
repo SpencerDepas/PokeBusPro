@@ -1,5 +1,7 @@
 package clearfaun.com.pokebuspro;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 /**
@@ -20,6 +22,8 @@ public class BusInfo implements Serializable {
     //constructor
     int busDistanceArrayIndex;
     boolean addedToPopup = false;
+
+
 
     public BusInfo(){
         distance = new String[3];
@@ -75,6 +79,8 @@ public class BusInfo implements Serializable {
 
         //made so you can put in one at a time
 
+
+
        if(busDistanceArrayIndex < 3) {
            distance[busDistanceArrayIndex] = busDistance;
            busDistanceArrayIndex++;
@@ -82,6 +88,13 @@ public class BusInfo implements Serializable {
 
 
     }
+
+    public void resetbusDistanceCounter(){
+        busDistanceArrayIndex = 0;
+    }
+
+
+
 
     public void setBusRadius(String TaskNumber) {
         radius = TaskNumber;

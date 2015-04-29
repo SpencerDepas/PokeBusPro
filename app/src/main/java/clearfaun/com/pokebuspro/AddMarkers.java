@@ -230,9 +230,11 @@ public class AddMarkers {
 
 
         for (int i = 0; i < busInfo.size() && i < marker.length; i++) {
+            Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getId(): " + marker[i].getId());
             Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getSnippet(): " + marker[i].getSnippet());
             Log.i("MyAddMarkers", "updateMarkersToMap :   marker.length: " + marker.length);
-            Log.i("MyAddMarkers", "updateMarkersToMap :  i < busInfo.size(): " + busInfo.size());
+            Log.i("MyAddMarkers", "updateMarkersToMap :  getBusName " + busInfo.get(i).getBusName());
+            Log.i("MyAddMarkers", "updateMarkersToMap :  getBusCode " + busInfo.get(i).getBusCode());
             Log.i("MyAddMarkers", "updateMarkersToMap :  i  " + i);
 
 
@@ -241,7 +243,10 @@ public class AddMarkers {
                         + "\n" + busInfo.get(i).getDistance()[2]
                     );
 
-            if(marker[i].isInfoWindowShown()) {
+            if(marker[i].isInfoWindowShown() && marker[i].getTitle().equals(MapsActivity.busInfo.get(i).getBusCode())) {
+                Log.i("MyAddMarkerss", "marker[i].getId() " + marker[i].getId());
+                Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[i].getTitle());
+                busInfo.get(i).setAddedToPopup(false);
                 marker[i].hideInfoWindow();
                 marker[i].showInfoWindow();
             }
