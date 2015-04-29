@@ -26,7 +26,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         this.inflater=inflater;
     }
 
-    ArrayList<String> overlappingMarkersIndex;
+
 
 
     @Override
@@ -51,7 +51,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         TextView busCode =(TextView)popup.findViewById(R.id.bus_code);
         TextView distances =(TextView)popup.findViewById(R.id.snippet);
         //ImageView image = (ImageView)popup_snippet.findViewById(R.id.icon);
-
+        MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
 
 
         for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
@@ -70,7 +70,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
                 + "\n" + MapsActivity.busInfo.get(i).distance[1]
                 + "\n" + MapsActivity.busInfo.get(i).distance[2]);
                 MapsActivity.busInfo.get(i).setAddedToPopup(true);
-
+                currentPopUpIndex = i;
 
                 for(int z = 0 ; z < MapsActivity.busInfo.size(); z ++){
 
@@ -99,6 +99,6 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         return(popup);
     }
 
-
+    static int currentPopUpIndex;
 
 }

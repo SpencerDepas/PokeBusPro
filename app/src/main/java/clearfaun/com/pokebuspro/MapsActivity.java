@@ -352,7 +352,17 @@ public class MapsActivity extends FragmentActivity implements
 
         Log.i("MyMapsActivity ", "popupForPokebus buscode " + buscode);
         Log.i("MyMapsActivity ", "popupForPokebus buscode " + id);
+        Log.i("MyMapsActivity ", "AddMarkers.marker[i].getId() " + AddMarkers.marker[0].getId() );
 
+        int busInfoIndexForBusName = -1;
+        for(int i = 0 ; i < AddMarkers.marker.length; i ++){
+            if( AddMarkers.marker[i].getId().equals(id)){
+                busInfoIndexForBusName = i;
+                break;
+            }
+
+        }
+        Log.i("MyMapsActivity ", "businfo index " + busInfo.get(busInfoIndexForBusName).busName );
 
         //to prevent null pouinter
         if(optionsButton != null) {
@@ -653,8 +663,14 @@ public class MapsActivity extends FragmentActivity implements
 
             @Override
             public void onMapClick(LatLng point) {
-                Log.d("MyMapsActivity", "Map clicked");
+                Log.i("MyMapsActivity", "Map clicked");
                 MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+                for(int i = 0; i < MapsActivity.busInfo.size(); i ++){
+                    if(MapsActivity.busInfo.get(i).isAddedToPopup()){
+                        MapsActivity.busInfo.get(i).setAddedToPopup(false);
+                    }
+
+                }
             }
         });
 

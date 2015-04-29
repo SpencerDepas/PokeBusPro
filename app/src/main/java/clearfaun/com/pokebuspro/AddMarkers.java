@@ -23,7 +23,7 @@ public class AddMarkers {
     static ArrayList<String> overlappingMarkersIndex;
 
 
-    public static void addMarkersToMap(ArrayList<BusInfo> busInfo) {
+    public static void addMarkersToMap(final ArrayList<BusInfo> busInfo) {
 
         overlappingMarkersIndex = new ArrayList<String>();
 
@@ -45,12 +45,13 @@ public class AddMarkers {
             markerLocation[i] = new LatLng(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
             marker[i] = MapsActivity.mMap.addMarker(new MarkerOptions().position(markerLocation[i]));
             marker[i].setTitle(busInfo.get(i).getBusCode());
-
+            //marker[i].setTitle(busInfo.get(i).getBusName());
 
 
             MapsActivity.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker Pin) {
+                    //busInfo.get(PopupAdapter.currentPopUpIndex).setMarkerSet(false);
 
                     dialogOpon = true;
                     MapsActivity.popupForPokebus(MapsActivity.optionsButton, Pin.getTitle(), Pin.getId());
