@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_margin="16dp"
-                android:src="@drawable/ic_plusone_standard_off_client"
+                android:src="@drawable/ic_action_next_item"
                 fab:fab_colorNormal="@color/white"
                 fab:fab_colorPressed="@color/yellow"
                 fab:fab_colorRipple="@color/translucent_red"
