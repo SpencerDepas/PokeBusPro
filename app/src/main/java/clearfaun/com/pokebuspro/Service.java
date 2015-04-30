@@ -33,24 +33,22 @@ public class Service extends IntentService {
 
 
     @Override
-    protected void onHandleIntent(Intent intent){
+    protected void onHandleIntent(Intent intent) {
         // Handle events on worker thread here
-         Log.i("MyService", "Service onHandleIntent ");
-
+        Log.i("MyService", "Service onHandleIntent ");
 
 
         ArrayList<BusInfo> busInfoArrayList = loadBusInfo();
-
-        if(busInfoArrayList.size() == 0){
+        try{
+        if (busInfoArrayList.size() == 0) {
 
             new ToastMessageTask().execute("Please set a PokeBus in the main application");
 
-        }else {
+        } else {
 
 
             Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
             Log.i("MyService", "loaded object: " + busInfoArrayList.size());
-
 
 
             //so get bus distance knows where we are coming from. API key stuff
@@ -64,6 +62,9 @@ public class Service extends IntentService {
             getBusDistance(busInfoArrayList);
 
 
+        }
+    }catch(Exception e){
+            Log.e("MyService", "Exception " + e);
         }
 
 
