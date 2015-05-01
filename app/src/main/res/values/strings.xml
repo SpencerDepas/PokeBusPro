@@ -87,7 +87,13 @@
     <string name="license_three_header">Subsampling Scale Image View</string>
 
 
-    <string name="dialog_title_list_preference">dialog_title_list_preference</string>
+    <!--
+            NOUI
+            -->
+
+
+
+
     <string name="title_list_preference">title_list_preference</string>
     <string name="title_checkbox_preference">title_checkbox_preference</string>
     <string name="summary_checkbox_preference">summary_checkbox_preference</string>

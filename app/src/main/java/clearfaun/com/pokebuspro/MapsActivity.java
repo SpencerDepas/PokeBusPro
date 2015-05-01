@@ -18,6 +18,7 @@ import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -109,7 +110,7 @@ public class MapsActivity extends FragmentActivity implements
 
     int indexForBringSnippetToForground = 1;
     ArrayList<String> busIndexForBusStopCycle = new ArrayList<String>();
-
+    boolean enabledGPS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,14 +134,12 @@ public class MapsActivity extends FragmentActivity implements
 
 
         LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
-        boolean enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        if(!enabledGPS) {
-            Log.i("MyMapsActivity", "!enabledGPS");
-            toaster("Tern GPS on for best results");
-        }
+
 
         mLocationProvider.connect();
+
 
 
 
@@ -332,6 +331,28 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+        }else{
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+
+
+    }
+
 
     static void popupForPokebus(ImageButton optionsButton, String buscode, String id) {
 
@@ -410,9 +431,6 @@ public class MapsActivity extends FragmentActivity implements
                     AddMarkers.addPokeBusColor();
 
 
-
-
-
                 }
             });
         }
@@ -445,7 +463,7 @@ public class MapsActivity extends FragmentActivity implements
         getBusStops(busInfo);
         Log.i("MyMapsActivity", "after getBusStops(busInfo) refresh ");
         Log.i("MyMapsActivity", "after busInfo " + busInfo.size());
-        Log.i("MyMapsActivity", "after busInfo " + busInfo.get(0).getBusCode());
+
 
         getBusDistance(busInfo);
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
@@ -568,6 +586,56 @@ public class MapsActivity extends FragmentActivity implements
 
         boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
+
+        if(!isLocationEnabled(mContext)){
+            final Dialog dialog = new Dialog(this, "Location services disabled", "Native Speed needs to access your location.\n" +
+                    "Please turn on location access.");
+            dialog.show();
+            dialog.setOnAcceptButtonClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+
+                    dialog.dismiss();
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+
+                }
+            });
+
+
+
+
+            /*ptionsButton = (ImageButton) findViewById(R.id.options_button);
+            optionsButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    //settings
+                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+                    fm = getFragmentManager();
+                    ft = fm.beginTransaction();
+
+                    prefsFragment = new PrefsFragment();
+                    ft.add(R.id.map, prefsFragment, "fragmentid");
+                    ft.addToBackStack("TAG");
+                    ft.commit();
+
+
+                }
+            });*/
+
+
+
+        }else if(!enabledGPS) {
+            Log.i("MyMapsActivity", "!enabledGPS");
+            toaster("Turn on GPS for best results");
+        }
+
+
+
+
         if(!isOnline()){
             Log.i("MyMapsActivity", "!isOnline()");
             Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
@@ -585,7 +653,7 @@ public class MapsActivity extends FragmentActivity implements
         }
 
 
-            fromOnResume = true;
+        fromOnResume = true;
         mLocationProvider.disconnect();
         mLocationProvider.connect();
         if(AddMarkers.marker != null){
