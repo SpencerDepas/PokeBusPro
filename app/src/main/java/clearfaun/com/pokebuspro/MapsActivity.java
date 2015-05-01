@@ -141,7 +141,10 @@ public class MapsActivity extends FragmentActivity implements
         mLocationProvider.connect();
 
 
-
+        if(!enabledGPS) {
+            Log.i("MyMapsActivity", "!enabledGPS");
+            toaster("Turn on GPS for best results");
+        }
 
 
 
@@ -605,32 +608,6 @@ public class MapsActivity extends FragmentActivity implements
             });
 
 
-
-
-            /*ptionsButton = (ImageButton) findViewById(R.id.options_button);
-            optionsButton.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    //settings
-                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
-                    fm = getFragmentManager();
-                    ft = fm.beginTransaction();
-
-                    prefsFragment = new PrefsFragment();
-                    ft.add(R.id.map, prefsFragment, "fragmentid");
-                    ft.addToBackStack("TAG");
-                    ft.commit();
-
-
-                }
-            });*/
-
-
-
-        }else if(!enabledGPS) {
-            Log.i("MyMapsActivity", "!enabledGPS");
-            toaster("Turn on GPS for best results");
         }
 
 

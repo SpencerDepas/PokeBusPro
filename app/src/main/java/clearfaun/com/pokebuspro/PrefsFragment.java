@@ -67,7 +67,13 @@ public class PrefsFragment extends PreferenceFragment {
                 //changing summery to siaplay current bus map
                 ListPreference prefSumBusMap = (ListPreference) findPreference("KEY99");
 
-                prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue());
+                if(prefSumBusMap.getValue() == null){
+                    prefSumBusMap.setSummary("Current Map is: " + "Brooklyn");
+                }else{
+                    prefSumBusMap.setSummary("Current Map is: " + prefSumBusMap.getValue());
+                }
+
+
             }else if(key.equals("KEY2")){
                 //this is to change auto refresh
                 MapsActivity.spinner.setVisibility(View.VISIBLE);
