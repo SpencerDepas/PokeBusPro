@@ -104,9 +104,7 @@ public class AddMarkers {
 
         Log.i("AddMarkers", "  Remove spinner ");
         Log.i("AddMarkers", "  MapsActivity.spinner.getVisibility(): " + MapsActivity.spinner.getVisibility());
-        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
-            MapsActivity.spinner.setVisibility(View.INVISIBLE);
-        }
+
 
 
 
@@ -251,6 +249,9 @@ public class AddMarkers {
                 marker[i].showInfoWindow();
             }
 
+        }
+        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
+            MapsActivity.spinner.setVisibility(View.INVISIBLE);
         }
         //+ "\n" + busInfo.get(i).getDistance()[2])
         //Log.i("MyAddMarkers", " after updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
