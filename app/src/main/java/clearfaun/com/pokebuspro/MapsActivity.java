@@ -432,6 +432,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
                     AddMarkers.addPokeBusColor();
+                    AddMarkers.openClosestSnippet(busInfo);
 
 
                 }
