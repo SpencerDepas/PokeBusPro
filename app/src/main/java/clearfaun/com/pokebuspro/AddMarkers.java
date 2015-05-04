@@ -107,7 +107,9 @@ public class AddMarkers {
 
 
 
-
+        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
+            MapsActivity.spinner.setVisibility(View.INVISIBLE);
+        }
 
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
@@ -224,7 +226,9 @@ public class AddMarkers {
 
     public static void updateMarkersToMap(ArrayList<BusInfo> busInfo) {
 
-
+        if(MapsActivity.spinner.getVisibility() == View.INVISIBLE){
+            MapsActivity.spinner.setVisibility(View.VISIBLE);
+        }
 
 
         for (int i = 0; i < busInfo.size() && i < marker.length; i++) {
