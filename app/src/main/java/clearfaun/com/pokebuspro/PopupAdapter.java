@@ -78,7 +78,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
                 text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                text.setSpan(new RelativeSizeSpan(.8f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new RelativeSizeSpan(.7f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 busCode.setText(text );
 

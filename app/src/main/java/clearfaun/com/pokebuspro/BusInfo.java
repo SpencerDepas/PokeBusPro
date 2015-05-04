@@ -55,8 +55,34 @@ public class BusInfo implements Serializable {
     public void setLongName(String longName) {
 
         //this.longName = longName.replace("-", "\n");
-        this.longName = longName.replace("via", "via\n");
+        this.longName = longName;
+
         //this.longName = this.longName.replaceAll(" ", "");
+        if(this.longName.length() > 29){
+            for(int i = 30; i >= 0; i --){
+                if( this.longName.charAt(i) == ' '){
+                    this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i +1, this.longName.length());
+                    break;
+                }
+
+            }
+            for (int i = 13; i >= 0; i--) {
+                if (this.longName.charAt(i) == ' ') {
+                    this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
+                    break;
+                }
+
+            }
+
+        }else if(this.longName.length() > 16){
+            for (int i = 16; i >= 0; i--) {
+                if (this.longName.charAt(i) == ' ') {
+                    this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
+                    break;
+                }
+
+            }
+        }
 
     }
 
