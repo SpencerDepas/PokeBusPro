@@ -22,7 +22,7 @@ public class BusInfo implements Serializable {
     //constructor
     int busDistanceArrayIndex;
     boolean addedToPopup = false;
-
+    String longName;
 
 
     public BusInfo(){
@@ -49,6 +49,15 @@ public class BusInfo implements Serializable {
 
     public void setBusCode(String codeForStop) {
         stopCode = codeForStop;
+    }
+
+
+    public void setLongName(String longName) {
+
+        //this.longName = longName.replace("-", "\n");
+        this.longName = longName.replace("via", "via\n");
+        //this.longName = this.longName.replaceAll(" ", "");
+
     }
 
     public void setBusName(String name) {
@@ -115,8 +124,8 @@ public class BusInfo implements Serializable {
         return busName;
     }
 
-    public Boolean getMarkerSet(){
-        return markerSet;
+    public String getLongName(){
+        return longName;
     }
 
     public String getBusStopLatString(){

@@ -71,9 +71,9 @@ public class GetBusStopJSON {
                         totalBuses ++;
                         Log.i("MyGetBusStopJSONy", "tlt.getJSONArray(\"routes\").getJSONObject(y) " + tlt.getJSONArray("routes").getJSONObject(y) );
 
-                        Log.i("MyGetBusStopJSONy", "BusName " + tlt.getJSONArray("routes")
+                        Log.i("MyGetBusStopJSONy", "BusName longName" + tlt.getJSONArray("routes")
                                 .getJSONObject(y)
-                                .getString("shortName") + " y = " + y);
+                                .getString("longName") + " y = " + y);
 
 
                         tempBusInfo = new BusInfo();

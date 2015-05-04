@@ -158,7 +158,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 //settings
-                MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+                changeSelectedBus.setVisibility(View.INVISIBLE);
                 fm = getFragmentManager();
                 ft = fm.beginTransaction();
 
@@ -180,29 +180,30 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 Log.i("MyMapsActivity", "onClick refreshLocation");
-                MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
-                //refresh button
-                fromOnResume = false;
-                spinner.setVisibility(View.VISIBLE);
+                if(spinner.getVisibility() == View.INVISIBLE) {
+                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+                    //refresh button
+                    fromOnResume = false;
+                    spinner.setVisibility(View.VISIBLE);
 
-                mLocationProvider.disconnect();
-                mLocationProvider.connect();
-                refreshMarkers();
-
-
-                zoom = mMap.getCameraPosition().zoom;
-                bearing = mMap.getCameraPosition().bearing;
-
-                mMap.setMyLocationEnabled(true);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .bearing(bearing)                // Sets the orientation of the camera to east
-                        .zoom(zoom)                   // keeps zoom
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    mLocationProvider.disconnect();
+                    mLocationProvider.connect();
+                    refreshMarkers();
 
 
+                    zoom = mMap.getCameraPosition().zoom;
+                    bearing = mMap.getCameraPosition().bearing;
+
+                    mMap.setMyLocationEnabled(true);
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(latLng)    // Sets the center of the map to Mountain View
+                            .bearing(bearing)                // Sets the orientation of the camera to east
+                            .zoom(zoom)                   // keeps zoom
+                            .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                            .build();                   // Creates a CameraPosition from the builder
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                }
             }
         });
         ImageButton mapButton = (ImageButton) findViewById(R.id.map_button);
@@ -655,7 +656,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-
+    static boolean firstTimer = true;
     public static void updateBusDistance() {
         Log.i("MyMapsActivity", "updateBusDistance()");
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
@@ -668,7 +669,8 @@ public class MapsActivity extends FragmentActivity implements
             //set a new Timer
             timer = new Timer();
             //initialize the TimerTask's job
-            initializeTimerTask();
+
+            initializeTimerTask(firstTimer);
             //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
             timer.schedule(timerTask, 5000, timeInMS);
 
@@ -686,12 +688,21 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
-    public static void initializeTimerTask() {
+
+
+    public static void initializeTimerTask(boolean firstTimer) {
+        final boolean firstTime = firstTimer;
         timerTask = new TimerTask() {
             public void run() {
-                Log.i("MyMapsActivity","initializeTimerTask    timerTask");
+                Log.i("MyMapsActivity", "initializeTimerTask    timerTask");
+                //this enables us to reset the timer in onreusme and it will not trigger it automatkly
+                if(firstTime){
 
-                getBusDistance(busInfo);
+                }else{
+                    getBusDistance(busInfo);
+                    //firstTime = false;
+                }
+
             }
         };
     }

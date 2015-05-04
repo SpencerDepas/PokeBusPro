@@ -69,6 +69,17 @@ public class GetBusDistanceJSON {
 
                         Log.i("MyGetBusDistanceJSONt", "maxNumberOfBusDistancesAvailable :" + sysLength);
 
+
+                        String destinationName = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                                .getJSONObject(0)
+                                .getJSONArray("MonitoredStopVisit")
+                                .getJSONObject(i)
+                                .getJSONObject("MonitoredVehicleJourney")
+                                .get("DestinationName").toString()
+                                ;
+
+                        Log.i("MyGetBusDistanceJSONt", "destinationName :" + destinationName);
+
                         JSONObject sys = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
                                 .getJSONObject(0)
                                 .getJSONArray("MonitoredStopVisit")
@@ -118,8 +129,9 @@ public class GetBusDistanceJSON {
 
                             if(busInfo.get(z).getBusName().equals(busNameObject)){
                                 Log.i("MyGetBusStopJSONy", "busInfo.get(z).getBusName() " + busInfo.get(z).getBusName() );
-                                Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject );
-                                Log.i("MyGetBusStopJSONy", "z: ) " + z );
+                                Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject);
+                                busInfo.get(z).setLongName(destinationName);
+                                Log.i("MyGetBusStopJSONy", "z: ) " + z);
                                 Log.i("MyGetBusStopJSONy", "i: busInfo.get(q).getBusCode() " + busInfo.get(z).getBusCode() );
                                 Log.i("MyGetBusStopJSONy", "IN " + busNameObject);
                                 Log.i("MyGetBusStopJSONy", "PresentableDistance " + sys.get("PresentableDistance").toString());

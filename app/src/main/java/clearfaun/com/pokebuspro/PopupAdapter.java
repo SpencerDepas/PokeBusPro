@@ -2,6 +2,11 @@ package clearfaun.com.pokebuspro;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +70,18 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
 
                 busName.setText(MapsActivity.busInfo.get(i).busName);
-                busCode.setText(marker.getTitle());
+
+
+                busCode.setText(marker.getTitle() + "\n" +
+                        MapsActivity.busInfo.get(i).longName, TextView.BufferType.SPANNABLE);
+                Spannable text = (Spannable) busCode.getText();
+
+                text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                text.setSpan(new RelativeSizeSpan(.8f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                busCode.setText(text );
+
                 distances.setText(MapsActivity.busInfo.get(i).distance[0]
                 + "\n" + MapsActivity.busInfo.get(i).distance[1]
                 + "\n" + MapsActivity.busInfo.get(i).distance[2]);
