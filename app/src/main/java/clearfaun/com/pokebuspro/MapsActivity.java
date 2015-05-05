@@ -316,19 +316,20 @@ public class MapsActivity extends FragmentActivity implements
 
         }else{
             Log.i("MyMapsActivity ", "savedInstanceState == null ");
-            if(pokeBusbusInfo.size() == 0) {
+            if(pokeBusbusInfo != null) {
+                if (pokeBusbusInfo.size() == 0) {
 
-                SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
-                    public void onClick(View v) {
-                        // it was the 1st button
+                    SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
+                        public void onClick(View v) {
+                            // it was the 1st button
 
 
-                    }
-                });
-                snackbar.setDismissTimer(8000);
-                snackbar.show();
+                        }
+                    });
+                    snackbar.setDismissTimer(8000);
+                    snackbar.show();
+                }
             }
-
         }
 
 
@@ -726,14 +727,15 @@ public class MapsActivity extends FragmentActivity implements
                     .getMap();
             mMap.getUiSettings().setMapToolbarEnabled(false);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
+
+            /*mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
 
                     return false;
                 }
-            });
+            });*/
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng point) {

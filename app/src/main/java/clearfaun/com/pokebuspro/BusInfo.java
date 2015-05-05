@@ -54,56 +54,60 @@ public class BusInfo implements Serializable {
 
     public void setLongName(String longName) {
 
-        this.longName = longName.replace("-", "");
+        if(longName != null) {
+            this.longName = longName.replace("-", "");
 
 
-        //this.longName = this.longName.replaceAll(" ", "");
-        if(this.longName.length() > 44){
-            for (int i = 45; i >= 0; i--) {
-                if (this.longName.charAt(i) == ' ') {
-                    this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
-                    break;
+            //this.longName = this.longName.replaceAll(" ", "");
+            if (this.longName.length() > 44) {
+                for (int i = 45; i >= 0; i--) {
+                    if (this.longName.charAt(i) == ' ') {
+                        this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
+                        break;
+                    }
+
+                }
+                for (int i = 30; i >= 0; i--) {
+                    if (this.longName.charAt(i) == ' ') {
+                        this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
+                        break;
+                    }
+
+                }
+                for (int i = 16; i >= 0; i--) {
+                    if (this.longName.charAt(i) == ' ') {
+                        this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
+                        break;
+                    }
+
+                }
+            } else if (this.longName.length() > 29) {
+                for (int i = 30; i >= 0; i--) {
+                    if (this.longName.charAt(i) == ' ') {
+                        this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
+                        break;
+                    }
+
+                }
+                for (int i = 13; i >= 0; i--) {
+                    if (this.longName.charAt(i) == ' ') {
+                        this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
+                        break;
+                    }
+
                 }
 
-            }
-            for(int i = 30; i >= 0; i --){
-                if( this.longName.charAt(i) == ' '){
-                    this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i +1, this.longName.length());
-                    break;
+            } else if (this.longName.length() > 16) {
+                for (int i = 16; i >= 0; i--) {
+                    if (this.longName.charAt(i) == ' ') {
+                        this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
+                        break;
+                    }
+
                 }
-
             }
-            for (int i = 16; i >= 0; i--) {
-                if (this.longName.charAt(i) == ' ') {
-                    this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
-                    break;
-                }
-
-            }
-        }else if (this.longName.length() > 29){
-            for(int i = 30; i >= 0; i --){
-                if( this.longName.charAt(i) == ' '){
-                    this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i +1, this.longName.length());
-                    break;
-                }
-
-            }
-            for (int i = 13; i >= 0; i--) {
-                if (this.longName.charAt(i) == ' ') {
-                    this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
-                    break;
-                }
-
-            }
-
-        }else if(this.longName.length() > 16){
-            for (int i = 16; i >= 0; i--) {
-                if (this.longName.charAt(i) == ' ') {
-                    this.longName = this.longName.substring(0, i) + "\n" + this.longName.substring(i + 1, this.longName.length());
-                    break;
-                }
-
-            }
+        }else{
+            this.longName = "Not available";
         }
 
     }
