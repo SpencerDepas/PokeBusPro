@@ -719,32 +719,35 @@ public class MapsActivity extends FragmentActivity implements
         // Do a null check to confirm that we have not already instantiated the map.
         Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
         // Try to obtain the map from the SupportMapFragment.
-        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                .getMap();
-        mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        if(mMap == null) {
 
-            @Override
-            public boolean onMarkerClick(Marker marker) {
 
-                return false;
-            }
-        });
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng point) {
-                Log.i("MyMapsActivity", "Map clicked");
-                MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
-                for(int i = 0; i < MapsActivity.busInfo.size(); i ++){
-                    if(MapsActivity.busInfo.get(i).isAddedToPopup()){
-                        MapsActivity.busInfo.get(i).setAddedToPopup(false);
-                    }
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                    .getMap();
+            mMap.getUiSettings().setMapToolbarEnabled(false);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+
+                    return false;
                 }
-            }
-        });
+            });
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng point) {
+                    Log.i("MyMapsActivity", "Map clicked");
+                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+                    for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
+                        if (MapsActivity.busInfo.get(i).isAddedToPopup()) {
+                            MapsActivity.busInfo.get(i).setAddedToPopup(false);
+                        }
 
+                    }
+                }
+            });
+        }
     }
 
 
