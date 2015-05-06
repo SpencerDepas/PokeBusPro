@@ -26,9 +26,9 @@ public class Service extends IntentService {
         super("MyIntentService");
     }
 
-    static ArrayList<BusInfo> busInfoArrayList = new ArrayList<>();
+
     static GetBusDistanceJSON objTwo;
-    static public String API_KEY_MTA ;
+
     SharedPreferences pref;
 
 

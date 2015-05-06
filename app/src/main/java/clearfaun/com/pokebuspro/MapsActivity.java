@@ -122,9 +122,9 @@ public class MapsActivity extends FragmentActivity implements
         prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
         //this loads in businfo of saved bus stops
-        pokeBusbusInfo = loadPokeBus();
+        //pokeBusbusInfo = loadPokeBus();
 
-        Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
+        //Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
 
         spinner = (ProgressBarCircularIndeterminate)findViewById(R.id.progressBar1);
 
@@ -181,7 +181,7 @@ public class MapsActivity extends FragmentActivity implements
             public void onClick(View v) {
                 Log.i("MyMapsActivity", "onClick refreshLocation");
                 if(spinner.getVisibility() == View.INVISIBLE) {
-                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+
                     //refresh button
                     fromOnResume = false;
                     spinner.setVisibility(View.VISIBLE);
@@ -212,7 +212,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 Log.i("MyMapsActivity", "onClick busmap");
-                MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+                changeSelectedBus.setVisibility(View.INVISIBLE);
                 //go to map
                 //bus map
                 SharedPreferences mapPref = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -230,7 +230,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
         changeSelectedBus = (ImageButton) findViewById(R.id.change_selected_bus);
-        changeSelectedBus.setVisibility(View.GONE);
+
         changeSelectedBus.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -238,72 +238,7 @@ public class MapsActivity extends FragmentActivity implements
                 //settings
 
 
-                AddMarkers.whatSnippetIsOpen();
-
-                //gets buses for each bus stop
-                Log.i("MyMapsActivityy", "AddMarkers.lastOpenSnippet " + AddMarkers.lastOpenSnippet);
-
-                if(busIndexForBusStopCycle.size() == 0 ) {
-                    if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
-                        for (int i = 0; i < busInfo.size(); i++) {
-
-                            //find marker index of all buses for stop
-                            if (AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[i].getTitle())) {
-                                busIndexForBusStopCycle.add(i + "");
-                            }
-
-                        }
-                    }
-                }else if (!AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(0))].getTitle())){
-                    Log.i("MyMapsActivityy", "else if  " + AddMarkers.lastOpenSnippet);
-                    //if its not the same snippet open as the last time button was pressed
-                    indexForBringSnippetToForground = 1;
-                    busIndexForBusStopCycle.clear();
-                    if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
-                        for (int i = 0; i < busInfo.size(); i++) {
-
-                            //find marker index of all buses for stop
-                            if (AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[i].getTitle())) {
-                                busIndexForBusStopCycle.add(i + "");
-                            }
-
-                        }
-                    }
-                }
-
-
-
-
-                Log.i("MyMapsActivityy", "indexForBringSnippetToForground ==  " + indexForBringSnippetToForground);
-                Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() ==  " + busIndexForBusStopCycle.size());
-
-                //resets which to select if iuts got to the last one
-                if(indexForBringSnippetToForground == busIndexForBusStopCycle.size() ) {
-                    Log.i("MyMapsActivityy", "in indexForBringSnippetToForground == busIndexForBusStopCycle.size() ");
-                    indexForBringSnippetToForground = 0;
-                    for (int i = 0; i < AddMarkers.marker.length; i++) {
-                        for(int t = 0; t < busIndexForBusStopCycle.size(); t++) {
-                            if (AddMarkers.marker[i].getTitle().equals(AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(t))].getTitle())) {
-                                t++;
-                                //all markers with the same buscode
-
-                                AddMarkers.marker[i].setVisible(false);
-                                MapsActivity.busInfo.get(i).setAddedToPopup(false);
-                                Log.i("MyMapsActivityy", "setting invisable marker: " + i);
-                            }
-                        }
-                    }
-                }
-
-                //makes all at stop invisable
-
-                //display next bus in cycle
-                Log.i("MyMapsActivityy", "marker index set visable : " + Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground)));
-                AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].setVisible(true);
-                AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].showInfoWindow();
-                indexForBringSnippetToForground++;
-
-
+                cycleThroughPopup();
 
 
             }
@@ -332,7 +267,77 @@ public class MapsActivity extends FragmentActivity implements
             }
         }
 
+        //this loads in businfo of saved bus stops
+        pokeBusbusInfo = loadPokeBus();
 
+    }
+
+    public void cycleThroughPopup(){
+        changeSelectedBus.setVisibility(View.GONE);
+        AddMarkers.whatSnippetIsOpen();
+
+        //gets buses for each bus stop
+        Log.i("MyMapsActivityy", "AddMarkers.lastOpenSnippet " + AddMarkers.lastOpenSnippet);
+
+        if(busIndexForBusStopCycle.size() == 0 ) {
+            if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
+                for (int i = 0; i < busInfo.size(); i++) {
+
+                    //find marker index of all buses for stop
+                    if (AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[i].getTitle())) {
+                        busIndexForBusStopCycle.add(i + "");
+                    }
+
+                }
+            }
+        }else if (!AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(0))].getTitle())){
+            Log.i("MyMapsActivityy", "else if  " + AddMarkers.lastOpenSnippet);
+            //if its not the same snippet open as the last time button was pressed
+            indexForBringSnippetToForground = 1;
+            busIndexForBusStopCycle.clear();
+            if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
+                for (int i = 0; i < busInfo.size(); i++) {
+
+                    //find marker index of all buses for stop
+                    if (AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[i].getTitle())) {
+                        busIndexForBusStopCycle.add(i + "");
+                    }
+
+                }
+            }
+        }
+
+
+
+
+        Log.i("MyMapsActivityy", "indexForBringSnippetToForground ==  " + indexForBringSnippetToForground);
+        Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() ==  " + busIndexForBusStopCycle.size());
+
+        //resets which to select if iuts got to the last one
+        if(indexForBringSnippetToForground == busIndexForBusStopCycle.size() ) {
+            Log.i("MyMapsActivityy", "in indexForBringSnippetToForground == busIndexForBusStopCycle.size() ");
+            indexForBringSnippetToForground = 0;
+            for (int i = 0; i < AddMarkers.marker.length; i++) {
+                for(int t = 0; t < busIndexForBusStopCycle.size(); t++) {
+                    if (AddMarkers.marker[i].getTitle().equals(AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(t))].getTitle())) {
+                        t++;
+                        //all markers with the same buscode
+
+                        AddMarkers.marker[i].setVisible(false);
+                        MapsActivity.busInfo.get(i).setAddedToPopup(false);
+                        Log.i("MyMapsActivityy", "setting invisable marker: " + i);
+                    }
+                }
+            }
+        }
+
+        //makes all at stop invisable
+
+        //display next bus in cycle
+        Log.i("MyMapsActivityy", "marker index set visable : " + Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground)));
+        AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].setVisible(true);
+        AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].showInfoWindow();
+        indexForBringSnippetToForground++;
 
     }
 
@@ -424,11 +429,13 @@ public class MapsActivity extends FragmentActivity implements
 
                     for (int i = 0; i < busInfo.size(); i++) {
 
-                        if (busInfo.get(i).getBusCode().equals(finalBuscode)) {
+
+                        if (busInfo.get(i).getBusCode().equals(finalBuscode) && busInfo.get(i).getBusName().equals(BusInfo.getDisplayedBusName())) {
                             pokeBusbusInfo.add(busInfo.get(i));
-                            MapsActivity.toasterShort("PokeBus set: " + finalBuscode);
+                            MapsActivity.toasterShort("PokeBus set: " + busInfo.get(i).busName + "\n" + finalBuscode);
                             break;
                         }
+
 
                     }
 
@@ -729,13 +736,19 @@ public class MapsActivity extends FragmentActivity implements
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
 
-            /*mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
+                    //makes marker the same as clicking button
 
+                    if (marker.isInfoWindowShown()) {
+
+                        cycleThroughPopup();
+
+                    }
                     return false;
                 }
-            });*/
+            });
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng point) {
@@ -891,16 +904,16 @@ public class MapsActivity extends FragmentActivity implements
 
 
             }
-        }else{
+        }else {
             //this is for standard onresume
-            mMap.setMyLocationEnabled(true);
+           /* mMap.setMyLocationEnabled(true);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
                     .bearing(bearing)                // Sets the orientation of the camera to east
                     .zoom(zoom)                   // keeps zoom
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
         }
 
     }

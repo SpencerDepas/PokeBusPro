@@ -34,6 +34,15 @@ public class BusInfo implements Serializable {
 
     }
 
+    static String currentBusPopup;
+    public static void setCurrentDisplayedBusName(String busname){
+        currentBusPopup = busname;
+    }
+
+    public static String getDisplayedBusName(){
+        return currentBusPopup;
+    }
+
     public void setDistanceNotAvailable(){
         distance[0] = "Not available";
         distance[1] = "Not available";
@@ -116,9 +125,7 @@ public class BusInfo implements Serializable {
         busName = name;
     }
 
-    public void setMarkerSet(Boolean setMarker) {
-        markerSet = setMarker;
-    }
+ 
 
     public void setBusId(String nameOfBus) {
         busNameId = nameOfBus;

@@ -69,6 +69,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
             if(marker.getTitle().equals(MapsActivity.busInfo.get(i).getBusCode()) && !MapsActivity.busInfo.get(i).isAddedToPopup()){
 
 
+                BusInfo.setCurrentDisplayedBusName(MapsActivity.busInfo.get(i).busName);
                 busName.setText(MapsActivity.busInfo.get(i).busName);
 
 

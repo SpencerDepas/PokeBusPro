@@ -46,6 +46,8 @@ public class GetBusDistanceJSON {
                 //z changes the bus stop we are choosing.
 
 
+
+
                 int maxNumberOfBusDistancesAvailable = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
                         .getJSONObject(0)
                         .getJSONArray("MonitoredStopVisit").length();
@@ -119,7 +121,7 @@ public class GetBusDistanceJSON {
                         Log.i("MyGetBusStopJSONy", "i: " + i);
                         Log.i("MyGetBusStopJSONy", "z: " + z);*/
 
-                        if(fromService){
+                        if(fromService &&  busInfo.get(0).getBusName().equals(busNameObject)){
                             busInfo.get(0).setBusDistance(sys.get("PresentableDistance").toString());
                             Log.i("MyGetBusStopJSONy", "sys.get(\"PresentableDistance\").toString() " + sys.get("PresentableDistance").toString());
                             Log.i("MyGetBusStopJSONy", "busInfo.get(0)." + busInfo.get(0).getDistance()[0]);
@@ -230,7 +232,7 @@ public class GetBusDistanceJSON {
                     if(fromService){
 
                         busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
-                                + stopCode + "&MaximumStopVisits=" + 3;
+                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
                     }else{
 
                         busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
