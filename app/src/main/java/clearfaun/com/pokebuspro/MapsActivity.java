@@ -119,6 +119,15 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "onCreate");
         back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
 
+        if(!isOnline()){
+            Log.i("MyMapsActivity", "!isOnline()");
+            Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
+            startActivity(intent);
+            this.finish();
+
+        }
+
+
         prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
         //this loads in businfo of saved bus stops
