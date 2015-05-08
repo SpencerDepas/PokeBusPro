@@ -82,6 +82,17 @@ public class PrefsFragment extends PreferenceFragment {
                 MapsActivity.refreshMarkers();
 
 
+                ListPreference prefSumBusMap = (ListPreference) findPreference(MapsActivity.mContext.getString(R.string.refresh_time_key));
+
+
+                if(prefSumBusMap.getValue() == "0"){
+                    Log.i("PrefsFragment", "onSharedPreferenceChanged prefSumBusMap.getValue() == \"0\"");
+
+                    MapsActivity.stopTimerTask();
+
+
+                }
+
             }
             }
         };
