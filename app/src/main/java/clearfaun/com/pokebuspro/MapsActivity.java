@@ -371,7 +371,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
     }
-
+    static ButtonFlat btnDismiss;
 
     static void popupForPokebus(ImageButton optionsButton, String buscode, String id) {
 
@@ -411,7 +411,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-            ButtonFlat btnDismiss = (ButtonFlat) popupView.findViewById(R.id.dismiss);
+            btnDismiss = (ButtonFlat) popupView.findViewById(R.id.dismiss);
             btnDismiss.setOnClickListener(new Button.OnClickListener() {
 
                 @Override
@@ -658,6 +658,7 @@ public class MapsActivity extends FragmentActivity implements
 
         setUpMapIfNeeded();
 
+        updateBusDistance();
 
     }
 
@@ -689,7 +690,8 @@ public class MapsActivity extends FragmentActivity implements
 
             initializeTimerTask(firstTimer);
             //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-            timer.schedule(timerTask, 5000, timeInMS);
+            timer.schedule(timerTask, 20000, timeInMS);
+
 
 
         }
@@ -713,12 +715,10 @@ public class MapsActivity extends FragmentActivity implements
             public void run() {
                 Log.i("MyMapsActivity", "initializeTimerTask    timerTask");
                 //this enables us to reset the timer in onreusme and it will not trigger it automatkly
-                if(firstTime){
 
-                }else{
-                    getBusDistance(busInfo);
+                getBusDistance(busInfo);
                     //firstTime = false;
-                }
+
 
             }
         };
@@ -762,6 +762,14 @@ public class MapsActivity extends FragmentActivity implements
                 @Override
                 public void onMapClick(LatLng point) {
                     Log.i("MyMapsActivity", "Map clicked");
+
+                   /* if(btnDismiss.getVisibility() == View.VISIBLE) {
+                        Log.i("MyMapsActivity", "btnDismiss.getVisibility() == View.VISIBLE");
+
+
+                        btnDismiss.performClick();
+                    }*/
+
                     MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
                     for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
                         if (MapsActivity.busInfo.get(i).isAddedToPopup()) {

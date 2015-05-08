@@ -1,21 +1,16 @@
 package clearfaun.com.pokebuspro;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.text.Html;
 import android.text.Spannable;
-import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
@@ -58,6 +53,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         //ImageView image = (ImageView)popup_snippet.findViewById(R.id.icon);
         MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
 
+        int hasPokeBusIndex =1000;
 
         for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
             Log.i("PopupAdapter", "getInfoWindow MapsActivity.busInfo.get(i).getBusCode() " + MapsActivity.busInfo.get(i).getBusCode());
@@ -65,8 +61,13 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
 
 
-
             if(marker.getTitle().equals(MapsActivity.busInfo.get(i).getBusCode()) && !MapsActivity.busInfo.get(i).isAddedToPopup()){
+
+                for(int q = 0 ; q < MapsActivity.pokeBusbusInfo.size(); q ++) {
+                    if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(q).getBusCode() + "")) {
+                        hasPokeBusIndex = q;
+                    }
+                }
 
 
                 BusInfo.setCurrentDisplayedBusName(MapsActivity.busInfo.get(i).busName);
@@ -107,6 +108,9 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
 
         }
+
+
+
 
 
 
