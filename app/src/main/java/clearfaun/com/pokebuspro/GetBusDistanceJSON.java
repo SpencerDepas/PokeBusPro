@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -22,30 +21,30 @@ public class GetBusDistanceJSON {
     ArrayList<BusInfo> busInfo;
     JSONObject busNameObject;
 
-    @SuppressLint("NewApi")
-    public void readAndParseJSON(String[] in) {
+    long timeForParsing;
 
-        for(int i = 0 ; i < busInfo.size(); i++){
-            //each distance is put in one at a time
-            //this resets the counter
-            //must be done in order to put new distances in
-            busInfo.get(i).resetbusDistanceCounter();
-        }
+
+
+    @SuppressLint("NewApi")
+    public void readAndParseJSON(ArrayList<String> in) {
+
+        //for each stop
 
 
         //in is the stream of data withdistance informatioon. it will be as large as the amount of buis stops in the area
         Log.i("MyGetBusDistanceJSONt", "inside readAndParseJSON");
-
+        timeForParsing =  System.currentTimeMillis() ;
 
         try {
 
-            Log.i("MyGetBusDistanceJSONt", "in.length " + in.length);
+            Log.i("MyGetBusDistanceJSONt", "in.length " + in.size());
 
-            for (int z = 0 ; z < in.length; z ++) {
-                JSONObject reader = new JSONObject(in[z]);
+            for (int z = 0 ; z < in.size(); z ++) {
+
+                JSONObject reader = new JSONObject(in.get(z));
                 //z changes the bus stop we are choosing.
 
-
+                Log.i("MyGetBusDistanceJSONttt", "z is :  " + reader.toString());
 
 
                 int maxNumberOfBusDistancesAvailable = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
@@ -53,10 +52,9 @@ public class GetBusDistanceJSON {
                         .getJSONArray("MonitoredStopVisit").length();
 
 
-
                 String[] tempDistance = new String[maxNumberOfBusDistancesAvailable];
                 // Max return of three buses
-                for (int i = 0 ;  i < maxNumberOfBusDistancesAvailable ; i++ ){
+                for (int i = 0; i < maxNumberOfBusDistancesAvailable; i++) {
                     // i gets the distances for each stop, up to three
                     Log.i("MyGetBusDistanceJSONt", "z is :  " + z);
                     Log.i("MyGetBusDistanceJSONt", "i is :  " + i);
@@ -77,8 +75,7 @@ public class GetBusDistanceJSON {
                                 .getJSONArray("MonitoredStopVisit")
                                 .getJSONObject(i)
                                 .getJSONObject("MonitoredVehicleJourney")
-                                .get("DestinationName").toString()
-                                ;
+                                .get("DestinationName").toString();
 
                         Log.i("MyGetBusDistanceJSONt", "destinationName :" + destinationName);
 
@@ -111,30 +108,20 @@ public class GetBusDistanceJSON {
                                 .getString("StopPointRef");
 
 
-
-                        //String callBusName = busNameObject.get("PublishedLineName").toString();
-                        //=Log.i("MyGetBusDistanceJSONt", "testForMultipleStops :" + callBusName);
-
-                        /*Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject);
-                        Log.i("MyGetBusStopJSONy", "busNameObject " + busCodeObject.substring(4));
-                        Log.i("MyGetBusStopJSONy", "PresentableDistance " +sys.get("PresentableDistance").toString());
-                        Log.i("MyGetBusStopJSONy", "i: " + i);
-                        Log.i("MyGetBusStopJSONy", "z: " + z);*/
-
-                        if(fromService &&  busInfo.get(0).getBusName().equals(busNameObject)){
+                        if (fromService && busInfo.get(0).getBusName().equals(busNameObject)) {
                             busInfo.get(0).setBusDistance(sys.get("PresentableDistance").toString());
                             Log.i("MyGetBusStopJSONy", "sys.get(\"PresentableDistance\").toString() " + sys.get("PresentableDistance").toString());
                             Log.i("MyGetBusStopJSONy", "busInfo.get(0)." + busInfo.get(0).getDistance()[0]);
-                        }else if(busInfo.get(z).getBusCode().equals(busCodeObject.substring(4))){
+                        } else if (busInfo.get(z).getBusCode().equals(busCodeObject.substring(4))) {
                             //if the bus code is the same
                             //if the bus name is the same
 
-                            if(busInfo.get(z).getBusName().equals(busNameObject)){
-                                Log.i("MyGetBusStopJSONy", "busInfo.get(z).getBusName() " + busInfo.get(z).getBusName() );
+                            if (busInfo.get(z).getBusName().equals(busNameObject)) {
+                                Log.i("MyGetBusStopJSONy", "busInfo.get(z).getBusName() " + busInfo.get(z).getBusName());
                                 Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject);
                                 busInfo.get(z).setLongName(destinationName);
                                 Log.i("MyGetBusStopJSONy", "z: ) " + z);
-                                Log.i("MyGetBusStopJSONy", "i: busInfo.get(q).getBusCode() " + busInfo.get(z).getBusCode() );
+                                Log.i("MyGetBusStopJSONy", "i: busInfo.get(q).getBusCode() " + busInfo.get(z).getBusCode());
                                 Log.i("MyGetBusStopJSONy", "IN " + busNameObject);
                                 Log.i("MyGetBusStopJSONy", "PresentableDistance " + sys.get("PresentableDistance").toString());
 
@@ -145,12 +132,10 @@ public class GetBusDistanceJSON {
                         }
 
 
-
-
                         //tempDistance[i] = sys.get("PresentableDistance").toString();
                         Log.i("MyGetBusDistanceJSONt", " sys  " + sys.get("PresentableDistance").toString() + ". i is : " + i);
 
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         Log.i("MyGetBusDistanceJSONt", " iner try catch Exception e  " + e.toString());
                         tempDistance[0] = "flofpfjfik";
                         tempDistance[1] = "flofpfjfik";
@@ -158,8 +143,6 @@ public class GetBusDistanceJSON {
 
                     }
                 }
-
-
 
 
                 Log.i("MyGetBusDistanceJSONt", " tempBusInfo  " + busInfo.get(z).getBusCode());
@@ -191,13 +174,19 @@ public class GetBusDistanceJSON {
             Log.i("MyAsyncTask", "end11:");
     }
 
-
+    long startTime;
 
     public void fetchBusDistanceJson(ArrayList<BusInfo> busInfoIn) {
 
         busInfo = busInfoIn;
         Log.i("fetchBusDistanceJson", "busInfo" + busInfo.size());
+        startTime =  System.currentTimeMillis() ;
         new LongOperation().execute("");
+
+
+
+
+
 
     }
 
@@ -215,55 +204,88 @@ public class GetBusDistanceJSON {
             Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop" + params[0]);
             String howManyBusesPerStop = "25";
 
-            String[] data = new String[busInfo.size()];
 
+
+
+            ArrayList<String> data = new ArrayList<>();
             Log.i("MyGetBusDistanceJSONn", "inside AsyncTask");
             try {
 
+                BusInfo.clearJson();
 
-                for(int i = 0; i < busInfo.size(); i ++) {
+                for(int i = 0, t = 0; i < busInfo.size(); i ++) {
+
+
+
+
                     Log.i("MyGetBusDistanceJSONn", "busInfo.size(): " + busInfo.size());
                     Log.i("MyGetBusDistanceJSONn", "i is : " + i );
-                    Log.i("MyGetBusDistanceJSONn", "data.length is : " + data.length );
+                    Log.i("MyGetBusDistanceJSONn", "data.length is : " + data.size() );
                     Log.i("MyGetBusDistanceJSONn", "busInfo.get(i).getBusCode(): " + busInfo.get(i).getBusCode());
                     stopCode = Integer.parseInt(busInfo.get(i).getBusCode());
+                    //Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
 
 
-                    if(fromService){
+                    if(BusInfo.hasBusCodeBeenCalledJson(busInfo.get(i).getBusCode())){
+
+                        //we only want one request for each stop
+                        //Log.i("MyGetBusDistanceJSONnn", "!hasBusCodeBeenCalledJson " + busInfo.get(i).getBusCode() );
+                        //Log.i("MyGetBusDistanceJSONnn", "i is : " + i );
+
+                    }else {
+                        Log.i("MyGetBusDistanceJSONnn", "hasBusCodeBeenCalledJson "  + busInfo.get(i).getBusCode());
+
+                        BusInfo.addBusCodeBeenCalledJson(busInfo.get(i).getBusCode());
+                        Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
+
+                        if (fromService) {
+
+                            busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
+                                    + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+
+                            URL url = new URL(busDistanceURL);
+                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                            conn.setReadTimeout(10000 /* milliseconds */);
+                            conn.setConnectTimeout(15000 /* milliseconds */);
+                            conn.setRequestMethod("GET");
+                            conn.setDoInput(true);
+                            // Starts the query
+                            conn.connect();
+                            InputStream stream = conn.getInputStream();
+
+                            data.add(i, convertStreamToString(stream));
+                            stream.close();
+
+                            break;
+                        }
+
+                        Log.i("MyGetBusDistanceJSONnn", "data length "  + data.size());
 
                         busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
                                 + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
-                    }else{
 
-                        busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
-                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+
+                        Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop");
+                        Log.i("MyGetBusDistanceJSONn", "busDistanceURL:" + busDistanceURL);
+
+                        URL url = new URL(busDistanceURL);
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setReadTimeout(10000 /* milliseconds */);
+                        conn.setConnectTimeout(15000 /* milliseconds */);
+                        conn.setRequestMethod("GET");
+                        conn.setDoInput(true);
+                        // Starts the query
+                        conn.connect();
+                        InputStream stream = conn.getInputStream();
+
+                        data.add(t, convertStreamToString(stream));
+                        t++;
+                        stream.close();
                     }
-
-
-
-
-
-                    Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop");
-                    Log.i("MyGetBusDistanceJSONn", "busDistanceURL:" + busDistanceURL);
-
-                    URL url = new URL(busDistanceURL);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setReadTimeout(10000 /* milliseconds */);
-                    conn.setConnectTimeout(15000 /* milliseconds */);
-                    conn.setRequestMethod("GET");
-                    conn.setDoInput(true);
-                    // Starts the query
-                    conn.connect();
-                    InputStream stream = conn.getInputStream();
-
-                    data[i] = convertStreamToString(stream);
-                    stream.close();
                 }
-                Log.i("MyGetBusDistanceJSONn", "Pre readAndParseJSON(data); ");
+                Log.i("MyGetBusDistanceJSONn", "data size: " + data.size());
 
-                /*for(int y = 0 ; y < data.length; y ++){
-                    Log.i("MyGetBusDistanceJSONn", "Pre data[" + y + "]; " + data[y] );
-                }*/
+
 
 
 
@@ -272,6 +294,23 @@ public class GetBusDistanceJSON {
                 Log.i("MyGetBusDistanceJSONn", " inside exception" +  e.toString());
             }
 
+           /* for(int g = 0 ; g < data.size(); g ++){
+
+                if(data.get(g).length() > 2){
+                    Log.i("MyGetBusDistanceJSONn", " whats the count on data " +  g);
+                }
+
+            }*/
+
+            for(int i = 0 ; i < busInfo.size(); i++){
+                //each distance is put in one at a time
+                //this resets the counter
+                //must be done in order to put new distances in
+                busInfo.get(i).resetbusDistanceCounter();
+            }
+
+            //long endTimeTT =  (System.currentTimeMillis() );
+            Log.i("MyMapsActivityTime", "getBusDistance(busInfo) This is the time it takes to connect with all the data : " + ((System.currentTimeMillis()  - startTime)));
 
             readAndParseJSON(data);
 
@@ -283,7 +322,9 @@ public class GetBusDistanceJSON {
 
             Log.i("MyAsyncTask", " onPostExecute");
 
+            long endTime =  (System.currentTimeMillis() );
 
+            Log.i("MyMapsActivityTime", "getBusDistance(busInfo) endTime for parsing : " + ((endTime - timeForParsing)));
 
             Log.i("MyAsyncTask", " fromService " + fromService);
             if(fromService){
@@ -306,6 +347,7 @@ public class GetBusDistanceJSON {
 
         @Override
         protected void onPreExecute() {
+            startTime = System.currentTimeMillis();
             Log.i("MyAsyncTask", " onPreExecute" );
             fromService =  false;
             try{

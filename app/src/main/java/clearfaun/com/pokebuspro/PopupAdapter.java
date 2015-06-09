@@ -53,7 +53,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         //ImageView image = (ImageView)popup_snippet.findViewById(R.id.icon);
         MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
 
-        int hasPokeBusIndex =1000;
+        int hasPokeBusIndex = 1000;
 
         for(int i = 0 ; i < MapsActivity.busInfo.size(); i ++){
             Log.i("PopupAdapter", "getInfoWindow MapsActivity.busInfo.get(i).getBusCode() " + MapsActivity.busInfo.get(i).getBusCode());
@@ -61,13 +61,20 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
 
 
-            if(marker.getTitle().equals(MapsActivity.busInfo.get(i).getBusCode()) && !MapsActivity.busInfo.get(i).isAddedToPopup()){
+            if(marker.getTitle().equals(MapsActivity.busInfo.get(i).getBusCode()) && !MapsActivity.busInfo.get(i).isAddedToPopup()) {
 
-                for(int q = 0 ; q < MapsActivity.pokeBusbusInfo.size(); q ++) {
+                /*for (int q = 0; q < MapsActivity.pokeBusbusInfo.size(); q++) {
                     if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(q).getBusCode() + "")) {
                         hasPokeBusIndex = q;
+                        Log.i("PopupAdapterr", "pokebus is here " + hasPokeBusIndex);
+                        Log.i("PopupAdapterr", "pokebus is here " + MapsActivity.pokeBusbusInfo.get(hasPokeBusIndex).getBusName());
+
                     }
-                }
+                }*/
+
+                //if in the stack of markers we have a pokebus we want the pokebus to be on the top of the stack
+                //this is if there is no pokebus
+
 
 
                 BusInfo.setCurrentDisplayedBusName(MapsActivity.busInfo.get(i).busName);
@@ -82,19 +89,19 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
                 text.setSpan(new RelativeSizeSpan(.7f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                busCode.setText(text );
+                busCode.setText(text);
 
                 distances.setText(MapsActivity.busInfo.get(i).distance[0]
-                + "\n" + MapsActivity.busInfo.get(i).distance[1]
-                + "\n" + MapsActivity.busInfo.get(i).distance[2]);
+                        + "\n" + MapsActivity.busInfo.get(i).distance[1]
+                        + "\n" + MapsActivity.busInfo.get(i).distance[2]);
                 MapsActivity.busInfo.get(i).setAddedToPopup(true);
                 currentPopUpIndex = i;
 
-                for(int z = 0 ; z < MapsActivity.busInfo.size(); z ++){
+                for (int z = 0; z < MapsActivity.busInfo.size(); z++) {
 
-                    if(z == i){
+                    if (z == i) {
                         //skip
-                    }else if(MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.busInfo.get(z).getBusCode())){
+                    } else if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.busInfo.get(z).getBusCode())) {
                         //make button visable
                         MapsActivity.changeSelectedBus.setVisibility(View.VISIBLE);
                     }

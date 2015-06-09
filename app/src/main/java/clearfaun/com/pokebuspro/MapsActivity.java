@@ -482,12 +482,19 @@ public class MapsActivity extends FragmentActivity implements
         mMap.clear();
 
 
+
         getBusStops(busInfo);
+
+
+
         Log.i("MyMapsActivity", "after getBusStops(busInfo) refresh ");
         Log.i("MyMapsActivity", "after busInfo " + busInfo.size());
 
 
         getBusDistance(busInfo);
+
+
+
         Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
         updateBusDistance();
@@ -524,8 +531,8 @@ public class MapsActivity extends FragmentActivity implements
 
 
     public static void getBusStops(ArrayList<BusInfo> busInfo){
-            Log.i("MyMapsActivity", "inside getBusStops");
-            obj = new GetBusStopJSON();
+        Log.i("MyMapsActivity", "inside getBusStops");
+        obj = new GetBusStopJSON();
         obj.fetchBusStop(busInfo);
 
         Log.i("MyMapsActivity", "before while");
@@ -910,10 +917,16 @@ public class MapsActivity extends FragmentActivity implements
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
 
+                //Log.i("MyMapsActivityTime", "startTime : " + System.currentTimeMillis());
+                long  startTime =  System.currentTimeMillis() ;
                 getBusStops(busInfo);
-                Log.i("MyMapsActivity", "after getBusStops(busInfo);: ");
+                long  endTime =  (System.currentTimeMillis() );
+                Log.i("MyMapsActivityTime", "getBusStops(busInfo) endTime  : " +  ((endTime - startTime)));
+
 
                 getBusDistance(busInfo);
+
+
                 Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
 
                 updateBusDistance();

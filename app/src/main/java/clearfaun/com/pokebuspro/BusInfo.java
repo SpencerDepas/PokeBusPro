@@ -3,12 +3,14 @@ package clearfaun.com.pokebuspro;
 import android.util.Log;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by spencer on 2/21/2015.
  */
 public class BusInfo implements Serializable {
 
+    private static ArrayList<String> addedBusCode = new ArrayList<String>();
     public String stopCode = "";
     public String busNameId = "";
     public String latitude = "";
@@ -169,10 +171,27 @@ public class BusInfo implements Serializable {
     }
 
 
-    public boolean getForNoUIToast(){
-        return forNoUIToast;
+    public static void addBusCodeBeenCalledJson(String busCode){
+
+        addedBusCode.add(busCode);
+
     }
 
+    public static boolean hasBusCodeBeenCalledJson(String busCode){
+
+        for(int i = 0 ; i < addedBusCode.size(); i ++){
+            if(addedBusCode.get(i).equals(busCode)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void clearJson(){
+
+        addedBusCode.clear();
+    }
 
 
     public String getBusCode(){
