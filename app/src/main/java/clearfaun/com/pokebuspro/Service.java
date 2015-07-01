@@ -136,6 +136,7 @@ public class Service extends IntentService {
 
 
         new ToastMessageTask().execute(busInfo.get(indexOfClosestBus).getBusName() +  "'s en-route:  \n"
+                + busInfo.get(indexOfClosestBus).getBusCode() + "\n"
                 + busInfo.get(indexOfClosestBus).getDistance()[0] + "\n"
                 + busInfo.get(indexOfClosestBus).getDistance()[1] + "\n"
                 + busInfo.get(indexOfClosestBus).getDistance()[2]);
