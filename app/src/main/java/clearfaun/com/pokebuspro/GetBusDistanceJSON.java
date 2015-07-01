@@ -24,22 +24,17 @@ public class GetBusDistanceJSON {
 
     long timeForParsing;
     String lineRef;
-    String lineRefTwo;
     String destinationName;
-    String destinationNameTwo;
     String presentableDistanceString;
-    String presentableDistanceStringTwo;
     String busNameObject;
-    String busNameObjectTwo;
     String busCodeJsonString;
-    String busCodeJsonStringTwo;
 
 
 
 
 
     @SuppressLint("NewApi")
-    public void readAndParseJSON(ArrayList<String> in) {
+    public void readAndParseJSON(String in, int busInfoIndex) {
 
         //for each stop
 
@@ -50,120 +45,113 @@ public class GetBusDistanceJSON {
 
         try {
 
-            Log.i("MyGetBusDistanceJSONt", "in.length " + in.size());
-
-            for (int z = 0 ; z < in.size(); z ++) {
-
-                JSONObject reader = new JSONObject(in.get(z));
-                //z changes the bus stop we are choosing.
-
-                Log.i("MyGetBusDistanceJSONttt", "z is :  " + reader.toString());
 
 
 
-                Log.i("MyGetBusDistanceJSONt", "z is :  " + z);
+            JSONObject reader = new JSONObject(in);
+            //z changes the bus stop we are choosing.
+
+            Log.i("MyGetBusDistanceJSONttt", "z is :  " + reader.toString());
 
 
-                Log.i("MyGetBusDistanceJSONt", " busInfo.get(z).getBusCode():  " + busInfo.get(z).busName);
-                try {
+            try {
 
-                    int incomingBusesForStop = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                int incomingBusesForStop = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                        .getJSONObject(0)
+                        .getJSONArray("MonitoredStopVisit")
+                        .length();
+
+                //this is the int for all the buses coming to the stop
+                //create a loop to organize all the distances
+
+                for (int i = 0; i < incomingBusesForStop; i++) {
+
+
+                    //we want this to match the busstop with bus
+                    lineRef = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
                             .getJSONObject(0)
                             .getJSONArray("MonitoredStopVisit")
-                            .length();
-
-                    //this is the int for all the buses coming to the stop
-                    //create a loop to organize all the distances
-
-                    for (int i = 0; i < incomingBusesForStop; i++) {
+                            .getJSONObject(i)
+                            .getJSONObject("MonitoredVehicleJourney")
+                            .get("LineRef").toString();
 
 
-                        //we want this to match the busstop with bus
-                        lineRef = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
-                                .getJSONObject(0)
-                                .getJSONArray("MonitoredStopVisit")
-                                .getJSONObject(i)
-                                .getJSONObject("MonitoredVehicleJourney")
-                                .get("LineRef").toString();
-
-
-                        int dashLocation = lineRef.indexOf('_') + 1;
-                        lineRef = lineRef.substring(dashLocation);
+                    int dashLocation = lineRef.indexOf('_') + 1;
+                    lineRef = lineRef.substring(dashLocation);
 
 
 
-                        destinationName = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
-                                .getJSONObject(0)
-                                .getJSONArray("MonitoredStopVisit")
-                                .getJSONObject(i)
-                                .getJSONObject("MonitoredVehicleJourney")
-                                .get("DestinationName").toString();
+                    destinationName = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                            .getJSONObject(0)
+                            .getJSONArray("MonitoredStopVisit")
+                            .getJSONObject(i)
+                            .getJSONObject("MonitoredVehicleJourney")
+                            .get("DestinationName").toString();
 
 
 
-                        presentableDistanceString = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
-                                .getJSONObject(0)
-                                .getJSONArray("MonitoredStopVisit")
-                                .getJSONObject(i)
-                                .getJSONObject("MonitoredVehicleJourney")
-                                .getJSONObject("MonitoredCall")
-                                .getJSONObject("Extensions")
-                                .getJSONObject("Distances")
-                                .get("PresentableDistance").toString();
+                    presentableDistanceString = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                            .getJSONObject(0)
+                            .getJSONArray("MonitoredStopVisit")
+                            .getJSONObject(i)
+                            .getJSONObject("MonitoredVehicleJourney")
+                            .getJSONObject("MonitoredCall")
+                            .getJSONObject("Extensions")
+                            .getJSONObject("Distances")
+                            .get("PresentableDistance").toString();
 
-                        busNameObject = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
-                                .getJSONObject(0)
-                                .getJSONArray("MonitoredStopVisit")
-                                .getJSONObject(i)
-                                .getJSONObject("MonitoredVehicleJourney")
-                                .get("PublishedLineName").toString();
-
-
-                        busCodeJsonString = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
-                                .getJSONObject(0)
-                                .getJSONArray("MonitoredStopVisit")
-                                .getJSONObject(i)
-                                .getJSONObject("MonitoredVehicleJourney")
-                                .getJSONObject("MonitoredCall")
-                                .getString("StopPointRef");
-
-                        dashLocation = busCodeJsonString.indexOf('_') + 1;
-                        busCodeJsonString = busCodeJsonString.substring(dashLocation);
+                    busNameObject = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                            .getJSONObject(0)
+                            .getJSONArray("MonitoredStopVisit")
+                            .getJSONObject(i)
+                            .getJSONObject("MonitoredVehicleJourney")
+                            .get("PublishedLineName").toString();
 
 
-                        Log.i("MyGetBusDistanceJSONt", "lineRef :" + lineRef);
-                        Log.i("MyGetBusDistanceJSONt", "destinationName :" + destinationName);
-                        Log.i("MyGetBusDistanceJSONt", "presentableDistanceString :" + presentableDistanceString);
-                        Log.i("MyGetBusDistanceJSONt", "busNameObject :" + busNameObject);
-                        Log.i("MyGetBusDistanceJSONt", "busCodeJsonString :" + busCodeJsonString);
-                        Log.i("MyGetBusDistanceJSONt", "TempHashName :" + busCodeJsonString + busNameObject);
+                    busCodeJsonString = reader.getJSONObject("Siri").getJSONObject("ServiceDelivery").getJSONArray("StopMonitoringDelivery")
+                            .getJSONObject(0)
+                            .getJSONArray("MonitoredStopVisit")
+                            .getJSONObject(i)
+                            .getJSONObject("MonitoredVehicleJourney")
+                            .getJSONObject("MonitoredCall")
+                            .getString("StopPointRef");
+
+                    dashLocation = busCodeJsonString.indexOf('_') + 1;
+                    busCodeJsonString = busCodeJsonString.substring(dashLocation);
+
+
+                    Log.i("MyGetBusDistanceJSONt", "lineRef :" + lineRef);
+                    Log.i("MyGetBusDistanceJSONt", "destinationName :" + destinationName);
+                    Log.i("MyGetBusDistanceJSONt", "presentableDistanceString :" + presentableDistanceString);
+                    Log.i("MyGetBusDistanceJSONt", "busNameObject :" + busNameObject);
+                    Log.i("MyGetBusDistanceJSONt", "busCodeJsonString :" + busCodeJsonString);
+                    Log.i("MyGetBusDistanceJSONt", "TempHashName :" + busCodeJsonString + busNameObject);
+                    Log.i("MyGetBusDistanceJSONt", "TempHashName :" + GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).getBusCode());
+
+                    Log.i("MyGetBusDistanceJSONt", "TEST howManyStops " + incomingBusesForStop);
+                    Log.i("MyGetBusDistanceJSONtu", " busCodeJsonString :" + busCodeJsonString);
+
+                    Log.i("MyGetBusDistanceJSONtu", " busInfo.indexOf(\"301648\"); :" + busInfo.indexOf("306562"));
+
+                    if (fromService && busInfo.get(0).getBusName().equals(busNameObject)) {
+                        busInfo.get(0).setBusDistance(presentableDistanceString);
+                        Log.i("MyGetBusStopJSONy", "presentableDistanceString :" + presentableDistanceString);
+                        Log.i("MyGetBusStopJSONy", "busInfo.get(0)." + busInfo.get(0).getDistance()[0]);
+                    } else
+
+
                         Log.i("MyGetBusDistanceJSONt", "TempHashName :" + GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).getBusCode());
-                        Log.i("MyGetBusDistanceJSONtu", "Z :" + z);
-                        Log.i("MyGetBusDistanceJSONtu", "businfo name :" + busInfo.get(z).getBusCode());
-                        Log.i("MyGetBusDistanceJSONt", "TEST howManyStops " + incomingBusesForStop);
-                        Log.i("MyGetBusDistanceJSONtu", " busCodeJsonString :" + busCodeJsonString);
 
-                        Log.i("MyGetBusDistanceJSONtu", " busInfo.indexOf(\"301648\"); :" + busInfo.indexOf("306562"));
-
-                        if (fromService && busInfo.get(0).getBusName().equals(busNameObject)) {
-                            busInfo.get(0).setBusDistance(presentableDistanceString);
-                            Log.i("MyGetBusStopJSONy", "presentableDistanceString :" + presentableDistanceString);
-                            Log.i("MyGetBusStopJSONy", "busInfo.get(0)." + busInfo.get(0).getDistance()[0]);
-                        } else
-
-
-                            Log.i("MyGetBusDistanceJSONt", "TempHashName :" + GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).getBusCode());
-
-                            Log.i("MyGetBusStopJSONy", "busInfo.get(z).getBusName() " + busInfo.get(z).getBusName());
-                            Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject);
-                            busInfo.get(z).setLongName(destinationName);
-                            Log.i("MyGetBusStopJSONy", "z: ) " + z);
-                            Log.i("MyGetBusStopJSONy", "i: busInfo.get(q).getBusCode() " + busInfo.get(z).getBusCode());
-                            Log.i("MyGetBusStopJSONy", "IN " + busNameObject);
-                            Log.i("MyGetBusStopJSONy", "PresentableDistance " + presentableDistanceString);
-                            GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).setBusDistance(presentableDistanceString);
-                            GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).setLongName(destinationName);
-                            //busInfo.get(z).setBusDistance(presentableDistanceString);
+                        Log.i("MyGetBusStopJSONy", "busInfo.get(z).getBusName() " + busInfo.get(busInfoIndex).getBusName());
+                        Log.i("MyGetBusStopJSONy", "busNameObject " + busNameObject);
+                        busInfo.get(busInfoIndex).setLongName(destinationName);
+                        Log.i("MyGetBusStopJSONy", "z: ) " + busInfoIndex);
+                        Log.i("MyGetBusStopJSONy", "i: busInfo.get(q).getBusCode() " + busInfo.get(busInfoIndex).getBusCode());
+                        Log.i("MyGetBusStopJSONy", "IN " + busNameObject);
+                        Log.i("MyGetBusStopJSONy", "PresentableDistance " + presentableDistanceString);
+                        GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).setBusDistance(presentableDistanceString);
+                        GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).setLongName(destinationName);
+                        //busInfo.get(z).setBusDistance(presentableDistanceString);
 
 
 
@@ -171,7 +159,7 @@ public class GetBusDistanceJSON {
 
 
 
-                        }
+                    }
 
 
 
@@ -193,10 +181,10 @@ public class GetBusDistanceJSON {
 
 
 
-                Log.i("MyGetBusDistanceJSONt", " tempBusInfo  " + busInfo.get(z).getBusCode());
+                Log.i("MyGetBusDistanceJSONt", " tempBusInfo  " + busInfo.get(busInfoIndex).getBusCode());
                 Log.i("MyGetBusDistanceJSONt", " busInfo.size()  " + busInfo.size());
 
-            }
+
 
 
             //just to read data
@@ -229,9 +217,13 @@ public class GetBusDistanceJSON {
         busInfo = busInfoIn;
         Log.i("fetchBusDistanceJson", "busInfo" + busInfo.size());
 
-        new LongOperation().execute("");
+        //new LongOperation().execute("");
 
 
+        for(int i = 0; i < busInfo.size(); i ++){
+            new LongOperation().execute(i + "");
+            busInfo.get(i).setDistanceNotLoading();
+        }
 
 
 
@@ -252,64 +244,64 @@ public class GetBusDistanceJSON {
             Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop" + params[0]);
             String howManyBusesPerStop = "25";
 
+            int busInfoIndex = Integer.parseInt(params[0]);
 
 
-
-            ArrayList<String> data = new ArrayList<>();
+            String data;
             Log.i("MyGetBusDistanceJSONn", "inside AsyncTask");
+            data = "poo";
             try {
 
                 BusInfo.clearJson();
 
                 startTime =  System.currentTimeMillis() ;
 
-                for(int i = 0, t = 0; i < busInfo.size(); i ++) {
 
 
 
 
-                    Log.i("MyGetBusDistanceJSONn", "busInfo.size(): " + busInfo.size());
-                    Log.i("MyGetBusDistanceJSONn", "i is : " + i );
-                    Log.i("MyGetBusDistanceJSONn", "data.length is : " + data.size() );
-                    Log.i("MyGetBusDistanceJSONn", "busInfo.get(i).getBusCode(): " + busInfo.get(i).getBusCode());
-                    stopCode = Integer.parseInt(busInfo.get(i).getBusCode());
-                    //Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
+
+                Log.i("MyGetBusDistanceJSONn", "busInfo.size(): " + busInfo.size());
+                Log.i("MyGetBusDistanceJSONn", "i is : " + busInfoIndex );
+
+                Log.i("MyGetBusDistanceJSONn", "busInfo.get(i).getBusCode(): " + busInfo.get(busInfoIndex).getBusCode());
+                stopCode = Integer.parseInt(busInfo.get(busInfoIndex).getBusCode());
+                //Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
 
 
-                    if(BusInfo.hasBusCodeBeenCalledJson(busInfo.get(i).getBusCode())){
+                if(BusInfo.hasBusCodeBeenCalledJson(busInfo.get(busInfoIndex).getBusCode())){
 
-                        //we only want one request for each stop
-                        //Log.i("MyGetBusDistanceJSONnn", "!hasBusCodeBeenCalledJson " + busInfo.get(i).getBusCode() );
-                        //Log.i("MyGetBusDistanceJSONnn", "i is : " + i );
+                    //we only want one request for each stop
+                    //Log.i("MyGetBusDistanceJSONnn", "!hasBusCodeBeenCalledJson " + busInfo.get(i).getBusCode() );
+                    //Log.i("MyGetBusDistanceJSONnn", "i is : " + i );
+
+                }else {
+                    Log.i("MyGetBusDistanceJSONnn", "hasBusCodeBeenCalledJson "  + busInfo.get(busInfoIndex).getBusCode());
+
+                    BusInfo.addBusCodeBeenCalledJson(busInfo.get(busInfoIndex).getBusCode());
+                    Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
+
+                    if (fromService) {
+
+                        busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
+                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+
+                        URL url = new URL(busDistanceURL);
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setReadTimeout(10000 /* milliseconds */);
+                        conn.setConnectTimeout(15000 /* milliseconds */);
+                        conn.setRequestMethod("GET");
+                        conn.setDoInput(true);
+                        // Starts the query
+                        conn.connect();
+                        InputStream stream = conn.getInputStream();
+
+                        data =  convertStreamToString(stream);
+                        stream.close();
+
 
                     }else {
-                        Log.i("MyGetBusDistanceJSONnn", "hasBusCodeBeenCalledJson "  + busInfo.get(i).getBusCode());
 
-                        BusInfo.addBusCodeBeenCalledJson(busInfo.get(i).getBusCode());
-                        Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
-
-                        if (fromService) {
-
-                            busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
-                                    + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
-
-                            URL url = new URL(busDistanceURL);
-                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                            conn.setReadTimeout(10000 /* milliseconds */);
-                            conn.setConnectTimeout(15000 /* milliseconds */);
-                            conn.setRequestMethod("GET");
-                            conn.setDoInput(true);
-                            // Starts the query
-                            conn.connect();
-                            InputStream stream = conn.getInputStream();
-
-                            data.add(i, convertStreamToString(stream));
-                            stream.close();
-
-                            break;
-                        }
-
-                        Log.i("MyGetBusDistanceJSONnn", "data length "  + data.size());
 
                         busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
                                 + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
@@ -328,12 +320,13 @@ public class GetBusDistanceJSON {
                         conn.connect();
                         InputStream stream = conn.getInputStream();
 
-                        data.add(t, convertStreamToString(stream));
-                        t++;
+                        data = convertStreamToString(stream);
+
                         stream.close();
                     }
                 }
-                Log.i("MyGetBusDistanceJSONn", "data size: " + data.size());
+
+
 
 
 
@@ -353,7 +346,7 @@ public class GetBusDistanceJSON {
             //long endTimeTT =  (System.currentTimeMillis() );
             Log.i("MyMapsActivityTime", "getBusDistance(busInfo) This is the time it takes to connect with all the data : " + ((System.currentTimeMillis()  - startTime)));
 
-            readAndParseJSON(data);
+            readAndParseJSON(data, busInfoIndex);
 
             return "Executed";
         }
