@@ -50,6 +50,12 @@ public class BusInfo implements Serializable {
         distance[1] = "Not available";
         distance[2] = "Not available";
     }
+
+    public void setDistanceNotLoading(){
+        distance[0] = "Loading";
+        distance[1] = "Loading";
+        distance[2] = "Loading";
+    }
     public void setAddedToPopup(boolean addedToPopup) {
         this.addedToPopup = addedToPopup;
     }

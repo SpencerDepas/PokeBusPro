@@ -757,6 +757,15 @@ public class MapsActivity extends FragmentActivity implements
                 public boolean onMarkerClick(Marker marker) {
                     //makes marker the same as clicking button
 
+                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+                    for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
+                        if (MapsActivity.busInfo.get(i).isAddedToPopup()) {
+                            MapsActivity.busInfo.get(i).setAddedToPopup(false);
+                        }
+
+                    }
+
+
                     if (marker.isInfoWindowShown()) {
 
                         cycleThroughPopup();
