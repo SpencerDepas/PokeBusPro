@@ -121,7 +121,7 @@ public class MapsActivity extends FragmentActivity implements
 
         if(!isOnline()){
             Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
+            Intent intent = new Intent(getApplicationContext() , NoConnection.class);
             startActivity(intent);
             this.finish();
 

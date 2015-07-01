@@ -25,7 +25,7 @@ public class BusInfo implements Serializable {
     int busDistanceArrayIndex;
     boolean addedToPopup = false;
     String longName;
-
+    String busCodeAndBusName;
 
     public BusInfo(){
         distance = new String[3];
@@ -127,7 +127,13 @@ public class BusInfo implements Serializable {
         busName = name;
     }
 
- 
+    public void setHashMapKey(String busCodeAndBusName) {
+        this.busCodeAndBusName = busCodeAndBusName;
+    }
+
+    public String getHashMapKey() {
+        return busCodeAndBusName;
+    }
 
     public void setBusId(String nameOfBus) {
         busNameId = nameOfBus;
@@ -159,11 +165,19 @@ public class BusInfo implements Serializable {
 
     }
 
-    public void resetbusDistanceCounter(){
-        busDistanceArrayIndex = 0;
+
+
+    public static void resetbusDistanceCounter(ArrayList<BusInfo> busInfo){
+
+
+        for(int i = 0 ; i < busInfo.size(); i++){
+            //each distance is put in one at a time
+            //this resets the counter
+            //must be done in order to put new distances in
+            busInfo.get(i).busDistanceArrayIndex = 0;
+
+        }
     }
-
-
 
 
     public void setBusRadius(String TaskNumber) {

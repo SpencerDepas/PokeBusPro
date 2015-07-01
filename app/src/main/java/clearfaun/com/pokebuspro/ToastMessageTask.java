@@ -19,8 +19,10 @@ class ToastMessageTask extends AsyncTask<String, String, String> {
         super.onProgressUpdate(values);
     }
     // This is executed in the context of the main GUI thread
-    protected void onPostExecute(String result){
-        Toast toast = Toast.makeText(PokeBusNoUI.mContext, result, Toast.LENGTH_SHORT);
-        toast.show();
+    protected void onPostExecute(String result) {
+        if (result.length() > 2) {
+            Toast toast = Toast.makeText(PokeBusNoUI.mContext, result, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }

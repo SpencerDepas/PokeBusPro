@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 /**
  * Created by spencer on 2/21/2015.
@@ -26,7 +27,8 @@ public class GetBusStopJSON {
     BusInfo tempBusInfo;
     ArrayList<BusInfo> busInfo;
 
-
+    static Hashtable<String, BusInfo> busInfoHashtable =
+            new Hashtable<String, BusInfo>();
     public volatile boolean parsingComplete = true;
 
 
@@ -85,7 +87,14 @@ public class GetBusStopJSON {
                         tempBusInfo.setBusId(tlt.getString("id"));
                         tempBusInfo.setBusStopLat(tlt.getString("lat"));
                         tempBusInfo.setBusStopLng(tlt.getString("lon"));
+
+
+                        tempBusInfo.setHashMapKey(tempBusInfo.getBusCode() + tempBusInfo.getBusName());
+                        Log.i("MyGetBusStopJSONy", " tempBusInfo.getHashMapKey() " + tempBusInfo.getHashMapKey());
                         busInfo.add(tempBusInfo);
+                        int lastIndex = busInfo.lastIndexOf(tempBusInfo);
+                        Log.i("MyGetBusStopJSONy", " tempBusInfo.getHashMapKey() " + busInfo.get(lastIndex).getHashMapKey());
+                        busInfoHashtable.put(tempBusInfo.getHashMapKey(), busInfo.get(lastIndex));
 
                     }
 
