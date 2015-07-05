@@ -219,10 +219,21 @@ public class GetBusDistanceJSON {
 
         //new LongOperation().execute("");
 
+        //calls for each busstop one thread per stop
+        //just makes it say that is loading
+        for(int i = 0, y = 0; i < busInfo.size(); i ++){
 
-        for(int i = 0; i < busInfo.size(); i ++){
-            new LongOperation().execute(i + "");
             busInfo.get(i).setDistanceNotLoading();
+            busInfo.get(i).setLongDistanceNotLoading();
+
+            if(!BusInfo.hasBusCodeBeenCalledJson(busInfo.get(i).getBusCode())){
+                BusInfo.addBusCodeBeenCalledJson(busInfo.get(i).getBusCode());
+                Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop y is :" + y);
+                y++;
+                new LongOperation().execute(i + "");
+
+            }
+
         }
 
 
@@ -269,62 +280,62 @@ public class GetBusDistanceJSON {
                 //Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
 
 
-                if(BusInfo.hasBusCodeBeenCalledJson(busInfo.get(busInfoIndex).getBusCode())){
 
-                    //we only want one request for each stop
-                    //Log.i("MyGetBusDistanceJSONnn", "!hasBusCodeBeenCalledJson " + busInfo.get(i).getBusCode() );
-                    //Log.i("MyGetBusDistanceJSONnn", "i is : " + i );
+                Log.i("MyGetBusDistanceJSONnn", "hasBusCodeBeenCalledJson "  + busInfo.get(busInfoIndex).getBusCode());
+
+                BusInfo.addBusCodeBeenCalledJson(busInfo.get(busInfoIndex).getBusCode());
+                Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
+
+                if (fromService) {
+
+                    busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
+                            + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+
+                    URL url = new URL(busDistanceURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setReadTimeout(10000 /* milliseconds */);
+                    conn.setConnectTimeout(15000 /* milliseconds */);
+                    conn.setRequestMethod("GET");
+                    conn.setDoInput(true);
+                    // Starts the query
+                    conn.connect();
+                    InputStream stream = conn.getInputStream();
+
+                    data =  convertStreamToString(stream);
+                    stream.close();
+
+
+                    readAndParseJSON(data, busInfoIndex);
 
                 }else {
-                    Log.i("MyGetBusDistanceJSONnn", "hasBusCodeBeenCalledJson "  + busInfo.get(busInfoIndex).getBusCode());
-
-                    BusInfo.addBusCodeBeenCalledJson(busInfo.get(busInfoIndex).getBusCode());
-                    Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
-
-                    if (fromService) {
-
-                        busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
-                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
-
-                        URL url = new URL(busDistanceURL);
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        conn.setReadTimeout(10000 /* milliseconds */);
-                        conn.setConnectTimeout(15000 /* milliseconds */);
-                        conn.setRequestMethod("GET");
-                        conn.setDoInput(true);
-                        // Starts the query
-                        conn.connect();
-                        InputStream stream = conn.getInputStream();
-
-                        data =  convertStreamToString(stream);
-                        stream.close();
 
 
-                    }else {
+                    busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
+                            + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
 
 
-                        busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
-                                + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
+                    Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop");
+                    Log.i("MyGetBusDistanceJSONn", "busDistanceURL:" + busDistanceURL);
+
+                    URL url = new URL(busDistanceURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setReadTimeout(10000 /* milliseconds */);
+                    conn.setConnectTimeout(15000 /* milliseconds */);
+                    conn.setRequestMethod("GET");
+                    conn.setDoInput(true);
+                    // Starts the query
+                    conn.connect();
+                    InputStream stream = conn.getInputStream();
+
+                    data = convertStreamToString(stream);
+
+                    stream.close();
 
 
-                        Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop");
-                        Log.i("MyGetBusDistanceJSONn", "busDistanceURL:" + busDistanceURL);
-
-                        URL url = new URL(busDistanceURL);
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        conn.setReadTimeout(10000 /* milliseconds */);
-                        conn.setConnectTimeout(15000 /* milliseconds */);
-                        conn.setRequestMethod("GET");
-                        conn.setDoInput(true);
-                        // Starts the query
-                        conn.connect();
-                        InputStream stream = conn.getInputStream();
-
-                        data = convertStreamToString(stream);
-
-                        stream.close();
-                    }
+                    BusInfo.resetbusDistanceCounter(busInfo);
+                    readAndParseJSON(data, busInfoIndex);
                 }
+
 
 
 
@@ -340,13 +351,11 @@ public class GetBusDistanceJSON {
 
 
 
-            BusInfo.resetbusDistanceCounter(busInfo);
-
 
             //long endTimeTT =  (System.currentTimeMillis() );
             Log.i("MyMapsActivityTime", "getBusDistance(busInfo) This is the time it takes to connect with all the data : " + ((System.currentTimeMillis()  - startTime)));
 
-            readAndParseJSON(data, busInfoIndex);
+
 
             return "Executed";
         }
