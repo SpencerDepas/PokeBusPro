@@ -206,8 +206,8 @@ public class MapsActivity extends FragmentActivity implements
                     mMap.setMyLocationEnabled(true);
                     CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(latLng)    // Sets the center of the map to Mountain View
-                            .bearing(bearing)                // Sets the orientation of the camera to east
-                            .zoom(zoom)                   // keeps zoom
+                            .bearing(bearing)           // Sets the orientation of the camera to east
+                            .zoom(zoom)                 // keeps zoom
                             .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                             .build();                   // Creates a CameraPosition from the builder
                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));

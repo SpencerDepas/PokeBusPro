@@ -63,7 +63,6 @@
 
             <com.melnykov.fab.FloatingActionButton
                 android:id="@+id/options_button"
-                android:layout_above="@+id/options_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -83,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_margin="16dp"
-                android:src="@drawable/ic_action_location_found"
+                android:src="@drawable/ic_action_replay"
                 fab:fab_colorNormal="@color/white"
                 fab:fab_colorPressed="@color/yellow"
                 fab:fab_colorRipple="@color/translucent_red"

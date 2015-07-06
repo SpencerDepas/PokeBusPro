@@ -376,18 +376,27 @@ public class GetBusDistanceJSON {
             Log.i("MyAsyncTasdk", " fromService distance" + busInfo.get(busInfoIndex).distance[1]);
             Log.i("MyAsyncTasdk", " fromService distance" + busInfo.get(busInfoIndex).distance[2]);
 
-            //remove loading
-            if(busInfo.get(busInfoIndex).distance[0].equals("Loading")){
-                busInfo.get(busInfoIndex).distance[0] = "Not available";
-                busInfo.get(busInfoIndex).distance[1] = "Not available";
-                busInfo.get(busInfoIndex).distance[2] = "Not available";
-            }else if (busInfo.get(busInfoIndex).getDistance()[1].equals("Loading")) {
-                busInfo.get(busInfoIndex).distance[1] = "Not available";
-                busInfo.get(busInfoIndex).distance[2] = "Not available";
+            for(int i = 0; i < busInfo.size(); i ++){
+
+                if(busInfo.get(i).getBusCode().equals(busCodeJsonString)){
+                    //remove loading
+                    if(busInfo.get(i).distance[0].equals("Loading")){
+                        busInfo.get(i).distance[0] = "Not available";
+                        busInfo.get(i).distance[1] = "Not available";
+                        busInfo.get(i).distance[2] = "Not available";
+                    }else if (busInfo.get(i).getDistance()[1].equals("Loading")) {
+                        busInfo.get(i).distance[1] = "Not available";
+                        busInfo.get(i).distance[2] = "Not available";
+                    }
+                    if (busInfo.get(i).getDistance()[1].equals("Loading")) {
+                        busInfo.get(i).distance[2] = "Not available";
+                    }
+
+                }
+
+
             }
-            if (busInfo.get(busInfoIndex).getDistance()[1].equals("Loading")) {
-                busInfo.get(busInfoIndex).distance[2] = "Not available";
-            }
+
 
             Log.i("MyAsyncTask", " onPostExecute");
 
