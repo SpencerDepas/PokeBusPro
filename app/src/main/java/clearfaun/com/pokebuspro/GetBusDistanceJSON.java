@@ -402,25 +402,42 @@ public class GetBusDistanceJSON {
 
                 for(int i = 0; i < busInfo.size(); i ++){
 
+
                     if(busInfo.get(i).getBusCode().equals(busCodeJsonString)){
-                        AddMarkers.updateMarkersToMap(busInfo.get(i), i );
+                        Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).getBusCode() " + busInfo.get(i).getBusCode());
+
                         //remove loading
                         if(busInfo.get(i).distance[0].equals("Loading")){
                             busInfo.get(i).distance[0] = "Not available";
                             busInfo.get(i).distance[1] = "Not available";
                             busInfo.get(i).distance[2] = "Not available";
-                        }else if (busInfo.get(i).getDistance()[1].equals("Loading")) {
+
+
+                        } else  if (busInfo.get(i).getDistance()[1].equals("Loading")) {
                             busInfo.get(i).distance[1] = "Not available";
                             busInfo.get(i).distance[2] = "Not available";
-                        }
-                        if (busInfo.get(i).getDistance()[1].equals("Loading")) {
+
+                        }else if (busInfo.get(i).getDistance()[2].equals("Loading")) {
                             busInfo.get(i).distance[2] = "Not available";
+
                         }
+
+                        //update marker
+                        //AddMarkers.updateMarkersToMap(busInfo.get(i), i );
 
                     }
-
-
                 }
+
+
+                for(int i = 0; i < busInfo.size(); i ++){
+                    if(busInfo.get(i).getBusCode().equals(busCodeJsonString)){
+                        //update marker
+                        AddMarkers.updateMarkersToMap(busInfo.get(i), i );
+
+                    }
+                }
+
+
             }
 
 

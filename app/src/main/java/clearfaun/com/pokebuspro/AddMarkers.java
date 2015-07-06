@@ -232,6 +232,7 @@ public class AddMarkers {
 
 
 
+
         Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getId(): " + marker[busIndexFormarker].getId());
         Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getSnippet(): " + marker[busIndexFormarker].getSnippet());
         Log.i("MyAddMarkers", "updateMarkersToMap :   marker.length: " + marker.length);
