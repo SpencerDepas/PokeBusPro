@@ -411,31 +411,22 @@ public class GetBusDistanceJSON {
                             busInfo.get(i).distance[0] = "Not available";
                             busInfo.get(i).distance[1] = "Not available";
                             busInfo.get(i).distance[2] = "Not available";
-
+                            AddMarkers.updateMarkersToMap(busInfo.get(i), i );
 
                         } else  if (busInfo.get(i).getDistance()[1].equals("Loading")) {
                             busInfo.get(i).distance[1] = "Not available";
                             busInfo.get(i).distance[2] = "Not available";
-
+                            AddMarkers.updateMarkersToMap(busInfo.get(i), i );
                         }else if (busInfo.get(i).getDistance()[2].equals("Loading")) {
                             busInfo.get(i).distance[2] = "Not available";
-
+                            AddMarkers.updateMarkersToMap(busInfo.get(i), i );
                         }
 
-                        //update marker
-                        //AddMarkers.updateMarkersToMap(busInfo.get(i), i );
+                        
 
                     }
                 }
 
-
-                for(int i = 0; i < busInfo.size(); i ++){
-                    if(busInfo.get(i).getBusCode().equals(busCodeJsonString)){
-                        //update marker
-                        AddMarkers.updateMarkersToMap(busInfo.get(i), i );
-
-                    }
-                }
 
 
             }
