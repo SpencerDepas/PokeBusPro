@@ -224,36 +224,36 @@ public class AddMarkers {
 
     }
 
-    public static void updateMarkersToMap(ArrayList<BusInfo> busInfo) {
+    public static void updateMarkersToMap(BusInfo busInfo, int busIndexFormarker) {
 
         if(MapsActivity.spinner.getVisibility() == View.INVISIBLE){
             MapsActivity.spinner.setVisibility(View.VISIBLE);
         }
 
 
-        for (int i = 0; i < busInfo.size() && i < marker.length; i++) {
-            Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getId(): " + marker[i].getId());
-            Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getSnippet(): " + marker[i].getSnippet());
-            Log.i("MyAddMarkers", "updateMarkersToMap :   marker.length: " + marker.length);
-            Log.i("MyAddMarkers", "updateMarkersToMap :  getBusName " + busInfo.get(i).getBusName());
-            Log.i("MyAddMarkers", "updateMarkersToMap :  getBusCode " + busInfo.get(i).getBusCode());
-            Log.i("MyAddMarkers", "updateMarkersToMap :  i  " + i);
+
+        Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getId(): " + marker[busIndexFormarker].getId());
+        Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getSnippet(): " + marker[busIndexFormarker].getSnippet());
+        Log.i("MyAddMarkers", "updateMarkersToMap :   marker.length: " + marker.length);
+        Log.i("MyAddMarkers", "updateMarkersToMap :  getBusName " + busInfo.getBusName());
+        Log.i("MyAddMarkers", "updateMarkersToMap :  getBusCode " + busInfo.getBusCode());
+        Log.i("MyAddMarkers", "updateMarkersToMap :  i  " + busIndexFormarker);
 
 
-            marker[i].setSnippet(busInfo.get(i).getDistance()[0]
-                        + "\n" + busInfo.get(i).getDistance()[1]
-                        + "\n" + busInfo.get(i).getDistance()[2]
-                    );
+        marker[busIndexFormarker].setSnippet(busInfo.getDistance()[0]
+                    + "\n" + busInfo.getDistance()[1]
+                    + "\n" + busInfo.getDistance()[2]
+                );
 
-            if(marker[i].isInfoWindowShown() && marker[i].getTitle().equals(MapsActivity.busInfo.get(i).getBusCode())) {
-                Log.i("MyAddMarkerss", "marker[i].getId() " + marker[i].getId());
-                Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[i].getTitle());
-                busInfo.get(i).setAddedToPopup(false);
-                marker[i].hideInfoWindow();
-                marker[i].showInfoWindow();
-            }
-
+        if(marker[busIndexFormarker].isInfoWindowShown() && marker[busIndexFormarker].getTitle().equals(MapsActivity.busInfo.get(busIndexFormarker).getBusCode())) {
+            Log.i("MyAddMarkerss", "marker[i].getId() " + marker[busIndexFormarker].getId());
+            Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[busIndexFormarker].getTitle());
+            busInfo.setAddedToPopup(false);
+            marker[busIndexFormarker].hideInfoWindow();
+            marker[busIndexFormarker].showInfoWindow();
         }
+
+
         if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
             MapsActivity.spinner.setVisibility(View.INVISIBLE);
         }
