@@ -131,10 +131,11 @@ public class GetBusDistanceJSON {
                     Log.i("MyGetBusDistanceJSONt", "TEST howManyStops " + incomingBusesForStop);
                     Log.i("MyGetBusDistanceJSONtu", " busCodeJsonString :" + busCodeJsonString);
 
-                    Log.i("MyGetBusDistanceJSONtu", " busInfo.indexOf(\"301648\"); :" + busInfo.indexOf("306562"));
+                    //Log.i("MyGetBusDistanceJSONtu", " busInfo.indexOf(\"301648\"); :" + busInfo.indexOf("306562"));
 
                     if (fromService && busInfo.get(0).getBusName().equals(busNameObject)) {
                         busInfo.get(0).setBusDistance(presentableDistanceString);
+                        Log.i("MyGetBusStopJSONy", "fromService && busInfo.get(0).getBusName().equals(busNameObject :" + presentableDistanceString);
                         Log.i("MyGetBusStopJSONy", "presentableDistanceString :" + presentableDistanceString);
                         Log.i("MyGetBusStopJSONy", "busInfo.get(0)." + busInfo.get(0).getDistance()[0]);
                     } else
@@ -151,7 +152,7 @@ public class GetBusDistanceJSON {
                         Log.i("MyGetBusStopJSONy", "PresentableDistance " + presentableDistanceString);
                         GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).setBusDistance(presentableDistanceString);
                         GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).setLongName(destinationName);
-                        //busInfo.get(z).setBusDistance(presentableDistanceString);
+
 
 
 
@@ -215,26 +216,28 @@ public class GetBusDistanceJSON {
     public void fetchBusDistanceJson(ArrayList<BusInfo> busInfoIn) {
 
         busInfo = busInfoIn;
-        Log.i("fetchBusDistanceJson", "busInfo" + busInfo.size());
+        BusInfo.clearJson();
 
         //new LongOperation().execute("");
 
         //calls for each busstop one thread per stop
         //just makes it say that is loading
-        for(int i = 0, y = 0; i < busInfo.size(); i ++){
+        for(int i = 0; i < busInfo.size(); i ++){
 
-            busInfo.get(i).setDistanceNotLoading();
+            busInfo.get(i).setDistanceLoading();
             busInfo.get(i).setLongDistanceNotLoading();
 
             if(!BusInfo.hasBusCodeBeenCalledJson(busInfo.get(i).getBusCode())){
                 BusInfo.addBusCodeBeenCalledJson(busInfo.get(i).getBusCode());
-                Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop y is :" + y);
-                y++;
                 new LongOperation().execute(i + "");
-
+                BusInfo.totalNumberOfBusStopsCalled ++;
+                Log.i("hasBusCodeBeenCalled", "busInfo.get(i).getBusCode()");
+                Log.i("hasBusCodeBeenCalled", "busInfo.get(i).getBusCode()" + busInfo.get(i).getBusCode());
             }
 
         }
+
+        //reset what has been called
 
 
 
@@ -246,6 +249,8 @@ public class GetBusDistanceJSON {
         return s.hasNext() ? s.next() : "";
     }
 
+    int busInfoIndex;
+
     private class LongOperation extends AsyncTask<String, Void, String> {
 
 
@@ -254,8 +259,9 @@ public class GetBusDistanceJSON {
         protected String doInBackground(String... params) {
             Log.i("MyGetBusDistanceJSONn", "inside fetchBusStop" + params[0]);
             String howManyBusesPerStop = "25";
+            
 
-            int busInfoIndex = Integer.parseInt(params[0]);
+            busInfoIndex = Integer.parseInt(params[0]);
 
 
             String data;
@@ -263,7 +269,6 @@ public class GetBusDistanceJSON {
             data = "poo";
             try {
 
-                BusInfo.clearJson();
 
                 startTime =  System.currentTimeMillis() ;
 
@@ -286,7 +291,9 @@ public class GetBusDistanceJSON {
                 BusInfo.addBusCodeBeenCalledJson(busInfo.get(busInfoIndex).getBusCode());
                 Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
 
+                //service is from the widget button
                 if (fromService) {
+
 
                     busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
                             + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
@@ -332,7 +339,8 @@ public class GetBusDistanceJSON {
                     stream.close();
 
 
-                    BusInfo.resetbusDistanceCounter(busInfo);
+
+                    busInfo.get(busInfoIndex).resetBusDistanceCounter(busInfo.get(busInfoIndex));
                     readAndParseJSON(data, busInfoIndex);
                 }
 
@@ -363,6 +371,24 @@ public class GetBusDistanceJSON {
         @Override
         protected void onPostExecute(String result) {
 
+            Log.i("MyAsyncTasdk", " fromService code  " + busInfo.get(busInfoIndex).getBusCode());
+            Log.i("MyAsyncTasdk", " fromService distance  " + busInfo.get(busInfoIndex).distance[0]);
+            Log.i("MyAsyncTasdk", " fromService distance" + busInfo.get(busInfoIndex).distance[1]);
+            Log.i("MyAsyncTasdk", " fromService distance" + busInfo.get(busInfoIndex).distance[2]);
+
+            //remove loading
+            if(busInfo.get(busInfoIndex).distance[0].equals("Loading")){
+                busInfo.get(busInfoIndex).distance[0] = "Not available";
+                busInfo.get(busInfoIndex).distance[1] = "Not available";
+                busInfo.get(busInfoIndex).distance[2] = "Not available";
+            }else if (busInfo.get(busInfoIndex).getDistance()[1].equals("Loading")) {
+                busInfo.get(busInfoIndex).distance[1] = "Not available";
+                busInfo.get(busInfoIndex).distance[2] = "Not available";
+            }
+            if (busInfo.get(busInfoIndex).getDistance()[1].equals("Loading")) {
+                busInfo.get(busInfoIndex).distance[2] = "Not available";
+            }
+
             Log.i("MyAsyncTask", " onPostExecute");
 
             long endTime =  (System.currentTimeMillis() );
@@ -379,10 +405,12 @@ public class GetBusDistanceJSON {
                 Log.i("MyAsyncTask", " AddMarkers.marker == null");
                 //to make markers on first run
                 AddMarkers.addMarkersToMap(busInfo);
+
             }else{
                 Log.i("MyAsyncTask", " AsyncTask  AddMarkers.markersAdded");
-                //update marker
-                AddMarkers.updateMarkersToMap(busInfo);
+
+                    AddMarkers.updateMarkersToMap(busInfo);
+
             }
 
 

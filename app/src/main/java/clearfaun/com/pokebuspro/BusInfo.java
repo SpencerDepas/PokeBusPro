@@ -26,6 +26,18 @@ public class BusInfo implements Serializable {
     boolean addedToPopup = false;
     String longName;
     String busCodeAndBusName;
+    static int totalNumberOfBusStopsCalled ;
+    static int finishedLoadingBusStops;
+
+
+    static boolean hasEveryBusStopFinishedLoading(){
+        if(totalNumberOfBusStopsCalled -1  == finishedLoadingBusStops){
+
+            return true;
+        }
+        return false;
+    }
+
 
     public BusInfo(){
         distance = new String[3];
@@ -49,13 +61,51 @@ public class BusInfo implements Serializable {
         distance[0] = "Not available";
         distance[1] = "Not available";
         distance[2] = "Not available";
+        busDistanceArrayIndex = 0;
     }
 
-    public void setDistanceNotLoading(){
+    public void setDistanceLoading(){
         distance[0] = "Loading";
         distance[1] = "Loading";
         distance[2] = "Loading";
+        busDistanceArrayIndex = 0;
+
     }
+
+   /* static void removeLoading(ArrayList<BusInfo> busInfo){
+
+        Log.i("removeLoading", " busInfo.size" + busInfo.size());
+
+        for(int i = 0; i < busInfo.size(); i ++) {
+
+
+            Log.i("removeLoading", " busInfo.buscode" + busInfo.get(i).getBusCode());
+
+            *//*if (busInfo.get(i).getDistance()[0].equals("Loading")) {
+                busInfo.get(i).distance[0] = "Not available";
+                busInfo.get(i).distance[1] = "Not available";
+                busInfo.get(i).distance[2] = "Not available";
+                Log.i("removeLoading", " busInfo.buscode" + busInfo.get(i).getBusCode());
+                Log.i("removeLoading", " busInfo.get(i).distance[2]" + busInfo.get(i).distance[0]);
+                Log.i("removeLoading", " busInfo.get(i).distance[2]" + busInfo.get(i).distance[1]);
+                Log.i("removeLoading", " busInfo.get(i).distance[2]" + busInfo.get(i).distance[2]);
+            }
+            if (busInfo.get(i).getDistance()[1].equals("Loading")) {
+                busInfo.get(i).distance[1] = "Not available";
+                busInfo.get(i).distance[2] = "Not available";
+                Log.i("removeLoading", " busInfo.buscode" + busInfo.get(i).getBusCode());
+                Log.i("removeLoading", " busInfo.get(i).distance[2]" + busInfo.get(i).distance[0]);
+                Log.i("removeLoading", " busInfo.get(i).distance[2]" + busInfo.get(i).distance[1]);
+            }
+            if (busInfo.get(i).getDistance()[1].equals("Loading")) {
+                busInfo.get(i).distance[2] = "Not available";
+                Log.i("removeLoading", " busInfo.buscode" + busInfo.get(i).getBusCode());
+                Log.i("removeLoading", " busInfo.get(i).distance[2]" + busInfo.get(i).distance[2]);
+            }*//*
+        }
+
+    }*/
+
 
     public void setLongDistanceNotLoading(){
         longName = "Loading";
@@ -165,28 +215,25 @@ public class BusInfo implements Serializable {
 
         //made so you can put in one at a time
 
-
-
-       if(busDistanceArrayIndex < 3) {
+        Log.i("hasBusCodeBeenploplo", "buscode " + getBusCode());
+        Log.i("hasBusCodeBeenploplo", "busDistance " + busDistance);
+        Log.i("hasBusCodeBeenploplo", "busDistanceArrayIndex " + busDistanceArrayIndex);
+        if(busDistanceArrayIndex < 3) {
            distance[busDistanceArrayIndex] = busDistance;
            busDistanceArrayIndex++;
-       }
+        }
 
 
     }
 
 
 
-    public static void resetbusDistanceCounter(ArrayList<BusInfo> busInfo){
+    public void resetBusDistanceCounter(BusInfo busInfo){
 
 
-        for(int i = 0 ; i < busInfo.size(); i++){
-            //each distance is put in one at a time
-            //this resets the counter
-            //must be done in order to put new distances in
-            busInfo.get(i).busDistanceArrayIndex = 0;
+        busInfo.busDistanceArrayIndex = 0;
 
-        }
+
     }
 
 
@@ -203,12 +250,13 @@ public class BusInfo implements Serializable {
 
     public static boolean hasBusCodeBeenCalledJson(String busCode){
 
-        for(int i = 0 ; i < addedBusCode.size(); i ++){
-            if(addedBusCode.get(i).equals(busCode)){
-                return true;
+        if(addedBusCode.size() > 0) {
+            for (int i = 0; i < addedBusCode.size(); i++) {
+                if (addedBusCode.get(i).equals(busCode)) {
+                    return true;
+                }
             }
         }
-
         return false;
     }
 
