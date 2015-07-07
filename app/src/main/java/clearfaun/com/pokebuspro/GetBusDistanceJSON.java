@@ -422,7 +422,7 @@ public class GetBusDistanceJSON {
                             AddMarkers.updateMarkersToMap(busInfo.get(i), i );
                         }
 
-                        
+
 
                     }
                 }

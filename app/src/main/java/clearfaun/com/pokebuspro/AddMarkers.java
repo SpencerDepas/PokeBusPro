@@ -239,7 +239,8 @@ public class AddMarkers {
         Log.i("MyAddMarkers", "updateMarkersToMap :  getBusName " + busInfo.getBusName());
         Log.i("MyAddMarkers", "updateMarkersToMap :  getBusCode " + busInfo.getBusCode());
         Log.i("MyAddMarkers", "updateMarkersToMap :  i  " + busIndexFormarker);
-
+        Log.i("MyAddMarkerss", "marker[i].getId() " + marker[busIndexFormarker].getId());
+        Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[busIndexFormarker].getTitle());
 
         marker[busIndexFormarker].setSnippet(busInfo.getDistance()[0]
                     + "\n" + busInfo.getDistance()[1]
@@ -254,6 +255,16 @@ public class AddMarkers {
             marker[busIndexFormarker].showInfoWindow();
         }
 
+        if(marker[busIndexFormarker].isInfoWindowShown() ) {
+
+            if(marker[busIndexFormarker].getSnippet().equals("Loading\n" +
+                    "    Loading\n" +
+                    "    Loading")){
+                marker[busIndexFormarker].hideInfoWindow();
+                marker[busIndexFormarker].showInfoWindow();
+            }
+
+        }
 
         if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
             MapsActivity.spinner.setVisibility(View.INVISIBLE);
