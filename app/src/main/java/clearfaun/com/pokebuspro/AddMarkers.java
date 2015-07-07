@@ -230,7 +230,10 @@ public class AddMarkers {
             MapsActivity.spinner.setVisibility(View.VISIBLE);
         }
 
-
+        if(marker[busIndexFormarker].isInfoWindowShown() ) {
+            marker[busIndexFormarker].hideInfoWindow();
+            marker[busIndexFormarker].showInfoWindow();
+        }
 
 
         Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getId(): " + marker[busIndexFormarker].getId());
@@ -255,16 +258,10 @@ public class AddMarkers {
             marker[busIndexFormarker].showInfoWindow();
         }
 
-        if(marker[busIndexFormarker].isInfoWindowShown() ) {
 
-            if(marker[busIndexFormarker].getSnippet().equals("Loading\n" +
-                    "    Loading\n" +
-                    "    Loading")){
-                marker[busIndexFormarker].hideInfoWindow();
-                marker[busIndexFormarker].showInfoWindow();
-            }
 
-        }
+
+
 
         if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
             MapsActivity.spinner.setVisibility(View.INVISIBLE);
