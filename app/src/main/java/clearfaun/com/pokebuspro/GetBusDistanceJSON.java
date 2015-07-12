@@ -394,25 +394,10 @@ public class GetBusDistanceJSON {
             }else if(AddMarkers.marker == null){
                 Log.i("MyAsyncTask", " AddMarkers.marker == null");
 
-                //remove loading
-                if(busInfo.get(busInfoIndex).distance[0].equals("Loading")){
-                    Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).distance[0].equals(\"Loading\" getBusCode() " + busInfo.get(busInfoIndex).getBusCode());
-                    busInfo.get(busInfoIndex).distance[0] = "Not available";
-                    busInfo.get(busInfoIndex).distance[1] = "Not available";
-                    busInfo.get(busInfoIndex).distance[2] = "Not available";
-                    AddMarkers.addMarkersToMap(busInfo);
 
-                } else  if (busInfo.get(busInfoIndex).getDistance()[1].equals("Loading")) {
-                    Log.i("MyAsyncTaskJJJJJ", " (busInfo.get(i).getDistance()[1].equals(\"Loading\")).getBusCode() " + busInfo.get(busInfoIndex).getBusCode());
-                    busInfo.get(busInfoIndex).distance[1] = "Not available";
-                    busInfo.get(busInfoIndex).distance[2] = "Not available";
-                    AddMarkers.addMarkersToMap(busInfo);
-                }else if (busInfo.get(busInfoIndex).getDistance()[2].equals("Loading")) {
-                    Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).getDistance()[2].equals(\"Loading\"))getBusCode() " + busInfo.get(busInfoIndex).getBusCode());
-                    busInfo.get(busInfoIndex).distance[2] = "Not available";
-                    AddMarkers.addMarkersToMap(busInfo);
-                }
 
+
+                AddMarkers.addMarkersToMap(busInfo);
 
 
                 //to make markers on first run
@@ -427,25 +412,8 @@ public class GetBusDistanceJSON {
 
                     if(busInfo.get(i).getBusCode().equals(busCodeJsonString)){
                         //Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).getBusCode() " + busInfo.get(i).getBusCode());
+                        AddMarkers.updateMarkersToMap(busInfo.get(i), i );
 
-                        //remove loading
-                        if(busInfo.get(i).distance[0].equals("Loading")){
-                            Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).distance[0].equals(\"Loading\" getBusCode() " + busInfo.get(i).getBusCode());
-                            busInfo.get(i).distance[0] = "Not available";
-                            busInfo.get(i).distance[1] = "Not available";
-                            busInfo.get(i).distance[2] = "Not available";
-                            AddMarkers.updateMarkersToMap(busInfo.get(i), i );
-
-                        } else  if (busInfo.get(i).getDistance()[1].equals("Loading")) {
-                            Log.i("MyAsyncTaskJJJJJ", " (busInfo.get(i).getDistance()[1].equals(\"Loading\")).getBusCode() " + busInfo.get(i).getBusCode());
-                            busInfo.get(i).distance[1] = "Not available";
-                            busInfo.get(i).distance[2] = "Not available";
-                            AddMarkers.updateMarkersToMap(busInfo.get(i), i );
-                        }else if (busInfo.get(i).getDistance()[2].equals("Loading")) {
-                            Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).getDistance()[2].equals(\"Loading\"))getBusCode() " + busInfo.get(i).getBusCode());
-                            busInfo.get(i).distance[2] = "Not available";
-                            AddMarkers.updateMarkersToMap(busInfo.get(i), i );
-                        }
 
 
 

@@ -134,7 +134,7 @@ public class AddMarkers {
 
     }
 
-
+    static int pokeBusMarkerIndex;
 
     public static void openClosestSnippet(ArrayList<BusInfo> busInfo){
         //this should open
@@ -181,6 +181,9 @@ public class AddMarkers {
                         if (busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() + "")) {
                             //if a poke bus is in range then it will opon in stead of the closest bus stop
                             busInfoIndex = i;
+                            pokeBusMarkerIndex = i;
+                            marker[i].hideInfoWindow();
+                            marker[i].showInfoWindow();
                             break;
                         }
 
@@ -193,6 +196,7 @@ public class AddMarkers {
         marker[busInfoIndex].showInfoWindow();
 
     }
+
 
 
     public static void addPokeBusColor(){
@@ -230,9 +234,22 @@ public class AddMarkers {
             MapsActivity.spinner.setVisibility(View.VISIBLE);
         }
 
-        if(marker[busIndexFormarker].isInfoWindowShown() ) {
-            marker[busIndexFormarker].hideInfoWindow();
-            marker[busIndexFormarker].showInfoWindow();
+
+        //remove loading
+        if(busInfo.distance[0].equals("Loading")){
+            Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).distance[0].equals(\"Loading\" getBusCode() " + busInfo.getBusCode());
+            busInfo.distance[0] = "Not available";
+            busInfo.distance[1] = "Not available";
+            busInfo.distance[2] = "Not available";
+
+        } else  if (busInfo.getDistance()[1].equals("Loading")) {
+            Log.i("MyAsyncTaskJJJJJ", " (busInfo.get(i).getDistance()[1].equals(\"Loading\")).getBusCode() " + busInfo.getBusCode());
+            busInfo.distance[1] = "Not available";
+            busInfo.distance[2] = "Not available";
+        }else if (busInfo.getDistance()[2].equals("Loading")) {
+            Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).getDistance()[2].equals(\"Loading\"))getBusCode() " + busInfo.getBusCode());
+            busInfo.distance[2] = "Not available";
+
         }
 
 
@@ -268,7 +285,15 @@ public class AddMarkers {
         }
         //+ "\n" + busInfo.get(i).getDistance()[2])
         //Log.i("MyAddMarkers", " after updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
+
+
+        Log.i("MyAddMarkerst", "updateMarkersToMap  marker[pokeBusMarkerIndex].getSnippet() " + marker[pokeBusMarkerIndex].getSnippet() );
+
+
+
+
         Log.i("MyAddMarkers", "updateMarkersToMap  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
+
     }
 
 
