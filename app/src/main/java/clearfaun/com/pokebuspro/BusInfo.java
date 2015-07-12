@@ -64,6 +64,12 @@ public class BusInfo implements Serializable {
         busDistanceArrayIndex = 0;
     }
 
+    static void onPauseNotForToastService(ArrayList<BusInfo> busInfo){
+        for (int i = 0; i < busInfo.size(); i++) {
+            busInfo.get(i).setForNoUIToast(false);
+        }
+    }
+
     public void setDistanceLoading(){
         distance[0] = "Loading";
         distance[1] = "Loading";
@@ -107,7 +113,7 @@ public class BusInfo implements Serializable {
     }*/
 
 
-    public void setLongDistanceNotLoading(){
+    public void setLongDistanceLoading(){
         longName = "Loading";
     }
     public void setAddedToPopup(boolean addedToPopup) {

@@ -49,7 +49,7 @@ public class Service extends IntentService {
 
             Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
             Log.i("MyService", "loaded object: " + busInfoArrayList.size());
-
+            Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusCode());
 
             //so get bus distance knows where we are coming from. API key stuff
             for (int i = 0; i < busInfoArrayList.size(); i++) {

@@ -572,7 +572,7 @@ public class MapsActivity extends FragmentActivity implements
 
         stopTimerTask();
         savePokeBus();
-
+        //BusInfo.onPauseNotForToastService(busInfo);
         //mLocationProvider.disconnect();
         //busInfo.clear();
         //AddMarkers.marker = null;
