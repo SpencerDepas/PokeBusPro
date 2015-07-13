@@ -288,6 +288,21 @@ public class MapsActivity extends FragmentActivity implements
         //gets buses for each bus stop
         Log.i("MyMapsActivityy", "AddMarkers.lastOpenSnippet " + AddMarkers.lastOpenSnippet);
 
+        String currentBusCode = AddMarkers.lastOpenSnippet;
+
+
+
+
+        for(int i = 0 ; i < AddMarkers.marker.length; i ++){
+
+            if(currentBusCode.equals(AddMarkers.marker[i].getTitle())){
+                Log.i("MyMapsActivityy", "AddMarkers.marker[i].getTitle() " + AddMarkers.marker[i].getTitle());
+            }
+
+        }
+
+
+
         if(busIndexForBusStopCycle.size() == 0 ) {
             if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
                 for (int i = 0; i < busInfo.size(); i++) {
@@ -441,7 +456,7 @@ public class MapsActivity extends FragmentActivity implements
 
                         if (busInfo.get(i).getBusCode().equals(finalBuscode) && busInfo.get(i).getBusName().equals(BusInfo.getDisplayedBusName())) {
                             pokeBusbusInfo.add(busInfo.get(i));
-                            MapsActivity.toasterShort("PokeBus set: " + busInfo.get(i).busName + "\n" + finalBuscode);
+                            MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(i).busName + " : " + finalBuscode);
                             break;
                         }
 
@@ -571,11 +586,19 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "onPause()zoom:" + zoom);
 
         stopTimerTask();
-        savePokeBus();
+
         //BusInfo.onPauseNotForToastService(busInfo);
         //mLocationProvider.disconnect();
         //busInfo.clear();
         //AddMarkers.marker = null;
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+
+        savePokeBus();
+
+        finish();
     }
 
     @Override
