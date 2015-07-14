@@ -130,13 +130,14 @@ public class GetBusDistanceJSON {
                     //Log.i("MyGetBusDistanceJSONt", "TempHashName :" + GetBusStopJSON.busInfoHashtable.get(busCodeJsonString + busNameObject).getBusCode());
 
                     Log.i("MyGetBusDistanceJSONt", "TEST howManyStops " + incomingBusesForStop);
-                    Log.i("MyGetBusDistanceJSONtu", " busCodeJsonString :" + busCodeJsonString);
+                    Log.i("MyGetBusDistanceJSONt", " busCodeJsonString :" + busCodeJsonString);
 
                     //Log.i("MyGetBusDistanceJSONtu", " busInfo.indexOf(\"301648\"); :" + busInfo.indexOf("306562"));
 
-                    if (fromService && busInfo.get(0).getBusName().equals(busNameObject) ) {
+                    if (fromService && busInfo.get(Service.indexOfClosestBus).getBusName().equals(busNameObject)
+                            ) {
                         Log.i("MyGetBusDistanceJSONtu", " in from service :" + busCodeJsonString);
-                        busInfo.get(0).setBusDistance(presentableDistanceString);
+                        busInfo.get(Service.indexOfClosestBus).setBusDistance(presentableDistanceString);
                         Log.i("MyGetBusDistanceJSONtu", " in from service presentableDistanceString:" + presentableDistanceString);
                         Log.i("MyGetBusStopJSONy", "fromService && busInfo.get(0).getBusName().equals(busNameObject :" + presentableDistanceString);
                         Log.i("MyGetBusStopJSONy", "presentableDistanceString :" + presentableDistanceString);
@@ -220,7 +221,7 @@ public class GetBusDistanceJSON {
 
         busInfo = busInfoIn;
         BusInfo.clearJson();
-        Log.i("fetchBusDistanceJson", "fromService:" + fromService);
+
         //new LongOperation().execute("");
         fromService =  false;
         try{
@@ -229,7 +230,7 @@ public class GetBusDistanceJSON {
         }catch(Exception e){
             Log.i("fetchBusDistanceJson", " Exception e " + e);
         }
-        Log.i("fetchBusDistanceJson", " onPreExecute  fromService" + fromService );
+        Log.i("fetchBusDistanceJson", " onPreExecute  fromService " + fromService );
         //calls for each busstop one thread per stop
         //just makes it say that is loading
         if(!fromService) {
@@ -296,7 +297,8 @@ public class GetBusDistanceJSON {
                 Log.i("MyGetBusDistanceJSONn", "i is : " + busInfoIndex );
 
                 Log.i("MyGetBusDistanceJSONn", "busInfo.get(i).getBusCode(): " + busInfo.get(busInfoIndex).getBusCode());
-                stopCode = Integer.parseInt(busInfo.get(busInfoIndex).getBusCode());
+             
+
                 //Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
 
 
@@ -308,7 +310,7 @@ public class GetBusDistanceJSON {
 
                 //service is from the widget button
                 if (fromService) {
-
+                    stopCode = Integer.parseInt(busInfo.get(Service.indexOfClosestBus).getBusCode());
 
                     busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
                             + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
@@ -331,7 +333,7 @@ public class GetBusDistanceJSON {
 
                 }else {
 
-
+                    stopCode = Integer.parseInt(busInfo.get(busInfoIndex).getBusCode());
                     busDistanceURL = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_"
                             + stopCode + "&MaximumStopVisits=" + howManyBusesPerStop;
 
@@ -404,10 +406,10 @@ public class GetBusDistanceJSON {
             if(fromService){
                 Log.i("MyAsyncTask", " fromService " + fromService);
                 Log.i("MyAsyncTask", " fromService");
-                Log.i("MyAsyncTask", " fromService code  " + busInfo.get(busInfoIndex).getBusCode());
-                Log.i("MyAsyncTask", " fromService distance  " + busInfo.get(busInfoIndex).distance[0]);
-                Log.i("MyAsyncTask", " fromService distance" + busInfo.get(busInfoIndex).distance[1]);
-                Log.i("MyAsyncTask", " fromService distance" + busInfo.get(busInfoIndex).distance[2]);
+                Log.i("MyAsyncTask", " fromService code  " + busInfo.get(Service.indexOfClosestBus).getBusCode());
+                Log.i("MyAsyncTask", " fromService distance  " + busInfo.get(Service.indexOfClosestBus).distance[0]);
+                Log.i("MyAsyncTask", " fromService distance" + busInfo.get(Service.indexOfClosestBus).distance[1]);
+                Log.i("MyAsyncTask", " fromService distance" + busInfo.get(Service.indexOfClosestBus).distance[2]);
                 Service.displayToastDistance(busInfo);
 
 

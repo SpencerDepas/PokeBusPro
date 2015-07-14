@@ -30,7 +30,7 @@ public class Service extends IntentService {
     static GetBusDistanceJSON objTwo;
 
     SharedPreferences pref;
-
+    static int indexOfClosestBus;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -47,6 +47,7 @@ public class Service extends IntentService {
         } else {
 
 
+
             Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
             Log.i("MyService", "loaded object: " + busInfoArrayList.size());
             Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusCode());
@@ -58,6 +59,8 @@ public class Service extends IntentService {
                 //busInfoArrayList.get(i).setBusDistance([""],[""],[""]);
             }
 
+            indexOfClosestBus = findClosestPokeBus(busInfoArrayList);
+            //busInfoArrayList.get(indexOfClosestBus).setDistanceNotAvailable();
 
             getBusDistance(busInfoArrayList);
 
@@ -117,6 +120,7 @@ public class Service extends IntentService {
                 }
 
             }
+            Log.i("MyService", "closest pokebus buscode" + busInfo.get(indexOfClosestBus).getBusCode());
             return indexOfClosestBus;
         }else{
             return 0;
@@ -130,7 +134,7 @@ public class Service extends IntentService {
         Log.i("MyService", "busInfoArrayList size : " + busInfo.size());
 
 
-        int indexOfClosestBus = findClosestPokeBus(busInfo);
+
 
 
 
