@@ -134,7 +134,7 @@ public class GetBusDistanceJSON {
 
                     //Log.i("MyGetBusDistanceJSONtu", " busInfo.indexOf(\"301648\"); :" + busInfo.indexOf("306562"));
 
-                    if (fromService) {
+                    if (fromService && busInfo.get(0).getBusName().equals(busNameObject) ) {
                         Log.i("MyGetBusDistanceJSONtu", " in from service :" + busCodeJsonString);
                         busInfo.get(0).setBusDistance(presentableDistanceString);
                         Log.i("MyGetBusDistanceJSONtu", " in from service presentableDistanceString:" + presentableDistanceString);
