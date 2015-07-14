@@ -267,6 +267,10 @@ public class BusInfo implements Serializable {
     }
 
 
+    public void isP(){
+
+        addedBusCode.clear();
+    }
 
     public static void clearJson(){
 

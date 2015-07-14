@@ -182,6 +182,7 @@ public class AddMarkers {
                             //if a poke bus is in range then it will opon in stead of the closest bus stop
                             busInfoIndex = i;
                             pokeBusMarkerIndex = i;
+
                             marker[i].hideInfoWindow();
                             marker[i].showInfoWindow();
                             break;
@@ -194,6 +195,7 @@ public class AddMarkers {
 
 
         marker[busInfoIndex].showInfoWindow();
+        //busInfo.get(busInfoIndex).setAddedToPopup(true);
 
     }
 

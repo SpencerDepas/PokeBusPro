@@ -281,8 +281,9 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
+    boolean firstRun = true;
     public void cycleThroughPopup(){
-        changeSelectedBus.setVisibility(View.GONE);
+        //changeSelectedBus.setVisibility(View.INVISIBLE);
         AddMarkers.whatSnippetIsOpen();
 
         //gets buses for each bus stop
@@ -293,23 +294,26 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-        for(int i = 0 ; i < AddMarkers.marker.length; i ++){
+       /* for(int i = 0 ; i < AddMarkers.marker.length; i ++){
 
             if(currentBusCode.equals(AddMarkers.marker[i].getTitle())){
                 Log.i("MyMapsActivityy", "AddMarkers.marker[i].getTitle() " + AddMarkers.marker[i].getTitle());
             }
 
-        }
+        }*/
 
 
 
         if(busIndexForBusStopCycle.size() == 0 ) {
+            Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() == 0 " );
             if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
                 for (int i = 0; i < busInfo.size(); i++) {
 
                     //find marker index of all buses for stop
                     if (AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[i].getTitle())) {
                         busIndexForBusStopCycle.add(i + "");
+                        Log.i("MyMapsActivityy", "busIndexForBusStopCycle " + i);
+                        Log.i("MyMapsActivityy", "busInfo naame " + busInfo.get(i).getBusName());
                     }
 
                 }
@@ -338,7 +342,8 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() ==  " + busIndexForBusStopCycle.size());
 
         //resets which to select if iuts got to the last one
-        if(indexForBringSnippetToForground == busIndexForBusStopCycle.size() ) {
+        if(indexForBringSnippetToForground == busIndexForBusStopCycle.size() || firstRun) {
+            firstRun = false;
             Log.i("MyMapsActivityy", "in indexForBringSnippetToForground == busIndexForBusStopCycle.size() ");
             indexForBringSnippetToForground = 0;
             for (int i = 0; i < AddMarkers.marker.length; i++) {
@@ -356,12 +361,13 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         //makes all at stop invisable
-
         //display next bus in cycle
+
         Log.i("MyMapsActivityy", "marker index set visable : " + Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground)));
         AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].setVisible(true);
         AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].showInfoWindow();
         indexForBringSnippetToForground++;
+
 
     }
 
@@ -586,7 +592,7 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "onPause()zoom:" + zoom);
 
         stopTimerTask();
-
+        savePokeBus();
         //BusInfo.onPauseNotForToastService(busInfo);
         //mLocationProvider.disconnect();
         //busInfo.clear();
@@ -596,7 +602,7 @@ public class MapsActivity extends FragmentActivity implements
     public void onDestroy() {
         super.onDestroy();
 
-        savePokeBus();
+
 
         finish();
     }
@@ -831,9 +837,9 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity","pokeBusbusInfo,size" + pokeBusbusInfo.size());
 
         //when a poke bus is called we dont want old information saved
-        for(BusInfo businfo: pokeBusbusInfo){
+        /*for(BusInfo businfo: pokeBusbusInfo){
             businfo.setDistanceNotAvailable();
-        }
+        }*/
 
 
         try{
