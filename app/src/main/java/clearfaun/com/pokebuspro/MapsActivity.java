@@ -119,165 +119,167 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "onCreate");
         back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
 
+        mContext = getApplicationContext();
+
         if(!isOnline()){
             Log.i("MyMapsActivity", "!isOnline()");
             Intent intent = new Intent(getApplicationContext() , NoConnection.class);
             startActivity(intent);
             this.finish();
 
-        }
+        }else {
 
 
-        prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
+            prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
-        //this loads in businfo of saved bus stops
-        //pokeBusbusInfo = loadPokeBus();
+            //this loads in businfo of saved bus stops
+            //pokeBusbusInfo = loadPokeBus();
 
-        //Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
+            //Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
 
-        spinner = (ProgressBarCircularIndeterminate)findViewById(R.id.progressBar1);
-
-
-        mContext = getApplicationContext();
-        mLocationProvider = new LocationProvider(this, this);
-
-
-        LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
-        enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            spinner = (ProgressBarCircularIndeterminate) findViewById(R.id.progressBar1);
 
 
 
-        mLocationProvider.connect();
+            mLocationProvider = new LocationProvider(this, this);
 
 
-        if(!enabledGPS) {
-            Log.i("MyMapsActivity", "!enabledGPS");
-            toaster("Turn on GPS for best results");
-        }
+            LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
+            enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 
+            mLocationProvider.connect();
 
 
-
-
-
-        optionsButton = (ImageButton) findViewById(R.id.options_button);
-        optionsButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                //settings
-                changeSelectedBus.setVisibility(View.INVISIBLE);
-                fm = getFragmentManager();
-                ft = fm.beginTransaction();
-
-                prefsFragment = new PrefsFragment();
-                ft.add(R.id.map, prefsFragment, "fragmentid");
-                ft.addToBackStack("TAG");
-                ft.commit();
-
-
-
+            if (!enabledGPS) {
+                Log.i("MyMapsActivity", "!enabledGPS");
+                toaster("Turn on GPS for best results");
             }
-        });
 
 
+            optionsButton = (ImageButton) findViewById(R.id.options_button);
+            optionsButton.setOnClickListener(new View.OnClickListener() {
 
-        ImageButton refreshLocation = (ImageButton) findViewById(R.id.refresh_location_button);
-        refreshLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //settings
+                    changeSelectedBus.setVisibility(View.INVISIBLE);
+                    fm = getFragmentManager();
+                    ft = fm.beginTransaction();
 
-            @Override
-            public void onClick(View v) {
-                Log.i("MyMapsActivity", "onClick refreshLocation");
-                if(spinner.getVisibility() == View.INVISIBLE) {
+                    prefsFragment = new PrefsFragment();
+                    ft.add(R.id.map, prefsFragment, "fragmentid");
+                    ft.addToBackStack("TAG");
+                    ft.commit();
 
-                    //refresh button
-                    fromOnResume = false;
-                    spinner.setVisibility(View.VISIBLE);
-
-                    mLocationProvider.disconnect();
-                    mLocationProvider.connect();
-                    refreshMarkers();
-
-
-                    zoom = mMap.getCameraPosition().zoom;
-                    bearing = mMap.getCameraPosition().bearing;
-
-                    mMap.setMyLocationEnabled(true);
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(latLng)    // Sets the center of the map to Mountain View
-                            .bearing(bearing)           // Sets the orientation of the camera to east
-                            .zoom(zoom)                 // keeps zoom
-                            .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                            .build();                   // Creates a CameraPosition from the builder
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 }
-            }
-        });
-        ImageButton mapButton = (ImageButton) findViewById(R.id.map_button);
-        mapButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.i("MyMapsActivity", "onClick busmap");
-                changeSelectedBus.setVisibility(View.INVISIBLE);
-                //go to map
-                //bus map
-                SharedPreferences mapPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-                String prefBusMap = mapPref.getString("KEY99", "Brooklyn");
-
-                Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
-
-                Intent intent = new Intent(MapsActivity.mContext, BusMap.class);
-                intent.putExtra("maptype", "Current Map is: " + prefBusMap);
-                startActivity(intent);
+            });
 
 
-            }
-        });
+            ImageButton refreshLocation = (ImageButton) findViewById(R.id.refresh_location_button);
+            refreshLocation.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Log.i("MyMapsActivity", "onClick refreshLocation");
+
+                    if(!isOnline()){
+                        Log.i("MyMapsActivity", "!isOnline()");
+                        Intent intent = new Intent(getApplicationContext() , NoConnection.class);
+                        startActivity(intent);
+                        //MapsActivity.finish();
+
+                    }else if (spinner.getVisibility() == View.INVISIBLE) {
+
+                        //refresh button
+                        fromOnResume = false;
+                        spinner.setVisibility(View.VISIBLE);
+
+                        mLocationProvider.disconnect();
+                        mLocationProvider.connect();
+                        refreshMarkers();
 
 
-        changeSelectedBus = (ImageButton) findViewById(R.id.change_selected_bus);
+                        zoom = mMap.getCameraPosition().zoom;
+                        bearing = mMap.getCameraPosition().bearing;
 
-        changeSelectedBus.setOnClickListener(new View.OnClickListener() {
+                        mMap.setMyLocationEnabled(true);
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(latLng)    // Sets the center of the map to Mountain View
+                                .bearing(bearing)           // Sets the orientation of the camera to east
+                                .zoom(zoom)                 // keeps zoom
+                                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                                .build();                   // Creates a CameraPosition from the builder
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-            @Override
-            public void onClick(View v) {
-                //settings
+                    }
+                }
+            });
+            ImageButton mapButton = (ImageButton) findViewById(R.id.map_button);
+            mapButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Log.i("MyMapsActivity", "onClick busmap");
+                    changeSelectedBus.setVisibility(View.INVISIBLE);
+                    //go to map
+                    //bus map
+                    SharedPreferences mapPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+                    String prefBusMap = mapPref.getString("KEY99", "Brooklyn");
+
+                    Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
+
+                    Intent intent = new Intent(MapsActivity.mContext, BusMap.class);
+                    intent.putExtra("maptype", "Current Map is: " + prefBusMap);
+                    startActivity(intent);
 
 
-                cycleThroughPopup();
+                }
+            });
 
 
-            }
-        });
+            changeSelectedBus = (ImageButton) findViewById(R.id.change_selected_bus);
+
+            changeSelectedBus.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    //settings
 
 
-        if( savedInstanceState != null ) {
-            //Then the application is being reloaded
-            Log.i("MyMapsActivity ", "savedInstanceState != null ");
-
-        }else{
-            Log.i("MyMapsActivity ", "savedInstanceState == null ");
-            if(pokeBusbusInfo != null) {
-                if (pokeBusbusInfo.size() == 0) {
-
-                    SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
-                        public void onClick(View v) {
-                            // it was the 1st button
+                    cycleThroughPopup();
 
 
-                        }
-                    });
-                    snackbar.setDismissTimer(8000);
-                    snackbar.show();
+                }
+            });
+
+
+            if (savedInstanceState != null) {
+                //Then the application is being reloaded
+                Log.i("MyMapsActivity ", "savedInstanceState != null ");
+
+            } else {
+                Log.i("MyMapsActivity ", "savedInstanceState == null ");
+                if (pokeBusbusInfo != null) {
+                    if (pokeBusbusInfo.size() == 0) {
+
+                        SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
+                            public void onClick(View v) {
+                                // it was the 1st button
+
+
+                            }
+                        });
+                        snackbar.setDismissTimer(8000);
+                        snackbar.show();
+                    }
                 }
             }
-        }
 
-        //this loads in businfo of saved bus stops
-        pokeBusbusInfo = loadPokeBus();
+            //this loads in businfo of saved bus stops
+            pokeBusbusInfo = loadPokeBus();
+        }
 
     }
 
@@ -644,8 +646,13 @@ public class MapsActivity extends FragmentActivity implements
 
         boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
+        if(!isOnline()){
+            Log.i("MyMapsActivity", "!isOnline()");
+            Intent intent = new Intent(getApplicationContext() , NoConnection.class);
+            startActivity(intent);
+            this.finish();
 
-        if(!isLocationEnabled(mContext)){
+        }else if(!isLocationEnabled(mContext)){
             final Dialog dialog = new Dialog(this, "Location services disabled", "Native Speed needs to access your location.\n" +
                     "Please turn on location access.");
             dialog.show();

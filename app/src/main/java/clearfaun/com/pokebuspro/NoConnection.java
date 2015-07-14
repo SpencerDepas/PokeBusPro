@@ -23,7 +23,7 @@ public class NoConnection extends Activity {
         setContentView(R.layout.no_connection);
 
 
-        Log.i("AirplaneMode", "onCreate");
+        Log.i("NoConnection", "onCreate");
 
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.WHITE);
@@ -34,11 +34,12 @@ public class NoConnection extends Activity {
 
             @Override
             public void onClick(View v) {
-                Log.i("AirplaneMode", "clicked button ");
+                Log.i("NoConnection", "clicked button ");
 
 
                 Intent intent = new Intent(MapsActivity.mContext , MapsActivity.class);
                 startActivity(intent);
+
 
 
             }
