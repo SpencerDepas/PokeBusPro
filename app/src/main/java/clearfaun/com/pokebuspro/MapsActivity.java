@@ -151,10 +151,7 @@ public class MapsActivity extends FragmentActivity implements
             mLocationProvider.connect();
 
 
-            if (!enabledGPS) {
-                Log.i("MyMapsActivity", "!enabledGPS");
-                toaster("Turn on GPS for best results");
-            }
+
 
 
             optionsButton = (ImageButton) findViewById(R.id.options_button);
@@ -452,6 +449,8 @@ public class MapsActivity extends FragmentActivity implements
                 }
             });
 
+            final int index = busInfoIndexForBusName;
+
             ButtonFlat btnSetPokeBus = (ButtonFlat) popupView.findViewById(R.id.set_pokebus);
             btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
 
@@ -481,8 +480,11 @@ public class MapsActivity extends FragmentActivity implements
                     }
 
 
+
                     AddMarkers.addPokeBusColor();
-                    AddMarkers.openClosestSnippet(busInfo);
+                    AddMarkers.openSnippetWithIndex(index);
+
+                    //AddMarkers.openClosestSnippet(busInfo);
 
 
                 }
@@ -647,6 +649,8 @@ public class MapsActivity extends FragmentActivity implements
         String myString = savedInstanceState.getString("MyString");*/
     }
 
+    int gpsPrompt = 0;
+
     boolean fromOnResume = false;
     @Override
     protected void onResume() {
@@ -679,17 +683,6 @@ public class MapsActivity extends FragmentActivity implements
             });
 
 
-        }
-
-
-
-
-        if(!isOnline()){
-            Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(MapsActivity.mContext , NoConnection.class);
-            startActivity(intent);
-            this.finish();
-
         }else if(enabledAirplaneMode){
             Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
 
@@ -700,6 +693,11 @@ public class MapsActivity extends FragmentActivity implements
 
         }
 
+        if (!enabledGPS && gpsPrompt == 0) {
+            gpsPrompt++;
+            Log.i("MyMapsActivity", "!enabledGPS");
+            toaster("Turn on GPS for best results");
+        }
 
         fromOnResume = true;
         mLocationProvider.disconnect();

@@ -136,6 +136,17 @@ public class AddMarkers {
 
     static int pokeBusMarkerIndex;
 
+    public static void openSnippetWithIndex(int index){
+        Log.i("AddMarkersa", "  MapsActivity.busInfoIndexForBusName  " + index);
+        Log.i("AddMarkersa", "  openSnippetWithIndex id " + marker[index].getId());
+        Log.i("AddMarkersa", "  openSnippetWithIndex  tittle" + marker[index].getTitle());
+        Log.i("AddMarkersa", "  openSnippetWithIndex  snippet" + marker[index].getSnippet());
+        marker[index].hideInfoWindow();
+        marker[index].showInfoWindow();
+
+    }
+
+
     public static void openClosestSnippet(ArrayList<BusInfo> busInfo){
         //this should open
         //1 last open snippet
