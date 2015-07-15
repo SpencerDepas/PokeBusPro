@@ -237,7 +237,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
             changeSelectedBus = (ImageButton) findViewById(R.id.change_selected_bus);
-
+            changeSelectedBus.setVisibility(View.INVISIBLE);
             changeSelectedBus.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -298,16 +298,6 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-       /* for(int i = 0 ; i < AddMarkers.marker.length; i ++){
-
-            if(currentBusCode.equals(AddMarkers.marker[i].getTitle())){
-                Log.i("MyMapsActivityy", "AddMarkers.marker[i].getTitle() " + AddMarkers.marker[i].getTitle());
-            }
-
-        }*/
-
-
-
         if(busIndexForBusStopCycle.size() == 0 ) {
             Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() == 0 " );
             if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
@@ -346,7 +336,7 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() ==  " + busIndexForBusStopCycle.size());
 
         //resets which to select if iuts got to the last one
-        if(indexForBringSnippetToForground == busIndexForBusStopCycle.size() || firstRun) {
+        if(indexForBringSnippetToForground == busIndexForBusStopCycle.size()) {
             firstRun = false;
             Log.i("MyMapsActivityy", "in indexForBringSnippetToForground == busIndexForBusStopCycle.size() ");
             indexForBringSnippetToForground = 0;
@@ -470,10 +460,6 @@ public class MapsActivity extends FragmentActivity implements
 
                     pokeBusbusInfo.add(busInfo.get(index));
                     MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
-
-
-
-
 
 
                     AddMarkers.addPokeBusColor();
