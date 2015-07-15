@@ -463,27 +463,22 @@ public class MapsActivity extends FragmentActivity implements
                     AddMarkers.dialogOpon = false;
 
 
-                    for (int i = 0; i < busInfo.size(); i++) {
-
-
-                        if(pokeBusbusInfo == null){
-                            pokeBusbusInfo = new ArrayList<>();
-                        }
-
-                        if (busInfo.get(i).getBusCode().equals(finalBuscode) && busInfo.get(i).getBusName().equals(BusInfo.getDisplayedBusName())) {
-                            pokeBusbusInfo.add(busInfo.get(i));
-                            MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(i).busName + " : " + finalBuscode);
-                            break;
-                        }
-
-
+                    if(pokeBusbusInfo == null){
+                        pokeBusbusInfo = new ArrayList<>();
                     }
+
+
+                    pokeBusbusInfo.add(busInfo.get(index));
+                    MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
+
+
+
 
 
 
                     AddMarkers.addPokeBusColor();
-                    AddMarkers.openSnippetWithIndex(index);
-
+                    //
+                    AddMarkers.openSnippetWithIndex(index );
                     //AddMarkers.openClosestSnippet(busInfo);
 
 

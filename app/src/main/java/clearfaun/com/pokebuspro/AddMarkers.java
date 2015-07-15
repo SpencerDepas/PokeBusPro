@@ -117,7 +117,7 @@ public class AddMarkers {
     static String lastOpenSnippet;
 
     public static void whatSnippetIsOpen(){
-        Log.i("AddMarkers", "  whatSnippetIsOpen() " );
+        Log.i("AddMarkers", "  whatSnippetIsOpen() ");
 
         lastOpenSnippet = null;
         if(marker != null) {
@@ -135,14 +135,19 @@ public class AddMarkers {
     }
 
     static int pokeBusMarkerIndex;
-
-    public static void openSnippetWithIndex(int index){
+    static boolean fromOpenSnippetWithIndex = false;
+    public static void openSnippetWithIndex(int index ){
         Log.i("AddMarkersa", "  MapsActivity.busInfoIndexForBusName  " + index);
         Log.i("AddMarkersa", "  openSnippetWithIndex id " + marker[index].getId());
+
         Log.i("AddMarkersa", "  openSnippetWithIndex  tittle" + marker[index].getTitle());
         Log.i("AddMarkersa", "  openSnippetWithIndex  snippet" + marker[index].getSnippet());
+
+        fromOpenSnippetWithIndex = true;
         marker[index].hideInfoWindow();
         marker[index].showInfoWindow();
+
+
 
     }
 
@@ -265,6 +270,7 @@ public class AddMarkers {
                             //to distinqush a pokebus
 
                             marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white__blue36dp));
+
                             //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
                         }
