@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,7 +35,7 @@ public class PokeBusNoUI extends Activity implements
     static LatLng latLng;
     static Context mContext;
     private LocationProvider mLocationProvider;
-
+    static boolean running = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +45,24 @@ public class PokeBusNoUI extends Activity implements
         mContext = getApplicationContext();
         mLocationProvider = new LocationProvider(this, this);
 
+        if(!isOnline()){
+            Log.i("PokeBusNoUI", "!isOnline()");
+            new ToastMessageTask().execute("No connection" + "\n" +
+                    "Please connect to the internet" );
 
+
+            finish();
+        }
 
 
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 
     @Override
     public void onResume(){
@@ -63,8 +78,9 @@ public class PokeBusNoUI extends Activity implements
 
         long timeStamp = System.currentTimeMillis();
         long limitPresses = sharedpreferences.getLong("limit_presses", 0);
+        Log.i("MyService", "limited == " + limitPresses);
         //only press ever 3 seconds
-        if (limitPresses == 0 || limitPresses + 3000 <= timeStamp) {
+        if (limitPresses == 0 || limitPresses + 5000 <= timeStamp) {
             Log.i("MyService", "limited presses");
             editor.putLong("limit_presses", timeStamp);
             editor.apply();
@@ -72,6 +88,8 @@ public class PokeBusNoUI extends Activity implements
             Intent service = new Intent(this, Service.class);
             startService(service);
 
+        }else{
+            Log.i("MyService", "you have been limited presses");
         }
 
         finish();

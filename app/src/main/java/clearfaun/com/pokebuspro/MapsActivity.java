@@ -261,9 +261,12 @@ public class MapsActivity extends FragmentActivity implements
 
             } else {
                 Log.i("MyMapsActivity ", "savedInstanceState == null ");
+                //Log.i("MyMapsActivity ", "pokeBusbusInfo SIZE" + pokeBusbusInfo.size());
+                pokeBusbusInfo = loadPokeBus();
                 if (pokeBusbusInfo != null) {
-                    if (pokeBusbusInfo.size() == 0) {
 
+                    if(pokeBusbusInfo.size() == 0) {
+                        Log.i("MyMapsActivity ", "pokeBusbusInfo.size() == 0 ");
                         SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
                             public void onClick(View v) {
                                 // it was the 1st button
@@ -278,7 +281,9 @@ public class MapsActivity extends FragmentActivity implements
             }
 
             //this loads in businfo of saved bus stops
-            pokeBusbusInfo = loadPokeBus();
+            if(pokeBusbusInfo != null) {
+                pokeBusbusInfo = loadPokeBus();
+            }
         }
 
     }
@@ -402,7 +407,7 @@ public class MapsActivity extends FragmentActivity implements
 
         Log.i("MyMapsActivity ", "popupForPokebus buscode " + buscode);
         Log.i("MyMapsActivity ", "popupForPokebus buscode " + id);
-        Log.i("MyMapsActivity ", "AddMarkers.marker[i].getId() " + AddMarkers.marker[0].getId() );
+        Log.i("MyMapsActivity ", "AddMarkers.marker[i].getId() " + AddMarkers.marker[0].getId());
 
         int busInfoIndexForBusName = -1;
         for(int i = 0 ; i < AddMarkers.marker.length; i ++){
@@ -412,7 +417,7 @@ public class MapsActivity extends FragmentActivity implements
             }
 
         }
-        Log.i("MyMapsActivity ", "businfo index " + busInfo.get(busInfoIndexForBusName).busName );
+        Log.i("MyMapsActivity ", "businfo index " + busInfo.get(busInfoIndexForBusName).busName);
 
         //to prevent null pouinter
         if(optionsButton != null) {
@@ -461,6 +466,10 @@ public class MapsActivity extends FragmentActivity implements
 
                     for (int i = 0; i < busInfo.size(); i++) {
 
+
+                        if(pokeBusbusInfo == null){
+                            pokeBusbusInfo = new ArrayList<>();
+                        }
 
                         if (busInfo.get(i).getBusCode().equals(finalBuscode) && busInfo.get(i).getBusName().equals(BusInfo.getDisplayedBusName())) {
                             pokeBusbusInfo.add(busInfo.get(i));
@@ -841,26 +850,27 @@ public class MapsActivity extends FragmentActivity implements
     private void savePokeBus() {
         Log.i("MyMapsActivity","setPokeBus()");
         Log.i("MyMapsActivity","busCode()" );
-        Log.i("MyMapsActivity","pokeBusbusInfo,size" + pokeBusbusInfo.size());
+        //Log.i("MyMapsActivity","pokeBusbusInfo,size" + pokeBusbusInfo.size());
 
         //when a poke bus is called we dont want old information saved
         /*for(BusInfo businfo: pokeBusbusInfo){
             businfo.setDistanceNotAvailable();
         }*/
 
+        if(pokeBusbusInfo != null){
 
-        try{
-            FileOutputStream fos = mContext.openFileOutput("BUSINFO", Context.MODE_PRIVATE);
-            ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(pokeBusbusInfo);
-            os.close();
-            fos.close();
+            try {
+                FileOutputStream fos = mContext.openFileOutput("BUSINFO", Context.MODE_PRIVATE);
+                ObjectOutputStream os = new ObjectOutputStream(fos);
+                os.writeObject(pokeBusbusInfo);
+                os.close();
+                fos.close();
 
-        }catch(Exception e) {
-            e.printStackTrace();
-            Log.i("MyMapsActivity"," e.printStackTrace();()" +  e);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("MyMapsActivity", " e.printStackTrace();()" + e);
+            }
         }
-
 
     }
 

@@ -145,6 +145,7 @@ public class AddMarkers {
         Log.i("AddMarkers", "  openClosestSnippet " );
         int busInfoIndex = 0;
         double closestSnippet = 0;
+        double closestPokeBus = 0;
         Log.i("AddMarkers", "  lastOpenSnippet  " + lastOpenSnippet );
 
         if(lastOpenSnippet != null){
@@ -176,16 +177,40 @@ public class AddMarkers {
             for (int i = 0; i < busInfo.size(); i++) {
 
                 if (MapsActivity.pokeBusbusInfo != null) {
+                    Log.i("AddMarkerstz", "  MapsActivity.pokeBusbusInfo != null: ");
                     for (int z = 0; z < MapsActivity.pokeBusbusInfo.size(); z++) {
 
                         if (busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() + "")) {
                             //if a poke bus is in range then it will opon in stead of the closest bus stop
-                            busInfoIndex = i;
-                            pokeBusMarkerIndex = i;
+                            Log.i("AddMarkerstz", "  getBusCode() " + MapsActivity.pokeBusbusInfo.get(z).getBusCode());
+                            Log.i("AddMarkerstz", "  busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() ");
+                            if(closestPokeBus == 0) {
+                                Log.i("AddMarkerstz", "  closestPokeBus == 0 ");
 
-                            marker[i].hideInfoWindow();
-                            marker[i].showInfoWindow();
-                            break;
+                                closestPokeBus = MapsActivity.distFrom(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng(),
+                                        MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng());
+
+                                busInfoIndex = i;
+                                pokeBusMarkerIndex = i;
+
+                                marker[i].hideInfoWindow();
+                                marker[i].showInfoWindow();
+                                Log.i("AddMarkerstz", "  closestPokeBus = " + closestPokeBus);
+                            }else if (closestPokeBus >  MapsActivity.distFrom(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng(),
+                                    MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng())) {
+
+                                closestPokeBus = MapsActivity.distFrom(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng(),
+                                        MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng());
+                                Log.i("AddMarkerstz", " else if  closestPokeBus = " + closestPokeBus);
+
+                                busInfoIndex = i;
+                                pokeBusMarkerIndex = i;
+
+                                marker[i].hideInfoWindow();
+                                marker[i].showInfoWindow();
+
+                            }
+
                         }
 
                     }

@@ -297,7 +297,7 @@ public class GetBusDistanceJSON {
                 Log.i("MyGetBusDistanceJSONn", "i is : " + busInfoIndex );
 
                 Log.i("MyGetBusDistanceJSONn", "busInfo.get(i).getBusCode(): " + busInfo.get(busInfoIndex).getBusCode());
-             
+
 
                 //Log.i("MyGetBusDistanceJSONnn", "stopCode " + stopCode);
 

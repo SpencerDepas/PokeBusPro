@@ -24,5 +24,7 @@ class ToastMessageTask extends AsyncTask<String, String, String> {
             Toast toast = Toast.makeText(PokeBusNoUI.mContext, result, Toast.LENGTH_LONG);
             toast.show();
         }
+
+        PokeBusNoUI.running = false;
     }
 }

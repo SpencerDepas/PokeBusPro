@@ -32,43 +32,47 @@ public class Service extends IntentService {
     SharedPreferences pref;
     static int indexOfClosestBus;
 
+
+
     @Override
     protected void onHandleIntent(Intent intent) {
         // Handle events on worker thread here
         Log.i("MyService", "Service onHandleIntent ");
 
 
+        Log.i("MyService", "currently running  ");
+
         ArrayList<BusInfo> busInfoArrayList = loadBusInfo();
-        try{
-        if (busInfoArrayList.size() == 0) {
+        try {
+            if (busInfoArrayList.size() == 0) {
 
-            new ToastMessageTask().execute("Please set a PokeBus in the main application");
+                new ToastMessageTask().execute("Please set a PokeBus in the main application");
 
-        } else {
+            } else {
 
 
+                Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
+                Log.i("MyService", "loaded object: " + busInfoArrayList.size());
+                Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusCode());
 
-            Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusStopLng());
-            Log.i("MyService", "loaded object: " + busInfoArrayList.size());
-            Log.i("MyService", "loaded object: " + busInfoArrayList.get(0).getBusCode());
+                //so get bus distance knows where we are coming from. API key stuff
+                for (int i = 0; i < busInfoArrayList.size(); i++) {
+                    busInfoArrayList.get(i).setForNoUIToast(true);
+                    busInfoArrayList.get(i).busDistanceArrayIndex = 0;
+                    //busInfoArrayList.get(i).setBusDistance([""],[""],[""]);
+                }
 
-            //so get bus distance knows where we are coming from. API key stuff
-            for (int i = 0; i < busInfoArrayList.size(); i++) {
-                busInfoArrayList.get(i).setForNoUIToast(true);
-                busInfoArrayList.get(i).busDistanceArrayIndex = 0;
-                //busInfoArrayList.get(i).setBusDistance([""],[""],[""]);
+                indexOfClosestBus = findClosestPokeBus(busInfoArrayList);
+                //busInfoArrayList.get(indexOfClosestBus).setDistanceNotAvailable();
+
+                getBusDistance(busInfoArrayList);
+
+
             }
-
-            indexOfClosestBus = findClosestPokeBus(busInfoArrayList);
-            //busInfoArrayList.get(indexOfClosestBus).setDistanceNotAvailable();
-
-            getBusDistance(busInfoArrayList);
-
-
-        }
-    }catch(Exception e){
+        } catch (Exception e) {
             Log.e("MyService", "Exception " + e);
         }
+
 
 
     }
