@@ -186,8 +186,10 @@ public class AddMarkers {
                             Log.i("AddMarkerstz", "  busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() ");
                             if(closestPokeBus == 0) {
                                 Log.i("AddMarkerstz", "  closestPokeBus == 0 ");
+                                Log.i("AddMarkerstz", "  closestPokeBus =  " + distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
+                                        MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng()));
 
-                                closestPokeBus = MapsActivity.distFrom(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng(),
+                                closestPokeBus = distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
                                         MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng());
 
                                 busInfoIndex = i;
@@ -196,10 +198,10 @@ public class AddMarkers {
                                 marker[i].hideInfoWindow();
                                 marker[i].showInfoWindow();
                                 Log.i("AddMarkerstz", "  closestPokeBus = " + closestPokeBus);
-                            }else if (closestPokeBus >  MapsActivity.distFrom(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng(),
+                            }else if (closestPokeBus > distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
                                     MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng())) {
 
-                                closestPokeBus = MapsActivity.distFrom(busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng(),
+                                closestPokeBus = distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
                                         MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng());
                                 Log.i("AddMarkerstz", " else if  closestPokeBus = " + closestPokeBus);
 
@@ -223,7 +225,22 @@ public class AddMarkers {
         //busInfo.get(busInfoIndex).setAddedToPopup(true);
 
     }
-
+    static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        Log.i("AddMarkerstz", " dLat = " + lat1);
+        Log.i("AddMarkerstz", " dLng = " + lng1);
+        Log.i("AddMarkerstz", " dLat = " + lat2);
+        Log.i("AddMarkerstz", " dLng = " + lng2);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+        Log.i("AddMarkerstz", " dist = " + dist);
+        return dist;
+    }
 
 
     public static void addPokeBusColor(){
