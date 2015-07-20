@@ -583,7 +583,7 @@ public class MapsActivity extends FragmentActivity implements
         zoom = mMap.getCameraPosition().zoom;
         bearing = mMap.getCameraPosition().bearing;
 
-        Log.i("MyMapsActivity", "onPause()zoom:" + zoom);
+
 
         stopTimerTask();
         savePokeBus();
@@ -765,10 +765,10 @@ public class MapsActivity extends FragmentActivity implements
         Log.i("MyMapsActivity", "setUpMapIfNeeded() ");
 
         // Do a null check to confirm that we have not already instantiated the map.
-        Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
+
         // Try to obtain the map from the SupportMapFragment.
         if(mMap == null) {
-
+            Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
 
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
@@ -916,10 +916,10 @@ public class MapsActivity extends FragmentActivity implements
         //we want it from onresume to update location but not refresh
         if(!fromOnResume || firstBoot == 0) {
             //stopAcuracyTimerTask();
-            Log.i("MyMapsActivity", "firstBoot ==  " + firstBoot );
-            Log.i("MyMapsActivity", "!fromOnResume ==  " + fromOnResume );
+            Log.i("MyMapsActivity", "firstBoot ==  " + firstBoot);
+            Log.i("MyMapsActivity", "fromOnResume ==  " + fromOnResume);
 
-            Log.i("MyMapsActivity", "in !fromOnResume || firstBoot == 0 " );
+            Log.i("MyMapsActivity", "in !fromOnResume || firstBoot == 0 ");
             //only want location this to run on first time. Not activate on every location update
             if (pointList.size() > 0) {
                 Log.i("MyMapsActivity", "afterpointList.size() > 0");
@@ -952,10 +952,10 @@ public class MapsActivity extends FragmentActivity implements
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
 
                 //Log.i("MyMapsActivityTime", "startTime : " + System.currentTimeMillis());
-                long  startTime =  System.currentTimeMillis() ;
+                long startTime = System.currentTimeMillis();
                 getBusStops(busInfo);
-                long  endTime =  (System.currentTimeMillis() );
-                Log.i("MyMapsActivityTime", "getBusStops(busInfo) endTime  : " +  ((endTime - startTime)));
+                long endTime = (System.currentTimeMillis());
+                Log.i("MyMapsActivityTime", "getBusStops(busInfo) endTime  : " + ((endTime - startTime)));
 
 
                 getBusDistance(busInfo);
@@ -968,16 +968,6 @@ public class MapsActivity extends FragmentActivity implements
 
 
             }
-        }else {
-            //this is for standard onresume
-           /* mMap.setMyLocationEnabled(true);
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLng)    // Sets the center of the map to Mountain View
-                    .bearing(bearing)                // Sets the orientation of the camera to east
-                    .zoom(zoom)                   // keeps zoom
-                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
         }
 
     }

@@ -135,7 +135,7 @@ public class GetBusStopJSON {
 
 
 
-        String radius= sharedPrefs.getString(MapsActivity.mContext.getString(R.string.radius_key), "200");
+        String radius= sharedPrefs.getString(MapsActivity.mContext.getString(R.string.radius_key), "300");
         stopRadius = Integer.parseInt(radius);
         Log.i("MyGetBusStopJSON", "stopRadius:" + stopRadius);
         Log.i("MyGetBusStopJSON", "prefradius:" + PrefsFragment.radius);
