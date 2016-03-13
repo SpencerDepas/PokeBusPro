@@ -39,7 +39,7 @@
     <string name="radius_preference">Set Radius</string>
     <string name="set_radius">Set the range of PokeBus</string>
     <string name="auto_refresh_time">Auto Refresh Time</string>
-    <string name="set_bus_update_frequency">Set How frequently to check for buses</string>
+    <string name="set_bus_update_frequency">Change Refresh Rate</string>
 
     <!--
          PokeBus preferences
@@ -56,6 +56,8 @@
     <!--
          BUS MAPS
          -->
+    Select your borough
+    <string name="select_bus_map_tittle"> Select your borough</string>
     <string name="map_preference">Choose Bus Map</string>
     <string name="bus_maps_key">KEY99</string>
     <string name="bus_maps">Bus Map</string>
