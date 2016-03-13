@@ -31,18 +31,19 @@
         android:gravity="right"
         android:orientation="vertical" >
 
-        <com.melnykov.fab.FloatingActionButton
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/button"
+            android:src="@drawable/ic_action_settings"
+            android:layout_above="@+id/options_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_action_settings"
-            fab:fab_colorNormal="@color/DeepSkyBlue"
-            fab:fab_colorPressed="@color/yellow"
-            fab:fab_colorRipple="@color/translucent_red"
-            fab:fab_type="mini"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/fab_margin"
             />
+
+
+
 
 
 

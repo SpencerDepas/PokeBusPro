@@ -7,16 +7,19 @@
 
 
 
-
-
-
-    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+    <ProgressBar
+        style="@style/Base.Widget.AppCompat.ProgressBar"
         android:id="@+id/progressBar1"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:background="@color/DeepSkyBlue" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/DeepSkyBlue"
+        android:indeterminate="true"
+        android:visibility="visible" />
+
+
+
 
     <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
         android:id="@+id/imageView"

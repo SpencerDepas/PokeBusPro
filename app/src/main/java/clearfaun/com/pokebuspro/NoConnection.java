@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 
-import com.melnykov.fab.FloatingActionButton;
+
 
 /**
  * Created by spencer on 4/2/2015.

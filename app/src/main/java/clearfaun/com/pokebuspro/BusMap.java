@@ -10,7 +10,7 @@ import android.widget.ProgressBar;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+
 
 
 /**
@@ -18,7 +18,7 @@ import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
  */
 public class BusMap extends Activity {
 
-    private ProgressBarCircularIndeterminate spinner;
+    private ProgressBar spinner;
     SubsamplingScaleImageView imageView;
 
 
@@ -37,7 +37,7 @@ public class BusMap extends Activity {
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.WHITE);
 
-        spinner = (ProgressBarCircularIndeterminate)findViewById(R.id.progressBar1);
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
         Log.i("BusMap", intent.getStringExtra("maptype"));
         Log.i("BusMap", "Brooklyn");
 

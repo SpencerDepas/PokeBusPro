@@ -10,79 +10,106 @@
         android:id="@+id/scrollView"
         android:layout_gravity="center_horizontal" >
 
+
+
+
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:paddingLeft="25dp"
-                android:paddingTop="20dp"
-                android:gravity="center"
-                android:text="@string/license_one_header"
-                android:id="@+id/licenseOneHeader" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="25dp"
-                android:id="@+id/textViewOne" />
-
-
-            <TextView
+            <android.support.v7.widget.CardView
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="3sp"
-                android:background="@color/black"
-                android:paddingRight="45dp"
-                android:paddingLeft="45dp"
-                android:id="@+id/seperatorOne" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-                android:paddingTop="20dp"
-                android:gravity="center"
-                android:text="@string/license_two_header"
-                android:id="@+id/licenseTwoHeader" />
+                android:layout_margin="@dimen/card_margin">
 
-            <TextView
-                android:layout_width="wrap_content"
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:paddingLeft="25dp"
+                    android:paddingTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/license_one_header"
+                    android:id="@+id/licenseOneHeader" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="25dp"
+                    android:id="@+id/textViewOne" />
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:visibility="gone"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="25dp"
-                android:id="@+id/textViewTwo" />
+                android:layout_margin="@dimen/card_margin">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="3dp"
-                android:background="@color/black"
-                android:paddingRight="30dp"
-                android:paddingLeft="30dp"
-                android:id="@+id/seperatorTwo" />
 
-            <TextView
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:paddingTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/license_two_header"
+                    android:id="@+id/licenseTwoHeader" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="25dp"
+                    android:id="@+id/textViewTwo" />
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:paddingLeft="25dp"
-                android:paddingTop="20dp"
-                android:gravity="center"
-                android:text="@string/license_three_header"
-                android:id="@+id/licenseThreeHeader" />
+                android:layout_margin="@dimen/card_margin">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="25dp"
-                android:id="@+id/textViewThree" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="22sp"
+                        android:paddingLeft="25dp"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="25dp"
+                        android:gravity="center"
+                        android:text="@string/license_three_header"
+                        android:id="@+id/licenseThreeHeader" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp"
+                        android:id="@+id/textViewThree" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
     </ScrollView>

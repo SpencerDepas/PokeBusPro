@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Map Settings">
+        <menu>
+            <item
+                android:key="@string/radius_key"
+                android:title="@string/radius_preference"
+                android:id="@+id/register_to_vote"
+                android:icon="@android:drawable/ic_menu_camera"
+                android:entries="@array/radius_entries"
+                android:dialogTitle="@string/set_radius"
+                android:entryValues="@array/radius_entries_values"
+               />
+
+            <item
+                android:title="@string/auto_refresh_time"
+                android:id="@+id/nav_discussion"
+                android:icon="@android:drawable/radiobutton_off_background"
+                android:key="@string/refresh_time_key"
+                android:entries="@array/auto_refresh_entries"
+                android:entryValues="@array/auto_refresh_entries_values"
+                android:dialogTitle="@string/set_bus_update_frequency"
+                />
+        </menu>
+
+    </item>
+
+
+    <item android:title="@string/poke_bus_settings">
+        <menu>
+            <item
+                android:title="@string/remove_all_poke_bus"
+                android:key="@string/remove_poke_bus_key"
+                android:id="@+id/set_my_adress"
+                android:icon="@android:drawable/ic_media_rew"
+               />
+
+        </menu>
+
+    </item>
+
+
+
+    <item android:title="@string/bus_maps">
+        <menu>
+            <item
+                android:icon="@android:drawable/ic_media_rew"
+                android:key="@string/bus_maps_key"
+                android:title="@string/map_preference"
+                android:entries="@array/map_entries"
+                android:entryValues="@array/map_entries_values"
+                android:summary="@string/current_map"
+                />
+
+        </menu>
+
+    </item>
+
+
+    <item android:title="@string/other">
+        <menu>
+            <item
+                android:title="@string/like_us_on_facebook"
+                android:key="@string/facebook_key"
+                />
+
+            <item
+                android:key="@string/about_page_key"
+                android:title="@string/about"
+                />
+            <item
+                android:key="@string/license_key"
+                android:title="@string/license"
+                />
+
+
+
+        </menu>
+
+    </item>
+
+
+</menu>

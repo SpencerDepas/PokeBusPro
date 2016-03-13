@@ -3,29 +3,42 @@ package clearfaun.com.pokebuspro;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -37,11 +50,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 
 
-import com.gc.materialdesign.views.ButtonFlat;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.gc.materialdesign.widgets.Dialog;
-import com.gc.materialdesign.widgets.SnackBar;
-import com.google.android.gms.internal.ge;
+
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -51,6 +61,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.FileInputStream;
@@ -63,7 +75,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MapsActivity extends FragmentActivity implements
+public class MapsActivity extends AppCompatActivity implements
         LocationProvider.LocationCallback  {
 
     static GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -75,6 +87,10 @@ public class MapsActivity extends FragmentActivity implements
     static Context mContext;
     static GetBusStopJSON obj;
     static GetBusDistanceJSON objTwo;
+
+
+    private DrawerLayout mDrawerLayout;
+    @Bind(R.id.main_content)  View view;
 
     float zoom;
     float bearing;
@@ -99,7 +115,7 @@ public class MapsActivity extends FragmentActivity implements
     static SharedPreferences prefs;
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-    static ProgressBarCircularIndeterminate spinner;
+    static ProgressBar spinner;
     static ImageButton optionsButton;
     static ImageButton changeSelectedBus;
     static RelativeLayout back_dim_layout;
@@ -115,8 +131,25 @@ public class MapsActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         Log.i("MyMapsActivity", "onCreate");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header=navigationView.getHeaderView(0);
+        if (navigationView != null) {
+            setupDrawerContent(navigationView);
+        }
+
         back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
 
         mContext = getApplicationContext();
@@ -137,7 +170,7 @@ public class MapsActivity extends FragmentActivity implements
 
             //Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
 
-            spinner = (ProgressBarCircularIndeterminate) findViewById(R.id.progressBar1);
+            spinner = (ProgressBar) findViewById(R.id.progressBar1);
 
 
 
@@ -264,15 +297,10 @@ public class MapsActivity extends FragmentActivity implements
 
                     if(pokeBusbusInfo.size() == 0) {
                         Log.i("MyMapsActivity ", "pokeBusbusInfo.size() == 0 ");
-                        SnackBar snackbar = new SnackBar(MapsActivity.this, "To set a Pokebus press on the bus stop window", "DISMISS", new View.OnClickListener() {
-                            public void onClick(View v) {
-                                // it was the 1st button
+                        Snackbar.make(view, "To set a Pokebus press on the bus stop window", Snackbar.LENGTH_LONG)
+                                .show();
 
 
-                            }
-                        });
-                        snackbar.setDismissTimer(8000);
-                        snackbar.show();
                     }
                 }
             }
@@ -283,6 +311,149 @@ public class MapsActivity extends FragmentActivity implements
             }
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        if(item.getItemId()== android.R.id.home){
+            mDrawerLayout.openDrawer(GravityCompat.START);
+            return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                        mContext = getApplicationContext();
+                        //Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+
+                        if (menuItem.getTitle().equals(getString(R.string.radius_preference))) {
+                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+                            CharSequence items[] = new CharSequence[]{"200 Feet", "250 Feet", "300 Feet"};
+                            builder.setTitle("Set the radius for PokeBus");
+                            builder.setNegativeButton("DISMIIS", null);
+                            builder.setPositiveButton("OK",  new DialogInterface.OnClickListener()  {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    prefs.edit().putString(getString(R.string.radius_key), "200").apply();
+                                    MapsActivity.spinner.setVisibility(View.VISIBLE);
+                                    MapsActivity.refreshMarkers();
+
+                                    Log.d("MyMainActivity", "radius set to 200:");
+                                }
+                            });
+                            builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.d("AlertDialog", "Positive");
+                                    dialog.dismiss();
+
+                                    if (which == 0) {
+                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
+
+                                        prefs.edit().putString(getString(R.string.radius_key), "200").apply();
+                                        MapsActivity.spinner.setVisibility(View.VISIBLE);
+                                        MapsActivity.refreshMarkers();
+
+                                        Log.d("MyMainActivity", "radius set to 200:");
+
+                                    } else if (which == 1) {
+                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
+
+                                        prefs.edit().putString(getString(R.string.radius_key), "250").apply();
+                                        MapsActivity.spinner.setVisibility(View.VISIBLE);
+                                        MapsActivity.refreshMarkers();
+
+                                        Log.d("MyMainActivity", "radius set to 250:");
+
+                                    } else if (which == 2) {
+                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
+
+                                        prefs.edit().putString(getString(R.string.radius_key), "300").apply();
+                                        MapsActivity.spinner.setVisibility(View.VISIBLE);
+                                        MapsActivity.refreshMarkers();
+
+                                        Log.d("MyMainActivity", "radius set to 300:");
+
+                                    }
+
+
+                                }
+                            });
+                            builder.show();
+
+
+
+
+
+                        } else if (menuItem.getTitle().equals(getString(R.string.auto_refresh_time))) {
+                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+
+
+                        } else if (menuItem.getTitle().equals(getString(R.string.remove_all_poke_bus))) {
+                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+
+                            //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
+
+
+
+
+
+                        }  else if (menuItem.getTitle().equals(getString(R.string.about))) {
+                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+
+                            //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
+
+                            Intent intent = new Intent(MapsActivity.mContext , AboutScreen.class);
+                            startActivity(intent);
+
+
+
+                        }else if (menuItem.getTitle().equals(getString(R.string.map_preference))) {
+                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+                            //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
+
+
+
+
+                        } else if (menuItem.getTitle().equals(getString(R.string.like_us_on_facebook))) {
+                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+                            //toaster("My ZIpcode is :" + parseUser.get("zip_code").toString());
+                            String url = "https://www.facebook.com/ClearFaun?ref=bookmarks";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+
+
+
+                        }else if (menuItem.getTitle().equals(getString(R.string.license))) {
+                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+                            //toaster("My ZIpcode is :" + parseUser.get("zip_code").toString());
+
+                            Intent intent = new Intent(MapsActivity.mContext , LicenseActivity.class);
+                            startActivity(intent);
+
+
+                        }
+
+
+                        String savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
+
+                        Log.d("MyMainActivity", "msavedRadius:" + savedRadius);
+
+                        return true;
+                    }
+                });
     }
 
     boolean firstRun = true;
@@ -386,7 +557,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
     }
-    static ButtonFlat btnDismiss;
+    static Button btnDismiss;
 
     static void popupForPokebus(ImageButton optionsButton, String buscode, String id) {
 
@@ -426,7 +597,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
 
-            btnDismiss = (ButtonFlat) popupView.findViewById(R.id.dismiss);
+            btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
             btnDismiss.setOnClickListener(new Button.OnClickListener() {
 
                 @Override
@@ -441,7 +612,7 @@ public class MapsActivity extends FragmentActivity implements
 
             final int index = busInfoIndexForBusName;
 
-            ButtonFlat btnSetPokeBus = (ButtonFlat) popupView.findViewById(R.id.set_pokebus);
+            Button btnSetPokeBus = (Button) popupView.findViewById(R.id.set_pokebus);
             btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
 
                 @Override
@@ -647,21 +818,22 @@ public class MapsActivity extends FragmentActivity implements
             this.finish();
 
         }else if(!isLocationEnabled(mContext)){
-            final Dialog dialog = new Dialog(this, "Location services disabled", "Native Speed needs to access your location.\n" +
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+            builder.setTitle("Location services disabled");
+            builder.setMessage("Native Speed needs to access your location.\n" +
                     "Please turn on location access.");
-            dialog.show();
-            dialog.setOnAcceptButtonClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-
-
-                    dialog.dismiss();
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-
-                }
-            });
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener()  {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d( "AlertDialog", "Positive" );
+                            dialog.dismiss();
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    });
+            builder.setNegativeButton("DISMIISS", null);
+            builder.show();
 
 
         }else if(enabledAirplaneMode){
