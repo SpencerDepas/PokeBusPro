@@ -338,7 +338,7 @@ public class MapsActivity extends AppCompatActivity implements
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"200 Feet", "250 Feet", "300 Feet"};
                             builder.setTitle("Set the radius for PokeBus");
-                            builder.setNegativeButton("DISMIIS", null);
+                            builder.setNegativeButton("DISMIS", null);
                             builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("AlertDialog", "Positive");
@@ -421,7 +421,7 @@ public class MapsActivity extends AppCompatActivity implements
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"20 Secconds", "30 Secconds", "60 Secconds", "OFF"};
                             builder.setTitle(getString(R.string.set_bus_update_frequency));
-                            builder.setNegativeButton("DISMIIS", null);
+                            builder.setNegativeButton("DISMIS", null);
                             builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("AlertDialog", "Positive");
@@ -812,6 +812,7 @@ public class MapsActivity extends AppCompatActivity implements
         //AddMarkers.marker = null;
     }
 
+
     public void onDestroy() {
         super.onDestroy();
 
@@ -880,7 +881,7 @@ public class MapsActivity extends AppCompatActivity implements
                             startActivity(intent);
                         }
                     });
-            builder.setNegativeButton("DISMIISS", null);
+            builder.setNegativeButton("DISMISS", null);
             builder.show();
 
 
@@ -1320,7 +1321,7 @@ public class MapsActivity extends AppCompatActivity implements
                 AddMarkers.dialogOpon = false;
 
 
-                if(pokeBusbusInfo == null){
+                if (pokeBusbusInfo == null){
                     pokeBusbusInfo = new ArrayList<>();
                 }
 
@@ -1328,7 +1329,7 @@ public class MapsActivity extends AppCompatActivity implements
                 pokeBusbusInfo.add(busInfo.get(index));
                 //MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
 
-                Snackbar.make(view, "PokeBus set: " + busInfo.get(index).busName + " : " + finalBuscode, Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "PokeBus set " + busInfo.get(index).busName + " :" + finalBuscode, Snackbar.LENGTH_LONG)
                         .show();
 
                 AddMarkers.addPokeBusColor();
@@ -1337,7 +1338,7 @@ public class MapsActivity extends AppCompatActivity implements
 
             }
         });
-        builder.setNegativeButton("DISMIISS", new DialogInterface.OnClickListener()  {
+        builder.setNegativeButton("DISMISS", new DialogInterface.OnClickListener()  {
             public void onClick(DialogInterface dialog, int which) {
                 Log.d( "AlertDialog", "Positive" );
                 dialog.dismiss();
