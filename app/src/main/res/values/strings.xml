@@ -70,7 +70,7 @@
     <string name="like_us_on_facebook">Like us on Facebook</string>
     <string name="bus_map">Select your preferred Bus Map</string>
     <string name="about">About</string>
-    <string name="license">Licenses</string>
+    <string name="license">License</string>
 
     <!--
              Alarm
@@ -127,7 +127,7 @@
     <!--
      This is for pokebus setting popup
      -->
-    <string name="set_pokebus_title">PokeBus</string>
+    <string name="set_pokebus_title">Set a PokeBus!</string>
     <string name="set_pokebus_body">Bus: B16 \nStopeCode: 36148 \nbody of information i like to write a lot of garbage \njusdt for a
         test giberish is my tone of
         just  \ndude infoprmations a wall  of text</string>

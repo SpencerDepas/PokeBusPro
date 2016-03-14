@@ -418,8 +418,9 @@ public class GetBusDistanceJSON {
 
 
 
+                //AddMarkers addMarkers = new AddMarkers();
 
-                AddMarkers.addMarkersToMap(busInfo);
+                MapsActivity.addMarkers.addMarkersToMap(busInfo);
 
 
                 //to make markers on first run

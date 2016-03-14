@@ -72,12 +72,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 public class MapsActivity extends AppCompatActivity implements
-        LocationProvider.LocationCallback  {
+        LocationProvider.LocationCallback, DialogPopupListner  {
 
     static GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
@@ -124,7 +125,7 @@ public class MapsActivity extends AppCompatActivity implements
   /*  static double testLat = 40.748441;
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
-
+    static AddMarkers addMarkers;
     int indexForBringSnippetToForground = 1;
     ArrayList<String> busIndexForBusStopCycle = new ArrayList<String>();
     boolean enabledGPS;
@@ -143,9 +144,10 @@ public class MapsActivity extends AppCompatActivity implements
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         ab.setDisplayHomeAsUpEnabled(true);
 
+        addMarkers = new AddMarkers();
+        addMarkers.popupListner = MapsActivity.this;
 
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+                mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header=navigationView.getHeaderView(0);
@@ -190,24 +192,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-            optionsButton = (ImageButton) findViewById(R.id.options_button);
-            optionsButton.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    //settings
-                    changeSelectedBus.setVisibility(View.INVISIBLE);
-                    fm = getFragmentManager();
-                    ft = fm.beginTransaction();
-
-                    prefsFragment = new PrefsFragment();
-                    ft.add(R.id.map, prefsFragment, "fragmentid");
-                    ft.addToBackStack("TAG");
-                    ft.commit();
-
-
-                }
-            });
 
 
             ImageButton refreshLocation = (ImageButton) findViewById(R.id.refresh_location_button);
@@ -249,27 +234,7 @@ public class MapsActivity extends AppCompatActivity implements
                     }
                 }
             });
-            ImageButton mapButton = (ImageButton) findViewById(R.id.map_button);
-            mapButton.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    Log.i("MyMapsActivity", "onClick busmap");
-                    changeSelectedBus.setVisibility(View.INVISIBLE);
-                    //go to map
-                    //bus map
-
-                    String prefBusMap = prefs.getString("KEY99", "Brooklyn");
-
-                    Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
-
-                    Intent intent = new Intent(MapsActivity.mContext, BusMap.class);
-                    intent.putExtra("maptype", "Current Map is: " + prefBusMap);
-                    startActivity(intent);
-
-
-                }
-            });
 
 
             changeSelectedBus = (ImageButton) findViewById(R.id.change_selected_bus);
@@ -726,91 +691,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
     static Button btnDismiss;
 
-    static void popupForPokebus(ImageButton optionsButton, String buscode, String id) {
 
-
-
-        Log.i("MyMapsActivity ", "popupForPokebus buscode " + buscode);
-        Log.i("MyMapsActivity ", "popupForPokebus buscode " + id);
-        Log.i("MyMapsActivity ", "AddMarkers.marker[i].getId() " + AddMarkers.marker[0].getId());
-
-        int busInfoIndexForBusName = -1;
-        for(int i = 0 ; i < AddMarkers.marker.length; i ++){
-            if( AddMarkers.marker[i].getId().equals(id)){
-                busInfoIndexForBusName = i;
-                break;
-            }
-
-        }
-        Log.i("MyMapsActivity ", "businfo index " + busInfo.get(busInfoIndexForBusName).busName);
-
-        //to prevent null pouinter
-        if(optionsButton != null) {
-            LayoutInflater layoutInflater = LayoutInflater.from(MapsActivity.mContext);
-            View popupView = layoutInflater.inflate(R.layout.popup_set_pokebus, null);
-
-            back_dim_layout.setVisibility(View.VISIBLE);
-
-            final String finalBuscode = buscode;
-
-
-            final PopupWindow popupWindow = new PopupWindow(
-                    popupView,
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.WRAP_CONTENT);
-
-
-            popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
-
-
-
-            btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
-            btnDismiss.setOnClickListener(new Button.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    popupWindow.dismiss();
-                    back_dim_layout.setVisibility(View.GONE);
-                    AddMarkers.dialogOpon = false;
-
-                }
-            });
-
-            final int index = busInfoIndexForBusName;
-
-            Button btnSetPokeBus = (Button) popupView.findViewById(R.id.set_pokebus);
-            btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    popupWindow.dismiss();
-                    back_dim_layout.setVisibility(View.GONE);
-
-                    AddMarkers.dialogOpon = false;
-
-
-                    if(pokeBusbusInfo == null){
-                        pokeBusbusInfo = new ArrayList<>();
-                    }
-
-
-                    pokeBusbusInfo.add(busInfo.get(index));
-                    MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
-
-
-                    AddMarkers.addPokeBusColor();
-                    //
-                    AddMarkers.openSnippetWithIndex(index );
-                    //AddMarkers.openClosestSnippet(busInfo);
-
-
-                }
-            });
-        }
-
-    }
 
 
     public boolean isOnline() {
@@ -1323,9 +1204,150 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
+    void popupForPokebus(ImageButton optionsButton, String buscode, String id) {
 
 
 
+
+        Log.i("MyMapsActivity ", "popupForPokebus buscode " + buscode);
+        Log.i("MyMapsActivity ", "popupForPokebus buscode " + id);
+        Log.i("MyMapsActivity ", "AddMarkers.marker[i].getId() " + AddMarkers.marker[0].getId());
+
+        int busInfoIndexForBusName = -1;
+        for(int i = 0 ; i < AddMarkers.marker.length; i ++){
+            if( AddMarkers.marker[i].getId().equals(id)){
+                busInfoIndexForBusName = i;
+                break;
+            }
+
+        }
+        Log.i("MyMapsActivity ", "bus name " + busInfo.get(busInfoIndexForBusName).busName);
+
+        //to prevent null pouinter
+        if(optionsButton != null) {
+            LayoutInflater layoutInflater = LayoutInflater.from(MapsActivity.mContext);
+            View popupView = layoutInflater.inflate(R.layout.popup_set_pokebus, null);
+
+            back_dim_layout.setVisibility(View.VISIBLE);
+
+            final String finalBuscode = buscode;
+
+
+            final PopupWindow popupWindow = new PopupWindow(
+                    popupView,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT);
+
+
+            popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
+
+
+
+            btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
+            btnDismiss.setOnClickListener(new Button.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    popupWindow.dismiss();
+                    back_dim_layout.setVisibility(View.GONE);
+                    AddMarkers.dialogOpon = false;
+
+                }
+            });
+
+            final int index = busInfoIndexForBusName;
+
+            Button btnSetPokeBus = (Button) popupView.findViewById(R.id.set_pokebus);
+            btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    popupWindow.dismiss();
+                    back_dim_layout.setVisibility(View.GONE);
+
+                    AddMarkers.dialogOpon = false;
+
+
+                    if(pokeBusbusInfo == null){
+                        pokeBusbusInfo = new ArrayList<>();
+                    }
+
+
+                    pokeBusbusInfo.add(busInfo.get(index));
+                    MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
+
+
+                    AddMarkers.addPokeBusColor();
+                    //
+                    AddMarkers.openSnippetWithIndex(index );
+                    //AddMarkers.openClosestSnippet(busInfo);
+
+
+                }
+            });
+        }
+
+    }
+
+
+
+    @Override
+    public void displayDialog(String pinTittle, String pinId) {
+        Log.i("MyMapsActivity", "displayDialog interface");
+
+
+        int busInfoIndexForBusName = -1;
+        for(int i = 0 ; i < AddMarkers.marker.length; i ++){
+            if( AddMarkers.marker[i].getId().equals(pinId)){
+                busInfoIndexForBusName = i;
+                break;
+            }
+
+        }
+
+        Log.i("MyMapsActivity ", "bus name " + busInfo.get(busInfoIndexForBusName).busName);
+        final int index = busInfoIndexForBusName;
+        final String finalBuscode = pinTittle;
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(getString(R.string.set_pokebus_title));
+        builder.setMessage(getString(R.string.set_pokebus_body_two));
+        builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener()  {
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d( "AlertDialog", "Positive" );
+                dialog.dismiss();
+                AddMarkers.dialogOpon = false;
+
+
+                if(pokeBusbusInfo == null){
+                    pokeBusbusInfo = new ArrayList<>();
+                }
+
+
+                pokeBusbusInfo.add(busInfo.get(index));
+                //MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
+
+                Snackbar.make(view, "PokeBus set: " + busInfo.get(index).busName + " : " + finalBuscode, Snackbar.LENGTH_LONG)
+                        .show();
+
+                AddMarkers.addPokeBusColor();
+                //
+                AddMarkers.openSnippetWithIndex(index);
+
+            }
+        });
+        builder.setNegativeButton("DISMIISS", new DialogInterface.OnClickListener()  {
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d( "AlertDialog", "Positive" );
+                dialog.dismiss();
+                AddMarkers.dialogOpon = false;
+
+
+            }
+        });
+        builder.show();
+    }
 }
 
 

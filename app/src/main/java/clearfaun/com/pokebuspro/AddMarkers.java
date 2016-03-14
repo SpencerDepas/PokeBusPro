@@ -1,6 +1,8 @@
 package clearfaun.com.pokebuspro;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 
@@ -22,8 +24,15 @@ public class AddMarkers {
     static boolean dialogOpon = false;
     static ArrayList<String> overlappingMarkersIndex;
 
+    DialogPopupListner popupListner = null;
 
-    public static void addMarkersToMap(final ArrayList<BusInfo> busInfo) {
+    public AddMarkers(){
+
+    }
+
+
+    public void addMarkersToMap(final ArrayList<BusInfo> busInfo) {
+
 
         overlappingMarkersIndex = new ArrayList<String>();
 
@@ -48,13 +57,17 @@ public class AddMarkers {
             //marker[i].setTitle(busInfo.get(i).getBusName());
 
 
+
+
             MapsActivity.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker Pin) {
                     //busInfo.get(PopupAdapter.currentPopUpIndex).setMarkerSet(false);
+                    popupListner.displayDialog(Pin.getTitle(), Pin.getId());
+
 
                     dialogOpon = true;
-                    MapsActivity.popupForPokebus(MapsActivity.optionsButton, Pin.getTitle(), Pin.getId());
+//                    MapsActivity.popupForPokebus(MapsActivity.optionsButton, Pin.getTitle(), Pin.getId());
 
 
                 }

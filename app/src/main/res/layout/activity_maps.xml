@@ -52,53 +52,13 @@
             android:orientation="vertical" >
 
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/change_selected_bus"
-                android:src="@drawable/ic_action_next_item"
-                android:layout_above="@+id/map_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="@dimen/fab_margin"
-                />
 
 
 
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/map_button"
-                android:src="@drawable/ic_action_web_site_black"
-                android:layout_above="@+id/options_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="@dimen/fab_margin"
-                />
-
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/options_button"
-                android:src="@drawable/ic_action_settings"
-
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="@dimen/fab_margin"
-                />
 
 
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/refresh_location_button"
-                android:layout_below="@+id/options_button"
-                android:src="@drawable/ic_action_replay"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="@dimen/fab_margin"
-                />
 
 
 

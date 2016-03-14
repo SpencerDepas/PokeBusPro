@@ -7,7 +7,7 @@
                 android:key="@string/radius_key"
                 android:title="@string/radius_preference"
                 android:id="@+id/register_to_vote"
-                android:icon="@android:drawable/ic_menu_camera"
+                android:icon="@drawable/ic_panorama_fish_eye_black_24dp"
                 android:entries="@array/radius_entries"
                 android:dialogTitle="@string/set_radius"
                 android:entryValues="@array/radius_entries_values"
@@ -16,36 +16,17 @@
             <item
                 android:title="@string/auto_refresh_time"
                 android:id="@+id/nav_discussion"
-                android:icon="@android:drawable/radiobutton_off_background"
+                android:icon="@drawable/ic_schedule_black_24dp"
+
                 android:key="@string/refresh_time_key"
                 android:entries="@array/auto_refresh_entries"
                 android:entryValues="@array/auto_refresh_entries_values"
                 android:dialogTitle="@string/set_bus_update_frequency"
                 />
-        </menu>
-
-    </item>
 
 
-    <item android:title="@string/poke_bus_settings">
-        <menu>
             <item
-                android:title="@string/remove_all_poke_bus"
-                android:key="@string/remove_poke_bus_key"
-                android:id="@+id/set_my_adress"
-                android:icon="@android:drawable/ic_media_rew"
-               />
-
-        </menu>
-
-    </item>
-
-
-
-    <item android:title="@string/bus_maps">
-        <menu>
-            <item
-                android:icon="@android:drawable/ic_media_rew"
+                android:icon="@drawable/ic_map_black_24dp"
                 android:key="@string/bus_maps_key"
                 android:title="@string/map_preference"
                 android:entries="@array/map_entries"
@@ -53,9 +34,20 @@
                 android:summary="@string/current_map"
                 />
 
+            <item
+
+                android:title="@string/remove_all_poke_bus"
+                android:key="@string/remove_poke_bus_key"
+                android:id="@+id/set_my_adress"
+                android:icon="@drawable/ic_delete_black_24dp"
+                />
+
         </menu>
 
     </item>
+
+
+
 
 
     <item android:title="@string/other">
