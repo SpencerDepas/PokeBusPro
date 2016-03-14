@@ -1,6 +1,7 @@
 package clearfaun.com.pokebuspro;
 
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -21,9 +23,11 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -91,6 +95,8 @@ public class MapsActivity extends AppCompatActivity implements
     static GetBusDistanceJSON objTwo;
 
 
+    boolean hasPermission;
+
     private DrawerLayout mDrawerLayout;
     @Bind(R.id.main_content)  View view;
 
@@ -129,6 +135,8 @@ public class MapsActivity extends AppCompatActivity implements
     int indexForBringSnippetToForground = 1;
     ArrayList<String> busIndexForBusStopCycle = new ArrayList<String>();
     boolean enabledGPS;
+    private Bundle savedInstanceState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +145,9 @@ public class MapsActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
         Log.i("MyMapsActivity", "onCreate");
 
+
+        this.savedInstanceState = savedInstanceState;
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
@@ -144,10 +155,14 @@ public class MapsActivity extends AppCompatActivity implements
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         ab.setDisplayHomeAsUpEnabled(true);
 
-        addMarkers = new AddMarkers();
-        addMarkers.popupListner = MapsActivity.this;
 
-                mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+        mContext = getApplicationContext();
+
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header=navigationView.getHeaderView(0);
@@ -155,9 +170,27 @@ public class MapsActivity extends AppCompatActivity implements
             setupDrawerContent(navigationView);
         }
 
-        back_dim_layout = (RelativeLayout) findViewById(R.id.bac_dim_layout);
+        hasPermission = permissionCheck();
+        Log.i("MyMapsActivity", "permissionCheck hasPermission : " + hasPermission);
 
-        mContext = getApplicationContext();
+        if(!hasPermission){
+            Log.i("MyMapsActivity", "permissionCheck !hasPermission");
+            askForPermissionActivty();
+        }else{
+            permissionGranted();
+        }
+
+
+
+
+    }
+
+    private void permissionGranted(){
+
+        addMarkers = new AddMarkers();
+        addMarkers.popupListner = MapsActivity.this;
+
+
 
         if(!isOnline()){
             Log.i("MyMapsActivity", "!isOnline()");
@@ -187,9 +220,6 @@ public class MapsActivity extends AppCompatActivity implements
 
 
             mLocationProvider.connect();
-
-
-
 
 
 
@@ -279,6 +309,116 @@ public class MapsActivity extends AppCompatActivity implements
             }
         }
 
+    }
+
+    private boolean permissionCheck(){
+        Log.i("MyMapsActivity ", "permissionCheck");
+        int permissionCheck = ContextCompat.checkSelfPermission(mContext,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if(permissionCheck == 0){
+            return true;
+        }
+
+        Log.i("MyMapsActivity ", "permissionCheck == " + permissionCheck);
+
+        return false;
+
+    }
+
+
+    private void askForPermissionActivty(){
+        Log.i("MyMapsActivity ", "permissionCheck askForPermission " );
+
+        Intent intent = new Intent(getApplicationContext() , GetPermissionActivity.class);
+        startActivity(intent);
+        this.finish();
+
+
+    }
+
+    private void requestPermissionReadStorage(){
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(mContext,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            Log.i("MyMapsActivity ", "permissionCheck askForPermission " );
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+
+                Log.i("MyMapsActivity ", "permissionCheck ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,\n" +
+                        "                    Manifest.permission.ACCESS_FINE_LOCATION) " );
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                Log.i("MyMapsActivity ", " permissionCheck No explanation needed, we can request the permission. " );
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(MapsActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+
+    final int  MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION = 22;
+    final int  MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 23;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
+
+                    requestPermissionReadStorage();
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:{
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
+
+
+                    permissionGranted();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     @Override
@@ -798,6 +938,9 @@ public class MapsActivity extends AppCompatActivity implements
     public void onPause() {
         super.onPause();
         Log.i("MyMapsActivity", "onPause()");
+        if(hasPermission){
+
+
         AddMarkers.whatSnippetIsOpen();
         zoom = mMap.getCameraPosition().zoom;
         bearing = mMap.getCameraPosition().bearing;
@@ -810,6 +953,7 @@ public class MapsActivity extends AppCompatActivity implements
         //mLocationProvider.disconnect();
         //busInfo.clear();
         //AddMarkers.marker = null;
+        }
     }
 
 
@@ -858,59 +1002,63 @@ public class MapsActivity extends AppCompatActivity implements
         super.onResume();
         Log.i("MyMapsActivity", "onResume()");
 
-        boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
+        if(hasPermission) {
 
-        if(!isOnline()){
-            Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(getApplicationContext() , NoConnection.class);
-            startActivity(intent);
-            this.finish();
+            boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
-        }else if(!isLocationEnabled(mContext)){
+            if (!isOnline()) {
+                Log.i("MyMapsActivity", "!isOnline()");
+                Intent intent = new Intent(getApplicationContext(), NoConnection.class);
+                startActivity(intent);
+                this.finish();
 
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
-            builder.setTitle("Location services disabled");
-            builder.setMessage("Native Speed needs to access your location.\n" +
-                    "Please turn on location access.");
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener()  {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.d( "AlertDialog", "Positive" );
-                            dialog.dismiss();
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivity(intent);
-                        }
-                    });
-            builder.setNegativeButton("DISMISS", null);
-            builder.show();
+            } else if (!isLocationEnabled(mContext)) {
 
 
-        }else if(enabledAirplaneMode){
-            Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
+                AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle("Location services disabled");
+                builder.setMessage("Native Speed needs to access your location.\n" +
+                        "Please turn on location access.");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("AlertDialog", "Positive");
+                        dialog.dismiss();
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(intent);
+                    }
+                });
+                builder.setNegativeButton("DISMISS", null);
+                builder.show();
 
 
-            Intent intent = new Intent(MapsActivity.mContext , AirplaneMode.class);
-            startActivity(intent);
-            this.finish();
+            } else if (enabledAirplaneMode) {
+                Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
+
+
+                Intent intent = new Intent(MapsActivity.mContext, AirplaneMode.class);
+                startActivity(intent);
+                this.finish();
+
+            }
+
+            if (!enabledGPS && gpsPrompt == 0) {
+                gpsPrompt++;
+                Log.i("MyMapsActivity", "!enabledGPS");
+                toaster("Turn on GPS for best results");
+            }
+
+            fromOnResume = true;
+            mLocationProvider.disconnect();
+            mLocationProvider.connect();
+            if (AddMarkers.marker != null) {
+                AddMarkers.openClosestSnippet(busInfo);
+            }
+
+            setUpMapIfNeeded();
+
+            updateBusDistance();
 
         }
-
-        if (!enabledGPS && gpsPrompt == 0) {
-            gpsPrompt++;
-            Log.i("MyMapsActivity", "!enabledGPS");
-            toaster("Turn on GPS for best results");
-        }
-
-        fromOnResume = true;
-        mLocationProvider.disconnect();
-        mLocationProvider.connect();
-        if(AddMarkers.marker != null){
-            AddMarkers.openClosestSnippet(busInfo);
-        }
-
-        setUpMapIfNeeded();
-
-        updateBusDistance();
 
     }
 

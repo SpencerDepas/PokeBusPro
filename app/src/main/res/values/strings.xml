@@ -62,6 +62,16 @@
     <string name="bus_maps_key">KEY99</string>
     <string name="bus_maps">Bus Map</string>
     <string name="current_map">Current map :Brooklyn</string>
+
+
+    <!--
+        Get Permission Text view
+        -->
+    <string name="turn_permission_on">For Native Speed to work, we need your location. Your location enables us to find what
+        buses to search for. Please enable the location permission.</string>
+    <string name="enable_permission">Enable Permission</string>
+
+
     <!--
          Other
          -->
