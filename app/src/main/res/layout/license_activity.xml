@@ -5,6 +5,7 @@
 
 
     <ScrollView
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView"
@@ -49,6 +50,7 @@
 
 
             <android.support.v7.widget.CardView
+
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,9 +81,13 @@
 
 
             <android.support.v7.widget.CardView
+                android:layout_marginTop="65dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/card_margin">
+               >
 
 
                 <LinearLayout

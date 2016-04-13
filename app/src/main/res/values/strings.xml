@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Native Speed</string>
+    <string name="app_name">Wave Bus</string>
     <string name="title_activity_maps">Native Speed</string>
     <string name="NoUI">Poke Bus</string>
     <string name="action_settings">Settings</string>
 
 
-    <string name="about_page_info">PokeBus was made by Clear Faun.
+    <string name="about_page_info">Native Speed was made by Clear Faun.
                                     PokeBus is licensed by the MTA.</string>
 
     <!--

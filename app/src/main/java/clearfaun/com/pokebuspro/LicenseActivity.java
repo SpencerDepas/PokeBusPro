@@ -2,8 +2,13 @@ package clearfaun.com.pokebuspro;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
@@ -12,10 +17,12 @@ import java.io.InputStream;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import butterknife.Bind;
+
 /**
  * Created by spencer on 4/5/2015.
  */
-public class LicenseActivity extends Activity {
+public class LicenseActivity extends AppCompatActivity {
 
     String labels = "caption";
     String text = "";
@@ -25,13 +32,26 @@ public class LicenseActivity extends Activity {
     private StringTokenizer tokenizer;
 
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.license_activity);
+        setContentView(R.layout.license_activity_main);
 
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.WHITE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         wordss = new Vector<String>();
 

@@ -68,6 +68,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.FileInputStream;
@@ -94,7 +95,9 @@ public class MapsActivity extends AppCompatActivity implements
     static GetBusStopJSON obj;
     static GetBusDistanceJSON objTwo;
 
-
+    static String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
+    final int  MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION = 22;
+    final int  MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 23;
     boolean hasPermission;
 
     private DrawerLayout mDrawerLayout;
@@ -170,15 +173,26 @@ public class MapsActivity extends AppCompatActivity implements
             setupDrawerContent(navigationView);
         }
 
-        hasPermission = permissionCheck();
-        Log.i("MyMapsActivity", "permissionCheck hasPermission : " + hasPermission);
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.M){
+            // Do something for lollipop and above versions
+            hasPermission = permissionCheck();
+            Log.i("MyMapsActivity", "permissionCheck hasPermission : " + hasPermission);
 
-        if(!hasPermission){
-            Log.i("MyMapsActivity", "permissionCheck !hasPermission");
-            askForPermissionActivty();
-        }else{
+            if(!hasPermission){
+                Log.i("MyMapsActivity", "permissionCheck !hasPermission");
+                askForPermissionActivty();
+            }else{
+                permissionGranted();
+            }
+
+
+        } else{
+            // do something for phones running an SDK before lollipop
             permissionGranted();
         }
+
+
 
 
 
@@ -373,8 +387,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    final int  MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION = 22;
-    final int  MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 23;
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -448,6 +461,7 @@ public class MapsActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    public void closeDrawer() {mDrawerLayout.closeDrawer(Gravity.LEFT);}
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
@@ -478,7 +492,7 @@ public class MapsActivity extends AppCompatActivity implements
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"200 Feet", "250 Feet", "300 Feet"};
                             builder.setTitle("Set the radius for PokeBus");
-                            builder.setNegativeButton("DISMIS", null);
+                            builder.setNegativeButton("DISMISS", null);
                             builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("AlertDialog", "Positive");
@@ -561,7 +575,7 @@ public class MapsActivity extends AppCompatActivity implements
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"20 Secconds", "30 Secconds", "60 Secconds", "OFF"};
                             builder.setTitle(getString(R.string.set_bus_update_frequency));
-                            builder.setNegativeButton("DISMIS", null);
+                            builder.setNegativeButton("DISMISS", null);
                             builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("AlertDialog", "Positive");
@@ -621,6 +635,10 @@ public class MapsActivity extends AppCompatActivity implements
                             AddMarkers.removePokeBusColor();
 
 
+                            Snackbar.make(view, "Pokebus's deleted", Snackbar.LENGTH_LONG)
+                                    .show();
+
+
 
                         }  else if (menuItem.getTitle().equals(getString(R.string.about))) {
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
@@ -630,6 +648,7 @@ public class MapsActivity extends AppCompatActivity implements
                             Intent intent = new Intent(MapsActivity.mContext , AboutScreen.class);
                             startActivity(intent);
 
+                            mDrawerLayout.closeDrawers();
 
 
                         }else if (menuItem.getTitle().equals(getString(R.string.map_preference))) {
@@ -641,7 +660,7 @@ public class MapsActivity extends AppCompatActivity implements
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"};
                             builder.setTitle(getString(R.string.select_bus_map_tittle));
-                            builder.setNegativeButton("DISMIS", null);
+                            builder.setNegativeButton("DISMISS", null);
                             builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("AlertDialog", "Positive");
@@ -1486,9 +1505,9 @@ public class MapsActivity extends AppCompatActivity implements
 
             }
         });
-        builder.setNegativeButton("DISMISS", new DialogInterface.OnClickListener()  {
+        builder.setNegativeButton("DISMISS", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Log.d( "AlertDialog", "Positive" );
+                Log.d("AlertDialog", "Positive");
                 dialog.dismiss();
                 AddMarkers.dialogOpon = false;
 
@@ -1497,6 +1516,8 @@ public class MapsActivity extends AppCompatActivity implements
         });
         builder.show();
     }
+
+
 }
 
 

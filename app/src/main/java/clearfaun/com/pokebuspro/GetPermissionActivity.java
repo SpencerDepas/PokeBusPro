@@ -3,13 +3,20 @@ package clearfaun.com.pokebuspro;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,13 +34,20 @@ import butterknife.OnClick;
 public class GetPermissionActivity extends AppCompatActivity {
 
 
-    final int  MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION = 22;
+
     final int  MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 23;
+    final int  MY_PERMISSIONS_REQUEST_FINE_LOCATION = 68;
+
+    final String DIALOG_TITLE = "Access Phone Location";
+    final String DIALOG_MESSAGE = "Wave Bus needs to acces your location in order to find the buses that are close to you.";
+
 
     private Context mContext;
 
     @Bind(R.id.get_permission_tv)  TextView textView;
 
+
+    final String PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
 
 
     @Override
@@ -44,16 +58,83 @@ public class GetPermissionActivity extends AppCompatActivity {
 
         Log.i("GetPermissionActivity ", "permissionCheck askForPermission ");
 
-//        View view = this.getWindow().getDecorView();
-//
-//        view.setBackgroundColor(Color.WHITE);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+//        setSupportActionBar(toolbar);
+
 
         mContext = getApplicationContext();
 
-        //askForPermission();
+        permissionAtRunTime();
 
     }
 
+    private void showAlertDialog(String title, String message, final String permission) {
+        Log.d("GetPermissionActivity", "showAlertDialog" );
+
+        //getSupportActionBar().getThemedContext()
+        //when add a toolbar add this
+        AlertDialog dialog = new AlertDialog.Builder(this)
+
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Request", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //permissionHelper.requestAfterExplanation(permission);
+                        ActivityCompat.requestPermissions(GetPermissionActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+                    }
+
+                })
+                .create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+    }
+
+    private void permissionAtRunTime(){
+        if(Build.VERSION.SDK_INT >= 23 ){
+            Log.d("GetPermissionActivity", "ask for call permission 23> " );
+
+            if( this.checkSelfPermission(PERMISSION)== (int) PackageManager.PERMISSION_GRANTED){
+                Log.d("GetPermissionActivity", "permission allready granted " );
+                Intent intent = new Intent(mContext, MapsActivity.class);
+                startActivity(intent);
+                this.finish();
+            }else{
+                Log.d("GetPermissionActivity", "permission  needs requesting" );
+
+                if(shouldWeAsk(MapsActivity.FINE_LOCATION_PERMISSION_ASKED) ){
+                    Log.d("GetPermissionActivity", "permission has yet to be asked" );
+
+                    showAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE, PERMISSION);
+                }else{
+                    Log.d("GetPermissionActivity", "permission has allready been denied" );
+                    phonePermissionNotGranted();
+                }
+
+
+            }
+
+        }
+    }
+
+    private void phonePermissionNotGranted() {
+        Log.d("GetPermissionActivity", "phonePermissionNotGranted" );
+    }
+
+    private boolean shouldWeAsk(String permission){
+        Log.d("GetPermissionActivity", "shouldWeAsk" );
+        Log.d("GetPermissionActivity", "permission : " + permission );
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        boolean needToAsk = sharedPreferences.getBoolean(permission, true);
+        Log.d("GetPermissionActivity", "shouldWeAsk : " + needToAsk );
+        return needToAsk;
+
+    }
 
     @SuppressWarnings("unused")
     @OnClick(R.id.request_permission)
@@ -63,94 +144,49 @@ public class GetPermissionActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(GetPermissionActivity.this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION);
+                MY_PERMISSIONS_REQUEST_FINE_LOCATION);
     }
 
-    private void askForPermission(){
-        Log.i("MyMapsActivity ", "permissionCheck askForPermission ");
 
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(mContext,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            Log.i("MyMapsActivity ", "permissionCheck askForPermission " );
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(GetPermissionActivity.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-
-                Log.i("MyMapsActivity ", "permissionCheck ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,\n" +
-                        "                    Manifest.permission.ACCESS_FINE_LOCATION) " );
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                Log.i("MyMapsActivity ", " permissionCheck No explanation needed, we can request the permission. " );
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(GetPermissionActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-
-
-    }
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-                    requestPermissionReadStorage();
+        if (requestCode == MY_PERMISSIONS_REQUEST_FINE_LOCATION) {
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                int grantResult = grantResults[i];
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
 
-                } else {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    textView.setVisibility(View.VISIBLE);
+                        Log.d("GetPermissionActivity", "fine location granted" );
+                        Intent intent = new Intent(mContext, MapsActivity.class);
+                        startActivity(intent);
+                        this.finish();
+
+                    } else {
+                        Log.d("GetPermissionActivity", "fine location not granted" );
+                        phonePermissionNotGranted();
+                    }
+
+
+                    savePermissionAsked(MapsActivity.FINE_LOCATION_PERMISSION_ASKED);
                 }
-                return;
             }
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:{
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
-
-
-                    permissionGranted();
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    textView.setVisibility(View.VISIBLE);
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
+    }
+
+    private void savePermissionAsked(String permission){
+        Log.d("GetPermissionActivity", "savePermissionAsked" );
+        Log.d("GetPermissionActivity", "permission : " + permission );
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(permission, false);
+        editor.apply();
     }
 
 
@@ -160,14 +196,14 @@ public class GetPermissionActivity extends AppCompatActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            Log.i("MyMapsActivity ", "permissionCheck askForPermission " );
+            Log.i("GetPermissionActivity ", "permissionCheck askForPermission " );
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(GetPermissionActivity.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
 
-                Log.i("MyMapsActivity ", "permissionCheck ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,\n" +
+                Log.i("GetPermissionActivity ", "permissionCheck ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,\n" +
                         "                    Manifest.permission.ACCESS_FINE_LOCATION) " );
                 // Show an expanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -175,7 +211,7 @@ public class GetPermissionActivity extends AppCompatActivity {
 
             } else {
 
-                Log.i("MyMapsActivity ", " permissionCheck No explanation needed, we can request the permission. " );
+                Log.i("GetPermissionActivity ", " permissionCheck No explanation needed, we can request the permission. " );
                 // No explanation needed, we can request the permission.
 
                 ActivityCompat.requestPermissions(GetPermissionActivity.this,
