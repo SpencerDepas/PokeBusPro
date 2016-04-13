@@ -45,7 +45,7 @@ public class GetPermissionActivity extends AppCompatActivity {
     private Context mContext;
 
     @Bind(R.id.get_permission_tv)  TextView textView;
-
+    @Bind(R.id.request_permission_button)  Button request_permission_button;
 
     final String PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -53,8 +53,15 @@ public class GetPermissionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.get_permission_activity);
+        setContentView(R.layout.get_permission_coord);
         ButterKnife.bind(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+
+
+        request_permission_button.
+                setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
         Log.i("GetPermissionActivity ", "permissionCheck askForPermission ");
 
@@ -66,6 +73,18 @@ public class GetPermissionActivity extends AppCompatActivity {
 
         permissionAtRunTime();
 
+    }
+
+
+
+    @OnClick(R.id.fab_get_permission)
+    public void fab_button(View view) {
+        Log.i("GetPermissionActivity ", "request_permission OnClick ");
+
+
+        ActivityCompat.requestPermissions(GetPermissionActivity.this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_FINE_LOCATION);
     }
 
     private void showAlertDialog(String title, String message, final String permission) {
@@ -137,7 +156,7 @@ public class GetPermissionActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("unused")
-    @OnClick(R.id.request_permission)
+    @OnClick(R.id.request_permission_button)
     public void submit(View view) {
         Log.i("GetPermissionActivity ", "request_permission OnClick ");
 

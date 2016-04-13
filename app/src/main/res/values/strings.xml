@@ -67,8 +67,8 @@
     <!--
         Get Permission Text view
         -->
-    <string name="turn_permission_on">For Native Speed to work, we need your location. Your location enables us to find what
-        buses to search for. Please enable the location permission.</string>
+    <string name="turn_permission_on">For Wave Bus to work, we need to access your location. Your location enables us to find which
+        buses you need to know about. Please enable the location permission.</string>
     <string name="enable_permission">Enable Permission</string>
 
 
