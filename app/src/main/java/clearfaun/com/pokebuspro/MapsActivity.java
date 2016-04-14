@@ -1373,12 +1373,11 @@ public class MapsActivity extends AppCompatActivity implements
                 Log.i("MyMapsActivityTime", "getBusStops(busInfo) endTime  : " + ((endTime - startTime)));
 
 
-                getBusDistance(busInfo);
+                CallAndParse callAndParse = new CallAndParse();
+
+                callAndParse.getBusStopsAndBusDistances("will be lat lng");
 
 
-                Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
-
-                updateBusDistance();
                 Log.i("MyMapsActivity", "after updateBusDistance();");
 
 
@@ -1489,7 +1488,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     @Override
-    public void displayDialog(String pinTittle, String pinId) {
+    public void displayDialog(String busCode, String pinId) {
         Log.i("MyMapsActivity", "displayDialog interface");
 
 
@@ -1504,7 +1503,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         Log.i("MyMapsActivity ", "bus name " + busInfo.get(busInfoIndexForBusName).busName);
         final int index = busInfoIndexForBusName;
-        final String finalBuscode = pinTittle;
+        final String finalBuscode = busCode;
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.set_pokebus_title));
         builder.setMessage(getString(R.string.set_pokebus_body_two));

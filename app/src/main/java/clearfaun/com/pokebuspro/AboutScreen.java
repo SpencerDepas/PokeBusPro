@@ -1,23 +1,16 @@
 package clearfaun.com.pokebuspro;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -61,9 +54,9 @@ public class AboutScreen extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
 
-        CallAndParse callAndParse = new CallAndParse();
-
-        callAndParse.getBusStopsInVicinity("poo");
+//        CallAndParse callAndParse = new CallAndParse();
+//
+//        callAndParse.getBusStopsAndBusDistances("will be lat lng");
 
 
 

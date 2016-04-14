@@ -14,6 +14,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+import POJO.DistancesExample;
+
 /**
  * Created by spencer on 2/21/2015.
  */
@@ -125,6 +127,186 @@ public class AddMarkers {
         }
 
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
+    }
+
+    public void addMarkerToMapWithBusDistances(DistancesExample distancesExample, String busCode,  LatLng busStopLatLng) {
+
+
+        overlappingMarkersIndex = new ArrayList<String>();
+
+        markerLocation = new LatLng[1];
+        marker = new Marker[1];
+        Log.i("AddMarkers", "markerLocation: " + markerLocation.length );
+        Log.i("AddMarkers", "marker " + marker.length );
+        Log.i("AddMarkers", "pointList " + MapsActivity.pointList.size() );
+
+        Log.i("AddMarkers", "befire int i = 0; i < busInfo.size() " );
+
+
+
+
+
+        Log.i("AddMarkers", "in befire int i = 0; i < busInfo.size()");
+
+        LatLng markerLocation;
+        Marker marker;
+
+
+        markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
+        marker = MapsActivity.mMap.addMarker(new MarkerOptions().position(markerLocation));
+        marker.setTitle(busCode);
+        //marker[i].setTitle(busInfo.get(i).getBusName());
+
+
+
+
+        MapsActivity.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker Pin) {
+                //busInfo.get(PopupAdapter.currentPopUpIndex).setMarkerSet(false);
+                popupListner.displayDialog(Pin.getTitle(), Pin.getId());
+
+
+                dialogOpon = true;
+//                    MapsActivity.popupForPokebus(MapsActivity.optionsButton, Pin.getTitle(), Pin.getId());
+
+
+            }
+        });
+
+
+
+        //here
+        addDistancesToMarkers(distancesExample, marker);
+
+
+
+
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+        //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker((float)355));
+        Log.i("AddMarkers", "pre color poke bus : ");
+
+
+
+
+        //this is for saving latlng for onRoatate
+        //MapsActivity.pointList.add(markerLocation[1]);
+
+
+
+
+        marker.showInfoWindow();
+
+
+        addPokeBusColor();
+        //to find closest marker to you
+
+        //openClosestSnippet(busInfo);
+
+        Log.i("AddMarkers", "  Remove spinner ");
+        Log.i("AddMarkers", "  MapsActivity.spinner.getVisibility(): " + MapsActivity.spinner.getVisibility());
+
+
+
+        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
+            MapsActivity.spinner.setVisibility(View.INVISIBLE);
+        }
+
+        Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
+    }
+
+    public void addDistancesToMarkers(DistancesExample distancesExample, Marker marker ){
+        Log.i("AddMarkers", "  addDistancesToMarkers " );
+
+        //distance
+        if (distancesExample.getSiri().getServiceDelivery()
+                .getStopMonitoringDelivery().get(0)
+                .getMonitoredStopVisit()
+                .get(1)
+                .getMonitoredVehicleJourney()
+                .getMonitoredCall()
+                .getExtensions()
+                .getDistances()
+                .getPresentableDistance()
+                .equals("Not available")) {
+
+            marker.setSnippet(distancesExample.getSiri().getServiceDelivery()
+                    .getStopMonitoringDelivery().get(0)
+                    .getMonitoredStopVisit()
+                    .get(0)
+                    .getMonitoredVehicleJourney()
+                    .getMonitoredCall()
+                    .getExtensions()
+                    .getDistances()
+                    .getPresentableDistance()
+            );
+
+        } else if (distancesExample.getSiri().getServiceDelivery()
+                .getStopMonitoringDelivery().get(0)
+                .getMonitoredStopVisit()
+                .get(2)
+                .getMonitoredVehicleJourney()
+                .getMonitoredCall()
+                .getExtensions()
+                .getDistances()
+                .getPresentableDistance()
+                .equals("Not available")) {
+
+            marker.setSnippet(distancesExample.getSiri().getServiceDelivery()
+                    .getStopMonitoringDelivery().get(0)
+                    .getMonitoredStopVisit()
+                    .get(0)
+                    .getMonitoredVehicleJourney()
+                    .getMonitoredCall()
+                    .getExtensions()
+                    .getDistances()
+                    .getPresentableDistance()
+
+                    + "\n" + distancesExample.getSiri().getServiceDelivery()
+                    .getStopMonitoringDelivery().get(0)
+                    .getMonitoredStopVisit()
+                    .get(1)
+                    .getMonitoredVehicleJourney()
+                    .getMonitoredCall()
+                    .getExtensions()
+                    .getDistances()
+                    .getPresentableDistance()
+            );
+
+        } else {
+
+            marker.setSnippet(distancesExample.getSiri().getServiceDelivery()
+                    .getStopMonitoringDelivery().get(0)
+                    .getMonitoredStopVisit()
+                    .get(0)
+                    .getMonitoredVehicleJourney()
+                    .getMonitoredCall()
+                    .getExtensions()
+                    .getDistances()
+                    .getPresentableDistance()
+
+                    + "\n" + distancesExample.getSiri().getServiceDelivery()
+                    .getStopMonitoringDelivery().get(0)
+                    .getMonitoredStopVisit()
+                    .get(1)
+                    .getMonitoredVehicleJourney()
+                    .getMonitoredCall()
+                    .getExtensions()
+                    .getDistances()
+                    .getPresentableDistance()
+
+                    + "\n" + distancesExample.getSiri().getServiceDelivery()
+                    .getStopMonitoringDelivery().get(0)
+                    .getMonitoredStopVisit()
+                    .get(2)
+                    .getMonitoredVehicleJourney()
+                    .getMonitoredCall()
+                    .getExtensions()
+                    .getDistances()
+                    .getPresentableDistance()
+            );
+        }
+
     }
 
     static String lastOpenSnippet;
@@ -301,6 +483,60 @@ public class AddMarkers {
         }
 
     }
+
+//    public static void updateMarkersToMap(DistancesExample distancesExample) {
+//
+//        if(MapsActivity.spinner.getVisibility() == View.INVISIBLE){
+//            MapsActivity.spinner.setVisibility(View.VISIBLE);
+//        }
+//
+//
+//        //remove loading
+//
+//
+//
+//        Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getId(): " + marker[busIndexFormarker].getId());
+//        Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getSnippet(): " + marker[busIndexFormarker].getSnippet());
+//        Log.i("MyAddMarkers", "updateMarkersToMap :   marker.length: " + marker.length);
+//        Log.i("MyAddMarkers", "updateMarkersToMap :  getBusName " + busInfo.getBusName());
+//        Log.i("MyAddMarkers", "updateMarkersToMap :  getBusCode " + busInfo.getBusCode());
+//        Log.i("MyAddMarkers", "updateMarkersToMap :  i  " + busIndexFormarker);
+//        Log.i("MyAddMarkerss", "marker[i].getId() " + marker[busIndexFormarker].getId());
+//        Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[busIndexFormarker].getTitle());
+//
+//        marker[busIndexFormarker].setSnippet(busInfo.getDistance()[0]
+//                + "\n" + busInfo.getDistance()[1]
+//                + "\n" + busInfo.getDistance()[2]
+//        );
+//
+//        if(marker[busIndexFormarker].isInfoWindowShown() && marker[busIndexFormarker].getTitle().equals(MapsActivity.busInfo.get(busIndexFormarker).getBusCode())) {
+//            Log.i("MyAddMarkerss", "marker[i].getId() " + marker[busIndexFormarker].getId());
+//            Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[busIndexFormarker].getTitle());
+//            busInfo.setAddedToPopup(false);
+//            marker[busIndexFormarker].hideInfoWindow();
+//            marker[busIndexFormarker].showInfoWindow();
+//        }
+//
+//
+//
+//
+//
+//
+//        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
+//            MapsActivity.spinner.setVisibility(View.INVISIBLE);
+//        }
+//        //+ "\n" + busInfo.get(i).getDistance()[2])
+//        //Log.i("MyAddMarkers", " after updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
+//
+//
+//        Log.i("MyAddMarkerst", "updateMarkersToMap  marker[pokeBusMarkerIndex].getSnippet() " + marker[pokeBusMarkerIndex].getSnippet() );
+//
+//
+//
+//
+//        Log.i("MyAddMarkers", "updateMarkersToMap  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
+//
+//    }
 
     public static void updateMarkersToMap(BusInfo busInfo, int busIndexFormarker) {
 

@@ -36,6 +36,7 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
     @SuppressLint("InflateParams")
     @Override
     public View getInfoContents(Marker marker) {
+
         if (popup == null) {
             popup = inflater.inflate(R.layout.popup_snippet, null);
         }
@@ -55,82 +56,25 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
         TextView distances = (TextView) popup.findViewById(R.id.snippet);
 
 
-        for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
-            Log.i("PopupAdapter", "getInfoWindow MapsActivity.busInfo.get(i).getBusCode() " + MapsActivity.busInfo.get(i).getBusCode());
-            //if the marker buscode matches the businfo bus code we know what bus it is
+        //BusInfo.setCurrentDisplayedBusName(MapsActivity.busInfo.get(i).busName);
+        busName.setText(marker.getTitle());
 
 
-            Log.i("PopupAdapter", "marker.getTitle() " + marker.getTitle());
-            Log.i("PopupAdapter", "MapsActivity.busInfo.get(i).getBusName() " + MapsActivity.busInfo.get(i).getBusName());
-            Log.i("PopupAdapter", "MapsActivity.busInfo.get(i).isAddedToPopup() " + MapsActivity.busInfo.get(i).isAddedToPopup());
-            if (marker.getTitle().equals(MapsActivity.busInfo.get(i).getBusCode()) && !MapsActivity.busInfo.get(i).isAddedToPopup()) {
-                Log.i("PopupAdapter", "ITS TRUE ");
-                /*for (int q = 0; q < MapsActivity.pokeBusbusInfo.size(); q++) {
-                    if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(q).getBusCode() + "")) {
-                        hasPokeBusIndex = q;
-                        Log.i("PopupAdapterr", "pokebus is here " + hasPokeBusIndex);
-                        Log.i("PopupAdapterr", "pokebus is here " + MapsActivity.pokeBusbusInfo.get(hasPokeBusIndex).getBusName());
+        busCode.setText(marker.getTitle() + "\n" +
+                marker.getSnippet(), TextView.BufferType.SPANNABLE);
+        Spannable text = (Spannable) busCode.getText();
 
-                    }
-                }*/
+        text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                //if in the stack of markers we have a pokebus we want the pokebus to be on the top of the stack
-                //this is if there is no pokebus
+        text.setSpan(new RelativeSizeSpan(.7f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        busCode.setText(text);
+
+        distances.setText(marker.getSnippet());
+        //MapsActivity.busInfo.get(i).setAddedToPopup(true);
 
 
-                BusInfo.setCurrentDisplayedBusName(MapsActivity.busInfo.get(i).busName);
-                busName.setText(MapsActivity.busInfo.get(i).busName);
 
-
-                busCode.setText(marker.getTitle() + "\n" +
-                        MapsActivity.busInfo.get(i).longName, TextView.BufferType.SPANNABLE);
-                Spannable text = (Spannable) busCode.getText();
-
-                text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                text.setSpan(new RelativeSizeSpan(.7f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                busCode.setText(text);
-
-                distances.setText(MapsActivity.busInfo.get(i).distance[0]
-                        + "\n" + MapsActivity.busInfo.get(i).distance[1]
-                        + "\n" + MapsActivity.busInfo.get(i).distance[2]);
-                MapsActivity.busInfo.get(i).setAddedToPopup(true);
-
-
-                for (int z = 0; z < AddMarkers.marker.length; z++) {
-
-
-                    if (z == i) {
-                        //skip
-                        Log.i("PopupAdapter", "z == i SKIP " + MapsActivity.busInfo.get(i).getBusCode());
-                        Log.i("PopupAdapter", "z == i SKIP " + MapsActivity.busInfo.get(i).getBusName());
-
-
-                    } else if (MapsActivity.busInfo.get(z).getBusCode().equals(AddMarkers.marker[i].getTitle())) {
-                        MapsActivity.changeSelectedBus.setVisibility(View.VISIBLE);
-
-
-                        currentPopUpIndex = i;
-
-
-                        Log.i("PopupAdapter", " else if " + MapsActivity.busInfo.get(i).getBusCode());
-                        Log.i("PopupAdapter", "else if" + MapsActivity.busInfo.get(i).getBusName());
-                        Log.i("PopupAdapter", "AddMarkers.marker[i].isVisible()" + AddMarkers.marker[i].isVisible());
-                        Log.i("PopupAdapter", "currentPopUpIndex " + currentPopUpIndex);
-
-
-                    }
-
-                }
-
-                break;
-
-
-            }
-
-
-        }
 
 
         return (popup);
