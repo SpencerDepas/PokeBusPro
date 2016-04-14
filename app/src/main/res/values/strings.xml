@@ -18,7 +18,7 @@
          no connection
          -->
 
-    <string name="no_connection">no_connection\nPush to try again</string>
+    <string name="no_connection">No Connection\nPush to try again</string>
     <!--
       Map preferences
       -->

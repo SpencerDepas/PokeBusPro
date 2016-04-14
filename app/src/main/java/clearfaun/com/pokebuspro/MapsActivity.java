@@ -747,6 +747,8 @@ public class MapsActivity extends AppCompatActivity implements
                 });
     }
 
+
+
     boolean firstRun = true;
     public void cycleThroughPopup(){
         //changeSelectedBus.setVisibility(View.INVISIBLE);
@@ -978,9 +980,10 @@ public class MapsActivity extends AppCompatActivity implements
 
     public void onDestroy() {
         super.onDestroy();
+        Log.i("MyMapsActivity", "onDestroy()");
 
 
-
+        mMap = null;
         finish();
     }
 
@@ -1077,6 +1080,7 @@ public class MapsActivity extends AppCompatActivity implements
 
             updateBusDistance();
 
+
         }
 
     }
@@ -1099,7 +1103,11 @@ public class MapsActivity extends AppCompatActivity implements
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
         String timeInMSString= prefs.getString(MapsActivity.mContext.getString(R.string.refresh_time_key), "20000");
 
+        if(timeInMSString.equals("OFF")){
+            timeInMSString = "0";
+        }
         Log.i("MyMapsActivity", "timeInMSString()" + timeInMSString);
+
         int timeInMS = Integer.parseInt(timeInMSString) * 1000;
         Log.i("MyMapsActivity", "timeInMS()" + timeInMS);
         if(timeInMS != 0) {
@@ -1207,7 +1215,11 @@ public class MapsActivity extends AppCompatActivity implements
                     }
                 }
             });
+
+
+
         }
+
     }
 
 
@@ -1250,7 +1262,7 @@ public class MapsActivity extends AppCompatActivity implements
             ArrayList<BusInfo> busInfo = (ArrayList)  is.readObject();
             is.close();
             fis.close();
-            Log.i("MyMapsActivity","loadPokeBus return 1 :)");
+            Log.i("MyMapsActivity","loadPokeBus busInfo size  :)" + busInfo.size());
             return busInfo;
 
         }catch(Exception e) {
@@ -1298,7 +1310,7 @@ public class MapsActivity extends AppCompatActivity implements
         latLng = new LatLng(latitude, longitude);
 
         Log.i("MyMapsActivity", "handleNewLocation()zoom:" + zoom);
-        Log.i("MyMapsActivity","handleNewLocation -----------");
+        Log.i("MyMapsActivity","handleNewLocation -------latLng : " + latLng.toString());
         Log.i("MyMapsActivity","handleNewLocation -----------location.getAccuracy():" +  location.getAccuracy());
         Log.i("MyMapsActivity","fromOnResume :" + fromOnResume);
         //we want it from onresume to update location but not refresh
@@ -1315,13 +1327,28 @@ public class MapsActivity extends AppCompatActivity implements
                 firstBoot++;
                 mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
                 mMap.setMyLocationEnabled(true);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .bearing(bearing)                // Sets the orientation of the camera to east
-                        .zoom(zoom)                   // keeps zoom
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                Log.i("MyMapsActivity", "bearing =" + bearing);
+                Log.i("MyMapsActivity", "zoom =" + zoom);
+
+                if(bearing == 0){
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(latLng)    // Sets the center of the map to Mountain View
+                            .zoom(17)                   // Sets the zoom
+                            .bearing(40)                 // keeps zoom
+                            .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                            .build();                   // Creates a CameraPosition from the builder
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }else{
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(latLng)    // Sets the center of the map to Mountain View
+                            .bearing(bearing)                // Sets the orientation of the camera to east
+                            .zoom(zoom)                   // keeps zoom
+                            .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                            .build();                   // Creates a CameraPosition from the builder
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+
                 refreshMarkers();
                 //AddMarkers.addMarkersToMap(busInfo);
 
