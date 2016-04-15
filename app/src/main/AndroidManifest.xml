@@ -29,7 +29,7 @@
             android:value="AIzaSyBSD0_ViGwMwNooLtSDXXX1dWiVFvpU680" />
 
         <activity
-            android:launchMode="singleTop"
+
 
             android:name=".MapsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -59,7 +59,7 @@
             android:parentActivityName=".MapsActivity"
             android:name="AboutScreen"/>
         <activity android:label="@string/app_name"
-            android:parentActivityName=".MapsActivity"
+
             android:name="BusMap"/>
         <activity android:label="@string/app_name" android:name="AirplaneMode"/>
         <activity android:label="@string/app_name" android:name="NoConnection"/>

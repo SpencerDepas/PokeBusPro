@@ -13,8 +13,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -26,8 +28,7 @@ import butterknife.OnClick;
 /**
  * Created by spencer on 3/16/2015.
  */
-public class BusMap extends AppCompatActivity
-        implements DialogInterface.OnDismissListener {
+public class BusMap extends AppCompatActivity   {
 
     private ProgressBar spinner;
     SubsamplingScaleImageView imageView;
@@ -215,6 +216,13 @@ public class BusMap extends AppCompatActivity
     }
 
     @Override
+    public  boolean  onOptionsItemSelected(MenuItem item) {
+
+        this.finish();
+        return  true;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
     }
@@ -222,10 +230,4 @@ public class BusMap extends AppCompatActivity
 
 
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        Log.i("BusMap", "dismiss");
-
-
-    }
 }
