@@ -95,8 +95,7 @@ public class CallAndParse {
 
                 Log.i("MyCallAndParse", "get bus stops size : " + busStopExample.getData().getStops().size());
 
-                //civicInterface.gotCivicLocalInfo(local);
-                //getBusStopsDistances("fart");
+
 
                 makeBusDistanceThreads(busStopExample);
 
@@ -177,23 +176,23 @@ public class CallAndParse {
                 Log.i("MyCallAndParse", "get bus stops success");
 
 
-                Log.i("MyCallAndParse", "get bus stops size : " + distancesExample.getSiri().getServiceDelivery()
+                Log.i("MyCallAndParse", "get bus distances size : " + distancesExample.getSiri().getServiceDelivery()
                         .getStopMonitoringDelivery()
                         .size()
                 );
 
 
-                Log.i("MyCallAndParse", "get bus stops local : " + distancesExample.getSiri().getServiceDelivery()
-                .getStopMonitoringDelivery().get(0)
-                .getMonitoredStopVisit()
-                .get(0)
-                .getMonitoredVehicleJourney()
-                .getMonitoredCall()
-                .getExtensions()
-                .getDistances()
-                .getPresentableDistance()
-
-                );
+//                Log.i("MyCallAndParse", "get bus stops local : " + distancesExample.getSiri().getServiceDelivery()
+//                .getStopMonitoringDelivery().get(0)
+//                .getMonitoredStopVisit()
+//                .get(0)
+//                .getMonitoredVehicleJourney()
+//                .getMonitoredCall()
+//                .getExtensions()
+//                .getDistances()
+//                .getPresentableDistance()
+//
+//                );
 
                 //AddMarkers.updateMarkersToMap(distancesExample );
 

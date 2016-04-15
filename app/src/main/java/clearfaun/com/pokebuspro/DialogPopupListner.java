@@ -5,6 +5,6 @@ package clearfaun.com.pokebuspro;
  */
 public interface DialogPopupListner {
 
-    public void displayDialog(String pinTittle, String pinId);
+    public void displayDialog(String pinTittle, String pinId, String buscode);
 
 }

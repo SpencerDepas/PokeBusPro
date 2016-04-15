@@ -3,9 +3,7 @@ package clearfaun.com.pokebuspro;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -24,7 +22,6 @@ import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.support.v4.content.ContextCompat;
@@ -40,13 +37,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -63,12 +56,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.FileInputStream;
@@ -76,8 +67,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -1325,7 +1314,7 @@ public class MapsActivity extends AppCompatActivity implements
                 Log.i("MyMapsActivity", "afterpointList.size() > 0");
                 //for after onrotate
                 firstBoot++;
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+                mMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
                 mMap.setMyLocationEnabled(true);
 
                 Log.i("MyMapsActivity", "bearing =" + bearing);
@@ -1364,13 +1353,13 @@ public class MapsActivity extends AppCompatActivity implements
                         .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                         .build();                   // Creates a CameraPosition from the builder
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
+                mMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
 
                 //Log.i("MyMapsActivityTime", "startTime : " + System.currentTimeMillis());
-                long startTime = System.currentTimeMillis();
-                getBusStops(busInfo);
-                long endTime = (System.currentTimeMillis());
-                Log.i("MyMapsActivityTime", "getBusStops(busInfo) endTime  : " + ((endTime - startTime)));
+//                long startTime = System.currentTimeMillis();
+//                getBusStops(busInfo);
+//                long endTime = (System.currentTimeMillis());
+//                Log.i("MyMapsActivityTime", "getBusStops(busInfo) endTime  : " + ((endTime - startTime)));
 
 
                 CallAndParse callAndParse = new CallAndParse();
@@ -1488,7 +1477,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     @Override
-    public void displayDialog(String busCode, String pinId) {
+    public void displayDialog(String busCode, String pinId, String buscode) {
         Log.i("MyMapsActivity", "displayDialog interface");
 
 

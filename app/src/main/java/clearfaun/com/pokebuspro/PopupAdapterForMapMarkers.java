@@ -18,11 +18,11 @@ import java.util.ArrayList;
 /**
  * Created by spencer on 2/25/2015.
  */
-class PopupAdapter implements GoogleMap.InfoWindowAdapter {
+class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     private View popup = null;
     private LayoutInflater inflater = null;
 
-    PopupAdapter(LayoutInflater inflater) {
+    PopupAdapterForMapMarkers(LayoutInflater inflater) {
         this.inflater = inflater;
     }
 
@@ -36,19 +36,19 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
     @SuppressLint("InflateParams")
     @Override
     public View getInfoContents(Marker marker) {
-
+        Log.i("PopupAdapterForMapMark", "new popup() ");
         if (popup == null) {
             popup = inflater.inflate(R.layout.popup_snippet, null);
         }
 
-        Log.i("PopupAdapter", "addMarkersToMap() ");
+        Log.i("PopupAdapterForMapMark", "addMarkersToMap() ");
 
         if (AddMarkers.fromOpenSnippetWithIndex) {
             AddMarkers.fromOpenSnippetWithIndex = false;
-            Log.i("PopupAdapter", "fromOpenSnippetWithIndex + true ");
+            Log.i("PopupAdapterForMapMark", "fromOpenSnippetWithIndex + true ");
             return popup;
         } else {
-            Log.i("PopupAdapter", "fromOpenSnippetWithIndex + false ");
+            Log.i("PopupAdapterForMapMark", "fromOpenSnippetWithIndex + false ");
 
 
         TextView busName = (TextView) popup.findViewById(R.id.bus_name);
@@ -57,18 +57,18 @@ class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
 
         //BusInfo.setCurrentDisplayedBusName(MapsActivity.busInfo.get(i).busName);
-        busName.setText(marker.getTitle());
+        busName.setText(marker.getTitle().substring(6));
 
 
         busCode.setText(marker.getTitle() + "\n" +
                 marker.getSnippet(), TextView.BufferType.SPANNABLE);
-        Spannable text = (Spannable) busCode.getText();
+//        Spannable text = (Spannable) busCode.getText();
+//
+//        text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//        text.setSpan(new RelativeSizeSpan(.7f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        text.setSpan(new RelativeSizeSpan(.7f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        busCode.setText(text);
+        busCode.setText(marker.getTitle().substring(0, 6));
 
         distances.setText(marker.getSnippet());
         //MapsActivity.busInfo.get(i).setAddedToPopup(true);
