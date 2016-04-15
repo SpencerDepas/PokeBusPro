@@ -1,5 +1,7 @@
 package clearfaun.com.pokebuspro;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -51,7 +53,7 @@ public class CallAndParse {
 
 
 
-
+    SharedPreferences prefs;
 
     public CallAndParse(){
         Log.i("MyCallAndParse", "CallAndParse");
@@ -60,11 +62,11 @@ public class CallAndParse {
     }
 
 
-    public void getBusStopsAndBusDistances(String state) {
+    public void getBusStopsAndBusDistances(LatLng latLng) {
         Log.i("MyCallAndParse", "getBusStopsAndBusDistances");
 
-        String lat = MapsActivity.latitude + "";
-        String lng = MapsActivity.longitude + "";
+        String lat = latLng.latitude + "";
+        String lng = latLng.longitude + "";
         //Retrofit
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(MTA_BUS_STOP_API)
@@ -76,6 +78,10 @@ public class CallAndParse {
         GetBussStopInterface bussStopInterface = restAdapter.create(GetBussStopInterface.class);
 
 
+        String prefRadius =   MapsActivity.prefs.getString("KEY1", "301");
+
+        Log.i("MyCallAndParse", "prefRadius : " + prefRadius);
+
         String radius = "500";
         //String lat = "40.6453205";
         //String lng = "-73.9838934";
@@ -83,7 +89,7 @@ public class CallAndParse {
 
 
 
-        bussStopInterface.getBusSTop(radius, "40.6459", "-73.9831", new Callback<BusStopExample>() {
+        bussStopInterface.getBusSTop(prefRadius, lat, lng, new Callback<BusStopExample>() {
 
 
             @Override

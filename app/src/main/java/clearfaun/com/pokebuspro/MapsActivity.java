@@ -66,6 +66,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Timer;
@@ -447,11 +448,8 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-                        String refreshRate = prefs.getString("KEY2", "DICK");
+                        String savedRadius = prefs.getString(getString(R.string.radius_key), "NA");
 
-                        String savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
-
-                        Log.d("MyMainActivity", "prefs refreshRate:" + refreshRate);
 
                         Log.d("MyMainActivity", "prefs msavedRadius:" + savedRadius);
 
@@ -462,14 +460,36 @@ public class MapsActivity extends AppCompatActivity implements
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
 
 
+                            final String findWhatToPreSelect = prefs.getString(getString(R.string.radius_key), "0");
+
+                            int preSelectedIndex = -1;
+                            switch (Integer.parseInt(findWhatToPreSelect)) {
+                                case 200:  preSelectedIndex = 0;
+                                    break;
+                                case 250:  preSelectedIndex = 1;
+                                    break;
+                                case 300:  preSelectedIndex = 2;
+                                    break;
+                                default:
+                                    preSelectedIndex = 0;
+                                    break;
+
+
+                            }
+
+                            Log.d("AlertDialog", "findWhatToPreSelect : " + findWhatToPreSelect);
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"200 Feet", "250 Feet", "300 Feet"};
                             builder.setTitle("Set the radius for PokeBus");
                             builder.setNegativeButton("DISMISS", null);
-                            builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                            builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("AlertDialog", "Positive");
                                     dialog.dismiss();
+
+                                    Log.d("AlertDialog", "findWhatToPreSelect : " + findWhatToPreSelect);
+
 
                                     if (which == 0) {
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
@@ -477,16 +497,16 @@ public class MapsActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
 
 
+
                                         prefs.edit().putString(getString(R.string.radius_key), "200").apply();
                                         MapsActivity.spinner.setVisibility(View.VISIBLE);
                                         MapsActivity.refreshMarkers();
 
 
-                                        String refreshRate = prefs.getString("KEY2", "DICK");
 
                                         String savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
 
-                                        Log.d("MyMainActivity", "prefs refreshRate:" + refreshRate);
+                                        Log.d("MyMainActivity", "prefs refreshRate:" + findWhatToPreSelect);
 
                                         Log.d("MyMainActivity", "prefs msavedRadius:" + savedRadius);
 
@@ -545,11 +565,36 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
+
+                            final String findWhatToPreSelect = prefs.getString(getString(R.string.refresh_time_key), "0");
+
+                            int preSelectedIndex = 0;
+                            try {
+                                switch (Integer.parseInt(findWhatToPreSelect)) {
+                                    case 20:
+                                        preSelectedIndex = 0;
+                                        break;
+                                    case 30:
+                                        preSelectedIndex = 1;
+                                        break;
+                                    case 60:
+                                        preSelectedIndex = 2;
+                                        break;
+                                    default:
+                                        preSelectedIndex = 3;
+                                        break;
+
+
+                                }
+                            }catch (Exception e){
+                                preSelectedIndex = 3;
+                            }
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"20 Secconds", "30 Secconds", "60 Secconds", "OFF"};
                             builder.setTitle(getString(R.string.set_bus_update_frequency));
                             builder.setNegativeButton("DISMISS", null);
-                            builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                            builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("AlertDialog", "Positive");
                                     dialog.dismiss();
@@ -584,7 +629,7 @@ public class MapsActivity extends AppCompatActivity implements
                                     } else if (which == 3) {
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
-                                        prefs.edit().putString("KEY2", "OFF").apply();
+                                        prefs.edit().putString("KEY2", "0").apply();
                                         MapsActivity.stopTimerTask();
 
                                     }
@@ -628,13 +673,38 @@ public class MapsActivity extends AppCompatActivity implements
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
                             //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
 
+                            final String findWhatToPreSelect = prefs.getString(getString(R.string.bus_maps_key), "0");
+
+                            int preSelectedIndex = 0;
+
+                            switch ( findWhatToPreSelect) {
+                                case "Brooklyn":
+                                    preSelectedIndex = 0;
+                                    break;
+                                case "Manhattan":
+                                    preSelectedIndex = 1;
+                                    break;
+                                case "Queens":
+                                    preSelectedIndex = 2;
+                                    break;
+                                case "Bronx":
+                                    preSelectedIndex = 3;
+                                    break;
+                                case "Staten Island":
+                                    preSelectedIndex = 4;
+                                    break;
+                                default:
+                                    preSelectedIndex = 0;
+                                    break;
+
+                            }
 
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"};
                             builder.setTitle(getString(R.string.select_bus_map_tittle));
                             builder.setNegativeButton("DISMISS", null);
-                            builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                            builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.d("AlertDialog", "Positive");
                                     dialog.dismiss();
@@ -642,7 +712,7 @@ public class MapsActivity extends AppCompatActivity implements
                                     if (which == 0) {
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
 
-                                        prefs.edit().putString("KEY99", "Brooklyn").apply();
+                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Brooklyn").apply();
 
 
 
@@ -652,7 +722,7 @@ public class MapsActivity extends AppCompatActivity implements
                                     } else if (which == 1) {
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
 
-                                        prefs.edit().putString("KEY99", "Manhattan").apply();
+                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Manhattan").apply();
 
 
                                         Log.d("MyMainActivity", "refreshrate set to 30:");
@@ -660,7 +730,7 @@ public class MapsActivity extends AppCompatActivity implements
                                     } else if (which == 2) {
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
-                                        prefs.edit().putString("KEY99", "Queens").apply();
+                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Queens").apply();
 
 
                                         Log.d("MyMainActivity", "refreshrate set to 60:");
@@ -668,13 +738,13 @@ public class MapsActivity extends AppCompatActivity implements
                                     } else if (which == 3) {
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
-                                        prefs.edit().putString("KEY99", "Bronx").apply();
+                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Bronx").apply();
 
 
                                     }else if (which == 4) {
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
-                                        prefs.edit().putString("KEY99", "Staten Island").apply();
+                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Staten Island").apply();
 
 
                                     }
@@ -686,7 +756,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-                        } else if (menuItem.getTitle().equals(getString(R.string.like_us_on_facebook))) {
+                        }else if (menuItem.getTitle().equals(getString(R.string.like_us_on_facebook))) {
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
                             //toaster("My ZIpcode is :" + parseUser.get("zip_code").toString());
                             String url = "https://www.facebook.com/ClearFaun?ref=bookmarks";
@@ -707,11 +777,9 @@ public class MapsActivity extends AppCompatActivity implements
                         }
 
 
-                         refreshRate = prefs.getString("KEY2", "DICK");
 
-                        Log.d("MyMainActivity", "final prefs refreshRate:" + refreshRate);
 
-                         savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
+                        savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
 
                         Log.d("MyMainActivity", "final prefs msavedRadius:" + savedRadius);
 
@@ -772,9 +840,10 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
+
         CallAndParse callAndParse = new CallAndParse();
 
-        callAndParse.getBusStopsAndBusDistances("will be lat lng");
+        callAndParse.getBusStopsAndBusDistances(latLng);
     }
 
 
@@ -1029,7 +1098,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
                 CallAndParse callAndParse = new CallAndParse();
-                callAndParse.getBusStopsAndBusDistances("will be lat lng");
+                callAndParse.getBusStopsAndBusDistances(latLng);
 
 
             }
@@ -1217,7 +1286,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         CallAndParse callAndParse = new CallAndParse();
 
-        callAndParse.getBusStopsAndBusDistances("will be lat lng");
+        callAndParse.getBusStopsAndBusDistances(latLng);
 
 
         Log.i("MyMapsActivity", "after updateBusDistance();");
