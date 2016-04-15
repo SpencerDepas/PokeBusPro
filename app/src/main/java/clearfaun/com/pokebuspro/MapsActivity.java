@@ -67,6 +67,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -81,8 +82,7 @@ public class MapsActivity extends AppCompatActivity implements
     static double latitude;
     static double longitude;
     static Context mContext;
-    static GetBusStopJSON obj;
-    static GetBusDistanceJSON objTwo;
+
 
     static String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
     final int  MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION = 22;
@@ -96,9 +96,6 @@ public class MapsActivity extends AppCompatActivity implements
     float bearing;
 
 
-    static ArrayList<BusInfo> busInfo = new ArrayList<>();
-    static ArrayList<BusInfo> pokeBusbusInfo;
-    static ArrayList<LatLng> pointList = new ArrayList<>();
 
     static Marker pokeBusMarker;
     static Timer timer;
@@ -293,23 +290,10 @@ public class MapsActivity extends AppCompatActivity implements
             } else {
                 Log.i("MyMapsActivity ", "savedInstanceState == null ");
                 //Log.i("MyMapsActivity ", "pokeBusbusInfo SIZE" + pokeBusbusInfo.size());
-                pokeBusbusInfo = loadPokeBus();
-                if (pokeBusbusInfo != null) {
 
-                    if(pokeBusbusInfo.size() == 0) {
-                        Log.i("MyMapsActivity ", "pokeBusbusInfo.size() == 0 ");
-                        Snackbar.make(view, "To set a Pokebus press on the bus stop window", Snackbar.LENGTH_LONG)
-                                .show();
-
-
-                    }
-                }
             }
 
-            //this loads in businfo of saved bus stops
-            if(pokeBusbusInfo != null) {
-                pokeBusbusInfo = loadPokeBus();
-            }
+
         }
 
     }
@@ -619,7 +603,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
                             MapsActivity.deletePrefs();
-                            MapsActivity.pokeBusbusInfo.clear();
+
                             //removes change of color from icon color
                             AddMarkers.removePokeBusColor();
 
@@ -741,79 +725,8 @@ public class MapsActivity extends AppCompatActivity implements
     boolean firstRun = true;
     public void cycleThroughPopup(){
         //changeSelectedBus.setVisibility(View.INVISIBLE);
-        AddMarkers.whatSnippetIsOpen();
 
-        //gets buses for each bus stop
-        Log.i("MyMapsActivityy", "AddMarkers.lastOpenSnippet " + AddMarkers.lastOpenSnippet);
-
-        String currentBusCode = AddMarkers.lastOpenSnippet;
-
-
-
-
-        if(busIndexForBusStopCycle.size() == 0 ) {
-            Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() == 0 " );
-            if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
-                for (int i = 0; i < busInfo.size(); i++) {
-
-                    //find marker index of all buses for stop
-                    if (AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[i].getTitle())) {
-                        busIndexForBusStopCycle.add(i + "");
-                        Log.i("MyMapsActivityy", "busIndexForBusStopCycle " + i);
-                        Log.i("MyMapsActivityy", "busInfo naame " + busInfo.get(i).getBusName());
-                    }
-
-                }
-            }
-        }else if (!AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(0))].getTitle())){
-            Log.i("MyMapsActivityy", "else if  " + AddMarkers.lastOpenSnippet);
-            //if its not the same snippet open as the last time button was pressed
-            indexForBringSnippetToForground = 1;
-            busIndexForBusStopCycle.clear();
-            if (Integer.parseInt(AddMarkers.lastOpenSnippet) > 0) {
-                for (int i = 0; i < busInfo.size(); i++) {
-
-                    //find marker index of all buses for stop
-                    if (AddMarkers.lastOpenSnippet.equals(AddMarkers.marker[i].getTitle())) {
-                        busIndexForBusStopCycle.add(i + "");
-                    }
-
-                }
-            }
-        }
-
-
-
-
-        Log.i("MyMapsActivityy", "indexForBringSnippetToForground ==  " + indexForBringSnippetToForground);
-        Log.i("MyMapsActivityy", "busIndexForBusStopCycle.size() ==  " + busIndexForBusStopCycle.size());
-
-        //resets which to select if iuts got to the last one
-        if(indexForBringSnippetToForground == busIndexForBusStopCycle.size()) {
-            firstRun = false;
-            Log.i("MyMapsActivityy", "in indexForBringSnippetToForground == busIndexForBusStopCycle.size() ");
-            indexForBringSnippetToForground = 0;
-            for (int i = 0; i < AddMarkers.marker.length; i++) {
-                for(int t = 0; t < busIndexForBusStopCycle.size(); t++) {
-                    if (AddMarkers.marker[i].getTitle().equals(AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(t))].getTitle())) {
-                        t++;
-                        //all markers with the same buscode
-
-                        AddMarkers.marker[i].setVisible(false);
-                        MapsActivity.busInfo.get(i).setAddedToPopup(false);
-                        Log.i("MyMapsActivityy", "setting invisable marker: " + i);
-                    }
-                }
-            }
-        }
-
-        //makes all at stop invisable
-        //display next bus in cycle
-
-        Log.i("MyMapsActivityy", "marker index set visable : " + Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground)));
-        AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].setVisible(true);
-        AddMarkers.marker[Integer.parseInt(busIndexForBusStopCycle.get(indexForBringSnippetToForground))].showInfoWindow();
-        indexForBringSnippetToForground++;
+       // AddMarkers.whatSnippetIsOpen();
 
 
     }
@@ -855,35 +768,13 @@ public class MapsActivity extends AppCompatActivity implements
     public static void refreshMarkers(){
         Log.i("MyMapsActivity", "refreshMarkers");
         //saves last open snippet
-        AddMarkers.whatSnippetIsOpen();
-
-        //pointlist is to save info for onrotate
-        pointList.clear();
-
-        busInfo.clear();
-        stopTimerTask();
-        AddMarkers.marker = null;
-        mMap.clear();
+        //AddMarkers.whatSnippetIsOpen();
 
 
 
-        getBusStops(busInfo);
+        CallAndParse callAndParse = new CallAndParse();
 
-
-
-        Log.i("MyMapsActivity", "after getBusStops(busInfo) refresh ");
-        Log.i("MyMapsActivity", "after busInfo " + busInfo.size());
-
-
-        getBusDistance(busInfo);
-
-
-
-        Log.i("MyMapsActivity", "after getBusDistance(busInfo); ");
-
-        updateBusDistance();
-        Log.i("MyMapsActivity", "after updateBusDistance();");
-
+        callAndParse.getBusStopsAndBusDistances("will be lat lng");
     }
 
 
@@ -914,41 +805,40 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    public static void getBusStops(ArrayList<BusInfo> busInfo){
-        Log.i("MyMapsActivity", "inside getBusStops");
-        obj = new GetBusStopJSON();
-        obj.fetchBusStop(busInfo);
+//    public static void getBusStops(ArrayList<BusInfo> busInfo){
+//        Log.i("MyMapsActivity", "inside getBusStops");
+//        obj = new GetBusStopJSON();
+//        obj.fetchBusStop(busInfo);
+//
+//        Log.i("MyMapsActivity", "before while");
+//
+//        while (obj.parsingComplete){
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//            continue;
+//        }
+//
+//        Log.i("MyMapsActivity", "after while while(obj.parsingComplete);    busInfo.size():" + busInfo.size());
+//
+//
+//    }
 
-        Log.i("MyMapsActivity", "before while");
-
-        while (obj.parsingComplete){
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            continue;
-        }
-
-        Log.i("MyMapsActivity", "after while while(obj.parsingComplete);    busInfo.size():" + busInfo.size());
 
 
-    }
-
-
-
-    public static void getBusDistance(ArrayList<BusInfo> busInfo){
-        Log.i("MyMapsActivity", "getBusDistance");
-        objTwo = new GetBusDistanceJSON();
-        objTwo.fetchBusDistanceJson(busInfo);
-
-    }
+//    public static void getBusDistance(ArrayList<BusInfo> busInfo){
+//        Log.i("MyMapsActivity", "getBusDistance");
+//        objTwo = new GetBusDistanceJSON();
+//        objTwo.fetchBusDistanceJson(busInfo);
+//
+//    }
 
     public void onPause() {
         super.onPause();
         Log.i("MyMapsActivity", "onPause()");
-        if(hasPermission){
 
 
         AddMarkers.whatSnippetIsOpen();
@@ -959,11 +849,8 @@ public class MapsActivity extends AppCompatActivity implements
 
         stopTimerTask();
         savePokeBus();
-        //BusInfo.onPauseNotForToastService(busInfo);
-        //mLocationProvider.disconnect();
-        //busInfo.clear();
-        //AddMarkers.marker = null;
-        }
+
+
     }
 
 
@@ -971,6 +858,11 @@ public class MapsActivity extends AppCompatActivity implements
         super.onDestroy();
         Log.i("MyMapsActivity", "onDestroy()");
 
+        MarkerManager markerManager = MarkerManager.getInstance();
+
+        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+
+        markerHashTable.clear();
 
         mMap = null;
         finish();
@@ -1058,12 +950,12 @@ public class MapsActivity extends AppCompatActivity implements
                 toaster("Turn on GPS for best results");
             }
 
-            fromOnResume = true;
+
             mLocationProvider.disconnect();
             mLocationProvider.connect();
-            if (AddMarkers.marker != null) {
-                AddMarkers.openClosestSnippet(busInfo);
-            }
+//            if (AddMarkers.marker != null) {
+//                //AddMarkers.openClosestSnippet(busInfo);
+//            }
 
             setUpMapIfNeeded();
 
@@ -1075,7 +967,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     public static void deletePrefs(){
-        pokeBusbusInfo.clear();
+
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.commit();
@@ -1104,6 +996,7 @@ public class MapsActivity extends AppCompatActivity implements
             timer = new Timer();
             //initialize the TimerTask's job
 
+
             initializeTimerTask(firstTimer);
             //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
             timer.schedule(timerTask, 20000, timeInMS);
@@ -1127,13 +1020,16 @@ public class MapsActivity extends AppCompatActivity implements
 
     public static void initializeTimerTask(boolean firstTimer) {
         final boolean firstTime = firstTimer;
+
+
         timerTask = new TimerTask() {
             public void run() {
                 Log.i("MyMapsActivity", "initializeTimerTask    timerTask");
                 //this enables us to reset the timer in onreusme and it will not trigger it automatkly
 
-                getBusDistance(busInfo);
-                    //firstTime = false;
+
+                CallAndParse callAndParse = new CallAndParse();
+                callAndParse.getBusStopsAndBusDistances("will be lat lng");
 
 
             }
@@ -1150,7 +1046,6 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "setUpMapIfNeeded() ");
 
         // Do a null check to confirm that we have not already instantiated the map.
-
         // Try to obtain the map from the SupportMapFragment.
         if(mMap == null) {
             Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
@@ -1166,20 +1061,20 @@ public class MapsActivity extends AppCompatActivity implements
                 public boolean onMarkerClick(Marker marker) {
                     //makes marker the same as clicking button
 
-                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
-                    for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
-                        if (MapsActivity.busInfo.get(i).isAddedToPopup()) {
-                            MapsActivity.busInfo.get(i).setAddedToPopup(false);
-                        }
-
-                    }
-
-
-                    if (marker.isInfoWindowShown()) {
-
-                        cycleThroughPopup();
-
-                    }
+//                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+//                    for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
+//                        if (MapsActivity.busInfo.get(i).isAddedToPopup()) {
+//                            MapsActivity.busInfo.get(i).setAddedToPopup(false);
+//                        }
+//
+//                    }
+//
+//
+//                    if (marker.isInfoWindowShown()) {
+//
+//                        cycleThroughPopup();
+//
+//                    }
                     return false;
                 }
             });
@@ -1195,13 +1090,13 @@ public class MapsActivity extends AppCompatActivity implements
                         btnDismiss.performClick();
                     }*/
 
-                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
-                    for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
-                        if (MapsActivity.busInfo.get(i).isAddedToPopup()) {
-                            MapsActivity.busInfo.get(i).setAddedToPopup(false);
-                        }
-
-                    }
+//                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
+//                    for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
+//                        if (MapsActivity.busInfo.get(i).isAddedToPopup()) {
+//                            MapsActivity.busInfo.get(i).setAddedToPopup(false);
+//                        }
+//
+//                    }
                 }
             });
 
@@ -1217,7 +1112,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     private void savePokeBus() {
         Log.i("MyMapsActivity","setPokeBus()");
-        Log.i("MyMapsActivity","busCode()" );
+
         //Log.i("MyMapsActivity","pokeBusbusInfo,size" + pokeBusbusInfo.size());
 
         //when a poke bus is called we dont want old information saved
@@ -1225,41 +1120,41 @@ public class MapsActivity extends AppCompatActivity implements
             businfo.setDistanceNotAvailable();
         }*/
 
-        if(pokeBusbusInfo != null){
-
-            try {
-                FileOutputStream fos = mContext.openFileOutput("BUSINFO", Context.MODE_PRIVATE);
-                ObjectOutputStream os = new ObjectOutputStream(fos);
-                os.writeObject(pokeBusbusInfo);
-                os.close();
-                fos.close();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.i("MyMapsActivity", " e.printStackTrace();()" + e);
-            }
-        }
+//        if(pokeBusbusInfo != null){
+//
+//            try {
+//                FileOutputStream fos = mContext.openFileOutput("BUSINFO", Context.MODE_PRIVATE);
+//                ObjectOutputStream os = new ObjectOutputStream(fos);
+//                os.writeObject(pokeBusbusInfo);
+//                os.close();
+//                fos.close();
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                Log.i("MyMapsActivity", " e.printStackTrace();()" + e);
+//            }
+//        }
 
     }
 
-    private ArrayList<BusInfo> loadPokeBus() {
+    private ArrayList<String> loadPokeBus() {
         Log.i("MyMapsActivity","loadPokeBus");
 
-        try{
-            FileInputStream fis = this.openFileInput("BUSINFO");
-            ObjectInputStream is = new ObjectInputStream(fis);
-            ArrayList<BusInfo> busInfo = (ArrayList)  is.readObject();
-            is.close();
-            fis.close();
-            Log.i("MyMapsActivity","loadPokeBus busInfo size  :)" + busInfo.size());
-            return busInfo;
-
-        }catch(Exception e) {
-            Log.i("MyMapsActivity", "e : " + e );
-            e.printStackTrace();
-        }
+//        try{
+//            FileInputStream fis = this.openFileInput("BUSINFO");
+//            ObjectInputStream is = new ObjectInputStream(fis);
+//            ArrayList<BusInfo> busInfo = (ArrayList)  is.readObject();
+//            is.close();
+//            fis.close();
+//            Log.i("MyMapsActivity","loadPokeBus busInfo size  :)" + busInfo.size());
+//            return busInfo;
+//
+//        }catch(Exception e) {
+//            Log.i("MyMapsActivity", "e : " + e );
+//            e.printStackTrace();
+//        }
         Log.i("MyMapsActivity","loadPokeBus return dud");
-        return new ArrayList<BusInfo>();
+        return new ArrayList<String>();
 
 
     }
@@ -1294,84 +1189,41 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public void handleNewLocation(Location location) {
+        Log.i("MyMapsActivity", "handleNewLocation ");
+
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         latLng = new LatLng(latitude, longitude);
 
-        Log.i("MyMapsActivity", "handleNewLocation()zoom:" + zoom);
-        Log.i("MyMapsActivity","handleNewLocation -------latLng : " + latLng.toString());
-        Log.i("MyMapsActivity","handleNewLocation -----------location.getAccuracy():" +  location.getAccuracy());
-        Log.i("MyMapsActivity","fromOnResume :" + fromOnResume);
-        //we want it from onresume to update location but not refresh
-        if(!fromOnResume || firstBoot == 0) {
-            //stopAcuracyTimerTask();
-            Log.i("MyMapsActivity", "firstBoot ==  " + firstBoot);
-            Log.i("MyMapsActivity", "fromOnResume ==  " + fromOnResume);
 
-            Log.i("MyMapsActivity", "in !fromOnResume || firstBoot == 0 ");
-            //only want location this to run on first time. Not activate on every location update
-            if (pointList.size() > 0) {
-                Log.i("MyMapsActivity", "afterpointList.size() > 0");
-                //for after onrotate
-                firstBoot++;
-                mMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-                mMap.setMyLocationEnabled(true);
+        firstBoot++;
+        mMap.setMyLocationEnabled(true);
+        // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)    // Sets the center of the map to Mountain View
+                .zoom(17)                   // Sets the zoom
+                .bearing(40)                // Sets the orientation of the camera to east
+                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
 
-                Log.i("MyMapsActivity", "bearing =" + bearing);
-                Log.i("MyMapsActivity", "zoom =" + zoom);
-
-                if(bearing == 0){
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(latLng)    // Sets the center of the map to Mountain View
-                            .zoom(17)                   // Sets the zoom
-                            .bearing(40)                 // keeps zoom
-                            .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                            .build();                   // Creates a CameraPosition from the builder
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }else{
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(latLng)    // Sets the center of the map to Mountain View
-                            .bearing(bearing)                // Sets the orientation of the camera to east
-                            .zoom(zoom)                   // keeps zoom
-                            .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                            .build();                   // Creates a CameraPosition from the builder
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-
-                refreshMarkers();
-                //AddMarkers.addMarkersToMap(busInfo);
-
-            } else if (firstBoot == 0) {
-                Log.i("MyMapsActivity", "in first boot ");
-                firstBoot++;
-                mMap.setMyLocationEnabled(true);
-                // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(17)                   // Sets the zoom
-                        .bearing(40)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                mMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-
-                //Log.i("MyMapsActivityTime", "startTime : " + System.currentTimeMillis());
+        //Log.i("MyMapsActivityTime", "startTime : " + System.currentTimeMillis());
 //                long startTime = System.currentTimeMillis();
 //                getBusStops(busInfo);
 //                long endTime = (System.currentTimeMillis());
 //                Log.i("MyMapsActivityTime", "getBusStops(busInfo) endTime  : " + ((endTime - startTime)));
 
 
-                CallAndParse callAndParse = new CallAndParse();
+        CallAndParse callAndParse = new CallAndParse();
 
-                callAndParse.getBusStopsAndBusDistances("will be lat lng");
-
-
-                Log.i("MyMapsActivity", "after updateBusDistance();");
+        callAndParse.getBusStopsAndBusDistances("will be lat lng");
 
 
-            }
-        }
+        Log.i("MyMapsActivity", "after updateBusDistance();");
+
+
+
 
     }
 
@@ -1394,17 +1246,8 @@ public class MapsActivity extends AppCompatActivity implements
 
         Log.i("MyMapsActivity ", "popupForPokebus buscode " + buscode);
         Log.i("MyMapsActivity ", "popupForPokebus buscode " + id);
-        Log.i("MyMapsActivity ", "AddMarkers.marker[i].getId() " + AddMarkers.marker[0].getId());
 
-        int busInfoIndexForBusName = -1;
-        for(int i = 0 ; i < AddMarkers.marker.length; i ++){
-            if( AddMarkers.marker[i].getId().equals(id)){
-                busInfoIndexForBusName = i;
-                break;
-            }
 
-        }
-        Log.i("MyMapsActivity ", "bus name " + busInfo.get(busInfoIndexForBusName).busName);
 
         //to prevent null pouinter
         if(optionsButton != null) {
@@ -1439,7 +1282,7 @@ public class MapsActivity extends AppCompatActivity implements
                 }
             });
 
-            final int index = busInfoIndexForBusName;
+
 
             Button btnSetPokeBus = (Button) popupView.findViewById(R.id.set_pokebus);
             btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
@@ -1447,24 +1290,18 @@ public class MapsActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
-                    popupWindow.dismiss();
-                    back_dim_layout.setVisibility(View.GONE);
-
-                    AddMarkers.dialogOpon = false;
-
-
-                    if(pokeBusbusInfo == null){
-                        pokeBusbusInfo = new ArrayList<>();
-                    }
-
-
-                    pokeBusbusInfo.add(busInfo.get(index));
-                    MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
-
-
-                    AddMarkers.addPokeBusColor();
-                    //
-                    AddMarkers.openSnippetWithIndex(index );
+//                    popupWindow.dismiss();
+//                    back_dim_layout.setVisibility(View.GONE);
+//
+//                    AddMarkers.dialogOpon = false;
+//
+//
+//                    MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
+//
+//
+//                    AddMarkers.addPokeBusColor();
+//                    //
+//                    AddMarkers.openSnippetWithIndex(index );
                     //AddMarkers.openClosestSnippet(busInfo);
 
 
@@ -1481,17 +1318,8 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "displayDialog interface");
 
 
-        int busInfoIndexForBusName = -1;
-        for(int i = 0 ; i < AddMarkers.marker.length; i ++){
-            if( AddMarkers.marker[i].getId().equals(pinId)){
-                busInfoIndexForBusName = i;
-                break;
-            }
 
-        }
 
-        Log.i("MyMapsActivity ", "bus name " + busInfo.get(busInfoIndexForBusName).busName);
-        final int index = busInfoIndexForBusName;
         final String finalBuscode = busCode;
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.set_pokebus_title));
@@ -1503,20 +1331,14 @@ public class MapsActivity extends AppCompatActivity implements
                 AddMarkers.dialogOpon = false;
 
 
-                if (pokeBusbusInfo == null){
-                    pokeBusbusInfo = new ArrayList<>();
-                }
 
-
-                pokeBusbusInfo.add(busInfo.get(index));
                 //MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
 
-                Snackbar.make(view, "PokeBus set " + busInfo.get(index).busName + " :" + finalBuscode, Snackbar.LENGTH_LONG)
-                        .show();
+
 
                 AddMarkers.addPokeBusColor();
                 //
-                AddMarkers.openSnippetWithIndex(index);
+                //AddMarkers.openSnippetWithIndex();
 
             }
         });

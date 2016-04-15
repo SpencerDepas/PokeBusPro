@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import POJO.DistancesExample;
 
@@ -22,8 +23,8 @@ import POJO.DistancesExample;
  */
 public class AddMarkers {
 
-    static LatLng[] markerLocation;
-    static Marker[] marker;
+//    static LatLng[] markerLocation;
+//    static Marker[] marker;
     static boolean dialogOpon = false;
     static ArrayList<String> overlappingMarkersIndex;
 
@@ -130,16 +131,23 @@ public class AddMarkers {
 //        Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
 //    }
 
+    LatLng markerLocation;
+    //Marker marker;
+
+    //private Hashtable<String, Marker> markerHashTable;
+
     public void addMarkerToMapWithBusDistances(DistancesExample distancesExample, String busCode,  LatLng busStopLatLng) {
 
-
-        overlappingMarkersIndex = new ArrayList<String>();
-
+        Log.i("AddMarkers", "addMarkerToMapWithBusDistances" );
 
 
-        Log.i("AddMarkers", "pointList " + MapsActivity.pointList.size() );
 
-        Log.i("AddMarkers", "befire int i = 0; i < busInfo.size() " );
+
+        MarkerManager markerManager = MarkerManager.getInstance();
+
+        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+
+
 
 
 
@@ -157,13 +165,34 @@ public class AddMarkers {
         LatLng markerLocation;
         Marker marker;
 
+        String hash = busCode + busName;
+        if(markerHashTable.containsKey(hash)){
+            //use old
+            marker = markerHashTable.get(hash);
+        }else{
 
-        markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
-        marker = MapsActivity.mMap.addMarker(new MarkerOptions().position(markerLocation));
-        marker.setTitle(busCode + busName);
+            //make new
+            markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
+            marker = MapsActivity.mMap.addMarker(new MarkerOptions().position(markerLocation));
+            marker.setTitle(busCode + busName);
+
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+        }
+
+
+
+
+        addDistancesToMarkers(distancesExample, marker);
+
+
+        Log.i("AddMarkers", "markerHashTable size : " + markerHashTable.size());
+
         //marker[i].setTitle(busInfo.get(i).getBusName());
 
 
+
+
+        markerHashTable.put(hash, marker);
 
         final String fBusCode = busCode;
 
@@ -182,35 +211,10 @@ public class AddMarkers {
         });
 
 
-
-        //here
-        addDistancesToMarkers(distancesExample, marker);
-
-
-
-
-        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-        //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker((float)355));
-        Log.i("AddMarkers", "pre color poke bus : ");
-
-
-
-
-        //this is for saving latlng for onRoatate
-        //MapsActivity.pointList.add(markerLocation[1]);
-
-
-
-
+        marker.hideInfoWindow();
         marker.showInfoWindow();
 
 
-        //addPokeBusColor();
-        //to find closest marker to you
-
-        //openClosestSnippet(busInfo);
-
-        Log.i("AddMarkers", "  Remove spinner ");
         Log.i("AddMarkers", "  MapsActivity.spinner.getVisibility(): " + MapsActivity.spinner.getVisibility());
 
 
@@ -335,125 +339,50 @@ public class AddMarkers {
     public static void whatSnippetIsOpen(){
         Log.i("AddMarkers", "  whatSnippetIsOpen() ");
 
-        lastOpenSnippet = null;
-        if(marker != null) {
-            Log.i("AddMarkers", "  AddMarkers.marker() length" + AddMarkers.marker.length );
-            for (Marker marker : AddMarkers.marker) {
-
-                if (marker.isInfoWindowShown()) {
-                    lastOpenSnippet = marker.getTitle();
-                    Log.i("AddMarkers", "  lastOpenSnippet " + lastOpenSnippet);
-                    break;
-                }
-            }
-        }
+//        lastOpenSnippet = null;
+//        if(marker != null) {
+//            Log.i("AddMarkers", "  AddMarkers.marker() length" + AddMarkers.marker.length );
+//            for (Marker marker : AddMarkers.marker) {
+//
+//                if (marker.isInfoWindowShown()) {
+//                    lastOpenSnippet = marker.getTitle();
+//                    Log.i("AddMarkers", "  lastOpenSnippet " + lastOpenSnippet);
+//                    break;
+//                }
+//            }
+//        }
 
     }
 
     static int pokeBusMarkerIndex;
     static boolean fromOpenSnippetWithIndex = false;
+
     public static void openSnippetWithIndex(int index ){
-        Log.i("AddMarkersa", "  MapsActivity.busInfoIndexForBusName  " + index);
-        Log.i("AddMarkersa", "  openSnippetWithIndex id " + marker[index].getId());
-
-        Log.i("AddMarkersa", "  openSnippetWithIndex  tittle" + marker[index].getTitle());
-        Log.i("AddMarkersa", "  openSnippetWithIndex  snippet" + marker[index].getSnippet());
-
-        fromOpenSnippetWithIndex = true;
-        marker[index].hideInfoWindow();
-        marker[index].showInfoWindow();
+//        Log.i("AddMarkersa", "  MapsActivity.busInfoIndexForBusName  " + index);
+//        Log.i("AddMarkersa", "  openSnippetWithIndex id " + marker[index].getId());
+//
+//        Log.i("AddMarkersa", "  openSnippetWithIndex  tittle" + marker[index].getTitle());
+//        Log.i("AddMarkersa", "  openSnippetWithIndex  snippet" + marker[index].getSnippet());
+//
+//        fromOpenSnippetWithIndex = true;
+//        marker[index].hideInfoWindow();
+//        marker[index].showInfoWindow();
 
 
 
     }
 
 
-    public static void openClosestSnippet(ArrayList<BusInfo> busInfo){
+    public static void openClosestSnippet(String testParam){
         //this should open
         //1 last open snippet
         //2 closest pokebus
         //3 closet snippet
 
-        Log.i("AddMarkers", "  openClosestSnippet " );
-        int busInfoIndex = 0;
-        double closestSnippet = 0;
-        double closestPokeBus = 0;
-        Log.i("AddMarkers", "  lastOpenSnippet  " + lastOpenSnippet );
-
-        if(lastOpenSnippet != null){
-            Log.i("AddMarkers", "  lastOpenSnippet != null " );
-            for(int i = 0; i < marker.length; i ++){
-                if(lastOpenSnippet.equals(marker[i].getTitle())){
-                    Log.i("AddMarkers", "  lastOpenSnippet.equals(marker[i].getTitle()" );
-                    busInfoIndex = i;
-                    Log.i("AddMarkers", "  busInfoIndex: "+  busInfoIndex);
-                }
-            }
-
-        }else {
-
-            Log.i("AddMarkers", "  in !snippetOpen: ");
-            //first onpons the closet snippet
-            for (int i = 0; i < busInfo.size(); i++) {
-                if (closestSnippet == 0 || closestSnippet > MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                        busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng())) {
-
-                    closestSnippet = MapsActivity.distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                            busInfo.get(i).getBusStopLat(), busInfo.get(i).getBusStopLng());
-                    busInfoIndex = i;
-
-                }
-            }
-
-            //if pokebus is in ranneg then opons pokebus snippet
-            for (int i = 0; i < busInfo.size(); i++) {
-
-                if (MapsActivity.pokeBusbusInfo != null) {
-                    Log.i("AddMarkerstz", "  MapsActivity.pokeBusbusInfo != null: ");
-                    for (int z = 0; z < MapsActivity.pokeBusbusInfo.size(); z++) {
-
-                        if (busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() + "")) {
-                            //if a poke bus is in range then it will opon in stead of the closest bus stop
-                            Log.i("AddMarkerstz", "  getBusCode() " + MapsActivity.pokeBusbusInfo.get(z).getBusCode());
-                            Log.i("AddMarkerstz", "  busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(z).getBusCode() ");
-                            if(closestPokeBus == 0) {
-                                Log.i("AddMarkerstz", "  closestPokeBus == 0 ");
-                                Log.i("AddMarkerstz", "  closestPokeBus =  " + distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                                        MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng()));
-
-                                closestPokeBus = distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                                        MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng());
-
-                                busInfoIndex = i;
-                                pokeBusMarkerIndex = i;
-
-                                marker[i].hideInfoWindow();
-                                marker[i].showInfoWindow();
-                                Log.i("AddMarkerstz", "  closestPokeBus = " + closestPokeBus);
-                            }else if (closestPokeBus > distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                                    MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng())) {
-
-                                closestPokeBus = distFrom(MapsActivity.latLng.latitude, MapsActivity.latLng.longitude,
-                                        MapsActivity.pokeBusbusInfo.get(z).getBusStopLat(), MapsActivity.pokeBusbusInfo.get(z).getBusStopLng());
-                                Log.i("AddMarkerstz", " else if  closestPokeBus = " + closestPokeBus);
-
-                                busInfoIndex = i;
-                                pokeBusMarkerIndex = i;
-
-                                marker[i].hideInfoWindow();
-                                marker[i].showInfoWindow();
-
-                            }
-
-                        }
-
-                    }
-                }
-            }
-        }
 
 
-        marker[busInfoIndex].showInfoWindow();
+
+        //marker[busInfoIndex].showInfoWindow();
         //busInfo.get(busInfoIndex).setAddedToPopup(true);
 
     }
@@ -476,32 +405,15 @@ public class AddMarkers {
 
 
     public static void addPokeBusColor(){
-        if(MapsActivity.pokeBusbusInfo != null) {
-            if (MapsActivity.pokeBusbusInfo.size() > 0) {
 
-                for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
-                    for (int q = 0; q < MapsActivity.pokeBusbusInfo.size(); q++) {
-
-                        if (MapsActivity.busInfo.get(i).getBusCode().equals(MapsActivity.pokeBusbusInfo.get(q).getBusCode() + "")) {
-                            //to distinqush a pokebus
-
-                            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white__blue36dp));
-
-                            //marker[i].setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public static void removePokeBusColor() {
 
-        for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
-            //marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
-            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-        }
+//        for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
+//            //marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
+//            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+//        }
 
     }
 
@@ -559,73 +471,8 @@ public class AddMarkers {
 //
 //    }
 
-    public static void updateMarkersToMap(BusInfo busInfo, int busIndexFormarker) {
+    public static void updateMarkersToMap(String testParam) {
 
-        Log.i("MyAsyncTaskJJJJJ", " updateMarkersToMap " );
-
-        if(MapsActivity.spinner.getVisibility() == View.INVISIBLE){
-            MapsActivity.spinner.setVisibility(View.VISIBLE);
-        }
-
-
-        //remove loading
-        if(busInfo.distance[0].equals("Loading")){
-            Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).distance[0].equals(\"Loading\" getBusCode() " + busInfo.getBusCode());
-            busInfo.distance[0] = "Not available";
-            busInfo.distance[1] = "Not available";
-            busInfo.distance[2] = "Not available";
-
-        } else  if (busInfo.getDistance()[1].equals("Loading")) {
-            Log.i("MyAsyncTaskJJJJJ", " (busInfo.get(i).getDistance()[1].equals(\"Loading\")).getBusCode() " + busInfo.getBusCode());
-            busInfo.distance[1] = "Not available";
-            busInfo.distance[2] = "Not available";
-        }else if (busInfo.getDistance()[2].equals("Loading")) {
-            Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).getDistance()[2].equals(\"Loading\"))getBusCode() " + busInfo.getBusCode());
-            busInfo.distance[2] = "Not available";
-
-        }
-
-
-        Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getId(): " + marker[busIndexFormarker].getId());
-        Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getSnippet(): " + marker[busIndexFormarker].getSnippet());
-        Log.i("MyAddMarkers", "updateMarkersToMap :   marker.length: " + marker.length);
-        Log.i("MyAddMarkers", "updateMarkersToMap :  getBusName " + busInfo.getBusName());
-        Log.i("MyAddMarkers", "updateMarkersToMap :  getBusCode " + busInfo.getBusCode());
-        Log.i("MyAddMarkers", "updateMarkersToMap :  i  " + busIndexFormarker);
-        Log.i("MyAddMarkerss", "marker[i].getId() " + marker[busIndexFormarker].getId());
-        Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[busIndexFormarker].getTitle());
-
-        marker[busIndexFormarker].setSnippet(busInfo.getDistance()[0]
-                    + "\n" + busInfo.getDistance()[1]
-                    + "\n" + busInfo.getDistance()[2]
-                );
-
-        if(marker[busIndexFormarker].isInfoWindowShown() && marker[busIndexFormarker].getTitle().equals(MapsActivity.busInfo.get(busIndexFormarker).getBusCode())) {
-            Log.i("MyAddMarkerss", "marker[i].getId() " + marker[busIndexFormarker].getId());
-            Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[busIndexFormarker].getTitle());
-            busInfo.setAddedToPopup(false);
-            marker[busIndexFormarker].hideInfoWindow();
-            marker[busIndexFormarker].showInfoWindow();
-        }
-
-
-
-
-
-
-        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
-            MapsActivity.spinner.setVisibility(View.INVISIBLE);
-        }
-        //+ "\n" + busInfo.get(i).getDistance()[2])
-        //Log.i("MyAddMarkers", " after updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
-
-
-        Log.i("MyAddMarkerst", "updateMarkersToMap  marker[pokeBusMarkerIndex].getSnippet() " + marker[pokeBusMarkerIndex].getSnippet() );
-
-
-
-
-        Log.i("MyAddMarkers", "updateMarkersToMap  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
 
     }
 
