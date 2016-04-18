@@ -74,7 +74,7 @@ import java.util.TimerTask;
 
 
 public class MapsActivity extends AppCompatActivity implements
-        LocationProvider.LocationCallback, DialogPopupListner  {
+        LocationProvider.LocationCallback, DialogPopupListner, NoBusesInAreaInterface  {
 
     static GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
@@ -126,6 +126,7 @@ public class MapsActivity extends AppCompatActivity implements
     ArrayList<String> busIndexForBusStopCycle = new ArrayList<String>();
     boolean enabledGPS;
     private Bundle savedInstanceState;
+    private CallAndParse callAndParse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,6 +182,8 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
+        callAndParse = new CallAndParse(MapsActivity.this);
+
 
 
 
@@ -220,7 +223,7 @@ public class MapsActivity extends AppCompatActivity implements
             enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 
-            mLocationProvider.connect();
+            //mLocationProvider.connect();
 
 
 
@@ -500,7 +503,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                                         prefs.edit().putString(getString(R.string.radius_key), "200").apply();
                                         MapsActivity.spinner.setVisibility(View.VISIBLE);
-                                        MapsActivity.refreshMarkers();
+                                        refreshMarkers();
 
 
 
@@ -518,7 +521,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                                         prefs.edit().putString(getString(R.string.radius_key), "250").apply();
                                         MapsActivity.spinner.setVisibility(View.VISIBLE);
-                                        MapsActivity.refreshMarkers();
+                                        refreshMarkers();
 
                                         String refreshRate = prefs.getString("KEY2", "DICK");
 
@@ -535,7 +538,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                                         prefs.edit().putString(getString(R.string.radius_key), "300").apply();
                                         MapsActivity.spinner.setVisibility(View.VISIBLE);
-                                        MapsActivity.refreshMarkers();
+                                        refreshMarkers();
 
 
                                         String refreshRate = prefs.getString("KEY2", "DICK");
@@ -604,7 +607,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                                         prefs.edit().putString("KEY2", "20").apply();
                                         MapsActivity.spinner.setVisibility(View.VISIBLE);
-                                        MapsActivity.refreshMarkers();
+                                        refreshMarkers();
 
                                         Log.d("MyMainActivity", "refreshrate set to 20:");
 
@@ -613,7 +616,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                                         prefs.edit().putString("KEY2", "30").apply();
                                         MapsActivity.spinner.setVisibility(View.VISIBLE);
-                                        MapsActivity.refreshMarkers();
+                                        refreshMarkers();
 
                                         Log.d("MyMainActivity", "refreshrate set to 30:");
 
@@ -622,7 +625,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                                         prefs.edit().putString("KEY2", "60").apply();
                                         MapsActivity.spinner.setVisibility(View.VISIBLE);
-                                        MapsActivity.refreshMarkers();
+                                        refreshMarkers();
 
                                         Log.d("MyMainActivity", "refreshrate set to 60:");
 
@@ -833,7 +836,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    public static void refreshMarkers(){
+    public void refreshMarkers(){
         Log.i("MyMapsActivity", "refreshMarkers");
         //saves last open snippet
         //AddMarkers.whatSnippetIsOpen();
@@ -841,9 +844,10 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-        CallAndParse callAndParse = new CallAndParse();
 
-        callAndParse.getBusStopsAndBusDistances(latLng);
+
+        //Log.i("MyMapsActivity", "refreshMarkers prior to a callAndParse : " );
+        //callAndParse.getBusStopsAndBusDistances(latLng);
     }
 
 
@@ -976,49 +980,8 @@ public class MapsActivity extends AppCompatActivity implements
 
         if(hasPermission) {
 
-            boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
-            if (!isOnline()) {
-                Log.i("MyMapsActivity", "!isOnline()");
-                Intent intent = new Intent(getApplicationContext(), NoConnection.class);
-                startActivity(intent);
-                this.finish();
-
-            } else if (!isLocationEnabled(mContext)) {
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
-                builder.setTitle("Location services disabled");
-                builder.setMessage("Native Speed needs to access your location.\n" +
-                        "Please turn on location access.");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.d("AlertDialog", "Positive");
-                        dialog.dismiss();
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(intent);
-                    }
-                });
-                builder.setNegativeButton("DISMISS", null);
-                builder.show();
-
-
-            } else if (enabledAirplaneMode) {
-                Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
-
-
-                Intent intent = new Intent(MapsActivity.mContext, AirplaneMode.class);
-                startActivity(intent);
-                this.finish();
-
-            }
-
-            if (!enabledGPS && gpsPrompt == 0) {
-                gpsPrompt++;
-                Log.i("MyMapsActivity", "!enabledGPS");
-                toaster("Turn on GPS for best results");
-            }
-
+            checkPhoneParams();
 
             mLocationProvider.disconnect();
             mLocationProvider.connect();
@@ -1035,6 +998,55 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
+    private void checkPhoneParams(){
+
+        boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
+
+        if (!isOnline()) {
+            Log.i("MyMapsActivity", "!isOnline()");
+            Intent intent = new Intent(getApplicationContext(), NoConnection.class);
+            startActivity(intent);
+            this.finish();
+
+        } else if (!isLocationEnabled(mContext)) {
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+            builder.setTitle("Location services disabled");
+            builder.setMessage("Native Speed needs to access your location.\n" +
+                    "Please turn on location access.");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.d("AlertDialog", "Positive");
+                    dialog.dismiss();
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            builder.setNegativeButton("DISMISS", null);
+            builder.show();
+
+
+        } else if (enabledAirplaneMode) {
+            Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
+
+
+            Intent intent = new Intent(MapsActivity.mContext, AirplaneMode.class);
+            startActivity(intent);
+            this.finish();
+
+        }
+
+        if (!enabledGPS && gpsPrompt == 0) {
+            gpsPrompt++;
+            Log.i("MyMapsActivity", "!enabledGPS");
+            toaster("Turn on GPS for best results");
+        }
+
+
+    }
+
+
     public static void deletePrefs(){
 
         SharedPreferences.Editor editor = prefs.edit();
@@ -1048,7 +1060,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     static boolean firstTimer = true;
-    public static void updateBusDistance() {
+    public void updateBusDistance() {
         Log.i("MyMapsActivity", "updateBusDistance()");
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
         String timeInMSString= prefs.getString(MapsActivity.mContext.getString(R.string.refresh_time_key), "20000");
@@ -1087,7 +1099,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-    public static void initializeTimerTask(boolean firstTimer) {
+    public void initializeTimerTask(boolean firstTimer) {
         final boolean firstTime = firstTimer;
 
 
@@ -1097,7 +1109,8 @@ public class MapsActivity extends AppCompatActivity implements
                 //this enables us to reset the timer in onreusme and it will not trigger it automatkly
 
 
-                CallAndParse callAndParse = new CallAndParse();
+
+                Log.i("MyMapsActivity", "initializeTimerTask prior to a callAndParse : " );
                 callAndParse.getBusStopsAndBusDistances(latLng);
 
 
@@ -1128,22 +1141,7 @@ public class MapsActivity extends AppCompatActivity implements
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    //makes marker the same as clicking button
 
-//                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
-//                    for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
-//                        if (MapsActivity.busInfo.get(i).isAddedToPopup()) {
-//                            MapsActivity.busInfo.get(i).setAddedToPopup(false);
-//                        }
-//
-//                    }
-//
-//
-//                    if (marker.isInfoWindowShown()) {
-//
-//                        cycleThroughPopup();
-//
-//                    }
                     return false;
                 }
             });
@@ -1152,20 +1150,7 @@ public class MapsActivity extends AppCompatActivity implements
                 public void onMapClick(LatLng point) {
                     Log.i("MyMapsActivity", "Map clicked");
 
-                   /* if(btnDismiss.getVisibility() == View.VISIBLE) {
-                        Log.i("MyMapsActivity", "btnDismiss.getVisibility() == View.VISIBLE");
 
-
-                        btnDismiss.performClick();
-                    }*/
-
-//                    MapsActivity.changeSelectedBus.setVisibility(View.INVISIBLE);
-//                    for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
-//                        if (MapsActivity.busInfo.get(i).isAddedToPopup()) {
-//                            MapsActivity.busInfo.get(i).setAddedToPopup(false);
-//                        }
-//
-//                    }
                 }
             });
 
@@ -1284,8 +1269,9 @@ public class MapsActivity extends AppCompatActivity implements
 //                Log.i("MyMapsActivityTime", "getBusStops(busInfo) endTime  : " + ((endTime - startTime)));
 
 
-        CallAndParse callAndParse = new CallAndParse();
 
+
+        Log.i("MyMapsActivity", " handleNewLocation prior to a callAndParse : " );
         callAndParse.getBusStopsAndBusDistances(latLng);
 
 
@@ -1424,6 +1410,16 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void noBususFound() {
+        Log.d("AlertDialog", "noBususFound");
+        Snackbar.make(view, "No Buses found in the area", Snackbar.LENGTH_LONG)
+                .show();
+
+        spinner.setVisibility(View.INVISIBLE);
+
+        stopTimerTask();
+    }
 }
 
 

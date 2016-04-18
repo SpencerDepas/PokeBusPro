@@ -1,5 +1,6 @@
 package clearfaun.com.pokebuspro;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -36,14 +37,14 @@ public class CallAndParse {
 
 
 
-
+    private NoBusesInAreaInterface noBusINterFace = null;
     //private final String API_KEY = "AIzaSyAljUMfpi4WiIiLi7nHTWakvYz_PS23Pyw";
 
 
     //private final String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28"
 
 
-    private String returnHowManyIncomingBuses = "4";
+    private String returnHowManyIncomingBuses = "12";
     private RestAdapter restAdapter;
 
     private Gson gson;
@@ -52,10 +53,14 @@ public class CallAndParse {
     //final private String MTA_BUS_DISTANCE_API = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_301649&MaximumStopVisits=3";
 
 
-
+    private AddMarkers addMarkers;
     SharedPreferences prefs;
 
-    public CallAndParse(){
+    public CallAndParse(NoBusesInAreaInterface noBusINterFace){
+
+
+        addMarkers = new AddMarkers();
+        this.noBusINterFace = noBusINterFace;
         Log.i("MyCallAndParse", "CallAndParse");
         gson = new GsonBuilder()
                 .create();
@@ -102,8 +107,14 @@ public class CallAndParse {
                 Log.i("MyCallAndParse", "get bus stops size : " + busStopExample.getData().getStops().size());
 
 
+                //only make a call if we have bus stops
+                if(busStopExample.getData().getStops().size() > 0){
+                    makeBusDistanceThreads(busStopExample);
+                }else {
+                    noBusINterFace.noBususFound();
+                }
 
-                makeBusDistanceThreads(busStopExample);
+
 
             }
 
@@ -135,27 +146,7 @@ public class CallAndParse {
 
     }
 
-    public class GetBusDistancesLongOperation extends AsyncTask<String, Void, String> {
-        LatLng busStopLatLng;
 
-        public GetBusDistancesLongOperation(LatLng busStopLatLng){
-            this.busStopLatLng = busStopLatLng;
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            Log.i("MyCallAndParse", "GetBusDistancesLongOperation" );
-            String busCode = params[0];
-            Log.i("MyCallAndParse", "GetBusDistancesLongOperation params.toString() : " +  busCode);
-
-            CallAndParse callAndParse = new CallAndParse();
-
-            callAndParse.getBusStopsDistances(busCode, busStopLatLng);
-
-            return "Executed";
-        }
-
-    }
 
     public void getBusStopsDistances(String busCode,  LatLng busStopLatLng) {
         Log.i("MyCallAndParse", " getBusStopsDistances   ");
@@ -187,31 +178,9 @@ public class CallAndParse {
                         .size()
                 );
 
+                Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode );
 
-//                Log.i("MyCallAndParse", "get bus stops local : " + distancesExample.getSiri().getServiceDelivery()
-//                .getStopMonitoringDelivery().get(0)
-//                .getMonitoredStopVisit()
-//                .get(0)
-//                .getMonitoredVehicleJourney()
-//                .getMonitoredCall()
-//                .getExtensions()
-//                .getDistances()
-//                .getPresentableDistance()
-//
-//                );
-
-                //AddMarkers.updateMarkersToMap(distancesExample );
-
-                AddMarkers addMarkers = new AddMarkers();
                 addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode, finalbusStopLatLng);
-
-                //Log.i("MyCallAndParse", "get bus stops local : " + distancesExample.getData().getStops().size());
-
-                //civicInterface.gotCivicLocalInfo(local);
-
-
-                //Log.i("MyAsyncTaskJJJJJ", " busInfo.get(i).getBusCode() " + busInfo.get(i).getBusCode());
-                //AddMarkers.updateMarkersToMap(busInfo.get(i), i );
 
 
 
@@ -231,6 +200,40 @@ public class CallAndParse {
 
     }
 
+
+
+    public class GetBusDistancesLongOperation extends AsyncTask<String, Void, Void> {
+        private LatLng busStopLatLng;
+        private String busCode;
+
+        public GetBusDistancesLongOperation(LatLng busStopLatLng){
+            this.busStopLatLng = busStopLatLng;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            Log.i("MyCallAndParse", "GetBusDistancesLongOperation" );
+            busCode = params[0];
+            Log.i("MyCallAndParse", "GetBusDistancesLongOperation params.toString() : " +  busCode);
+
+
+
+            getBusStopsDistances(busCode, busStopLatLng);
+
+            Log.i("MyCallAndParse", "post getBusStopsDistances"  + busCode);
+
+           return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            Log.i("MyCallAndParse", "onPostExecute" );
+
+
+            Log.i("MyCallAndParse", "onPostExecute busCode : " + busCode );
+        }
+
+    }
 
 
 

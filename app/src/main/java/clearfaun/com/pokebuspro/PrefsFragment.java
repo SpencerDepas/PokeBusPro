@@ -47,7 +47,7 @@ public class PrefsFragment extends PreferenceFragment {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
 
-
+        final MapsActivity mapsActivity = new MapsActivity();
 
 
         prefSumBusMap = (ListPreference) findPreference("KEY99");
@@ -66,7 +66,8 @@ public class PrefsFragment extends PreferenceFragment {
                 //for changing radius
                 Log.i("PrefsFragment", "KEY1");
                 MapsActivity.spinner.setVisibility(View.VISIBLE);
-                MapsActivity.refreshMarkers();
+
+                mapsActivity.refreshMarkers();
             }else if(key.equals("KEY99")){
                 //changing summery to siaplay current bus map
                 ListPreference prefSumBusMap = (ListPreference) findPreference("KEY99");
@@ -79,7 +80,8 @@ public class PrefsFragment extends PreferenceFragment {
             }else if(key.equals("KEY2")){
                 //this is to change auto refresh
                 MapsActivity.spinner.setVisibility(View.VISIBLE);
-                MapsActivity.refreshMarkers();
+
+                mapsActivity.refreshMarkers();
 
 
                 ListPreference prefSumBusMap = (ListPreference) findPreference(MapsActivity.mContext.getString(R.string.refresh_time_key));
