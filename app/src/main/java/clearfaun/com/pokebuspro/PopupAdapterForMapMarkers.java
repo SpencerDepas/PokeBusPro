@@ -21,11 +21,18 @@ import java.util.ArrayList;
 class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     private View popup = null;
     private LayoutInflater inflater = null;
+    static Marker lastOpenMarker;
 
     PopupAdapterForMapMarkers(LayoutInflater inflater) {
         this.inflater = inflater;
     }
 
+    public static Marker getLastOpenMarker(){
+        if(lastOpenMarker == null){
+            return null;
+        }
+        return lastOpenMarker;
+    }
 
     @Override
     public View getInfoWindow(Marker marker) {
@@ -36,6 +43,8 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     @SuppressLint("InflateParams")
     @Override
     public View getInfoContents(Marker marker) {
+
+        lastOpenMarker = marker;
         Log.i("PopupAdapterForMapMark", "new popup() ");
         if (popup == null) {
             popup = inflater.inflate(R.layout.popup_snippet, null);

@@ -76,8 +76,10 @@ import java.util.TimerTask;
 
 
 public class MapsActivity extends AppCompatActivity implements
-        LocationProvider.LocationCallback, DialogPopupListner, NoBusesInAreaInterface
-            ,OnMapReadyCallback{
+        LocationProvider.LocationCallback,
+        DialogPopupListner,
+        NoBusesInAreaInterface
+            ,OnMapReadyCallback {
 
 
     private LatLng onMapPresedLatLng;
@@ -797,6 +799,9 @@ public class MapsActivity extends AppCompatActivity implements
 
         }else if (spinner.getVisibility() == View.INVISIBLE) {
 
+            zoom = googleMap.getCameraPosition().zoom;
+            bearing = googleMap.getCameraPosition().bearing;
+
             //refresh button
             fromOnResume = false;
             spinner.setVisibility(View.VISIBLE);
@@ -845,7 +850,7 @@ public class MapsActivity extends AppCompatActivity implements
         }else{
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
-                    .zoom(17)                   // Sets the zoom
+                    .zoom(16)                   // Sets the zoom
                     .bearing(40)                // Sets the orientation of the camera to east
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
@@ -1369,23 +1374,41 @@ public class MapsActivity extends AppCompatActivity implements
                 // TODO Auto-generated method stub
                 Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
 
-                onMapPresedLatLng = arg0;
-                //deletes old markers
-                MarkerManager markerManager = MarkerManager.getInstance();
-                Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-                markerHashTable.clear();
-                finalGoogleMap.clear();
+                Marker lastOpenMarker = PopupAdapterForMapMarkers.getLastOpenMarker();
+
+                Log.d("MyMapsActivity", " lastOpenMarker getTitle: " + lastOpenMarker.getTitle());
+                Log.d("MyMapsActivity", " lastOpenMarker isVisible: " + lastOpenMarker.isVisible());
 
 
-                zoom = finalGoogleMap.getCameraPosition().zoom;
-                bearing = finalGoogleMap.getCameraPosition().bearing;
-                selectCorrectLatLng();
+                if(lastOpenMarker != null && !lastOpenMarker.isVisible()){
+
+                    onMapPresedLatLng = arg0;
+                    //deletes old markers
+                    MarkerManager markerManager = MarkerManager.getInstance();
+                    Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+                    markerHashTable.clear();
+                    finalGoogleMap.clear();
+
+
+                    zoom = finalGoogleMap.getCameraPosition().zoom;
+                    bearing = finalGoogleMap.getCameraPosition().bearing;
+                    selectCorrectLatLng();
+
+                }else{
+                    //do nothing
+                    //we are doing this as we do not want the onclick of
+                    //map to register if a popup is active
+                }
+
+
             }
         });
 
 
 
     }
+
+
 }
 
 

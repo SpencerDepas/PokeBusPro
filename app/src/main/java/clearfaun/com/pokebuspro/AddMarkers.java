@@ -86,8 +86,11 @@ public class AddMarkers {
 
 
 
-        marker.showInfoWindow();
-        marker.hideInfoWindow();
+        if(marker.isVisible()){
+            marker.showInfoWindow();
+            marker.hideInfoWindow();
+        }
+
 
 
 
@@ -100,6 +103,9 @@ public class AddMarkers {
         MapsActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker Pin) {
+
+                Log.i("AddMarkers", "  setOnInfoWindowClickListener " );
+
 
                 popupListner.displayDialog(Pin.getTitle(), Pin.getId(), fBusCode);
                 dialogOpon = true;
@@ -309,6 +315,10 @@ public class AddMarkers {
     }
 
     static String lastOpenSnippet;
+
+    public void setLastOpenMarker(){
+
+    }
 
     public static void whatSnippetIsOpen(){
         Log.i("AddMarkers", "  whatSnippetIsOpen() ");
