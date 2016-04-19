@@ -69,8 +69,8 @@ public class AddMarkers {
         LatLng markerLocation;
 
 
-        String hash = busCode + busName;
-        Marker marker = markerHashTable.get(hash);
+
+        Marker marker = markerHashTable.get(busCode);
         if(marker != null){
             Log.i("AddMarkers", "markerHashTable.containsKey(hash) use old marker : " + busName);
             //use old
@@ -99,7 +99,7 @@ public class AddMarkers {
         marker.hideInfoWindow();
 
 
-        markerHashTable.put(hash, marker);
+        markerHashTable.put(busCode, marker);
 
 
 
