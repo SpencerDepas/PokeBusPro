@@ -751,14 +751,6 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-    boolean firstRun = true;
-    public void cycleThroughPopup(){
-        //changeSelectedBus.setVisibility(View.INVISIBLE);
-
-       // AddMarkers.whatSnippetIsOpen();
-
-
-    }
 
     public static boolean isLocationEnabled(Context context) {
         int locationMode = 0;
@@ -828,10 +820,6 @@ public class MapsActivity extends AppCompatActivity implements
 
         }
 
-
-
-        //Log.i("MyMapsActivity", "refreshMarkers prior to a callAndParse : " );
-        //callAndParse.getBusStopsAndBusDistances(latLng);
     }
 
 
@@ -862,36 +850,6 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-//    public static void getBusStops(ArrayList<BusInfo> busInfo){
-//        Log.i("MyMapsActivity", "inside getBusStops");
-//        obj = new GetBusStopJSON();
-//        obj.fetchBusStop(busInfo);
-//
-//        Log.i("MyMapsActivity", "before while");
-//
-//        while (obj.parsingComplete){
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            continue;
-//        }
-//
-//        Log.i("MyMapsActivity", "after while while(obj.parsingComplete);    busInfo.size():" + busInfo.size());
-//
-//
-//    }
-
-
-
-//    public static void getBusDistance(ArrayList<BusInfo> busInfo){
-//        Log.i("MyMapsActivity", "getBusDistance");
-//        objTwo = new GetBusDistanceJSON();
-//        objTwo.fetchBusDistanceJson(busInfo);
-//
-//    }
 
     public void onPause() {
         super.onPause();
@@ -965,16 +923,11 @@ public class MapsActivity extends AppCompatActivity implements
         if(hasPermission) {
 
 
-            //for location/gps/airplane mode ect
             checkPhoneParams();
 
             mLocationProvider.disconnect();
             mLocationProvider.connect();
-//            if (AddMarkers.marker != null) {
-//                //AddMarkers.openClosestSnippet(busInfo);
-//            }
 
-            //setUpMapIfNeeded();
 
             updateBusDistance();
 
@@ -1431,8 +1384,23 @@ public class MapsActivity extends AppCompatActivity implements
     public void onMapReady(GoogleMap googleMap) {
         Log.d("MyMapsActivity", "onMapReadypoooo");
         this.googleMap = googleMap;
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-        //refreshMarkers();
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng arg0) {
+                Log.d("MyMapsActivity", "onMapClick");
+                // TODO Auto-generated method stub
+                Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
+
+
+
+                callAndParse.getBusStopsAndBusDistances(arg0);
+            }
+        });
+
+
 
     }
 }

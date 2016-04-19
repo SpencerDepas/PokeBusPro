@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import POJO.DistancesExample;
+import POJO.MonitoredStopVisit;
+import POJO.MonitoredVehicleJourney;
 
 /**
  * Created by spencer on 2/21/2015.
@@ -39,35 +41,24 @@ public class AddMarkers {
 
         Log.i("AddMarkers", "addMarkerToMapWithBusDistances" );
 
-
-
-        String allbusNamesAndDistances = putBusStopsInStackedString(distancesExample);
-
-
-        MarkerManager markerManager = MarkerManager.getInstance();
-
-        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-
-
-
-
-
-
-        String busName = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
+        int incomingBusesSize = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
                 .getMonitoredStopVisit()
-                .get(0)
-                .getMonitoredVehicleJourney()
-                .getLineRef();
+                .size();
 
 
+        String busName = getBusName( distancesExample, incomingBusesSize);
 
-        int indexOfChar = busName.indexOf('_') + 1;
-        busName = busName.substring(indexOfChar);
+
+        String allbusNamesAndDistances = putBusStopsInStackedString(distancesExample, incomingBusesSize);
 
         Log.i("AddMarkers", "busName : " + busName);
 
         LatLng markerLocation;
 
+
+        MarkerManager markerManager = MarkerManager.getInstance();
+
+        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
 
         Marker marker = markerHashTable.get(busCode);
@@ -99,6 +90,8 @@ public class AddMarkers {
         marker.hideInfoWindow();
 
 
+
+
         markerHashTable.put(busCode, marker);
 
 
@@ -123,18 +116,45 @@ public class AddMarkers {
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
 
-    private String putBusStopsInStackedString(DistancesExample distancesExample){
+    private String getBusName(DistancesExample distancesExample, int incomingBusesSize){
+        //this is for when no buses are incoming
+
+
+
+        String busName;
+
+        if(incomingBusesSize == 0){
+
+
+            busName = "Not available";
+
+        }else{
+
+            busName = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
+                    .getMonitoredStopVisit()
+                    .get(0)
+                    .getMonitoredVehicleJourney()
+                    .getLineRef();
+
+
+            int indexOfChar = busName.indexOf('_') + 1;
+            busName = busName.substring(indexOfChar);
+        }
+
+        return busName;
+
+    }
+
+    private String putBusStopsInStackedString(DistancesExample distancesExample, int incomingBusesSize){
         Log.i("AddMarkers", "putBusStopsInStackedString" );
 
 
-        int busNameL = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
-                .getMonitoredStopVisit()
-                .size();
+
 
         String allbusNamesAndDistances = "";
 
         long startTime = System.nanoTime();
-        for(int i = 0; i < busNameL; i ++){
+        for(int i = 0; i < incomingBusesSize; i ++){
 
 
 
@@ -149,7 +169,7 @@ public class AddMarkers {
             busNamec = busNamec.substring(indexOfChar);
 
 
-            Log.i("AddMarkerss", "busNameL : "  + busNameL );
+            Log.i("AddMarkerss", "incomingBusesSize : "  + incomingBusesSize );
             Log.i("AddMarkerss", "busNamec : "  + busNamec );
 
             Log.i("AddMarkerss", "i : "  + i );
@@ -370,59 +390,7 @@ public class AddMarkers {
 
     }
 
-//    public static void updateMarkersToMap(DistancesExample distancesExample) {
-//
-//        if(MapsActivity.spinner.getVisibility() == View.INVISIBLE){
-//            MapsActivity.spinner.setVisibility(View.VISIBLE);
-//        }
-//
-//
-//        //remove loading
-//
-//
-//
-//        Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getId(): " + marker[busIndexFormarker].getId());
-//        Log.i("MyAddMarkers", "updateMarkersToMap :  marker[i].getSnippet(): " + marker[busIndexFormarker].getSnippet());
-//        Log.i("MyAddMarkers", "updateMarkersToMap :   marker.length: " + marker.length);
-//        Log.i("MyAddMarkers", "updateMarkersToMap :  getBusName " + busInfo.getBusName());
-//        Log.i("MyAddMarkers", "updateMarkersToMap :  getBusCode " + busInfo.getBusCode());
-//        Log.i("MyAddMarkers", "updateMarkersToMap :  i  " + busIndexFormarker);
-//        Log.i("MyAddMarkerss", "marker[i].getId() " + marker[busIndexFormarker].getId());
-//        Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[busIndexFormarker].getTitle());
-//
-//        marker[busIndexFormarker].setSnippet(busInfo.getDistance()[0]
-//                + "\n" + busInfo.getDistance()[1]
-//                + "\n" + busInfo.getDistance()[2]
-//        );
-//
-//        if(marker[busIndexFormarker].isInfoWindowShown() && marker[busIndexFormarker].getTitle().equals(MapsActivity.busInfo.get(busIndexFormarker).getBusCode())) {
-//            Log.i("MyAddMarkerss", "marker[i].getId() " + marker[busIndexFormarker].getId());
-//            Log.i("MyAddMarkerss", " marker[i].getTitle()" + marker[busIndexFormarker].getTitle());
-//            busInfo.setAddedToPopup(false);
-//            marker[busIndexFormarker].hideInfoWindow();
-//            marker[busIndexFormarker].showInfoWindow();
-//        }
-//
-//
-//
-//
-//
-//
-//        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
-//            MapsActivity.spinner.setVisibility(View.INVISIBLE);
-//        }
-//        //+ "\n" + busInfo.get(i).getDistance()[2])
-//        //Log.i("MyAddMarkers", " after updateMarkersToMap : " + busInfo.get(0).getDistance()[0]);
-//
-//
-//        Log.i("MyAddMarkerst", "updateMarkersToMap  marker[pokeBusMarkerIndex].getSnippet() " + marker[pokeBusMarkerIndex].getSnippet() );
-//
-//
-//
-//
-//        Log.i("MyAddMarkers", "updateMarkersToMap  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
-//
-//    }
+
 
     public static void updateMarkersToMap(String testParam) {
 
