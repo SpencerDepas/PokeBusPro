@@ -49,9 +49,6 @@ public class AddMarkers {
         String test = "";
 
         long startTime = System.nanoTime();
-// ... the code being measured ...
-
-
         for(int i = 0; i < busNameL; i ++){
 
 
@@ -121,7 +118,14 @@ public class AddMarkers {
         String hash = busCode + busName;
         if(markerHashTable.containsKey(hash)){
             //use old
-            marker = markerHashTable.get(hash);
+            //we do not need to re add it to the screen
+            //we do need to delete the old info
+            Marker tempMarker = markerHashTable.get(hash);
+            tempMarker.setTitle(busCode + busName);
+            tempMarker.setSnippet(test);
+            tempMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+
+            marker = tempMarker;
         }else{
 
             //make new
@@ -154,8 +158,8 @@ public class AddMarkers {
         });
 
 
-        marker.showInfoWindow();
-        marker.hideInfoWindow();
+//        marker.showInfoWindow();
+//        marker.hideInfoWindow();
 
         if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
             MapsActivity.spinner.setVisibility(View.INVISIBLE);

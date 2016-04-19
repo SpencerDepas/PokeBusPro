@@ -53,13 +53,12 @@ public class CallAndParse {
     //final private String MTA_BUS_DISTANCE_API = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_301649&MaximumStopVisits=3";
 
 
-    private AddMarkers addMarkers;
     SharedPreferences prefs;
 
     public CallAndParse(NoBusesInAreaInterface noBusINterFace){
 
 
-        addMarkers = new AddMarkers();
+
         this.noBusINterFace = noBusINterFace;
         Log.i("MyCallAndParse", "CallAndParse");
         gson = new GsonBuilder()
@@ -179,7 +178,7 @@ public class CallAndParse {
                 );
 
                 Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode );
-
+                AddMarkers addMarkers = new AddMarkers();
                 addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode, finalbusStopLatLng);
 
 

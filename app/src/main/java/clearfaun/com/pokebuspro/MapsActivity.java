@@ -137,7 +137,6 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "onCreate");
 
 
-        this.savedInstanceState = savedInstanceState;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -147,11 +146,14 @@ public class MapsActivity extends AppCompatActivity implements
         ab.setDisplayHomeAsUpEnabled(true);
 
 
+        this.savedInstanceState = savedInstanceState;
+
+        mContext = getApplicationContext();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 
-        mContext = getApplicationContext();
+
 
 
 
@@ -271,20 +273,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-            changeSelectedBus = (ImageButton) findViewById(R.id.change_selected_bus);
-            changeSelectedBus.setVisibility(View.INVISIBLE);
-            changeSelectedBus.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    //settings
-
-
-                    cycleThroughPopup();
-
-
-                }
-            });
 
 
             if (savedInstanceState != null) {
@@ -981,6 +970,7 @@ public class MapsActivity extends AppCompatActivity implements
         if(hasPermission) {
 
 
+            //for location/gps/airplane mode ect
             checkPhoneParams();
 
             mLocationProvider.disconnect();

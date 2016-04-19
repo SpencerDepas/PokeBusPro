@@ -56,6 +56,8 @@ public class GetPermissionActivity extends AppCompatActivity {
         setContentView(R.layout.get_permission_coord);
         ButterKnife.bind(this);
 
+        Log.i("GetPermissionActivity ", "onCreate ");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,8 +67,7 @@ public class GetPermissionActivity extends AppCompatActivity {
 
         Log.i("GetPermissionActivity ", "permissionCheck askForPermission ");
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        setSupportActionBar(toolbar);
+
 
 
         mContext = getApplicationContext();
