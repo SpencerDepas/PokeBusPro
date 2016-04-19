@@ -48,7 +48,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 
 
-
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,6 +61,7 @@ import com.google.android.gms.maps.model.Marker;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.FileInputStream;
@@ -74,9 +76,10 @@ import java.util.TimerTask;
 
 
 public class MapsActivity extends AppCompatActivity implements
-        LocationProvider.LocationCallback, DialogPopupListner, NoBusesInAreaInterface  {
+        LocationProvider.LocationCallback, DialogPopupListner, NoBusesInAreaInterface
+            ,OnMapReadyCallback{
 
-    static GoogleMap mMap; // Might be null if Google Play services APK is not available.
+
 
     static LatLng latLng;
     static private LocationProvider mLocationProvider;
@@ -96,7 +99,7 @@ public class MapsActivity extends AppCompatActivity implements
     float zoom;
     float bearing;
 
-
+    static GoogleMap googleMap;
 
     static Marker pokeBusMarker;
     static Timer timer;
@@ -127,6 +130,7 @@ public class MapsActivity extends AppCompatActivity implements
     boolean enabledGPS;
     private Bundle savedInstanceState;
     private CallAndParse callAndParse;
+    SupportMapFragment mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +187,8 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
 
+        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        mMap.getMapAsync(this);
 
         callAndParse = new CallAndParse(MapsActivity.this);
 
@@ -225,55 +231,6 @@ public class MapsActivity extends AppCompatActivity implements
             enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 
-            //mLocationProvider.connect();
-
-
-
-
-
-            ImageButton refreshLocation = (ImageButton) findViewById(R.id.refresh_location_button);
-            refreshLocation.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    Log.i("MyMapsActivity", "onClick refreshLocation");
-
-                    if(!isOnline()){
-                        Log.i("MyMapsActivity", "!isOnline()");
-                        Intent intent = new Intent(getApplicationContext() , NoConnection.class);
-                        startActivity(intent);
-                        //MapsActivity.finish();
-
-                    }else if (spinner.getVisibility() == View.INVISIBLE) {
-
-                        //refresh button
-                        fromOnResume = false;
-                        spinner.setVisibility(View.VISIBLE);
-
-                        mLocationProvider.disconnect();
-                        mLocationProvider.connect();
-                        refreshMarkers();
-
-
-                        zoom = mMap.getCameraPosition().zoom;
-                        bearing = mMap.getCameraPosition().bearing;
-
-                        mMap.setMyLocationEnabled(true);
-                        CameraPosition cameraPosition = new CameraPosition.Builder()
-                                .target(latLng)    // Sets the center of the map to Mountain View
-                                .bearing(bearing)           // Sets the orientation of the camera to east
-                                .zoom(zoom)                 // keeps zoom
-                                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                                .build();                   // Creates a CameraPosition from the builder
-                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                    }
-                }
-            });
-
-
-
-
 
 
             if (savedInstanceState != null) {
@@ -288,6 +245,18 @@ public class MapsActivity extends AppCompatActivity implements
 
 
         }
+
+    }
+
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.refresh_location_button)
+    public void refreshLocation(View view) {
+        Log.i("MyMapsActivity", "onClick refreshLocation");
+
+
+
+        refreshMarkers();
 
     }
 
@@ -595,7 +564,7 @@ public class MapsActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
 
                                         prefs.edit().putString("KEY2", "20").apply();
-                                        MapsActivity.spinner.setVisibility(View.VISIBLE);
+
                                         refreshMarkers();
 
                                         Log.d("MyMainActivity", "refreshrate set to 20:");
@@ -604,7 +573,7 @@ public class MapsActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
 
                                         prefs.edit().putString("KEY2", "30").apply();
-                                        MapsActivity.spinner.setVisibility(View.VISIBLE);
+
                                         refreshMarkers();
 
                                         Log.d("MyMainActivity", "refreshrate set to 30:");
@@ -613,7 +582,7 @@ public class MapsActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
                                         prefs.edit().putString("KEY2", "60").apply();
-                                        MapsActivity.spinner.setVisibility(View.VISIBLE);
+
                                         refreshMarkers();
 
                                         Log.d("MyMainActivity", "refreshrate set to 60:");
@@ -827,11 +796,37 @@ public class MapsActivity extends AppCompatActivity implements
 
     public void refreshMarkers(){
         Log.i("MyMapsActivity", "refreshMarkers");
-        //saves last open snippet
-        //AddMarkers.whatSnippetIsOpen();
+
+        if(!isOnline()){
+            Log.i("MyMapsActivity", "!isOnline()");
+            Intent intent = new Intent(getApplicationContext() , NoConnection.class);
+            startActivity(intent);
+
+
+        }else if (spinner.getVisibility() == View.INVISIBLE) {
+
+            //refresh button
+            fromOnResume = false;
+            spinner.setVisibility(View.VISIBLE);
+
+            mLocationProvider.disconnect();
+            mLocationProvider.connect();
 
 
 
+            zoom = googleMap.getCameraPosition().zoom;
+            bearing = googleMap.getCameraPosition().bearing;
+
+            googleMap.setMyLocationEnabled(true);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)    // Sets the center of the map to Mountain View
+                    .bearing(bearing)           // Sets the orientation of the camera to east
+                    .zoom(zoom)                 // keeps zoom
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        }
 
 
 
@@ -904,8 +899,8 @@ public class MapsActivity extends AppCompatActivity implements
 
 
         AddMarkers.whatSnippetIsOpen();
-        zoom = mMap.getCameraPosition().zoom;
-        bearing = mMap.getCameraPosition().bearing;
+        zoom = googleMap.getCameraPosition().zoom;
+        bearing = googleMap.getCameraPosition().bearing;
 
 
 
@@ -979,7 +974,7 @@ public class MapsActivity extends AppCompatActivity implements
 //                //AddMarkers.openClosestSnippet(busInfo);
 //            }
 
-            setUpMapIfNeeded();
+            //setUpMapIfNeeded();
 
             updateBusDistance();
 
@@ -1114,43 +1109,60 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-    private void setUpMapIfNeeded() {
-        Log.i("MyMapsActivity", "setUpMapIfNeeded() ");
-
-        // Do a null check to confirm that we have not already instantiated the map.
-        // Try to obtain the map from the SupportMapFragment.
-        if(mMap == null) {
-            Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
-
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            mMap.getUiSettings().setMapToolbarEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-
-                    return false;
-                }
-            });
-            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng point) {
-                    Log.i("MyMapsActivity", "Map clicked");
-
-
-                }
-            });
-
-
-
-        }
-
-    }
-
-
+//    private void setUpMapIfNeeded() {
+//        Log.i("MyMapsActivity", "setUpMapIfNeeded() ");
+//
+//        // Do a null check to confirm that we have not already instantiated the map.
+//        // Try to obtain the map from the SupportMapFragment.
+//
+//        mMap = ((mMap) getFragmentManager().findFragmentById(R.id.map));
+//        mMap.getMapAsync(this);
+////        mMap.getMapAsync(new OnMapReadyCallback() {
+////            @Override
+////            public void onMapReady(GoogleMap googleMap) {
+////                mMap = googleMap;
+////                setUpMap();
+////            }
+////        });
+//
+//
+//        if(mMap == null) {
+//            Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
+//
+//            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+//                    .getMap();
+//
+//            mMap.getUiSettings().setMapToolbarEnabled(false);
+//            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+//
+//
+//            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//                @Override
+//                public boolean onMarkerClick(Marker marker) {
+//
+//                    return false;
+//                }
+//            });
+//            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//                @Override
+//                public void onMapClick(LatLng point) {
+//                    Log.i("MyMapsActivity", "Map clicked");
+//
+//
+//                }
+//            });
+//
+//
+//
+//        }
+//
+//    }
+//
+//
+//    private void setUpMap() {
+//        mMap.setMyLocationEnabled(true);
+//        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+//    }
 
 
 
@@ -1241,7 +1253,9 @@ public class MapsActivity extends AppCompatActivity implements
 
 
         firstBoot++;
-        mMap.setMyLocationEnabled(true);
+        //setUpMapIfNeeded();
+
+        googleMap.setMyLocationEnabled(true);
         // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latLng)    // Sets the center of the map to Mountain View
@@ -1249,8 +1263,8 @@ public class MapsActivity extends AppCompatActivity implements
                 .bearing(40)                // Sets the orientation of the camera to east
                 .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        mMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
 
         //Log.i("MyMapsActivityTime", "startTime : " + System.currentTimeMillis());
 //                long startTime = System.currentTimeMillis();
@@ -1409,6 +1423,17 @@ public class MapsActivity extends AppCompatActivity implements
         spinner.setVisibility(View.INVISIBLE);
 
         stopTimerTask();
+    }
+
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d("MyMapsActivity", "onMapReadypoooo");
+        this.googleMap = googleMap;
+
+        //refreshMarkers();
+
     }
 }
 

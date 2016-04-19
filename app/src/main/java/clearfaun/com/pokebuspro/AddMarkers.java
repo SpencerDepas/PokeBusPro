@@ -46,7 +46,7 @@ public class AddMarkers {
                 .getMonitoredStopVisit()
                 .size();
 
-        String test = "";
+        String allbusNamesAndDistances = "";
 
         long startTime = System.nanoTime();
         for(int i = 0; i < busNameL; i ++){
@@ -80,9 +80,12 @@ public class AddMarkers {
                     .getDistances()
                     .getPresentableDistance();
 
-            test += busNamec + ": " + distance + "\n";
+            allbusNamesAndDistances += busNamec + ": " + distance + "\n";
             Log.i("AddMarkerss", "distance : "  + distance );
         }
+
+
+        Log.i("AddMarkerss", "allbusNamesAndDistances : "  + allbusNamesAndDistances  + " buscode : " + busCode);
 
 
         long estimatedTime = System.nanoTime() - startTime;
@@ -117,22 +120,23 @@ public class AddMarkers {
 
         String hash = busCode + busName;
         if(markerHashTable.containsKey(hash)){
+            Log.i("AddMarkers", "markerHashTable.containsKey(hash) use old marker : " + busName);
             //use old
             //we do not need to re add it to the screen
             //we do need to delete the old info
             Marker tempMarker = markerHashTable.get(hash);
             tempMarker.setTitle(busCode + busName);
-            tempMarker.setSnippet(test);
+            tempMarker.setSnippet(allbusNamesAndDistances);
             tempMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
 
             marker = tempMarker;
         }else{
-
+            Log.i("AddMarkers", "markerHashTable.containsKey(hash) make new marker  : " + busName);
             //make new
             markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
-            marker = MapsActivity.mMap.addMarker(new MarkerOptions().position(markerLocation));
+            marker = MapsActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
             marker.setTitle(busCode + busName);
-            marker.setSnippet(test);
+            marker.setSnippet(allbusNamesAndDistances);
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
         }
 
@@ -147,7 +151,7 @@ public class AddMarkers {
 
 
         final String fBusCode = busCode;
-        MapsActivity.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        MapsActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker Pin) {
 
@@ -158,8 +162,8 @@ public class AddMarkers {
         });
 
 
-//        marker.showInfoWindow();
-//        marker.hideInfoWindow();
+        marker.showInfoWindow();
+        marker.hideInfoWindow();
 
         if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
             MapsActivity.spinner.setVisibility(View.INVISIBLE);
