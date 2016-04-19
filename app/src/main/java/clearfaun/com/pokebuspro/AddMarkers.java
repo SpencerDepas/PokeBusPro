@@ -41,6 +41,91 @@ public class AddMarkers {
 
 
 
+        String allbusNamesAndDistances = putBusStopsInStackedString(distancesExample);
+
+
+        MarkerManager markerManager = MarkerManager.getInstance();
+
+        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+
+
+
+
+
+
+        String busName = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
+                .getMonitoredStopVisit()
+                .get(0)
+                .getMonitoredVehicleJourney()
+                .getLineRef();
+
+
+
+        int indexOfChar = busName.indexOf('_') + 1;
+        busName = busName.substring(indexOfChar);
+
+        Log.i("AddMarkers", "busName : " + busName);
+
+        LatLng markerLocation;
+
+
+        String hash = busCode + busName;
+        Marker marker = markerHashTable.get(hash);
+        if(marker != null){
+            Log.i("AddMarkers", "markerHashTable.containsKey(hash) use old marker : " + busName);
+            //use old
+            //we do not need to re add it to the screen
+            //we do need to delete the old info
+
+            marker.setTitle(busCode + busName);
+            marker.setSnippet(allbusNamesAndDistances);
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+
+
+        }else{
+            Log.i("AddMarkers", "markerHashTable.containsKey(hash) make new marker  : " + busName);
+            //make new
+            markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
+            marker = MapsActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
+            marker.setTitle(busCode + busName);
+            marker.setSnippet(allbusNamesAndDistances);
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+        }
+
+
+
+
+        marker.showInfoWindow();
+        marker.hideInfoWindow();
+
+
+        markerHashTable.put(hash, marker);
+
+
+
+        final String fBusCode = busCode;
+        MapsActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker Pin) {
+
+                popupListner.displayDialog(Pin.getTitle(), Pin.getId(), fBusCode);
+                dialogOpon = true;
+
+            }
+        });
+
+
+
+        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
+            MapsActivity.spinner.setVisibility(View.INVISIBLE);
+        }
+
+        Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
+    }
+
+    private String putBusStopsInStackedString(DistancesExample distancesExample){
+        Log.i("AddMarkers", "putBusStopsInStackedString" );
+
 
         int busNameL = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
                 .getMonitoredStopVisit()
@@ -85,91 +170,14 @@ public class AddMarkers {
         }
 
 
-        Log.i("AddMarkerss", "allbusNamesAndDistances : "  + allbusNamesAndDistances  + " buscode : " + busCode);
+        // Log.i("AddMarkerss", "allbusNamesAndDistances : "  + allbusNamesAndDistances  + " buscode : " + busCode);
 
 
         long estimatedTime = System.nanoTime() - startTime;
 
         Log.i("AddMarkerss", "estimatedTime : " +   estimatedTime);
 
-
-        MarkerManager markerManager = MarkerManager.getInstance();
-
-        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-
-
-
-
-
-
-        String busName = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
-                .getMonitoredStopVisit()
-                .get(0)
-                .getMonitoredVehicleJourney()
-                .getLineRef();
-
-
-
-        int indexOfChar = busName.indexOf('_') + 1;
-        busName = busName.substring(indexOfChar);
-
-        Log.i("AddMarkers", "busName : " + busName);
-
-        LatLng markerLocation;
-        Marker marker;
-
-        String hash = busCode + busName;
-        if(markerHashTable.containsKey(hash)){
-            Log.i("AddMarkers", "markerHashTable.containsKey(hash) use old marker : " + busName);
-            //use old
-            //we do not need to re add it to the screen
-            //we do need to delete the old info
-            Marker tempMarker = markerHashTable.get(hash);
-            tempMarker.setTitle(busCode + busName);
-            tempMarker.setSnippet(allbusNamesAndDistances);
-            tempMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-
-            marker = tempMarker;
-        }else{
-            Log.i("AddMarkers", "markerHashTable.containsKey(hash) make new marker  : " + busName);
-            //make new
-            markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
-            marker = MapsActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
-            marker.setTitle(busCode + busName);
-            marker.setSnippet(allbusNamesAndDistances);
-            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-        }
-
-
-
-
-
-
-
-        markerHashTable.put(hash, marker);
-
-
-
-        final String fBusCode = busCode;
-        MapsActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker Pin) {
-
-                popupListner.displayDialog(Pin.getTitle(), Pin.getId(), fBusCode);
-                dialogOpon = true;
-
-            }
-        });
-
-
-        marker.showInfoWindow();
-        marker.hideInfoWindow();
-
-        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
-            MapsActivity.spinner.setVisibility(View.INVISIBLE);
-        }
-
-        Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
+        return allbusNamesAndDistances;
     }
 
     public void addDistancesToMarkers(DistancesExample distancesExample, Marker marker ){
@@ -300,7 +308,6 @@ public class AddMarkers {
 
     }
 
-    static int pokeBusMarkerIndex;
     static boolean fromOpenSnippetWithIndex = false;
 
     public static void openSnippetWithIndex(int index ){
