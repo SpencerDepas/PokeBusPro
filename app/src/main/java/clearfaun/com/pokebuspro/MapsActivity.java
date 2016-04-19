@@ -80,7 +80,7 @@ public class MapsActivity extends AppCompatActivity implements
             ,OnMapReadyCallback{
 
 
-
+    private LatLng onMapPresedLatLng;
     static LatLng latLng;
     static private LocationProvider mLocationProvider;
     static double latitude;
@@ -805,19 +805,52 @@ public class MapsActivity extends AppCompatActivity implements
             mLocationProvider.connect();
 
 
+            animateCameraPos();
 
-            zoom = googleMap.getCameraPosition().zoom;
-            bearing = googleMap.getCameraPosition().bearing;
 
-            googleMap.setMyLocationEnabled(true);
+        }
+
+    }
+
+    private void animateCameraPos(){
+
+        if(zoom != 0){
+
+            if(onMapPresedLatLng != null){
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
+                        .zoom(zoom)                   // Sets the zoom
+                        .bearing(bearing)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+
+            }else{
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .zoom(zoom)                   // Sets the zoom
+                        .bearing(bearing)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+
+            }
+
+
+
+        }else{
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
-                    .bearing(bearing)           // Sets the orientation of the camera to east
-                    .zoom(zoom)                 // keeps zoom
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(40)                // Sets the orientation of the camera to east
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+            googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
         }
 
     }
@@ -856,7 +889,7 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "onPause()");
 
 
-        AddMarkers.whatSnippetIsOpen();
+        //AddMarkers.whatSnippetIsOpen();
         zoom = googleMap.getCameraPosition().zoom;
         bearing = googleMap.getCameraPosition().bearing;
 
@@ -1049,7 +1082,9 @@ public class MapsActivity extends AppCompatActivity implements
 
 
                 Log.i("MyMapsActivity", "initializeTimerTask prior to a callAndParse : " );
-                callAndParse.getBusStopsAndBusDistances(latLng);
+
+                selectCorrectLatLng();
+
 
 
             }
@@ -1057,65 +1092,6 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-
-
-
-
-
-//    private void setUpMapIfNeeded() {
-//        Log.i("MyMapsActivity", "setUpMapIfNeeded() ");
-//
-//        // Do a null check to confirm that we have not already instantiated the map.
-//        // Try to obtain the map from the SupportMapFragment.
-//
-//        mMap = ((mMap) getFragmentManager().findFragmentById(R.id.map));
-//        mMap.getMapAsync(this);
-////        mMap.getMapAsync(new OnMapReadyCallback() {
-////            @Override
-////            public void onMapReady(GoogleMap googleMap) {
-////                mMap = googleMap;
-////                setUpMap();
-////            }
-////        });
-//
-//
-//        if(mMap == null) {
-//            Log.i("MyMapsActivity", "setUpMapIfNeeded()  mMap == null ");
-//
-//            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-//                    .getMap();
-//
-//            mMap.getUiSettings().setMapToolbarEnabled(false);
-//            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-//
-//
-//            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//                @Override
-//                public boolean onMarkerClick(Marker marker) {
-//
-//                    return false;
-//                }
-//            });
-//            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-//                @Override
-//                public void onMapClick(LatLng point) {
-//                    Log.i("MyMapsActivity", "Map clicked");
-//
-//
-//                }
-//            });
-//
-//
-//
-//        }
-//
-//    }
-//
-//
-//    private void setUpMap() {
-//        mMap.setMyLocationEnabled(true);
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-//    }
 
 
 
@@ -1210,26 +1186,12 @@ public class MapsActivity extends AppCompatActivity implements
 
         googleMap.setMyLocationEnabled(true);
         // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLng)    // Sets the center of the map to Mountain View
-                .zoom(17)                   // Sets the zoom
-                .bearing(40)                // Sets the orientation of the camera to east
-                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                .build();                   // Creates a CameraPosition from the builder
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-
-        //Log.i("MyMapsActivityTime", "startTime : " + System.currentTimeMillis());
-//                long startTime = System.currentTimeMillis();
-//                getBusStops(busInfo);
-//                long endTime = (System.currentTimeMillis());
-//                Log.i("MyMapsActivityTime", "getBusStops(busInfo) endTime  : " + ((endTime - startTime)));
+        animateCameraPos();
 
 
 
+        selectCorrectLatLng();
 
-        Log.i("MyMapsActivity", " handleNewLocation prior to a callAndParse : " );
-        callAndParse.getBusStopsAndBusDistances(latLng);
 
 
         Log.i("MyMapsActivity", "after updateBusDistance();");
@@ -1237,6 +1199,16 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
+    }
+
+    private void selectCorrectLatLng(){
+        Log.i("MyMapsActivity ", "selectCorrectLatLng " );
+
+        if(onMapPresedLatLng != null){
+            callAndParse.getBusStopsAndBusDistances(onMapPresedLatLng);
+        }else{
+            callAndParse.getBusStopsAndBusDistances(latLng);
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -1380,11 +1352,14 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d("MyMapsActivity", "onMapReadypoooo");
         this.googleMap = googleMap;
         googleMap.getUiSettings().setMapToolbarEnabled(false);
+
+        final GoogleMap finalGoogleMap = googleMap;
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
@@ -1394,9 +1369,17 @@ public class MapsActivity extends AppCompatActivity implements
                 // TODO Auto-generated method stub
                 Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
 
+                onMapPresedLatLng = arg0;
+                //deletes old markers
+                MarkerManager markerManager = MarkerManager.getInstance();
+                Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+                markerHashTable.clear();
+                finalGoogleMap.clear();
 
 
-                callAndParse.getBusStopsAndBusDistances(arg0);
+                zoom = finalGoogleMap.getCameraPosition().zoom;
+                bearing = finalGoogleMap.getCameraPosition().bearing;
+                selectCorrectLatLng();
             }
         });
 
