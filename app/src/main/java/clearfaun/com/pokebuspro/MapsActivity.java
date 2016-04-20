@@ -78,8 +78,8 @@ import java.util.TimerTask;
 public class MapsActivity extends AppCompatActivity implements
         LocationProvider.LocationCallback,
         DialogPopupListner,
-        NoBusesInAreaInterface
-            ,OnMapReadyCallback {
+        NoBusesInAreaInterface,
+        OnMapReadyCallback {
 
     private LatLng onMapPresedLatLng;
     static LatLng latLng;
@@ -87,6 +87,8 @@ public class MapsActivity extends AppCompatActivity implements
     static double latitude;
     static double longitude;
     static Context mContext;
+
+    private boolean hasInstructionalSnackBarBeenShown = false;
 
 
     static String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
@@ -317,6 +319,8 @@ public class MapsActivity extends AppCompatActivity implements
                 e.printStackTrace();
 
             }
+
+
 
             if(addressList.size() > 0){
                 Address address = addressList.get(0);
@@ -913,6 +917,8 @@ public class MapsActivity extends AppCompatActivity implements
                     .build();                   // Creates a CameraPosition from the builder
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+
+
         }
 
     }
@@ -955,6 +961,7 @@ public class MapsActivity extends AppCompatActivity implements
         zoom = googleMap.getCameraPosition().zoom;
         bearing = googleMap.getCameraPosition().bearing;
 
+        onMapPresedLatLng = null;
 
 
         stopTimerTask();
@@ -1027,7 +1034,36 @@ public class MapsActivity extends AppCompatActivity implements
             updateBusDistance();
 
 
+            showInstructionalSnackBar();
+
+
         }
+
+    }
+
+    private void showInstructionalSnackBar(){
+
+        if(!hasInstructionalSnackBarBeenShown){
+            hasInstructionalSnackBarBeenShown = true;
+
+
+            Snackbar snackbar = Snackbar
+                    .make(view, (R.string.tap_for_search), Snackbar.LENGTH_LONG)
+                    .setAction("GOT IT", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+
+                        }
+                    });
+
+            snackbar.show();
+
+            
+        }
+
+
+
 
     }
 

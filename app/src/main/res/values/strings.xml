@@ -5,8 +5,8 @@
     <string name="action_settings">Settings</string>
 
 
-    <string name="about_page_info">WaveBus was made by Clear Faun.
-                                    PokeBus is licensed by the MTA.</string>
+    <string name="about_page_info">WaveBus was made by ClearFaun.
+                                    WaveBus is licensed by the MTA.</string>
 
     <!--
      Air Plane Mode
@@ -75,7 +75,7 @@
     <!--
          Other
          -->
-
+    <string name="tap_for_search">Tap map to search</string>
     <string name="other">Other</string>
     <string name="like_us_on_facebook">Like us on Facebook</string>
     <string name="bus_map">Select your preferred Bus Map</string>
