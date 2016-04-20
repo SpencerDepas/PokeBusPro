@@ -68,10 +68,8 @@ import io.fabric.sdk.android.Fabric;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -106,8 +104,8 @@ public class MapsActivity extends AppCompatActivity implements
     static GoogleMap googleMap;
 
     static Marker pokeBusMarker;
-    static Timer timer;
-    static TimerTask timerTask;
+    Timer timer;
+    TimerTask timerTask;
 
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
@@ -129,8 +127,8 @@ public class MapsActivity extends AppCompatActivity implements
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
     static AddMarkers addMarkers;
-    int indexForBringSnippetToForground = 1;
-    ArrayList<String> busIndexForBusStopCycle = new ArrayList<String>();
+
+    ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
     boolean enabledGPS;
     private Bundle savedInstanceState;
     private CallAndParse callAndParse;
@@ -671,7 +669,8 @@ public class MapsActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
                                         prefs.edit().putString("KEY2", "0").apply();
-                                        MapsActivity.stopTimerTask();
+                                        MapsActivity mapsActivity = new MapsActivity();
+                                        mapsActivity.stopTimerTask();
 
                                     }
 
@@ -691,10 +690,11 @@ public class MapsActivity extends AppCompatActivity implements
                             MapsActivity.deletePrefs();
 
                             //removes change of color from icon color
-                            AddMarkers.removePokeBusColor();
+                            removeFavBus();
 
 
-                            Snackbar.make(view, "Pokebus's deleted", Snackbar.LENGTH_LONG)
+                            Snackbar.make(view, getString(R.string.removed_fav_bus),
+                                    Snackbar.LENGTH_LONG)
                                     .show();
 
 
@@ -827,6 +827,11 @@ public class MapsActivity extends AppCompatActivity implements
                         return true;
                     }
                 });
+    }
+
+
+    public void removeFavBus(){
+        addMarkers.removePokeBusColor(busCodeOfFavBusStops);
     }
 
 
@@ -1035,7 +1040,7 @@ public class MapsActivity extends AppCompatActivity implements
             mLocationProvider.connect();
 
 
-            updateBusDistance();
+            startTimerTask();
 
 
             showInstructionalSnackBar();
@@ -1133,34 +1138,38 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     static boolean firstTimer = true;
-    public void updateBusDistance() {
-        Log.i("MyMapsActivity", "updateBusDistance()");
+    public void startTimerTask() {
+        Log.i("MyMapsActivity", "startTimerTask()");
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
         String timeInMSString= prefs.getString(MapsActivity.mContext.getString(R.string.refresh_time_key), "20000");
 
         if(timeInMSString.equals("OFF")){
             timeInMSString = "0";
-        }
-        Log.i("MyMapsActivity", "timeInMSString()" + timeInMSString);
-
-        int timeInMS = Integer.parseInt(timeInMSString) * 1000;
-        Log.i("MyMapsActivity", "timeInMS()" + timeInMS);
-        if(timeInMS != 0) {
-            //set a new Timer
-            timer = new Timer();
-            //initialize the TimerTask's job
+        }else{
 
 
-            initializeTimerTask(firstTimer);
-            //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-            timer.schedule(timerTask, 20000, timeInMS);
+            Log.i("MyMapsActivity", "timeInMSString()" + timeInMSString);
+
+            int timeInMS = Integer.parseInt(timeInMSString) * 1000;
+            Log.i("MyMapsActivity", "timeInMS()" + timeInMS);
+            if(timeInMS != 0) {
+                //set a new Timer
+                timer = new Timer();
+                //initialize the TimerTask's job
 
 
+                initializeTimerTask(firstTimer);
+                //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+                timer.schedule(timerTask, 20000, timeInMS);
+
+
+
+            }
 
         }
     }
 
-    public static void stopTimerTask() {
+    public void stopTimerTask() {
         Log.i("MyMapsActivity", "stopTimerTask()" );
         //stop the timer, if it's not already null
         if (timer != null) {
@@ -1199,6 +1208,9 @@ public class MapsActivity extends AppCompatActivity implements
 
     private void savePokeBus() {
         Log.i("MyMapsActivity","setPokeBus()");
+
+
+
 
         //Log.i("MyMapsActivity","pokeBusbusInfo,size" + pokeBusbusInfo.size());
 
@@ -1296,7 +1308,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-        Log.i("MyMapsActivity", "after updateBusDistance();");
+        Log.i("MyMapsActivity", "after startTimerTask();");
 
 
 
@@ -1307,9 +1319,9 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity ", "selectCorrectLatLng " );
 
         if(onMapPresedLatLng != null){
-            callAndParse.getBusStopsAndBusDistances(onMapPresedLatLng);
+            callAndParse.getBusStopsAndBusDistances(onMapPresedLatLng, busCodeOfFavBusStops);
         }else{
-            callAndParse.getBusStopsAndBusDistances(latLng);
+            callAndParse.getBusStopsAndBusDistances(latLng, busCodeOfFavBusStops);
         }
     }
 
@@ -1416,7 +1428,11 @@ public class MapsActivity extends AppCompatActivity implements
                 Log.d( "AlertDialog", "Positive" );
                 dialog.dismiss();
 
+
+                busCodeOfFavBusStops.add(finalBuscode);
+
                 addMarkers.addPokeBusColor(finalBuscode);
+
 
 
             }

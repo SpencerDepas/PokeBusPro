@@ -28,12 +28,14 @@ public class AddMarkers {
 //    static LatLng[] markerLocation;
 //    static Marker[] marker;
     static boolean dialogOpon = false;
-    static ArrayList<String> overlappingMarkersIndex;
+
 
 
     static AddMarkers addMarkers;
+    private MapsActivity mapsActivity;
 
     private AddMarkers(){
+        mapsActivity = new MapsActivity();
 
     }
 
@@ -45,7 +47,9 @@ public class AddMarkers {
     }
 
 
-    public void addMarkerToMapWithBusDistances(DistancesExample distancesExample, String busCode,  LatLng busStopLatLng) {
+    public void addMarkerToMapWithBusDistances(DistancesExample distancesExample, String busCode,
+
+                                               LatLng busStopLatLng, ArrayList<String> favBuses) {
 
         Log.i("AddMarkers", "addMarkerToMapWithBusDistances" );
 
@@ -108,6 +112,15 @@ public class AddMarkers {
 
 
 
+        Log.i("AddMarkers", "  favBuses.size :  " + favBuses.size() );
+
+        for(int i = 0 ; i < favBuses.size(); i ++){
+
+            if (favBuses.get(i).equals(busCode)){
+                Log.i("AddMarkers", "  I R FAV BUS " );
+                addPokeBusColor(busCode);
+            }
+        }
 
 
 
@@ -401,12 +414,17 @@ public class AddMarkers {
 
     }
 
-    public static void removePokeBusColor() {
+    public static void removePokeBusColor(ArrayList<String> arrayList) {
 
-//        for (int i = 0; i < MapsActivity.busInfo.size(); i++) {
-//            //marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.blueba));
-//            marker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-//        }
+        if(arrayList.size() > 0){
+            for (int i = 0; i < arrayList.size(); i++) {
+                MarkerManager markerManager = MarkerManager.getInstance();
+                Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+                Marker marker = markerHashTable.get(arrayList.get(i));
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+            }
+        }
+
 
     }
 

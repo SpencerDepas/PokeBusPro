@@ -90,7 +90,8 @@ public class PrefsFragment extends PreferenceFragment {
                 if(prefSumBusMap.getValue() == "0"){
                     Log.i("PrefsFragment", "onSharedPreferenceChanged prefSumBusMap.getValue() == \"0\"");
 
-                    MapsActivity.stopTimerTask();
+                    MapsActivity mapsActivity = new MapsActivity();
+                    mapsActivity.stopTimerTask();
 
 
                 }
@@ -146,7 +147,10 @@ public class PrefsFragment extends PreferenceFragment {
             MapsActivity.deletePrefs();
             //MapsActivity.pokeBusbusInfo.clear();
             //removes change of color from icon color
-            AddMarkers.removePokeBusColor();
+
+
+            MapsActivity mapsActivity = new MapsActivity();
+            mapsActivity.removeFavBus();
 
         }
 
@@ -186,7 +190,7 @@ public class PrefsFragment extends PreferenceFragment {
 
 
        /* MapsActivity.stopTimerTask();
-        MapsActivity.updateBusDistance();*/
+        MapsActivity.startTimerTask();*/
 
     }
 

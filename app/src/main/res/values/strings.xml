@@ -8,6 +8,8 @@
     <string name="about_page_info">WaveBus was made by ClearFaun.
                                     WaveBus is licensed by the MTA.</string>
 
+        <string name="removed_fav_bus">Deleted favorite Buses</string>
+
     <!--
      Air Plane Mode
      -->

@@ -65,9 +65,14 @@ public class CallAndParse {
                 .create();
     }
 
+    ArrayList<String> favBusStops;
 
-    public void getBusStopsAndBusDistances(LatLng latLng) {
+    public void getBusStopsAndBusDistances(LatLng latLng, ArrayList<String> favBusStops) {
         Log.i("MyCallAndParse", "getBusStopsAndBusDistances");
+
+        this.favBusStops = favBusStops;
+
+        Log.i("MyCallAndParse", "favBusStops. size : " + favBusStops.size());
 
         String lat = latLng.latitude + "";
         String lng = latLng.longitude + "";
@@ -179,7 +184,8 @@ public class CallAndParse {
 
                 Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode );
                 AddMarkers addMarkers = AddMarkers.getInstance();
-                addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode, finalbusStopLatLng);
+                addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode,
+                        finalbusStopLatLng, favBusStops);
 
 
 

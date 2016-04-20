@@ -54,13 +54,12 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
         }
 
 
-        TextView busName = (TextView) popup.findViewById(R.id.bus_name);
         TextView busCode = (TextView) popup.findViewById(R.id.bus_code);
         TextView distances = (TextView) popup.findViewById(R.id.snippet);
 
 
         //BusInfo.setCurrentDisplayedBusName(MapsActivity.busInfo.get(i).busName);
-        busName.setText(marker.getTitle().substring(6));
+
 
 
         busCode.setText(marker.getTitle() + "\n" +
@@ -91,6 +90,8 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
 
             }
         });
+
+
 
 
         return (popup);
