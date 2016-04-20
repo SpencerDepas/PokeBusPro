@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
@@ -48,7 +49,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 
 
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -64,15 +64,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -254,13 +248,57 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     @SuppressWarnings("unused")
-    @OnClick(R.id.refresh_location_button)
+    @OnClick(R.id.refresh_location_fab)
     public void refreshLocation(View view) {
         Log.i("MyMapsActivity", "onClick refreshLocation");
 
 
 
         refreshMarkers();
+
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.searchFab)
+    public void searchForLocation(View view) {
+        Log.i("MyMapsActivity", "onClick searchForLocation");
+
+
+
+        final View finalView = view;
+        LayoutInflater li = LayoutInflater.from(MapsActivity.this);
+        View alertDialogView = li.inflate(R.layout.search_address_dialog, null);
+
+
+        final EditText locationToSearchFor = (EditText) alertDialogView
+                .findViewById(R.id.seacrhed_address);
+
+
+
+        final android.support.v7.app.AlertDialog.Builder alertDialogBuilder =
+                new android.support.v7.app.AlertDialog.Builder(MapsActivity.this,
+                        R.style.MyAlertDialogStyle);
+        alertDialogBuilder.setView(alertDialogView);
+
+
+        alertDialogBuilder.setPositiveButton("SEARCH",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // get user input and set it to result
+                        // edit text
+                        Log.i("MyMapsActivity", "DialogInterface onClick ");
+                        Snackbar.make(finalView, "locationToSearchFor : " +
+                                locationToSearchFor.getText().toString(), Snackbar.LENGTH_LONG)
+                                .show();
+                    }
+
+                });
+        alertDialogBuilder.setNegativeButton("Cancel", null);
+        final android.support.v7.app.AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+
+
 
     }
 

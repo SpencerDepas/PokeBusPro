@@ -56,7 +56,7 @@
     <!--
          BUS MAPS
          -->
-    Select your borough
+
     <string name="select_bus_map_tittle"> Select your borough</string>
     <string name="map_preference">Choose Bus Map</string>
     <string name="bus_maps_key">KEY99</string>
@@ -97,6 +97,14 @@
     <string name="license_one_header">FloatingActionButton</string>
     <string name="license_two_header">Material Design Elements Of Android L</string>
     <string name="license_three_header">Subsampling Scale Image View</string>
+
+
+    <!--
+       SearchDialog
+       -->
+
+    <string name="search_by_location">Search by location</string>
+    <string name="address">Address</string>
 
 
     <!--

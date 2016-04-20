@@ -53,7 +53,7 @@
         app:layout_anchorGravity="top|right|end" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/refresh_location_button"
+        android:id="@+id/refresh_location_fab"
         android:src="@drawable/ic_refresh_white_48dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
