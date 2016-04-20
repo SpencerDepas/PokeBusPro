@@ -71,6 +71,8 @@ import java.io.ObjectOutputStream;
 import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -222,7 +224,7 @@ public class MapsActivity extends AppCompatActivity implements
 
             //Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
 
-            spinner = (ProgressBar) findViewById(R.id.progressBar1);
+            spinner = (ProgressBar) findViewById(R.id.mapsAcitvityProgressBar);
 
 
 
@@ -1374,18 +1376,20 @@ public class MapsActivity extends AppCompatActivity implements
                 // TODO Auto-generated method stub
                 Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
 
-                Marker lastOpenMarker = PopupAdapterForMapMarkers.getLastOpenMarker();
-
-                Log.d("MyMapsActivity", " lastOpenMarker getTitle: " + lastOpenMarker.getTitle());
-                Log.d("MyMapsActivity", " lastOpenMarker isVisible: " + lastOpenMarker.isVisible());
 
 
-                if(lastOpenMarker != null && !lastOpenMarker.isVisible()){
+                MarkerManager markerManager = MarkerManager.getInstance();
+
+                Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+
+
+
+                //something
+                if(true){
 
                     onMapPresedLatLng = arg0;
                     //deletes old markers
-                    MarkerManager markerManager = MarkerManager.getInstance();
-                    Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+
                     markerHashTable.clear();
                     finalGoogleMap.clear();
 

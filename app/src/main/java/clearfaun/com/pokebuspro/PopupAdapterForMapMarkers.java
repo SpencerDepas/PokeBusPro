@@ -21,18 +21,13 @@ import java.util.ArrayList;
 class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     private View popup = null;
     private LayoutInflater inflater = null;
-    static Marker lastOpenMarker;
+    static boolean isMarkerOpen = false;
 
     PopupAdapterForMapMarkers(LayoutInflater inflater) {
         this.inflater = inflater;
     }
 
-    public static Marker getLastOpenMarker(){
-        if(lastOpenMarker == null){
-            return null;
-        }
-        return lastOpenMarker;
-    }
+
 
     @Override
     public View getInfoWindow(Marker marker) {
@@ -44,20 +39,17 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     @Override
     public View getInfoContents(Marker marker) {
 
-        lastOpenMarker = marker;
+
         Log.i("PopupAdapterForMapMark", "new popup() ");
         if (popup == null) {
             popup = inflater.inflate(R.layout.popup_snippet, null);
         }
 
-        Log.i("PopupAdapterForMapMark", "addMarkersToMap() ");
-
-        if (AddMarkers.fromOpenSnippetWithIndex) {
-            AddMarkers.fromOpenSnippetWithIndex = false;
-            Log.i("PopupAdapterForMapMark", "fromOpenSnippetWithIndex + true ");
-            return popup;
-        } else {
-            Log.i("PopupAdapterForMapMark", "fromOpenSnippetWithIndex + false ");
+        if(marker.isInfoWindowShown()){
+            isMarkerOpen = true;
+        }else{
+            isMarkerOpen = false;
+        }
 
 
         TextView busName = (TextView) popup.findViewById(R.id.bus_name);
@@ -88,8 +80,5 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
 
         return (popup);
     }
-
-}
-    static int currentPopUpIndex;
 
 }
