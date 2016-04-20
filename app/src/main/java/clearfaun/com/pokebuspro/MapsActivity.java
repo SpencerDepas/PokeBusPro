@@ -68,6 +68,7 @@ import io.fabric.sdk.android.Fabric;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -193,6 +194,9 @@ public class MapsActivity extends AppCompatActivity implements
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mMap.getMapAsync(this);
 
+        addMarkers = AddMarkers.getInstance();
+        addMarkers.popupListner = MapsActivity.this;
+
         callAndParse = new CallAndParse(MapsActivity.this);
 
 
@@ -202,8 +206,8 @@ public class MapsActivity extends AppCompatActivity implements
 
     private void permissionGranted(){
 
-        addMarkers = new AddMarkers();
-        addMarkers.popupListner = MapsActivity.this;
+
+
 
 
 
@@ -1059,7 +1063,7 @@ public class MapsActivity extends AppCompatActivity implements
 
             snackbar.show();
 
-            
+
         }
 
 
@@ -1396,17 +1400,18 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     @Override
-    public void displayDialog(String busCode, String pinId, String buscode) {
+    public void displayDialog(String buscode) {
         Log.i("MyMapsActivity", "displayDialog interface");
 
 
 
 
-        final String finalBuscode = busCode;
+        final String finalBuscode = buscode;
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(getString(R.string.set_pokebus_title));
-        builder.setMessage(getString(R.string.set_pokebus_body_two));
-        builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener()  {
+        builder.setTitle(getString(R.string.set_fav_bus)
+                + "\n\n" + finalBuscode);
+        builder.setMessage(getString(R.string.set_fav_bus_body));
+        builder.setPositiveButton("SET", new DialogInterface.OnClickListener()  {
             public void onClick(DialogInterface dialog, int which) {
                 Log.d( "AlertDialog", "Positive" );
                 dialog.dismiss();
@@ -1492,6 +1497,8 @@ public class MapsActivity extends AppCompatActivity implements
         Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
         //something
+
+
 
 
         onMapPresedLatLng = latLng;

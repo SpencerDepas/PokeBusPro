@@ -178,7 +178,7 @@ public class CallAndParse {
                 );
 
                 Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode );
-                AddMarkers addMarkers = new AddMarkers();
+                AddMarkers addMarkers = AddMarkers.getInstance();
                 addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode, finalbusStopLatLng);
 
 

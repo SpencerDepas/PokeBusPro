@@ -31,9 +31,17 @@ public class AddMarkers {
     static ArrayList<String> overlappingMarkersIndex;
 
     DialogPopupListner popupListner = null;
+    static AddMarkers addMarkers;
 
-    public AddMarkers(){
+    private AddMarkers(){
 
+    }
+
+    public static synchronized AddMarkers getInstance(){
+        if(addMarkers == null){
+            addMarkers = new AddMarkers();
+        }
+        return addMarkers;
     }
 
 
@@ -86,9 +94,10 @@ public class AddMarkers {
 
 
 
-        if(marker.isVisible()){
-            marker.showInfoWindow();
+        if(marker.isInfoWindowShown()){
+            Log.i("AddMarkers", "  marker.isInfoWindowShown() " );
             marker.hideInfoWindow();
+            marker.showInfoWindow();
         }
 
 
@@ -107,7 +116,7 @@ public class AddMarkers {
                 Log.i("AddMarkers", "  setOnInfoWindowClickListener " );
 
 
-                popupListner.displayDialog(Pin.getTitle(), Pin.getId(), fBusCode);
+                popupListner.displayDialog(fBusCode);
                 dialogOpon = true;
 
             }
@@ -159,7 +168,7 @@ public class AddMarkers {
 
         String allbusNamesAndDistances = "";
 
-        long startTime = System.nanoTime();
+        //long startTime = System.nanoTime();
         for(int i = 0; i < incomingBusesSize; i ++){
 
 
@@ -175,10 +184,10 @@ public class AddMarkers {
             busNamec = busNamec.substring(indexOfChar);
 
 
-            Log.i("AddMarkerss", "incomingBusesSize : "  + incomingBusesSize );
-            Log.i("AddMarkerss", "busNamec : "  + busNamec );
-
-            Log.i("AddMarkerss", "i : "  + i );
+//            Log.i("AddMarkerss", "incomingBusesSize : "  + incomingBusesSize );
+//            Log.i("AddMarkerss", "busNamec : "  + busNamec );
+//
+//            Log.i("AddMarkerss", "i : "  + i );
 
 
             String distance = distancesExample.getSiri().getServiceDelivery()
@@ -192,16 +201,16 @@ public class AddMarkers {
                     .getPresentableDistance();
 
             allbusNamesAndDistances += busNamec + ": " + distance + "\n";
-            Log.i("AddMarkerss", "distance : "  + distance );
+            //Log.i("AddMarkerss", "distance : "  + distance );
         }
 
 
         // Log.i("AddMarkerss", "allbusNamesAndDistances : "  + allbusNamesAndDistances  + " buscode : " + busCode);
 
 
-        long estimatedTime = System.nanoTime() - startTime;
+        //long estimatedTime = System.nanoTime() - startTime;
 
-        Log.i("AddMarkerss", "estimatedTime : " +   estimatedTime);
+        //Log.i("AddMarkerss", "estimatedTime : " +   estimatedTime);
 
         return allbusNamesAndDistances;
     }

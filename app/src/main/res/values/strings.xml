@@ -146,10 +146,8 @@
     <!--
      This is for pokebus setting popup
      -->
-    <string name="set_pokebus_title">Set a PokeBus!</string>
-    <string name="set_pokebus_body">Bus: B16 \nStopeCode: 36148 \nbody of information i like to write a lot of garbage \njusdt for a
-        test giberish is my tone of
-        just  \ndude infoprmations a wall  of text</string>
+    <string name="set_fav_bus">Set a favorite Bus Stop</string>
+    <string name="set_fav_bus_body">When you set a favorite Bus Stop the closest Favorite bus stop in range will be displayed automatically</string>
     <string name="set_pokebus_body_two">Setting a Pokebus enables the fastest way to know when a bus is approaching a specific stop.
     Set the stop and use the included black launcher. A Pokebus stop is blue. You can enable multiple Pokebuses. The bus stop that is
         closest to you will be chosen. You can remove your Pokebuses in the settings menu.</string>
