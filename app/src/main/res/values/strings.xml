@@ -105,6 +105,7 @@
 
     <string name="search_by_location">Search by location</string>
     <string name="address">Address</string>
+    <string name="location_not_found">Address not found</string>
 
 
     <!--

@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -64,8 +66,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -76,7 +80,6 @@ public class MapsActivity extends AppCompatActivity implements
         DialogPopupListner,
         NoBusesInAreaInterface
             ,OnMapReadyCallback {
-
 
     private LatLng onMapPresedLatLng;
     static LatLng latLng;
@@ -288,9 +291,9 @@ public class MapsActivity extends AppCompatActivity implements
                         // get user input and set it to result
                         // edit text
                         Log.i("MyMapsActivity", "DialogInterface onClick ");
-                        Snackbar.make(finalView, "locationToSearchFor : " +
-                                locationToSearchFor.getText().toString(), Snackbar.LENGTH_LONG)
-                                .show();
+
+                        getLatLngForSearchLocation(locationToSearchFor.getText().toString());
+
                     }
 
                 });
@@ -299,6 +302,33 @@ public class MapsActivity extends AppCompatActivity implements
         alert.show();
 
 
+
+    }
+
+    private void getLatLngForSearchLocation(String location){
+        Log.i("MyMapsActivity", "getLatLngForSearchLocation ");
+        List<Address> addressList = null;
+
+        if (location != null || !location.equals("") ) {
+            Geocoder geocoder = new Geocoder(this);
+            try {
+                addressList = geocoder.getFromLocationName(location, 2);
+            } catch (IOException e) {
+                e.printStackTrace();
+
+            }
+
+            if(addressList.size() > 0){
+                Address address = addressList.get(0);
+                LatLng onSearchLatLng = new LatLng(address.getLatitude(), address.getLongitude());
+                newLocationFromLatLng(onSearchLatLng);
+            }else {
+                Snackbar.make(view, getString(R.string.location_not_found), Snackbar.LENGTH_LONG)
+                        .show();
+            }
+
+
+        }
 
     }
 
@@ -859,35 +889,22 @@ public class MapsActivity extends AppCompatActivity implements
 
     private void animateCameraPos(){
 
-        if(zoom != 0){
+        if(zoom != 0 && onMapPresedLatLng != null){
+            Log.i("MyMapsActivity", "zoom != 0 && onMapPresedLatLng != null");
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
+                    .zoom(zoom)                   // Sets the zoom
+                    .bearing(bearing)                // Sets the orientation of the camera to east
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
 
-            if(onMapPresedLatLng != null){
-
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
-                        .zoom(zoom)                   // Sets the zoom
-                        .bearing(bearing)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-
-            }else{
-
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(zoom)                   // Sets the zoom
-                        .bearing(bearing)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-
-            }
 
 
 
         }else{
+            Log.i("MyMapsActivity", "animateCameraPos else");
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)    // Sets the center of the map to Mountain View
                     .zoom(16)                   // Sets the zoom
@@ -1416,31 +1433,11 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-                MarkerManager markerManager = MarkerManager.getInstance();
 
-                Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-
+                newLocationFromLatLng(arg0);
 
 
-                //something
-                if(true){
 
-                    onMapPresedLatLng = arg0;
-                    //deletes old markers
-
-                    markerHashTable.clear();
-                    finalGoogleMap.clear();
-
-
-                    zoom = finalGoogleMap.getCameraPosition().zoom;
-                    bearing = finalGoogleMap.getCameraPosition().bearing;
-                    selectCorrectLatLng();
-
-                }else{
-                    //do nothing
-                    //we are doing this as we do not want the onclick of
-                    //map to register if a popup is active
-                }
 
 
             }
@@ -1448,6 +1445,31 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
+
+    }
+
+    private void newLocationFromLatLng(LatLng latLng){
+        Log.d("MyMapsActivity", "newLocationFromLatLng");
+
+        MarkerManager markerManager = MarkerManager.getInstance();
+
+        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+
+        //something
+
+
+        onMapPresedLatLng = latLng;
+        //deletes old markers
+
+        markerHashTable.clear();
+        googleMap.clear();
+
+
+        zoom = googleMap.getCameraPosition().zoom;
+        bearing = googleMap.getCameraPosition().bearing;
+        selectCorrectLatLng();
+
+        animateCameraPos();
     }
 
 
