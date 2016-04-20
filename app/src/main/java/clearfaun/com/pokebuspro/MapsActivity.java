@@ -195,7 +195,7 @@ public class MapsActivity extends AppCompatActivity implements
         mMap.getMapAsync(this);
 
         addMarkers = AddMarkers.getInstance();
-        addMarkers.popupListner = MapsActivity.this;
+        PopupAdapterForMapMarkers.popupListner = MapsActivity.this;
 
         callAndParse = new CallAndParse(MapsActivity.this);
 
@@ -1408,24 +1408,16 @@ public class MapsActivity extends AppCompatActivity implements
 
         final String finalBuscode = buscode;
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(getString(R.string.set_fav_bus)
-                + "\n\n" + finalBuscode);
-        builder.setMessage(getString(R.string.set_fav_bus_body));
+        builder.setTitle(getString(R.string.set_fav_bus));
+        builder.setMessage("BusCode: " + finalBuscode
+                + "\n" + "\n" +  getString(R.string.set_fav_bus_body));
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener()  {
             public void onClick(DialogInterface dialog, int which) {
                 Log.d( "AlertDialog", "Positive" );
                 dialog.dismiss();
-                AddMarkers.dialogOpon = false;
 
+                addMarkers.addPokeBusColor(finalBuscode);
 
-
-                //MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
-
-
-
-                AddMarkers.addPokeBusColor();
-                //
-                //AddMarkers.openSnippetWithIndex();
 
             }
         });

@@ -23,6 +23,8 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     private LayoutInflater inflater = null;
     static boolean isMarkerOpen = false;
 
+    static DialogPopupListner popupListner = null;
+
     PopupAdapterForMapMarkers(LayoutInflater inflater) {
         this.inflater = inflater;
     }
@@ -76,6 +78,19 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
 
 
 
+        final String fBusCode = marker.getTitle().substring(0, 6);
+        MapsActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker Pin) {
+
+                Log.i("AddMarkers", "  setOnInfoWindowClickListener " );
+
+
+                popupListner.displayDialog(fBusCode);
+
+
+            }
+        });
 
 
         return (popup);

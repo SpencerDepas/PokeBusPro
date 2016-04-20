@@ -30,7 +30,7 @@ public class AddMarkers {
     static boolean dialogOpon = false;
     static ArrayList<String> overlappingMarkersIndex;
 
-    DialogPopupListner popupListner = null;
+
     static AddMarkers addMarkers;
 
     private AddMarkers(){
@@ -108,19 +108,6 @@ public class AddMarkers {
 
 
 
-        final String fBusCode = busCode;
-        MapsActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker Pin) {
-
-                Log.i("AddMarkers", "  setOnInfoWindowClickListener " );
-
-
-                popupListner.displayDialog(fBusCode);
-                dialogOpon = true;
-
-            }
-        });
 
 
 
@@ -396,7 +383,21 @@ public class AddMarkers {
     }
 
 
-    public static void addPokeBusColor(){
+    public void addPokeBusColor(String busCode){
+        Log.i("AddMarkerstz", "addPokeBusColor");
+
+        MarkerManager markerManager = MarkerManager.getInstance();
+
+        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+
+
+        Marker marker = markerHashTable.get(busCode);
+
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
+
+        marker.hideInfoWindow();
+        marker.showInfoWindow();
+
 
     }
 
