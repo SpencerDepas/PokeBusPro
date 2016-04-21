@@ -700,10 +700,10 @@ public class MapsActivity extends AppCompatActivity implements
                             //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
 
 
-                            deletePrefs();
+                            removeSavedFavBusFromStorage();
 
                             //removes change of color from icon color
-                            removeFavBus();
+                            removeFavBusMarkerColor();
 
 
                             Snackbar.make(view, getString(R.string.removed_fav_bus),
@@ -843,7 +843,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    public void removeFavBus(){
+    public void removeFavBusMarkerColor(){
         addMarkers.removePokeBusColor(busCodeOfFavBusStops);
     }
 
@@ -1130,7 +1130,15 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    public void deletePrefs(){
+    private void removeSavedFavBusFromStorage(){
+
+        busCodeOfFavBusStops.clear();
+        Log.i("MyMapsActivity", "busCodeOfFavBusStops.size : " + busCodeOfFavBusStops.size());
+    }
+
+
+
+    private void deletePrefs(){
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
