@@ -27,12 +27,13 @@ public class AddMarkers {
 
 //    static LatLng[] markerLocation;
 //    static Marker[] marker;
-    static boolean dialogOpon = false;
+
+
     FirstBusStopHasBeenDisplayed firstBusStopHasBeenDisplayed = null;
 
 
 
-    static AddMarkers addMarkers;
+    private static AddMarkers addMarkers;
     private MapsActivity mapsActivity;
 
     private AddMarkers(){
@@ -47,7 +48,6 @@ public class AddMarkers {
 
     public static synchronized AddMarkers getInstance(){
         if(addMarkers == null){
-
             addMarkers = new AddMarkers();
         }
         return addMarkers;

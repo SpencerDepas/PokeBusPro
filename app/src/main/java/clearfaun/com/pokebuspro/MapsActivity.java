@@ -80,7 +80,8 @@ public class MapsActivity extends AppCompatActivity implements
         DialogPopupListner,
         NoBusesInAreaInterface,
         FirstBusStopHasBeenDisplayed,
-        OnMapReadyCallback {
+        OnMapReadyCallback ,
+        GoogleMap.OnInfoWindowCloseListener{
 
     private LatLng onMapPresedLatLng;
     static LatLng latLng;
@@ -911,6 +912,13 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onInfoWindowClose(Marker marker) {
+        Log.i("PopupAdapterForMapMark", "  onInfoWindowClose " );
+
+         enableMapOnPress();
+    }
+
     private void animateCameraPos(){
 
         if(zoom != 0 && onMapPresedLatLng != null){
@@ -924,6 +932,7 @@ public class MapsActivity extends AppCompatActivity implements
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
 
+            googleMap.setOnInfoWindowCloseListener(this);
 
 
 
@@ -939,6 +948,7 @@ public class MapsActivity extends AppCompatActivity implements
                         .build();                   // Creates a CameraPosition from the builder
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+                googleMap.setOnInfoWindowCloseListener(this);
             }else{
                 Log.i("MyMapsActivity", "zoom == 0");
                 CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -949,6 +959,7 @@ public class MapsActivity extends AppCompatActivity implements
                         .build();                   // Creates a CameraPosition from the builder
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+                googleMap.setOnInfoWindowCloseListener(this);
 
             }
 
@@ -1374,7 +1385,7 @@ public class MapsActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 Log.d("AlertDialog", "Positive");
                 dialog.dismiss();
-                AddMarkers.dialogOpon = false;
+
 
 
             }
@@ -1398,34 +1409,56 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap newGoogleMap) {
         Log.d("MyMapsActivity", "onMapReadypoooo");
-        this.googleMap = googleMap;
+        this.googleMap = newGoogleMap;
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-        final GoogleMap finalGoogleMap = googleMap;
 
+        //enabled by deafault
+        enableMapOnPress();
+
+
+
+
+
+    }
+
+    public void disableMapOnPress(){
+        Log.d("MyMapsActivity", "disableMapOnPress");
+        googleMap.setOnMapClickListener(null);
+        Log.d("MyMapsActivity", "i work once fEnable : " + isMapOnPressEnabled);
+        isMapOnPressEnabled = false;
+    }
+
+    boolean isMapOnPressEnabled = false;
+
+    public void enableMapOnPress(){
+        Log.d("MyMapsActivity", "enableMapOnPress");
+        
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
             public void onMapClick(LatLng arg0) {
                 Log.d("MyMapsActivity", "onMapClick");
-                // TODO Auto-generated method stub
-                Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
 
+                //Log.d("MyMapsActivity", "fEnable : " + fEnable);
+                if(isMapOnPressEnabled) {
+                    isMapOnPressEnabled = false;
+                    // TODO Auto-generated method stub
+                    Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
 
+                    newLocationFromLatLng(arg0);
+                } else{
 
-
-                newLocationFromLatLng(arg0);
-
-
+                    isMapOnPressEnabled = true;
+                    //Log.d("MyMapsActivity", "isMapOnPressEnabled : " + isMapOnPressEnabled);
+                }
 
 
 
             }
         });
-
-
 
 
     }

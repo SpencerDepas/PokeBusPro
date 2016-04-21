@@ -18,9 +18,12 @@ import java.util.ArrayList;
 /**
  * Created by spencer on 2/25/2015.
  */
-class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
+public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
+
     private View popup = null;
     private LayoutInflater inflater = null;
+    private MapsActivity mapsActivity;
+
     static boolean isMarkerOpen = false;
 
     static DialogPopupListner popupListner = null;
@@ -35,6 +38,10 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     public View getInfoWindow(Marker marker) {
         return (null);
     }
+
+
+
+
 
 
     @SuppressLint("InflateParams")
@@ -53,6 +60,7 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
             isMarkerOpen = false;
         }
 
+        mapsActivity = new MapsActivity();
 
         TextView busCode = (TextView) popup.findViewById(R.id.bus_code);
         TextView distances = (TextView) popup.findViewById(R.id.snippet);
@@ -82,7 +90,7 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
             @Override
             public void onInfoWindowClick(Marker Pin) {
 
-                Log.i("AddMarkers", "  setOnInfoWindowClickListener " );
+                Log.i("PopupAdapterForMapMark", "  setOnInfoWindowClickListener " );
 
 
                 popupListner.displayDialog(fBusCode);
@@ -92,9 +100,15 @@ class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
         });
 
 
+        mapsActivity.disableMapOnPress();
+
+
+
+
 
 
         return (popup);
     }
+
 
 }
