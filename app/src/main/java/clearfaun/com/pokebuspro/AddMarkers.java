@@ -28,6 +28,7 @@ public class AddMarkers {
 //    static LatLng[] markerLocation;
 //    static Marker[] marker;
     static boolean dialogOpon = false;
+    FirstBusStopHasBeenDisplayed firstBusStopHasBeenDisplayed = null;
 
 
 
@@ -39,8 +40,14 @@ public class AddMarkers {
 
     }
 
+
+    public void setInterface(FirstBusStopHasBeenDisplayed newfirstBusStopHasBeenDisplayed){
+        firstBusStopHasBeenDisplayed = newfirstBusStopHasBeenDisplayed;
+    }
+
     public static synchronized AddMarkers getInstance(){
         if(addMarkers == null){
+
             addMarkers = new AddMarkers();
         }
         return addMarkers;
@@ -56,6 +63,8 @@ public class AddMarkers {
         int incomingBusesSize = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
                 .getMonitoredStopVisit()
                 .size();
+
+        Log.i("AddMarkers", "addMarkerToMapWithBusDistances" );
 
 
         String busName = getBusName( distancesExample, incomingBusesSize);
@@ -124,9 +133,8 @@ public class AddMarkers {
 
 
 
-        if(MapsActivity.spinner.getVisibility() == View.VISIBLE){
-            MapsActivity.spinner.setVisibility(View.INVISIBLE);
-        }
+        firstBusStopHasBeenDisplayed.removeLoadingIcon();
+
 
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }

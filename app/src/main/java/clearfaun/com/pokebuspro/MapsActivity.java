@@ -39,11 +39,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -82,6 +79,7 @@ public class MapsActivity extends AppCompatActivity implements
         LocationProvider.LocationCallback,
         DialogPopupListner,
         NoBusesInAreaInterface,
+        FirstBusStopHasBeenDisplayed,
         OnMapReadyCallback {
 
     private LatLng onMapPresedLatLng;
@@ -118,12 +116,11 @@ public class MapsActivity extends AppCompatActivity implements
     FragmentManager fm;
     FragmentTransaction ft;
     int firstBoot = 0;
-    static SharedPreferences prefs;
+    SharedPreferences prefs;
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-    static ProgressBar spinner;
-    static ImageButton optionsButton;
-    static ImageButton changeSelectedBus;
+    private ProgressBar spinner;
+
     static RelativeLayout back_dim_layout;
     //EMPIRE STATE BUILDING
   /*  static double testLat = 40.748441;
@@ -141,7 +138,7 @@ public class MapsActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_nav_draw);
         ButterKnife.bind(this);
         Log.i("MyMapsActivity", "onCreate");
 
@@ -200,6 +197,7 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "busCodeOfFavBusStops.size : " + busCodeOfFavBusStops.size());
 
         addMarkers = AddMarkers.getInstance();
+        addMarkers.setInterface(MapsActivity.this);
         PopupAdapterForMapMarkers.popupListner = MapsActivity.this;
 
         callAndParse = new CallAndParse(MapsActivity.this);
@@ -218,7 +216,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         if(!isOnline()){
             Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(getApplicationContext() , NoConnection.class);
+            Intent intent = new Intent(getApplicationContext() , NoConnectionActivity.class);
             startActivity(intent);
             this.finish();
 
@@ -457,7 +455,7 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
 
-        getMenuInflater().inflate(R.menu.my_menu, menu);
+        getMenuInflater().inflate(R.menu.my_main_actvity_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -551,7 +549,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
                                         prefs.edit().putString(getString(R.string.radius_key), "200").apply();
-                                        MapsActivity.spinner.setVisibility(View.VISIBLE);
+                                        spinner.setVisibility(View.VISIBLE);
                                         refreshMarkers();
 
 
@@ -569,7 +567,7 @@ public class MapsActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
 
                                         prefs.edit().putString(getString(R.string.radius_key), "250").apply();
-                                        MapsActivity.spinner.setVisibility(View.VISIBLE);
+                                        spinner.setVisibility(View.VISIBLE);
                                         refreshMarkers();
 
                                         String refreshRate = prefs.getString("KEY2", "DICK");
@@ -586,7 +584,7 @@ public class MapsActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
                                         prefs.edit().putString(getString(R.string.radius_key), "300").apply();
-                                        MapsActivity.spinner.setVisibility(View.VISIBLE);
+                                        spinner.setVisibility(View.VISIBLE);
                                         refreshMarkers();
 
 
@@ -850,7 +848,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-    public static boolean isLocationEnabled(Context context) {
+    private boolean isLocationEnabled(Context context) {
         int locationMode = 0;
         String locationProviders;
 
@@ -871,7 +869,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     }
-    static Button btnDismiss;
+
 
 
 
@@ -889,7 +887,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         if(!isOnline()){
             Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(getApplicationContext() , NoConnection.class);
+            Intent intent = new Intent(getApplicationContext() , NoConnectionActivity.class);
             startActivity(intent);
 
 
@@ -1087,34 +1085,34 @@ public class MapsActivity extends AppCompatActivity implements
 
         if (!isOnline()) {
             Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(getApplicationContext(), NoConnection.class);
+            Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
             this.finish();
 
         } else if (!isLocationEnabled(mContext)) {
 
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
-            builder.setTitle("Location services disabled");
-            builder.setMessage("WaveBus needs to access your location.\n" +
-                    "Please turn on location access.");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.d("AlertDialog", "Positive");
-                    dialog.dismiss();
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-            builder.setNegativeButton("DISMISS", null);
-            builder.show();
+//            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+//            builder.setTitle("Location services disabled");
+//            builder.setMessage("WaveBus needs to access your location for the best results." +
+//                    "Please enable location access.");
+//            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int which) {
+//                    Log.d("AlertDialog", "Positive");
+//                    dialog.dismiss();
+//                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                    startActivity(intent);
+//                }
+//            });
+//            builder.setNegativeButton("DISMISS", null);
+//            builder.show();
 
 
         } else if (enabledAirplaneMode) {
             Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
 
 
-            Intent intent = new Intent(MapsActivity.mContext, AirplaneMode.class);
+            Intent intent = new Intent(MapsActivity.mContext, NoConnectionActivity.class);
             startActivity(intent);
             this.finish();
 
@@ -1123,6 +1121,7 @@ public class MapsActivity extends AppCompatActivity implements
         if (!enabledGPS && gpsPrompt == 0) {
             gpsPrompt++;
             Log.i("MyMapsActivity", "!enabledGPS");
+
             toaster("Turn on GPS for best results");
         }
 
@@ -1284,10 +1283,7 @@ public class MapsActivity extends AppCompatActivity implements
         toast.show();
     }
 
-    static void toasterShort(String string){
-        Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_SHORT);
-        toast.show();
-    }
+
 
 
 
@@ -1323,10 +1319,13 @@ public class MapsActivity extends AppCompatActivity implements
     private void selectCorrectLatLng(){
         Log.i("MyMapsActivity ", "selectCorrectLatLng " );
 
+        String radius = prefs.getString("KEY1", "301");
+
         if(onMapPresedLatLng != null){
-            callAndParse.getBusStopsAndBusDistances(onMapPresedLatLng, busCodeOfFavBusStops);
+
+            callAndParse.getBusStopsAndBusDistances(onMapPresedLatLng, busCodeOfFavBusStops, radius);
         }else{
-            callAndParse.getBusStopsAndBusDistances(latLng, busCodeOfFavBusStops);
+            callAndParse.getBusStopsAndBusDistances(latLng, busCodeOfFavBusStops, radius);
         }
     }
 
@@ -1342,77 +1341,6 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
-    void popupForPokebus(ImageButton optionsButton, String buscode, String id) {
-
-
-
-
-        Log.i("MyMapsActivity ", "popupForPokebus buscode " + buscode);
-        Log.i("MyMapsActivity ", "popupForPokebus buscode " + id);
-
-
-
-        //to prevent null pouinter
-        if(optionsButton != null) {
-            LayoutInflater layoutInflater = LayoutInflater.from(MapsActivity.mContext);
-            View popupView = layoutInflater.inflate(R.layout.popup_set_pokebus, null);
-
-            back_dim_layout.setVisibility(View.VISIBLE);
-
-            final String finalBuscode = buscode;
-
-
-            final PopupWindow popupWindow = new PopupWindow(
-                    popupView,
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.WRAP_CONTENT);
-
-
-            popupWindow.showAtLocation(optionsButton, Gravity.CENTER, 0, 0);
-
-
-
-            btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
-            btnDismiss.setOnClickListener(new Button.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    popupWindow.dismiss();
-                    back_dim_layout.setVisibility(View.GONE);
-                    AddMarkers.dialogOpon = false;
-
-                }
-            });
-
-
-
-            Button btnSetPokeBus = (Button) popupView.findViewById(R.id.set_pokebus);
-            btnSetPokeBus.setOnClickListener(new Button.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-//                    popupWindow.dismiss();
-//                    back_dim_layout.setVisibility(View.GONE);
-//
-//                    AddMarkers.dialogOpon = false;
-//
-//
-//                    MapsActivity.toasterShort("PokeBus set: " + "\n" + busInfo.get(index).busName + " : " + finalBuscode);
-//
-//
-//                    AddMarkers.addPokeBusColor();
-//                    //
-//                    AddMarkers.openSnippetWithIndex(index );
-                    //AddMarkers.openClosestSnippet(busInfo);
-
-
-                }
-            });
-        }
-
-    }
 
 
 
@@ -1526,6 +1454,14 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void removeLoadingIcon() {
+        Log.d("MyMapsActivity", "removeLoadingIcon");
+
+        if(spinner.getVisibility() == View.VISIBLE){
+            spinner.setVisibility(View.INVISIBLE);
+        }
+    }
 }
 
 

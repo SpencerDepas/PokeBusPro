@@ -67,7 +67,7 @@ public class CallAndParse {
 
     ArrayList<String> favBusStops;
 
-    public void getBusStopsAndBusDistances(LatLng latLng, ArrayList<String> favBusStops) {
+    public void getBusStopsAndBusDistances(LatLng latLng, ArrayList<String> favBusStops, String radius) {
         Log.i("MyCallAndParse", "getBusStopsAndBusDistances");
 
         this.favBusStops = favBusStops;
@@ -86,12 +86,12 @@ public class CallAndParse {
 
         GetBussStopInterface bussStopInterface = restAdapter.create(GetBussStopInterface.class);
 
-
-        String prefRadius =   MapsActivity.prefs.getString("KEY1", "301");
+        //MapsActivity.prefs.getString("KEY1", "301");
+        String prefRadius = radius;
 
         Log.i("MyCallAndParse", "prefRadius : " + prefRadius);
 
-        String radius = "500";
+        //String radius = "500";
         //String lat = "40.6453205";
         //String lng = "-73.9838934";
 

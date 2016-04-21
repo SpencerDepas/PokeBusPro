@@ -33,7 +33,7 @@
         />
 
 
-    <include layout="@layout/bus_map"/>
+    <include layout="@layout/bus_map_activity"/>
 
 
 
