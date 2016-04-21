@@ -4,6 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
 
+    <item android:id="@+id/my_location_item"
+        android:icon="@drawable/ic_my_location_white_48dp"
+        android:title="MY LOCATION"
+        app:showAsAction="always"/>
+
+
+    <item android:id="@+id/search_item"
+        android:icon="@drawable/ic_search_white_48dp"
+        android:title="SEARCH"
+        app:showAsAction="always"/>
+
+
     <item android:id="@+id/map_item"
         android:icon="@drawable/ic_map_white_48dp"
         android:title="MAP"

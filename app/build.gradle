@@ -49,7 +49,7 @@ dependencies {
 
     compile 'com.google.android.gms:play-services:8.4.0'
 
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.1.2'
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
 
 
 

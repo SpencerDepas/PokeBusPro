@@ -267,7 +267,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     @OnClick(R.id.searchFab)
-    public void searchForLocation(View view) {
+    public void searchForLocationFab(View view) {
         Log.i("MyMapsActivity", "onClick searchForLocation");
 
 
@@ -308,6 +308,8 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     }
+
+
 
     private void getLatLngForSearchLocation(String location){
         Log.i("MyMapsActivity", "getLatLngForSearchLocation ");
@@ -457,8 +459,14 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        if(item.getItemId()== R.id.my_location_item){
 
-        if(item.getItemId()== android.R.id.home){
+            onMapPresedLatLng = null;
+            newLocationFromLatLng(latLng);
+
+        }else if(item.getItemId()== R.id.search_item){
+            searchForLocationFab(view);
+        }else if(item.getItemId()== android.R.id.home){
             mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
         }else if(item.getItemId()== R.id.map_item){
@@ -970,7 +978,7 @@ public class MapsActivity extends AppCompatActivity implements
         zoom = googleMap.getCameraPosition().zoom;
         bearing = googleMap.getCameraPosition().bearing;
 
-        onMapPresedLatLng = null;
+
 
 
         stopTimerTask();
@@ -1091,7 +1099,7 @@ public class MapsActivity extends AppCompatActivity implements
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
             builder.setTitle("Location services disabled");
-            builder.setMessage("Native Speed needs to access your location.\n" +
+            builder.setMessage("WaveBus needs to access your location.\n" +
                     "Please turn on location access.");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {

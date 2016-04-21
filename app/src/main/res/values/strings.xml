@@ -46,7 +46,7 @@
     <!--
          PokeBus preferences
          -->
-    <string name="remove_all_poke_bus">Remove all saved poke Buses</string>
+    <string name="remove_all_poke_bus">Delete favorite Bus Stops</string>
     <string name="poke_bus_settings">PokeBus Settings</string>
     <string name="current_poke_bus">Current Poke Bus:</string>
     <string name="place_pokebus_marker">Make a PokeBus with a marker</string>
@@ -60,7 +60,7 @@
          -->
 
     <string name="select_bus_map_tittle"> Select your borough</string>
-    <string name="map_preference">Choose Bus Map</string>
+    <string name="map_preference">Select default Bus Map</string>
     <string name="bus_maps_key">KEY99</string>
     <string name="bus_maps">Bus Map</string>
     <string name="current_map">Current map :Brooklyn</string>
