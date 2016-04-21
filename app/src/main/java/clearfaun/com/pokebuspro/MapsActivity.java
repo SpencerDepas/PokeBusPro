@@ -110,6 +110,8 @@ public class MapsActivity extends AppCompatActivity implements
     Timer timer;
     TimerTask timerTask;
 
+    private String[] snackBarInstructions = new String[4];
+
     /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
 
@@ -202,6 +204,13 @@ public class MapsActivity extends AppCompatActivity implements
         PopupAdapterForMapMarkers.popupListner = MapsActivity.this;
 
         callAndParse = new CallAndParse(MapsActivity.this);
+
+
+        snackBarInstructions[0] = getString(R.string.tap_for_search);
+        snackBarInstructions[1] = getString(R.string.tap_search_icon);
+        snackBarInstructions[2] = getString(R.string.my_location_icon);
+        snackBarInstructions[3] = getString(R.string.my_bus_map);
+
 
 
 
@@ -1069,9 +1078,10 @@ public class MapsActivity extends AppCompatActivity implements
         if(!hasInstructionalSnackBarBeenShown){
             hasInstructionalSnackBarBeenShown = true;
 
+            int randomNum = 0 + (int)(Math.random() * 3);
 
             Snackbar snackbar = Snackbar
-                    .make(view, (R.string.tap_for_search), Snackbar.LENGTH_LONG)
+                    .make(view, snackBarInstructions[randomNum], Snackbar.LENGTH_LONG)
                     .setAction("GOT IT", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -1435,7 +1445,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     public void enableMapOnPress(){
         Log.d("MyMapsActivity", "enableMapOnPress");
-        
+
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
