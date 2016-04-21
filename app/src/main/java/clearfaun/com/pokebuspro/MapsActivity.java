@@ -66,7 +66,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -111,7 +115,6 @@ public class MapsActivity extends AppCompatActivity implements
     static double testLng = -73.9829084;*/
 
 
-    PrefsFragment prefsFragment;
     FragmentManager fm;
     FragmentTransaction ft;
     int firstBoot = 0;
@@ -192,6 +195,10 @@ public class MapsActivity extends AppCompatActivity implements
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mMap.getMapAsync(this);
 
+        busCodeOfFavBusStops = loadFavBus();
+
+        Log.i("MyMapsActivity", "busCodeOfFavBusStops.size : " + busCodeOfFavBusStops.size());
+
         addMarkers = AddMarkers.getInstance();
         PopupAdapterForMapMarkers.popupListner = MapsActivity.this;
 
@@ -221,7 +228,7 @@ public class MapsActivity extends AppCompatActivity implements
             prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
             //this loads in businfo of saved bus stops
-            //pokeBusbusInfo = loadPokeBus();
+            //pokeBusbusInfo = loadFavBus();
 
             //Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
 
@@ -693,7 +700,7 @@ public class MapsActivity extends AppCompatActivity implements
                             //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
 
 
-                            MapsActivity.deletePrefs();
+                            deletePrefs();
 
                             //removes change of color from icon color
                             removeFavBus();
@@ -955,29 +962,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-    @Override
-    public void onBackPressed(){
-        Log.i("MyMapsActivity", "onBackPressed");
 
-
-
-        if(AddMarkers.dialogOpon){
-            Log.i("MyMapsActivity", "AddMarkers.dialogOpon");
-        }if(prefsFragment != null){
-            ft = fm.beginTransaction();
-            ft.remove(prefsFragment);
-            ft.commit();
-            prefsFragment = null;
-            Log.i("MyMapsActivity", "prefsFragment != null");
-        }else{
-            Log.i("MyMapsActivity", "startMain");
-            Intent startMain = new Intent(Intent.ACTION_MAIN);
-            startMain.addCategory(Intent.CATEGORY_HOME);
-            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(startMain);
-        }
-
-    }
 
 
 
@@ -994,7 +979,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
         stopTimerTask();
-        savePokeBus();
+        saveFavBus();
 
 
     }
@@ -1145,7 +1130,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    public static void deletePrefs(){
+    public void deletePrefs(){
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
@@ -1226,53 +1211,45 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-    private void savePokeBus() {
-        Log.i("MyMapsActivity","setPokeBus()");
+    private void saveFavBus() {
+        Log.i("MyMapsActivity","saveFavBus()");
 
 
 
+        if(busCodeOfFavBusStops != null){
 
-        //Log.i("MyMapsActivity","pokeBusbusInfo,size" + pokeBusbusInfo.size());
+            try {
+                FileOutputStream fos = mContext.openFileOutput(getResources().getString(R.string.fav_bus_key), Context.MODE_PRIVATE);
+                ObjectOutputStream os = new ObjectOutputStream(fos);
+                os.writeObject(busCodeOfFavBusStops);
+                os.close();
+                fos.close();
 
-        //when a poke bus is called we dont want old information saved
-        /*for(BusInfo businfo: pokeBusbusInfo){
-            businfo.setDistanceNotAvailable();
-        }*/
-
-//        if(pokeBusbusInfo != null){
-//
-//            try {
-//                FileOutputStream fos = mContext.openFileOutput("BUSINFO", Context.MODE_PRIVATE);
-//                ObjectOutputStream os = new ObjectOutputStream(fos);
-//                os.writeObject(pokeBusbusInfo);
-//                os.close();
-//                fos.close();
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                Log.i("MyMapsActivity", " e.printStackTrace();()" + e);
-//            }
-//        }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("MyMapsActivity", " e.printStackTrace();()" + e);
+            }
+        }
 
     }
 
-    private ArrayList<String> loadPokeBus() {
-        Log.i("MyMapsActivity","loadPokeBus");
+    private ArrayList<String> loadFavBus() {
+        Log.i("MyMapsActivity","loadFavBus");
 
-//        try{
-//            FileInputStream fis = this.openFileInput("BUSINFO");
-//            ObjectInputStream is = new ObjectInputStream(fis);
-//            ArrayList<BusInfo> busInfo = (ArrayList)  is.readObject();
-//            is.close();
-//            fis.close();
-//            Log.i("MyMapsActivity","loadPokeBus busInfo size  :)" + busInfo.size());
-//            return busInfo;
-//
-//        }catch(Exception e) {
-//            Log.i("MyMapsActivity", "e : " + e );
-//            e.printStackTrace();
-//        }
-        Log.i("MyMapsActivity","loadPokeBus return dud");
+        try{
+            FileInputStream fis = this.openFileInput(getResources().getString(R.string.fav_bus_key));
+            ObjectInputStream is = new ObjectInputStream(fis);
+            ArrayList<String> favBuses = (ArrayList)  is.readObject();
+            is.close();
+            fis.close();
+            Log.i("MyMapsActivity","favBuses.size()" + favBuses.size());
+            return favBuses;
+
+        }catch(Exception e) {
+            Log.i("MyMapsActivity", "e : " + e );
+            e.printStackTrace();
+        }
+        Log.i("MyMapsActivity","loadFavBus return dud");
         return new ArrayList<String>();
 
 
@@ -1524,13 +1501,10 @@ public class MapsActivity extends AppCompatActivity implements
 
         Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
-        //something
-
 
 
 
         onMapPresedLatLng = latLng;
-        //deletes old markers
 
         markerHashTable.clear();
         googleMap.clear();

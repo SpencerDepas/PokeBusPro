@@ -20,7 +20,17 @@
          no connection
          -->
 
+
+
     <string name="no_connection">No Connection\nPush to try again</string>
+
+    <!--
+    Keys
+    -->
+    <string name="fav_bus_key">favorite_bus_key</string>
+
+
+
     <!--
       Map preferences
       -->
