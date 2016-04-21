@@ -260,14 +260,12 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "onClick refreshLocation");
 
 
-
         refreshMarkers();
 
     }
 
-    @SuppressWarnings("unused")
-    @OnClick(R.id.searchFab)
-    public void searchForLocationFab(View view) {
+
+    public void searchForLocationFab() {
         Log.i("MyMapsActivity", "onClick searchForLocation");
 
 
@@ -465,7 +463,7 @@ public class MapsActivity extends AppCompatActivity implements
             newLocationFromLatLng(latLng);
 
         }else if(item.getItemId()== R.id.search_item){
-            searchForLocationFab(view);
+            searchForLocationFab();
         }else if(item.getItemId()== android.R.id.home){
             mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
@@ -925,15 +923,29 @@ public class MapsActivity extends AppCompatActivity implements
 
 
         }else{
-            Log.i("MyMapsActivity", "animateCameraPos else");
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLng)    // Sets the center of the map to Mountain View
-                    .zoom(16)                   // Sets the zoom
-                    .bearing(40)                // Sets the orientation of the camera to east
-                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+
+            if(zoom != 0){
+                Log.i("MyMapsActivity", "zoom != 0");
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .zoom(zoom)                   // Sets the zoom
+                        .bearing(bearing)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+            }else{
+                Log.i("MyMapsActivity", "zoom == 0");
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .zoom(16)                   // Sets the zoom
+                        .bearing(40)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+
+            }
 
 
         }

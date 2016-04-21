@@ -85,23 +85,23 @@ public class BusMap extends AppCompatActivity   {
         if(savedBusMap.equals("Brooklyn")){
             Log.i("BusMap", "in bk");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
-            imageView.setImage(ImageSource.resource(R.drawable.busbkln_map));
+            imageView.setImage(ImageSource.asset("busbklnmap.jpg"));
         }else if(savedBusMap.equals("Manhattan")){
             Log.i("BusMap", "in mn");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
-            imageView.setImage(ImageSource.resource(R.drawable.manbus));
+            imageView.setImage(ImageSource.asset("manbusmap.jpg"));
         }else if(savedBusMap.equals("Queens")){
             Log.i("BusMap", "in qns");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
-            imageView.setImage(ImageSource.resource(R.drawable.busqns));
+            imageView.setImage(ImageSource.asset("busqnsmap.jpg"));
         }else if(savedBusMap.equals("Bronx")){
             Log.i("BusMap", "in bx");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
-            imageView.setImage(ImageSource.resource(R.drawable.busbx));
+            imageView.setImage(ImageSource.asset("busbxmap.jpg"));
         }else if(savedBusMap.equals("Staten Island")){
             Log.i("BusMap", "in si");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
-            imageView.setImage(ImageSource.resource(R.drawable.bussi));
+            imageView.setImage(ImageSource.asset("bussimap.jpg"));
         }
     }
 
