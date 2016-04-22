@@ -2,6 +2,8 @@ package clearfaun.com.pokebuspro;
 
 import android.annotation.SuppressLint;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -79,6 +81,8 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
 //        text.setSpan(new RelativeSizeSpan(.7f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         busCode.setText(marker.getTitle().substring(0, 6));
+
+
 
         distances.setText(marker.getSnippet());
         //MapsActivity.busInfo.get(i).setAddedToPopup(true);

@@ -39,7 +39,6 @@
 
 
 
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/refresh_location_fab"
         android:src="@drawable/ic_refresh_white_48dp"
@@ -50,6 +49,15 @@
         />
 
 
+    <ProgressBar
+        style="@style/Base.Widget.AppCompat.ProgressBar"
+        android:id="@+id/mapsAcitvityProgressBar"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="visible" />
 
 
 

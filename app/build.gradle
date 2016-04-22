@@ -24,8 +24,8 @@ android {
         applicationId "clearfaun.com.pokebuspro"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 13
-        versionName "1.013"
+        versionCode 14
+        versionName "1.014"
         multiDexEnabled true
     }
     buildTypes {

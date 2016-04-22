@@ -32,7 +32,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -457,6 +459,7 @@ public class MapsActivity extends AppCompatActivity implements
         if(item.getItemId()== R.id.my_location_item){
 
             onMapPresedLatLng = null;
+
             newLocationFromLatLng(latLng);
 
         }else if(item.getItemId()== R.id.search_item){
@@ -1052,6 +1055,8 @@ public class MapsActivity extends AppCompatActivity implements
 
             int randomNum = 0 + (int)(Math.random() * 3);
 
+
+
             Snackbar snackbar = Snackbar
                     .make(view, snackBarInstructions[randomNum], Snackbar.LENGTH_LONG)
                     .setAction("GOT IT", new View.OnClickListener() {
@@ -1071,6 +1076,8 @@ public class MapsActivity extends AppCompatActivity implements
 
 
     }
+
+
 
     private void checkPhoneParams(){
 
@@ -1424,7 +1431,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         markerHashTable.clear();
         googleMap.clear();
-
+        spinner.setVisibility(view.VISIBLE);
 
         zoom = googleMap.getCameraPosition().zoom;
         bearing = googleMap.getCameraPosition().bearing;

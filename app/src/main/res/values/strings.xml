@@ -89,8 +89,8 @@
          -->
 
     <string name="tap_for_search">Tap map to search</string>
-    <string name="tap_search_icon">Tap the Search icon in the toolbar to search for a bus stop</string>
-    <string name="my_location_icon">The my location icon will always return you to your currunt location </string>
+    <string name="tap_search_icon">Tap the Search icon in the toolbar to search for a bus stop in via location</string>
+    <string name="my_location_icon">The my location icon will always return you to your current location </string>
     <string name="my_bus_map">Have a look at our bus maps</string>
 
     <!--
