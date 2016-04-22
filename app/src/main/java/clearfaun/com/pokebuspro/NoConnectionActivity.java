@@ -1,14 +1,10 @@
 package clearfaun.com.pokebuspro;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -72,7 +68,7 @@ public class NoConnectionActivity extends AppCompatActivity {
             String prefBusMap = prefs.getString("KEY99", "Brooklyn");
 
             Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
-            Intent intent = new Intent(mContext, BusMap.class);
+            Intent intent = new Intent(mContext, MTABusMapActivity.class);
             intent.putExtra("maptype", "Current Map is: " + prefBusMap);
             startActivity(intent);
         }

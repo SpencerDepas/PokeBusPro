@@ -1,6 +1,5 @@
 package clearfaun.com.pokebuspro;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,7 +15,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -28,7 +26,7 @@ import butterknife.OnClick;
 /**
  * Created by spencer on 3/16/2015.
  */
-public class BusMap extends AppCompatActivity   {
+public class MTABusMapActivity extends AppCompatActivity   {
 
     private ProgressBar spinner;
     SubsamplingScaleImageView imageView;
@@ -40,7 +38,7 @@ public class BusMap extends AppCompatActivity   {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_main);
         ButterKnife.bind(this);
-        Log.i("BusMap", "onCreate");
+        Log.i("MTABusMapActivity", "onCreate");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
@@ -54,20 +52,20 @@ public class BusMap extends AppCompatActivity   {
         Intent intent = getIntent();
         savedBusMap = intent.getStringExtra("maptype");
 
-        Log.i("BusMap", "intent " + intent.getStringExtra("maptype"));
+        Log.i("MTABusMapActivity", "intent " + intent.getStringExtra("maptype"));
 
         savedBusMap = savedBusMap.substring(16);
-        Log.i("BusMap", "savedBusMap " + savedBusMap);
+        Log.i("MTABusMapActivity", "savedBusMap " + savedBusMap);
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.WHITE);
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
-        Log.i("BusMap", intent.getStringExtra("maptype"));
-        Log.i("BusMap", "Brooklyn");
+        Log.i("MTABusMapActivity", intent.getStringExtra("maptype"));
+        Log.i("MTABusMapActivity", "Brooklyn");
 
 
         loadMap();
-        Log.i("BusMap", "not ==");
+        Log.i("MTABusMapActivity", "not ==");
 
 
 
@@ -78,28 +76,28 @@ public class BusMap extends AppCompatActivity   {
     }
 
     private void loadMap(){
-        Log.i("BusMap", "loadMap");
+        Log.i("MTABusMapActivity", "loadMap");
 
 
 
         if(savedBusMap.equals("Brooklyn")){
-            Log.i("BusMap", "in bk");
+            Log.i("MTABusMapActivity", "in bk");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busbklnmap.jpg"));
         }else if(savedBusMap.equals("Manhattan")){
-            Log.i("BusMap", "in mn");
+            Log.i("MTABusMapActivity", "in mn");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("manbusmap.jpg"));
         }else if(savedBusMap.equals("Queens")){
-            Log.i("BusMap", "in qns");
+            Log.i("MTABusMapActivity", "in qns");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busqnsmap.jpg"));
         }else if(savedBusMap.equals("Bronx")){
-            Log.i("BusMap", "in bx");
+            Log.i("MTABusMapActivity", "in bx");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busbxmap.jpg"));
         }else if(savedBusMap.equals("Staten Island")){
-            Log.i("BusMap", "in si");
+            Log.i("MTABusMapActivity", "in si");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("bussimap.jpg"));
         }
@@ -145,7 +143,7 @@ public class BusMap extends AppCompatActivity   {
 
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(BusMap.this, R.style.AppCompatAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MTABusMapActivity.this, R.style.AppCompatAlertDialogStyle);
         CharSequence items[] = new CharSequence[]{"Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"};
         builder.setTitle(getString(R.string.select_bus_map_tittle));
         builder.setNegativeButton("DISMISS", null);
@@ -208,7 +206,7 @@ public class BusMap extends AppCompatActivity   {
     @SuppressWarnings("unused")
     @OnClick(R.id.map_fab)
     public void selectMap(View view) {
-        Log.i("BusMap", "selectMap");
+        Log.i("MTABusMapActivity", "selectMap");
 
 
         selectMapDialog();

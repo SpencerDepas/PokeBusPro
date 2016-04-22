@@ -49,15 +49,6 @@
         />
 
 
-    <ProgressBar
-        style="@style/Base.Widget.AppCompat.ProgressBar"
-        android:id="@+id/mapsAcitvityProgressBar"
-        android:layout_width="match_parent"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="visible" />
 
 
 

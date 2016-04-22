@@ -4,8 +4,6 @@ package clearfaun.com.pokebuspro;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +17,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -32,9 +29,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -42,9 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -281,7 +274,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         final android.support.v7.app.AlertDialog.Builder alertDialogBuilder =
                 new android.support.v7.app.AlertDialog.Builder(MapsActivity.this,
-                        R.style.MyAlertDialogStyle);
+                        R.style.AppCompatAlertDialogStyle);
         alertDialogBuilder.setView(alertDialogView);
 
 
@@ -471,7 +464,7 @@ public class MapsActivity extends AppCompatActivity implements
             String prefBusMap = prefs.getString("KEY99", "Brooklyn");
 
             Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
-            Intent intent = new Intent(mContext, BusMap.class);
+            Intent intent = new Intent(mContext, MTABusMapActivity.class);
             intent.putExtra("maptype", "Current Map is: " + prefBusMap);
             startActivity(intent);
         }
