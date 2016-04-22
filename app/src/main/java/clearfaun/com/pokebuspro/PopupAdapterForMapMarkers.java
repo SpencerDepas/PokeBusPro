@@ -86,7 +86,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
 
 
         final String fBusCode = marker.getTitle().substring(0, 6);
-        MapsActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        mapsActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker Pin) {
 

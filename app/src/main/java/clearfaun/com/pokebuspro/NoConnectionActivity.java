@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -23,13 +25,13 @@ import android.view.View;
 public class NoConnectionActivity extends AppCompatActivity {
 
     private SharedPreferences prefs;
-
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.no_connection_coord);
-
+        ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -39,25 +41,24 @@ public class NoConnectionActivity extends AppCompatActivity {
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.WHITE);
 
-
-        FloatingActionButton b = (FloatingActionButton) findViewById(R.id.button);
-        b.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.i("NoConnectionActivity", "clicked button ");
-
-
-                Intent intent = new Intent(MapsActivity.mContext , MapsActivity.class);
-                startActivity(intent);
+        mContext = getApplicationContext();
 
 
 
-            }
-        });
 
 
 
+
+
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.no_connection_fab)
+    public void mapsActivityIntent(View view) {
+        Log.i("MyMapsActivity", "onClick refreshLocation");
+
+        Intent intent = new Intent(mContext , MapsActivity.class);
+        startActivity(intent);
 
 
     }
@@ -71,7 +72,7 @@ public class NoConnectionActivity extends AppCompatActivity {
             String prefBusMap = prefs.getString("KEY99", "Brooklyn");
 
             Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
-            Intent intent = new Intent(MapsActivity.mContext, BusMap.class);
+            Intent intent = new Intent(mContext, BusMap.class);
             intent.putExtra("maptype", "Current Map is: " + prefBusMap);
             startActivity(intent);
         }

@@ -83,59 +83,49 @@ public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback ,
         GoogleMap.OnInfoWindowCloseListener{
 
-    private LatLng onMapPresedLatLng;
-    static LatLng latLng;
-    static private LocationProvider mLocationProvider;
-    static double latitude;
-    static double longitude;
-    static Context mContext;
 
+    static String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
+    static GoogleMap googleMap;
+
+    private LatLng onMapPresedLatLng;
+    private LatLng latLng;
+    private LocationProvider mLocationProvider;
+    private double latitude;
+    private double longitude;
+    private Context mContext;
+    private boolean isMapOnPressEnabled = false;
     private boolean hasInstructionalSnackBarBeenShown = false;
 
 
-    static String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
-    final int  MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION = 22;
-    final int  MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 23;
-    boolean hasPermission;
+    private final int  MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION = 22;
+    private final int  MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 23;
+    private boolean hasPermission;
+
+    private int gpsPrompt = 0;
+    private float zoom;
+    private float bearing;
+    private Timer timer;
+    private TimerTask timerTask;
+    private String[] snackBarInstructions = new String[4];
+    private SharedPreferences prefs;
+    private ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
+    private boolean enabledGPS;
+    private Bundle savedInstanceState;
+    private CallAndParse callAndParse;
 
     private DrawerLayout mDrawerLayout;
     @Bind(R.id.main_content)  View view;
-
-    float zoom;
-    float bearing;
-
-    static GoogleMap googleMap;
-
-    static Marker pokeBusMarker;
-    Timer timer;
-    TimerTask timerTask;
-
-    private String[] snackBarInstructions = new String[4];
-
-    /*static double testLat = 40.6455520;
-    static double testLng = -73.9829084;*/
-
-
-    FragmentManager fm;
-    FragmentTransaction ft;
-    int firstBoot = 0;
-    SharedPreferences prefs;
-
-    public static final String TAG = MapsActivity.class.getSimpleName();
     private ProgressBar spinner;
+    private AddMarkers addMarkers;
+    private SupportMapFragment mMap;
 
-    static RelativeLayout back_dim_layout;
+
+        /*static double testLat = 40.6455520;
+    static double testLng = -73.9829084;*/
     //EMPIRE STATE BUILDING
   /*  static double testLat = 40.748441;
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
-    static AddMarkers addMarkers;
-
-    ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
-    boolean enabledGPS;
-    private Bundle savedInstanceState;
-    private CallAndParse callAndParse;
-    SupportMapFragment mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +157,6 @@ public class MapsActivity extends AppCompatActivity implements
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View header=navigationView.getHeaderView(0);
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
@@ -218,11 +207,6 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     private void permissionGranted(){
-
-
-
-
-
 
         if(!isOnline()){
             Log.i("MyMapsActivity", "!isOnline()");
@@ -280,12 +264,10 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    public void searchForLocationFab() {
+    private void searchForLocationFab() {
         Log.i("MyMapsActivity", "onClick searchForLocation");
 
 
-
-        final View finalView = view;
         LayoutInflater li = LayoutInflater.from(MapsActivity.this);
         View alertDialogView = li.inflate(R.layout.search_address_dialog, null);
 
@@ -454,7 +436,7 @@ public class MapsActivity extends AppCompatActivity implements
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
-                return;
+
             }
 
             // other 'case' lines to check for other
@@ -486,7 +468,7 @@ public class MapsActivity extends AppCompatActivity implements
             String prefBusMap = prefs.getString("KEY99", "Brooklyn");
 
             Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
-            Intent intent = new Intent(MapsActivity.mContext, BusMap.class);
+            Intent intent = new Intent(mContext, BusMap.class);
             intent.putExtra("maptype", "Current Map is: " + prefBusMap);
             startActivity(intent);
         }
@@ -725,7 +707,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                             //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
 
-                            Intent intent = new Intent(MapsActivity.mContext , AboutScreen.class);
+                            Intent intent = new Intent(mContext , AboutScreen.class);
                             startActivity(intent);
 
                             mDrawerLayout.closeDrawers();
@@ -832,7 +814,7 @@ public class MapsActivity extends AppCompatActivity implements
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
                             //toaster("My ZIpcode is :" + parseUser.get("zip_code").toString());
 
-                            Intent intent = new Intent(MapsActivity.mContext , LicenseActivity.class);
+                            Intent intent = new Intent(mContext , LicenseActivity.class);
                             startActivity(intent);
 
 
@@ -851,7 +833,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    public void removeFavBusMarkerColor(){
+    private void removeFavBusMarkerColor(){
         addMarkers.removePokeBusColor(busCodeOfFavBusStops);
     }
 
@@ -884,7 +866,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-    public boolean isOnline() {
+    private boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -892,7 +874,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    public void refreshMarkers(){
+    private void refreshMarkers(){
         Log.i("MyMapsActivity", "refreshMarkers");
 
         if(!isOnline()){
@@ -906,8 +888,7 @@ public class MapsActivity extends AppCompatActivity implements
             zoom = googleMap.getCameraPosition().zoom;
             bearing = googleMap.getCameraPosition().bearing;
 
-            //refresh button
-            fromOnResume = false;
+
             spinner.setVisibility(View.VISIBLE);
 
             mLocationProvider.disconnect();
@@ -926,6 +907,7 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("PopupAdapterForMapMark", "  onInfoWindowClose " );
 
          enableMapOnPress();
+
     }
 
     private void animateCameraPos(){
@@ -1025,30 +1007,20 @@ public class MapsActivity extends AppCompatActivity implements
         // killed and restarted.
         savedInstanceState.putFloat("zoom", zoom);
         savedInstanceState.putFloat("bearing", bearing);
-      /*  savedInstanceState.putBoolean("MyBoolean", true);
-        savedInstanceState.putDouble("myDouble", 1.9);
-        savedInstanceState.putInt("MyInt", 1);
-        savedInstanceState.putString("MyString", "Welcome back to Android");*/
-        // etc.
+
         super.onSaveInstanceState(savedInstanceState);
     }
-    //onRestoreInstanceState
+
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        // Restore UI state from the savedInstanceState.
-        // This bundle has also been passed to onCreate.
+
         zoom = savedInstanceState.getFloat("zoom");
         bearing = savedInstanceState.getFloat("bearing");
-        /*boolean myBoolean = savedInstanceState.getBoolean("MyBoolean");
-        double myDouble = savedInstanceState.getDouble("myDouble");
-        int myInt = savedInstanceState.getInt("MyInt");
-        String myString = savedInstanceState.getString("MyString");*/
+
     }
 
-    int gpsPrompt = 0;
 
-    boolean fromOnResume = false;
     @Override
     protected void onResume() {
         super.onResume();
@@ -1113,27 +1085,14 @@ public class MapsActivity extends AppCompatActivity implements
         } else if (!isLocationEnabled(mContext)) {
 
 
-//            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
-//            builder.setTitle("Location services disabled");
-//            builder.setMessage("WaveBus needs to access your location for the best results." +
-//                    "Please enable location access.");
-//            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int which) {
-//                    Log.d("AlertDialog", "Positive");
-//                    dialog.dismiss();
-//                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                    startActivity(intent);
-//                }
-//            });
-//            builder.setNegativeButton("DISMISS", null);
-//            builder.show();
+            Log.i("MyMapsActivity", "!isLocationEnabled(mContext)");
 
 
         } else if (enabledAirplaneMode) {
             Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
 
 
-            Intent intent = new Intent(MapsActivity.mContext, NoConnectionActivity.class);
+            Intent intent = new Intent(mContext, NoConnectionActivity.class);
             startActivity(intent);
             this.finish();
 
@@ -1166,15 +1125,9 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
-
-
-
-
-    static boolean firstTimer = true;
     public void startTimerTask() {
         Log.i("MyMapsActivity", "startTimerTask()");
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MapsActivity.mContext);
-        String timeInMSString= prefs.getString(MapsActivity.mContext.getString(R.string.refresh_time_key), "20000");
+        String timeInMSString= prefs.getString(mContext.getString(R.string.refresh_time_key), "20000");
 
         if(timeInMSString.equals("OFF")){
             timeInMSString = "0";
@@ -1191,7 +1144,7 @@ public class MapsActivity extends AppCompatActivity implements
                 //initialize the TimerTask's job
 
 
-                initializeTimerTask(firstTimer);
+                initializeTimerTask();
                 //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
                 timer.schedule(timerTask, 20000, timeInMS);
 
@@ -1202,7 +1155,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
-    public void stopTimerTask() {
+    private void stopTimerTask() {
         Log.i("MyMapsActivity", "stopTimerTask()" );
         //stop the timer, if it's not already null
         if (timer != null) {
@@ -1214,18 +1167,11 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-    public void initializeTimerTask(boolean firstTimer) {
-        final boolean firstTime = firstTimer;
-
+    private void initializeTimerTask() {
 
         timerTask = new TimerTask() {
             public void run() {
                 Log.i("MyMapsActivity", "initializeTimerTask    timerTask");
-                //this enables us to reset the timer in onreusme and it will not trigger it automatkly
-
-
-
-                Log.i("MyMapsActivity", "initializeTimerTask prior to a callAndParse : " );
 
                 selectCorrectLatLng();
 
@@ -1285,7 +1231,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-    static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+    double distFrom(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2-lat1);
         double dLng = Math.toRadians(lng2-lng1);
@@ -1299,7 +1245,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    static void toaster(String string){
+    private void toaster(String string){
         Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_LONG);
         toast.show();
     }
@@ -1316,21 +1262,14 @@ public class MapsActivity extends AppCompatActivity implements
         longitude = location.getLongitude();
         latLng = new LatLng(latitude, longitude);
 
-
-        firstBoot++;
-        //setUpMapIfNeeded();
-
         googleMap.setMyLocationEnabled(true);
-        // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+
+
         animateCameraPos();
-
-
 
         selectCorrectLatLng();
 
 
-
-        Log.i("MyMapsActivity", "after startTimerTask();");
 
 
 
@@ -1352,7 +1291,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public static boolean isAirplaneModeOn(Context context) {
+    private static boolean isAirplaneModeOn(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return Settings.System.getInt(context.getContentResolver(),
                     Settings.System.AIRPLANE_MODE_ON, 0) != 0;
@@ -1384,7 +1323,6 @@ public class MapsActivity extends AppCompatActivity implements
 
 
                 busCodeOfFavBusStops.add(finalBuscode);
-
                 addMarkers.addPokeBusColor(finalBuscode);
 
 
@@ -1425,7 +1363,6 @@ public class MapsActivity extends AppCompatActivity implements
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
 
-        //enabled by deafault
         enableMapOnPress();
 
 
@@ -1441,7 +1378,7 @@ public class MapsActivity extends AppCompatActivity implements
         isMapOnPressEnabled = false;
     }
 
-    boolean isMapOnPressEnabled = false;
+
 
     public void enableMapOnPress(){
         Log.d("MyMapsActivity", "enableMapOnPress");
@@ -1500,6 +1437,8 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public void removeLoadingIcon() {
         Log.d("MyMapsActivity", "removeLoadingIcon");
+
+
 
         if(spinner.getVisibility() == View.VISIBLE){
             spinner.setVisibility(View.INVISIBLE);

@@ -107,11 +107,6 @@ public class AddMarkers {
 
 
 
-        if(marker.isInfoWindowShown()){
-            Log.i("AddMarkers", "  marker.isInfoWindowShown() " );
-            marker.hideInfoWindow();
-            marker.showInfoWindow();
-        }
 
 
 
@@ -355,7 +350,7 @@ public class AddMarkers {
 
     }
 
-    static boolean fromOpenSnippetWithIndex = false;
+
 
     public static void openSnippetWithIndex(int index ){
 //        Log.i("AddMarkersa", "  MapsActivity.busInfoIndexForBusName  " + index);
