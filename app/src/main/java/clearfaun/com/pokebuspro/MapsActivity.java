@@ -89,7 +89,7 @@ public class MapsActivity extends AppCompatActivity implements
     private double longitude;
     private Context mContext;
     private boolean isMapOnPressEnabled = false;
-    private boolean hasInstructionalSnackBarBeenShown = false;
+    private boolean hasInstructionalSnackBarBeenShownOnThisLaunch = false;
 
 
     private final int  MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION = 22;
@@ -1042,30 +1042,41 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     private void showInstructionalSnackBar(){
-
-        if(!hasInstructionalSnackBarBeenShown){
-            hasInstructionalSnackBarBeenShown = true;
-
-            int randomNum = 0 + (int)(Math.random() * 3);
+        Log.i("MyMapsActivity", "showInstructionalSnackBar()");
+        final int randomNum = 0 + (int)(Math.random() * 3);
 
 
+        boolean hasInstructionalSnackBarBeenAccepted
+                = prefs.getBoolean(snackBarInstructions[randomNum], false);
 
-            Snackbar snackbar = Snackbar
-                    .make(view, snackBarInstructions[randomNum], Snackbar.LENGTH_LONG)
-                    .setAction("GOT IT", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+        if(!hasInstructionalSnackBarBeenAccepted) {
+            Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenAccepted()");
+
+            if (!hasInstructionalSnackBarBeenShownOnThisLaunch) {
+                hasInstructionalSnackBarBeenShownOnThisLaunch = true;
+
+                Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenShownOnThisLaunch()");
+                Snackbar snackbar = Snackbar
+                        .make(view, snackBarInstructions[randomNum], Snackbar.LENGTH_LONG)
+                        .setAction("GOT IT", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenShownOnThisLaunch() onclick");
+                                SharedPreferences.Editor editor = prefs.edit();
+
+                                editor.putBoolean(snackBarInstructions[randomNum], true);
+                                editor.commit();
+
+                            }
+                        });
+
+                snackbar.show();
 
 
-                        }
-                    });
-
-            snackbar.show();
-
+            }
 
         }
-
-
 
 
     }
