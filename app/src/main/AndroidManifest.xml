@@ -37,22 +37,17 @@
             android:taskAffinity="clearfaun.com.pokebuspro.MapsActivity" >
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-
-
-            </intent-filter>
-        </activity>
-        <activity android:label="@string/app_name"
-            android:name=".GetPermissionActivity"
-            >
-            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+        </activity>
+        <activity android:label="@string/app_name"
+            android:name=".GetPermissionActivity"
+            >
+
         </activity>
 
         <activity android:label="@string/app_name"

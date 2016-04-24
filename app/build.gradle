@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId "clearfaun.com.pokebuspro"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 14
         versionName "1.014"
@@ -52,6 +52,8 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
 
+
+    compile 'com.dmitrymalkovich.android:progress-fab:1.2'
 
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
 

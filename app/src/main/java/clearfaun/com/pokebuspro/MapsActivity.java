@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -79,7 +80,7 @@ public class MapsActivity extends AppCompatActivity implements
         GoogleMap.OnInfoWindowCloseListener{
 
 
-    static String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
+    private final String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
     static GoogleMap googleMap;
 
     private LatLng onMapPresedLatLng;
@@ -92,9 +93,9 @@ public class MapsActivity extends AppCompatActivity implements
     private boolean hasInstructionalSnackBarBeenShownOnThisLaunch = false;
 
 
-    private final int  MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION = 22;
-    private final int  MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 23;
-    private boolean hasPermission;
+    final int  MY_PERMISSIONS_REQUEST_FINE_LOCATION = 68;
+
+    private boolean hasLocationPermission;
 
     private int gpsPrompt = 0;
     private float zoom;
@@ -113,7 +114,11 @@ public class MapsActivity extends AppCompatActivity implements
     private ProgressBar spinner;
     private AddMarkers addMarkers;
     private SupportMapFragment mMap;
+    private final LatLng EMPIRE_STATE_BUILDING_LAT_LNG = new LatLng(40.748441, -73.985664);
 
+    final String DIALOG_TITLE = "Access Phone Location";
+    final String DIALOG_MESSAGE = "WaveBus needs to acces your location to find the bus stops that are close to you.";
+    final String PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
 
         /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
@@ -121,6 +126,8 @@ public class MapsActivity extends AppCompatActivity implements
   /*  static double testLat = 40.748441;
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,34 +152,14 @@ public class MapsActivity extends AppCompatActivity implements
         mContext = getApplicationContext();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        spinner = (ProgressBar) findViewById(R.id.mapsAcitvityProgressBar);
 
 
-
-
-
+        prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             setupDrawerContent(navigationView);
-        }
-
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.M){
-            // Do something for lollipop and above versions
-            hasPermission = permissionCheck();
-            Log.i("MyMapsActivity", "permissionCheck hasPermission : " + hasPermission);
-
-            if(!hasPermission){
-                Log.i("MyMapsActivity", "permissionCheck !hasPermission");
-                askForPermissionActivty();
-            }else{
-                permissionGranted();
-            }
-
-
-        } else{
-            // do something for phones running an SDK before lollipop
-            permissionGranted();
         }
 
 
@@ -181,7 +168,90 @@ public class MapsActivity extends AppCompatActivity implements
 
         busCodeOfFavBusStops = loadFavBus();
 
-        Log.i("MyMapsActivity", "busCodeOfFavBusStops.size : " + busCodeOfFavBusStops.size());
+
+
+        permissionAtRunTime();
+
+
+
+
+
+
+
+
+    }
+
+
+
+    private void permissionAtRunTime(){
+        Log.i("MyMapsActivity", "permissionAtRunTime ");
+
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.M){
+            // Do something for lollipop and above versions
+            hasLocationPermission = permissionCheck();
+            Log.i("MyMapsActivity", "permissionCheck hasLocationPermission : " + hasLocationPermission);
+
+            if(!hasLocationPermission){
+                Log.i("MyMapsActivity", "permissionCheck !hasLocationPermission");
+
+                if(shouldWeAsk(FINE_LOCATION_PERMISSION_ASKED) ){
+                    showAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
+                }else {
+                    phonePermissionNotGranted();
+                }
+
+            }else{
+                hasLocationPermission = true;
+                hasPermission();
+            }
+
+
+            savePermissionAsked("fine_location_permission_has_been_asked");
+
+
+        } else{
+            // do something for phones running an SDK before lollipop
+            hasPermission();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
+
+                    hasLocationPermission = true;
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
+                    hasLocationPermission = false;
+                    hasPermission();
+
+                }
+
+            }
+
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    private void setUpForNoPermissionGranted(){
+        Log.i("MyMapsActivity ", "setUpForNoPermissionGranted" );
+
+
+
+        latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
 
         addMarkers = AddMarkers.getInstance();
         addMarkers.setInterface(MapsActivity.this);
@@ -190,18 +260,80 @@ public class MapsActivity extends AppCompatActivity implements
         callAndParse = new CallAndParse(MapsActivity.this);
 
 
+
         snackBarInstructions[0] = getString(R.string.tap_for_search);
         snackBarInstructions[1] = getString(R.string.tap_search_icon);
         snackBarInstructions[2] = getString(R.string.my_location_icon);
         snackBarInstructions[3] = getString(R.string.my_bus_map);
 
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)    // Sets the center of the map to Mountain View
+                .zoom(16)                   // Sets the zoom
+                .bearing(40)                // Sets the orientation of the camera to east
+                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+        googleMap.setOnInfoWindowCloseListener(this);
 
 
 
+        spinner.setVisibility(view.INVISIBLE);
+        // permission denied, boo! Disable the
+        // functionality that depends on this permission.
+    }
+
+    private void savePermissionAsked(String permission){
+        Log.d("GetPermissionActivity", "savePermissionAsked" );
+        Log.d("GetPermissionActivity", "permission : " + permission );
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(permission, false);
+        editor.apply();
+    }
+
+    private void phonePermissionNotGranted() {
+        Log.d("GetPermissionActivity", "phonePermissionNotGranted" );
+    }
+
+    private void showAlertDialog(String title, String message) {
+        Log.d("GetPermissionActivity", "showAlertDialog" );
+
+
+        android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Request", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //permissionHelper.requestAfterExplanation(permission);
+                        ActivityCompat.requestPermissions(MapsActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+                    }
+
+                })
+                .create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
 
     }
 
-    private void permissionGranted(){
+    private boolean shouldWeAsk(String permission){
+        Log.d("GetPermissionActivity", "shouldWeAsk" );
+        Log.d("GetPermissionActivity", "permission : " + permission );
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        boolean needToAsk = sharedPreferences.getBoolean(permission, true);
+        Log.d("GetPermissionActivity", "shouldWeAsk : " + needToAsk );
+        return needToAsk;
+
+    }
+
+    private void hasPermission(){
+        Log.i("MyMapsActivity", "hasPermission");
 
         if(!isOnline()){
             Log.i("MyMapsActivity", "!isOnline()");
@@ -219,15 +351,29 @@ public class MapsActivity extends AppCompatActivity implements
 
             //Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
 
-            spinner = (ProgressBar) findViewById(R.id.mapsAcitvityProgressBar);
+
+            addMarkers = AddMarkers.getInstance();
+            addMarkers.setInterface(MapsActivity.this);
+            PopupAdapterForMapMarkers.popupListner = MapsActivity.this;
+
+            callAndParse = new CallAndParse(MapsActivity.this);
 
 
+            if(hasLocationPermission){
+                mLocationProvider = new LocationProvider(this, this);
+                LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
+                enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            mLocationProvider = new LocationProvider(this, this);
+            }else{
 
 
-            LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
-            enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
+                onMapPresedLatLng = EMPIRE_STATE_BUILDING_LAT_LNG;
+                refreshMarkers();
+
+
+            }
+
 
 
 
@@ -241,6 +387,17 @@ public class MapsActivity extends AppCompatActivity implements
                 //Log.i("MyMapsActivity ", "pokeBusbusInfo SIZE" + pokeBusbusInfo.size());
 
             }
+
+            Log.i("MyMapsActivity", "busCodeOfFavBusStops.size : " + busCodeOfFavBusStops.size());
+
+
+
+
+            snackBarInstructions[0] = getString(R.string.tap_for_search);
+            snackBarInstructions[1] = getString(R.string.tap_search_icon);
+            snackBarInstructions[2] = getString(R.string.my_location_icon);
+            snackBarInstructions[3] = getString(R.string.my_bus_map);
+
 
 
         }
@@ -346,98 +503,9 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    private void askForPermissionActivty(){
-        Log.i("MyMapsActivity ", "permissionCheck askForPermission " );
-
-        Intent intent = new Intent(getApplicationContext() , GetPermissionActivity.class);
-        startActivity(intent);
-        this.finish();
-
-
-    }
-
-    private void requestPermissionReadStorage(){
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(mContext,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            Log.i("MyMapsActivity ", "permissionCheck askForPermission " );
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-
-                Log.i("MyMapsActivity ", "permissionCheck ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,\n" +
-                        "                    Manifest.permission.ACCESS_FINE_LOCATION) " );
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                Log.i("MyMapsActivity ", " permissionCheck No explanation needed, we can request the permission. " );
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(MapsActivity.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-    }
 
 
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
-
-                    requestPermissionReadStorage();
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:{
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
-
-
-                    permissionGranted();
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -879,7 +947,7 @@ public class MapsActivity extends AppCompatActivity implements
             startActivity(intent);
 
 
-        }else if (spinner.getVisibility() == View.INVISIBLE) {
+        }else {
 
             zoom = googleMap.getCameraPosition().zoom;
             bearing = googleMap.getCameraPosition().bearing;
@@ -887,8 +955,16 @@ public class MapsActivity extends AppCompatActivity implements
 
             spinner.setVisibility(View.VISIBLE);
 
-            mLocationProvider.disconnect();
-            mLocationProvider.connect();
+            if(hasLocationPermission){
+                mLocationProvider.disconnect();
+                mLocationProvider.connect();
+
+            }else{
+
+                zoom = 16;
+                bearing = 40;
+                selectCorrectLatLng();
+            }
 
 
             animateCameraPos();
@@ -918,7 +994,6 @@ public class MapsActivity extends AppCompatActivity implements
                     .build();                   // Creates a CameraPosition from the builder
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-
             googleMap.setOnInfoWindowCloseListener(this);
 
 
@@ -1022,7 +1097,7 @@ public class MapsActivity extends AppCompatActivity implements
         super.onResume();
         Log.i("MyMapsActivity", "onResume()");
 
-        if(hasPermission) {
+        if(hasLocationPermission) {
 
 
             checkPhoneParams();
@@ -1453,6 +1528,14 @@ public class MapsActivity extends AppCompatActivity implements
 
         if(spinner.getVisibility() == View.VISIBLE){
             spinner.setVisibility(View.INVISIBLE);
+        }
+
+
+
+        if(!hasLocationPermission && hasInstructionalSnackBarBeenShownOnThisLaunch){
+            hasInstructionalSnackBarBeenShownOnThisLaunch = true;
+            Snackbar.make(view, snackBarInstructions[0], Snackbar.LENGTH_LONG)
+                    .show();
         }
     }
 }

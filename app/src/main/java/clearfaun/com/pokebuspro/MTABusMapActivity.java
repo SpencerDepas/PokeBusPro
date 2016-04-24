@@ -59,7 +59,7 @@ public class MTABusMapActivity extends AppCompatActivity   {
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.WHITE);
 
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner = (ProgressBar)findViewById(R.id.progressMTA_Map_Activity);
         Log.i("MTABusMapActivity", intent.getStringExtra("maptype"));
         Log.i("MTABusMapActivity", "Brooklyn");
 
@@ -100,7 +100,29 @@ public class MTABusMapActivity extends AppCompatActivity   {
             Log.i("MTABusMapActivity", "in si");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("bussimap.jpg"));
+
         }
+
+        imageView.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
+            @Override
+            public void onReady() { }
+            @Override
+            public void onImageLoaded() {
+                spinner.setVisibility(View.INVISIBLE);
+            }
+            @Override
+            public void onPreviewLoadError(Exception e) {
+
+            }
+            @Override
+            public void onImageLoadError(Exception e) {
+
+            }
+            @Override
+            public void onTileLoadError(Exception e) {
+
+            }
+        });
     }
 
     private int findPreselectedIndex(){
@@ -150,6 +172,7 @@ public class MTABusMapActivity extends AppCompatActivity   {
         builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Log.d("AlertDialog", "Positive");
+                spinner.setVisibility(View.VISIBLE);
                 dialog.dismiss();
 
                 if (which == 0) {

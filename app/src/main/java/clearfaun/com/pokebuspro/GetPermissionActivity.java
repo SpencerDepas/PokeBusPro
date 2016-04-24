@@ -126,7 +126,7 @@ public class GetPermissionActivity extends AppCompatActivity {
             }else{
                 Log.d("GetPermissionActivity", "permission  needs requesting" );
 
-                if(shouldWeAsk(MapsActivity.FINE_LOCATION_PERMISSION_ASKED) ){
+                if(shouldWeAsk("fine_location_permission_has_been_asked") ){
                     Log.d("GetPermissionActivity", "permission has yet to be asked" );
 
                     showAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE, PERMISSION);
@@ -193,7 +193,7 @@ public class GetPermissionActivity extends AppCompatActivity {
                     }
 
 
-                    savePermissionAsked(MapsActivity.FINE_LOCATION_PERMISSION_ASKED);
+                    savePermissionAsked("fine_location_permission_has_been_asked");
                 }
             }
         }

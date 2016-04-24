@@ -37,17 +37,30 @@
 
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/map_fab"
-        android:src="@drawable/ic_map_white_48dp"
-        android:layout_gravity="end|bottom"
+
+
+
+    <com.dmitrymalkovich.android.ProgressFloatingActionButton
         android:layout_width="wrap_content"
+        android:layout_gravity="end|bottom"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        />
+        android:clickable="true">
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/map_fab"
+            android:src="@drawable/ic_map_white_48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
+        <ProgressBar
+            android:id="@+id/progressMTA_Map_Activity"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
+    </com.dmitrymalkovich.android.ProgressFloatingActionButton>
 
 
 
