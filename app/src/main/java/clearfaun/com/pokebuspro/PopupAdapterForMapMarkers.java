@@ -1,21 +1,13 @@
 package clearfaun.com.pokebuspro;
 
 import android.annotation.SuppressLint;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
-
-import java.util.ArrayList;
 
 /**
  * Created by spencer on 2/25/2015.
@@ -24,7 +16,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
 
     private View popup = null;
     private LayoutInflater inflater = null;
-    private MapsActivity mapsActivity;
+    private MainActivity mainActivity;
 
     static boolean isMarkerOpen = false;
 
@@ -62,13 +54,13 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
             isMarkerOpen = false;
         }
 
-        mapsActivity = new MapsActivity();
+        mainActivity = new MainActivity();
 
         TextView busCode = (TextView) popup.findViewById(R.id.bus_code);
         TextView distances = (TextView) popup.findViewById(R.id.snippet);
 
 
-        //BusInfo.setCurrentDisplayedBusName(MapsActivity.busInfo.get(i).busName);
+        //BusInfo.setCurrentDisplayedBusName(MainActivity.busInfo.get(i).busName);
 
 
 
@@ -85,12 +77,12 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
 
 
         distances.setText(marker.getSnippet());
-        //MapsActivity.busInfo.get(i).setAddedToPopup(true);
+        //MainActivity.busInfo.get(i).setAddedToPopup(true);
 
 
 
         final String fBusCode = marker.getTitle().substring(0, 6);
-        mapsActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        mainActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker Pin) {
 
@@ -104,7 +96,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
         });
 
 
-        mapsActivity.disableMapOnPress();
+        mainActivity.disableMapOnPress();
 
 
 

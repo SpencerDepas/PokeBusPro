@@ -1,19 +1,16 @@
 package clearfaun.com.pokebuspro;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,8 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -120,7 +115,7 @@ public class GetPermissionActivity extends AppCompatActivity {
 
             if( this.checkSelfPermission(PERMISSION)== (int) PackageManager.PERMISSION_GRANTED){
                 Log.d("GetPermissionActivity", "permission allready granted " );
-                Intent intent = new Intent(mContext, MapsActivity.class);
+                Intent intent = new Intent(mContext, MainActivity.class);
                 startActivity(intent);
                 this.finish();
             }else{
@@ -183,7 +178,7 @@ public class GetPermissionActivity extends AppCompatActivity {
                     if (grantResult == PackageManager.PERMISSION_GRANTED) {
 
                         Log.d("GetPermissionActivity", "fine location granted" );
-                        Intent intent = new Intent(mContext, MapsActivity.class);
+                        Intent intent = new Intent(mContext, MainActivity.class);
                         startActivity(intent);
                         this.finish();
 
@@ -223,7 +218,7 @@ public class GetPermissionActivity extends AppCompatActivity {
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
 
-                Log.i("GetPermissionActivity ", "permissionCheck ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,\n" +
+                Log.i("GetPermissionActivity ", "permissionCheck ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,\n" +
                         "                    Manifest.permission.ACCESS_FINE_LOCATION) " );
                 // Show an expanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -246,7 +241,7 @@ public class GetPermissionActivity extends AppCompatActivity {
     }
 
     private void permissionGranted(){
-        Intent intent = new Intent(getApplicationContext() , MapsActivity.class);
+        Intent intent = new Intent(getApplicationContext() , MainActivity.class);
         startActivity(intent);
         this.finish();
     }

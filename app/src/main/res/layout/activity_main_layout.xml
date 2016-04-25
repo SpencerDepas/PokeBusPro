@@ -39,14 +39,36 @@
 
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/refresh_location_fab"
-        android:src="@drawable/ic_refresh_white_48dp"
+    <com.dmitrymalkovich.android.ProgressFloatingActionButton
+        android:id="@+id/testbody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        />
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/refresh_location_fab"
+            android:src="@drawable/ic_refresh_white_48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/testbody"
+            app:layout_anchorGravity="top"
+            android:layout_gravity="top"
+            />
+
+
+        <ProgressBar
+            app:layout_anchorGravity="top"
+            android:layout_gravity="top"
+            app:layout_anchor="@id/refresh_location_fab"
+            android:id="@+id/mapsAcitvityProgressBar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </com.dmitrymalkovich.android.ProgressFloatingActionButton>
+
 
 
 

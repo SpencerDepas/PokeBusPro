@@ -1,6 +1,7 @@
 package clearfaun.com.pokebuspro;
 
-
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -37,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -71,7 +73,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MapsActivity extends AppCompatActivity implements
+public class MainActivity extends AppCompatActivity implements
         LocationProvider.LocationCallback,
         DialogPopupListner,
         NoBusesInAreaInterface,
@@ -254,10 +256,10 @@ public class MapsActivity extends AppCompatActivity implements
         latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
 
         addMarkers = AddMarkers.getInstance();
-        addMarkers.setInterface(MapsActivity.this);
-        PopupAdapterForMapMarkers.popupListner = MapsActivity.this;
+        addMarkers.setInterface(MainActivity.this);
+        PopupAdapterForMapMarkers.popupListner = MainActivity.this;
 
-        callAndParse = new CallAndParse(MapsActivity.this);
+        callAndParse = new CallAndParse(MainActivity.this);
 
 
 
@@ -309,7 +311,7 @@ public class MapsActivity extends AppCompatActivity implements
                     public void onClick(DialogInterface dialog, int which) {
 
                         //permissionHelper.requestAfterExplanation(permission);
-                        ActivityCompat.requestPermissions(MapsActivity.this,
+                        ActivityCompat.requestPermissions(MainActivity.this,
                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                 MY_PERMISSIONS_REQUEST_FINE_LOCATION);
                     }
@@ -353,10 +355,10 @@ public class MapsActivity extends AppCompatActivity implements
 
 
             addMarkers = AddMarkers.getInstance();
-            addMarkers.setInterface(MapsActivity.this);
-            PopupAdapterForMapMarkers.popupListner = MapsActivity.this;
+            addMarkers.setInterface(MainActivity.this);
+            PopupAdapterForMapMarkers.popupListner = MainActivity.this;
 
-            callAndParse = new CallAndParse(MapsActivity.this);
+            callAndParse = new CallAndParse(MainActivity.this);
 
 
             if(hasLocationPermission){
@@ -420,7 +422,11 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "onClick searchForLocation");
 
 
-        LayoutInflater li = LayoutInflater.from(MapsActivity.this);
+        //brings up keyboard
+        InputMethodManager inputMethodManager=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInputFromWindow(view.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+
+        LayoutInflater li = LayoutInflater.from(MainActivity.this);
         View alertDialogView = li.inflate(R.layout.search_address_dialog, null);
 
 
@@ -430,7 +436,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
         final android.support.v7.app.AlertDialog.Builder alertDialogBuilder =
-                new android.support.v7.app.AlertDialog.Builder(MapsActivity.this,
+                new android.support.v7.app.AlertDialog.Builder(MainActivity.this,
                         R.style.AppCompatAlertDialogStyle);
         alertDialogBuilder.setView(alertDialogView);
 
@@ -445,10 +451,28 @@ public class MapsActivity extends AppCompatActivity implements
 
                         getLatLngForSearchLocation(locationToSearchFor.getText().toString());
 
+                        getWindow().setSoftInputMode(
+                                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                        );
+
                     }
 
                 });
-        alertDialogBuilder.setNegativeButton("Cancel", null);
+        alertDialogBuilder.setNegativeButton("Cancel",  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // get user input and set it to result
+                // edit text
+                Log.i("MyMapsActivity", "DialogInterface onClick Cancel");
+
+                getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                );
+
+            }
+
+        });
+
         final android.support.v7.app.AlertDialog alert = alertDialogBuilder.create();
         alert.show();
 
@@ -585,7 +609,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                             Log.d("AlertDialog", "findWhatToPreSelect : " + findWhatToPreSelect);
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"200 Feet", "250 Feet", "300 Feet"};
                             builder.setTitle("Set the radius for PokeBus");
                             builder.setNegativeButton("DISMISS", null);
@@ -696,7 +720,7 @@ public class MapsActivity extends AppCompatActivity implements
                                 preSelectedIndex = 3;
                             }
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"20 Secconds", "30 Secconds", "60 Secconds", "OFF"};
                             builder.setTitle(getString(R.string.set_bus_update_frequency));
                             builder.setNegativeButton("DISMISS", null);
@@ -736,8 +760,8 @@ public class MapsActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
                                         prefs.edit().putString("KEY2", "0").apply();
-                                        MapsActivity mapsActivity = new MapsActivity();
-                                        mapsActivity.stopTimerTask();
+                                        MainActivity mainActivity = new MainActivity();
+                                        mainActivity.stopTimerTask();
 
                                     }
 
@@ -808,7 +832,7 @@ public class MapsActivity extends AppCompatActivity implements
                             }
 
 
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"};
                             builder.setTitle(getString(R.string.select_bus_map_tittle));
                             builder.setNegativeButton("DISMISS", null);
@@ -1398,7 +1422,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
         final String finalBuscode = buscode;
-        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AppCompatAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.set_fav_bus));
         builder.setMessage("BusCode: " + finalBuscode
                 + "\n" + "\n" +  getString(R.string.set_fav_bus_body));

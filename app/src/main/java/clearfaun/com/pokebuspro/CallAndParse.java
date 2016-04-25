@@ -86,7 +86,7 @@ public class CallAndParse {
 
         GetBussStopInterface bussStopInterface = restAdapter.create(GetBussStopInterface.class);
 
-        //MapsActivity.prefs.getString("KEY1", "301");
+        //MainActivity.prefs.getString("KEY1", "301");
 
 
         Log.i("MyCallAndParse", "prefRadius : " + prefRadius);

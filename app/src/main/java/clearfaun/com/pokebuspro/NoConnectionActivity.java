@@ -53,7 +53,7 @@ public class NoConnectionActivity extends AppCompatActivity {
     public void mapsActivityIntent(View view) {
         Log.i("MyMapsActivity", "onClick refreshLocation");
 
-        Intent intent = new Intent(mContext , MapsActivity.class);
+        Intent intent = new Intent(mContext , MainActivity.class);
         startActivity(intent);
 
 

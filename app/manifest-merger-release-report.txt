@@ -85,7 +85,7 @@ ADDED from AndroidManifest.xml:27:9
 		ADDED from AndroidManifest.xml:28:13
 	android:value
 		ADDED from AndroidManifest.xml:29:13
-activity#clearfaun.com.pokebuspro.MapsActivity
+activity#clearfaun.com.pokebuspro.MainActivity
 ADDED from AndroidManifest.xml:31:9
 	android:label
 		ADDED from AndroidManifest.xml:36:13

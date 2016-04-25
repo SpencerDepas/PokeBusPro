@@ -1,13 +1,8 @@
 package clearfaun.com.pokebuspro;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-
 import android.util.Log;
-import android.view.View;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -17,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import POJO.DistancesExample;
-import POJO.MonitoredStopVisit;
-import POJO.MonitoredVehicleJourney;
 
 /**
  * Created by spencer on 2/21/2015.
@@ -34,10 +27,10 @@ public class AddMarkers {
 
 
     private static AddMarkers addMarkers;
-    private MapsActivity mapsActivity;
+    private MainActivity mainActivity;
 
     private AddMarkers(){
-        mapsActivity = new MapsActivity();
+        mainActivity = new MainActivity();
 
     }
 
@@ -98,7 +91,7 @@ public class AddMarkers {
             Log.i("AddMarkers", "markerHashTable.containsKey(hash) make new marker  : " + busName);
             //make new
             markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
-            marker = MapsActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
+            marker = MainActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
             marker.setTitle(busCode + busName);
             marker.setSnippet(allbusNamesAndDistances);
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
@@ -353,7 +346,7 @@ public class AddMarkers {
 
 
     public static void openSnippetWithIndex(int index ){
-//        Log.i("AddMarkersa", "  MapsActivity.busInfoIndexForBusName  " + index);
+//        Log.i("AddMarkersa", "  MainActivity.busInfoIndexForBusName  " + index);
 //        Log.i("AddMarkersa", "  openSnippetWithIndex id " + marker[index].getId());
 //
 //        Log.i("AddMarkersa", "  openSnippetWithIndex  tittle" + marker[index].getTitle());
