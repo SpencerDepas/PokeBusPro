@@ -55,7 +55,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements
     private CallAndParse callAndParse;
 
     private DrawerLayout mDrawerLayout;
-    @BindView(R.id.main_content)  View view;
+    @Bind(R.id.main_content)  View view;
     private ProgressBar spinner;
     private AddMarkers addMarkers;
     private SupportMapFragment mMap;
@@ -204,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
             }else{
+                responseAnsweredForRuntimePermission = true;
                 hasLocationPermission = true;
                 setUpAfterPermissionRequest();
             }
@@ -262,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity ", "setUpAfterPermissionRequest" );
 
         if(responseAnsweredForRuntimePermission){
+            Log.i("MyMapsActivity ", "responseAnsweredForRuntimePermission : " + responseAnsweredForRuntimePermission );
 
             addMarkers = AddMarkers.getInstance();
             addMarkers.setInterface(MainActivity.this);
@@ -285,6 +287,8 @@ public class MainActivity extends AppCompatActivity implements
 
                 Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
                 mLocationProvider = new LocationProvider(this, this);
+                mLocationProvider.disconnect();
+                mLocationProvider.connect();
                 LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
                 enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
@@ -368,78 +372,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private void hasPermission(){
-        Log.i("MyMapsActivity", "hasPermission");
-
-        if(!isOnline()){
-            Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(getApplicationContext() , NoConnectionActivity.class);
-            startActivity(intent);
-            this.finish();
-
-        }else {
-
-
-            prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
-
-            //this loads in businfo of saved bus stops
-            //pokeBusbusInfo = loadFavBus();
-
-            //Log.i("MyMapsActivity", "pokeBusbusInfo " + pokeBusbusInfo.size());
-
-
-            addMarkers = AddMarkers.getInstance();
-            addMarkers.setInterface(MainActivity.this);
-            PopupAdapterForMapMarkers.popupListner = MainActivity.this;
-
-            callAndParse = new CallAndParse(MainActivity.this);
-
-
-            if(hasLocationPermission){
-                Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
-                mLocationProvider = new LocationProvider(this, this);
-                LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
-                enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            }else{
-                Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
-
-                latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
-                onMapPresedLatLng = EMPIRE_STATE_BUILDING_LAT_LNG;
-                refreshMarkers();
-
-
-            }
-
-
-
-
-
-            if (savedInstanceState != null) {
-                //Then the application is being reloaded
-                Log.i("MyMapsActivity ", "savedInstanceState != null ");
-
-            } else {
-                Log.i("MyMapsActivity ", "savedInstanceState == null ");
-                //Log.i("MyMapsActivity ", "pokeBusbusInfo SIZE" + pokeBusbusInfo.size());
-
-            }
-
-            Log.i("MyMapsActivity", "busCodeOfFavBusStops.size : " + busCodeOfFavBusStops.size());
-
-
-
-
-            snackBarInstructions[0] = getString(R.string.tap_for_search);
-            snackBarInstructions[1] = getString(R.string.tap_search_icon);
-            snackBarInstructions[2] = getString(R.string.my_location_icon);
-            snackBarInstructions[3] = getString(R.string.my_bus_map);
-
-
-
-        }
-
-    }
 
 
     @SuppressWarnings("unused")
@@ -1014,7 +946,7 @@ public class MainActivity extends AppCompatActivity implements
             spinner.setVisibility(View.VISIBLE);
 
             if(hasLocationPermission){
-
+                Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
 
 
                 zoom = 16;
@@ -1024,7 +956,7 @@ public class MainActivity extends AppCompatActivity implements
                 mLocationProvider.connect();
 
             }else{
-
+                Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
 
                 selectCorrectLatLng();
             }
@@ -1050,50 +982,81 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.i("MyMapsActivity", "zoom : " + zoom);
 
-        if(zoom != 0 && onMapPresedLatLng != null){
+        if(onMapPresedLatLng != null){
+            Log.i("MyMapsActivity", "onMapPresedLatLng != null");
 
-            Log.i("MyMapsActivity", "zoom != 0 && onMapPresedLatLng != null");
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
-                    .zoom(zoom)                   // Sets the zoom
-                    .bearing(bearing)                // Sets the orientation of the camera to east
+                    .zoom(16)                   // Sets the zoom
+                    .bearing(40)                // Sets the orientation of the camera to east
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
             googleMap.setOnInfoWindowCloseListener(this);
 
-
-
-        }else{
-
-            if(zoom != 0){
-                Log.i("MyMapsActivity", "zoom != 0");
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(16)                   // Sets the zoom
-                        .bearing(40)                 // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-                googleMap.setOnInfoWindowCloseListener(this);
-            }else{
-                Log.i("MyMapsActivity", "zoom == 0");
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(16)                   // Sets the zoom
-                        .bearing(40)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-                googleMap.setOnInfoWindowCloseListener(this);
-
-            }
-
-
+        }else {
+            Log.i("MyMapsActivity", "onMapPresedLatLng == null");
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)    // Sets the center of the map to Mountain View
+                    .zoom(16)                   // Sets the zoom
+                    .bearing(40)                // Sets the orientation of the camera to east
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+            googleMap.setOnInfoWindowCloseListener(this);
         }
+
+
+
+//        if(zoom != 0 && onMapPresedLatLng != null){
+//
+//            zoom = 16;
+//            bearing = 40;
+//
+//            Log.i("MyMapsActivity", "zoom != 0 && onMapPresedLatLng != null");
+//            CameraPosition cameraPosition = new CameraPosition.Builder()
+//                    .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
+//                    .zoom(zoom)                   // Sets the zoom
+//                    .bearing(bearing)                // Sets the orientation of the camera to east
+//                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+//                    .build();                   // Creates a CameraPosition from the builder
+//            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//            googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+//            googleMap.setOnInfoWindowCloseListener(this);
+//
+//
+//
+//        }else{
+//
+//            if(zoom != 0){
+//                Log.i("MyMapsActivity", "zoom != 0");
+//                CameraPosition cameraPosition = new CameraPosition.Builder()
+//                        .target(latLng)    // Sets the center of the map to Mountain View
+//                        .zoom(16)                   // Sets the zoom
+//                        .bearing(40)                 // Sets the orientation of the camera to east
+//                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+//                        .build();                   // Creates a CameraPosition from the builder
+//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+//                googleMap.setOnInfoWindowCloseListener(this);
+//            }else{
+//                Log.i("MyMapsActivity", "zoom == 0");
+//                CameraPosition cameraPosition = new CameraPosition.Builder()
+//                        .target(latLng)    // Sets the center of the map to Mountain View
+//                        .zoom(16)                   // Sets the zoom
+//                        .bearing(40)                // Sets the orientation of the camera to east
+//                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+//                        .build();                   // Creates a CameraPosition from the builder
+//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+//                googleMap.setOnInfoWindowCloseListener(this);
+//
+//            }
+//
+//
+//        }
 
     }
 
