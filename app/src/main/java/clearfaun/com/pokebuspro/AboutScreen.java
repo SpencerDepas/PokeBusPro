@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -23,7 +23,7 @@ public class AboutScreen extends AppCompatActivity {
 
 
 
-    @Bind(R.id.clearfaun_image)  ImageView clearFaunLogo;
+    @BindView(R.id.clearfaun_image)  ImageView clearFaunLogo;
 
 
     @Override

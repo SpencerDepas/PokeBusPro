@@ -92,9 +92,10 @@ public class AddMarkers {
             //make new
             markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
             marker = MainActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
             marker.setTitle(busCode + busName);
             marker.setSnippet(allbusNamesAndDistances);
-            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+
         }
 
 

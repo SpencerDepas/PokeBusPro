@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import butterknife.Bind;
 
 /**
  * Created by spencer on 4/5/2015.
