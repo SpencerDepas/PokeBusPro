@@ -82,6 +82,8 @@ public class AddMarkers {
             //we do not need to re add it to the screen
             //we do need to delete the old info
 
+
+
             marker.setTitle(busCode + busName);
             marker.setSnippet(allbusNamesAndDistances);
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
@@ -201,13 +203,9 @@ public class AddMarkers {
             //Log.i("AddMarkerss", "distance : "  + distance );
         }
 
-
-        // Log.i("AddMarkerss", "allbusNamesAndDistances : "  + allbusNamesAndDistances  + " buscode : " + busCode);
-
-
-        //long estimatedTime = System.nanoTime() - startTime;
-
-        //Log.i("AddMarkerss", "estimatedTime : " +   estimatedTime);
+        if(allbusNamesAndDistances.length() < 1 ){
+            allbusNamesAndDistances = "No incoming busses";
+        }
 
         return allbusNamesAndDistances;
     }

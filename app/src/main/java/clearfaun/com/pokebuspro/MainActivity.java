@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements
             snackBarInstructions[0] = getString(R.string.tap_for_search);
             snackBarInstructions[1] = getString(R.string.tap_search_icon);
             snackBarInstructions[2] = getString(R.string.my_location_icon);
-            snackBarInstructions[3] = getString(R.string.my_bus_map);
+            snackBarInstructions[3] = getString(R.string.tap_bus_distances);
 
 
             prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
@@ -1128,6 +1128,9 @@ public class MainActivity extends AppCompatActivity implements
             Log.i("MyMapsActivity", "showInstructionalSnackBar hasInstructionalSnackBarBeenAccepted : "
                     + hasInstructionalSnackBarBeenAccepted);
 
+            Log.i("MyMapsActivity", "showInstructionalSnackBar hasInstructionalSnackBarBeenShownOnThisLaunch : "
+                    + hasInstructionalSnackBarBeenShownOnThisLaunch);
+
             if (!hasInstructionalSnackBarBeenShownOnThisLaunch) {
                 hasInstructionalSnackBarBeenShownOnThisLaunch = true;
 
@@ -1553,11 +1556,11 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-        if(!hasLocationPermission && hasInstructionalSnackBarBeenShownOnThisLaunch){
-            hasInstructionalSnackBarBeenShownOnThisLaunch = true;
-            Snackbar.make(view, snackBarInstructions[0], Snackbar.LENGTH_LONG)
-                    .show();
-        }
+//        if(!hasLocationPermission && hasInstructionalSnackBarBeenShownOnThisLaunch){
+//            hasInstructionalSnackBarBeenShownOnThisLaunch = true;
+//            Snackbar.make(view, snackBarInstructions[0], Snackbar.LENGTH_LONG)
+//                    .show();
+//        }
     }
 }
 
