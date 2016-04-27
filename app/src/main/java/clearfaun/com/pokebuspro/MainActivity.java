@@ -110,9 +110,11 @@ public class MainActivity extends AppCompatActivity implements
     private Bundle savedInstanceState;
     private CallAndParse callAndParse;
 
-    private DrawerLayout mDrawerLayout;
     @Bind(R.id.main_content)  View view;
-    private ProgressBar spinner;
+    @Bind(R.id.progress_bar_activity_main) ProgressBar progressBar;
+    @Bind(R.id.drawer_layout)  DrawerLayout mDrawerLayout;
+    @Bind(R.id.nav_view)  NavigationView navigationView;
+
     private AddMarkers addMarkers;
     private SupportMapFragment mMap;
     private final LatLng EMPIRE_STATE_BUILDING_LAT_LNG = new LatLng(40.748441, -73.985664);
@@ -120,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements
     final String DIALOG_TITLE = "Access Phone Location";
     final String DIALOG_MESSAGE = "WaveBus needs to acces your location to find the bus stops that are close to you.";
     final String PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
-
+    private int randomNum;
         /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
     //EMPIRE STATE BUILDING
@@ -152,13 +154,11 @@ public class MainActivity extends AppCompatActivity implements
 
         mContext = getApplicationContext();
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        spinner = (ProgressBar) findViewById(R.id.mapsAcitvityProgressBar);
+
 
 
         prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
@@ -174,7 +174,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-
+        //for instructional snackbar
+        randomNum = 0 + (int)(Math.random() * 3);
 
 
 
@@ -385,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void searchForLocationFab() {
+    private void searchForLocationFromAddress() {
         Log.i("MyMapsActivity", "onClick searchForLocation");
 
 
@@ -416,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements
                         // edit text
                         Log.i("MyMapsActivity", "DialogInterface onClick ");
 
-                        getLatLngForSearchLocation(locationToSearchFor.getText().toString());
+                        getLatLngForSearchLocationFromAddress(locationToSearchFor.getText().toString());
 
                         getWindow().setSoftInputMode(
                                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -449,11 +450,11 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    private void getLatLngForSearchLocation(String location){
-        Log.i("MyMapsActivity", "getLatLngForSearchLocation ");
+    private void getLatLngForSearchLocationFromAddress(String location){
+        Log.i("MyMapsActivity", "getLatLngForSearchLocationFromAddress ");
         List<Address> addressList = null;
 
-        if (location != null || !location.equals("") ) {
+        if (location != null && location.length() > 0 ) {
             Geocoder geocoder = new Geocoder(this);
             try {
                 addressList = geocoder.getFromLocationName(location, 2);
@@ -515,7 +516,7 @@ public class MainActivity extends AppCompatActivity implements
             newLocationFromLatLng(latLng);
 
         }else if(item.getItemId()== R.id.search_item){
-            searchForLocationFab();
+            searchForLocationFromAddress();
         }else if(item.getItemId()== android.R.id.home){
             mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
@@ -596,7 +597,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
                                         prefs.edit().putString(getString(R.string.radius_key), "200").apply();
-                                        spinner.setVisibility(View.VISIBLE);
+                                        progressBar.setVisibility(view.VISIBLE);
                                         refreshMarkers();
 
 
@@ -614,8 +615,7 @@ public class MainActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
 
                                         prefs.edit().putString(getString(R.string.radius_key), "250").apply();
-                                        spinner.setVisibility(View.VISIBLE);
-                                        refreshMarkers();
+                                        progressBar.setVisibility(view.VISIBLE);                                       refreshMarkers();
 
                                         String refreshRate = prefs.getString("KEY2", "DICK");
 
@@ -631,7 +631,7 @@ public class MainActivity extends AppCompatActivity implements
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
                                         prefs.edit().putString(getString(R.string.radius_key), "300").apply();
-                                        spinner.setVisibility(View.VISIBLE);
+                                        progressBar.setVisibility(view.VISIBLE);
                                         refreshMarkers();
 
 
@@ -943,7 +943,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-            spinner.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(view.VISIBLE);
 
             if(hasLocationPermission){
                 Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
@@ -981,6 +981,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "animateCameraPos");
 
         Log.i("MyMapsActivity", "zoom : " + zoom);
+        Log.i("MyMapsActivity", "onMapPresedLatLng : " + onMapPresedLatLng);
 
         if(onMapPresedLatLng != null){
             Log.i("MyMapsActivity", "onMapPresedLatLng != null");
@@ -1008,55 +1009,6 @@ public class MainActivity extends AppCompatActivity implements
             googleMap.setOnInfoWindowCloseListener(this);
         }
 
-
-
-//        if(zoom != 0 && onMapPresedLatLng != null){
-//
-//            zoom = 16;
-//            bearing = 40;
-//
-//            Log.i("MyMapsActivity", "zoom != 0 && onMapPresedLatLng != null");
-//            CameraPosition cameraPosition = new CameraPosition.Builder()
-//                    .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
-//                    .zoom(zoom)                   // Sets the zoom
-//                    .bearing(bearing)                // Sets the orientation of the camera to east
-//                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-//                    .build();                   // Creates a CameraPosition from the builder
-//            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//            googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-//            googleMap.setOnInfoWindowCloseListener(this);
-//
-//
-//
-//        }else{
-//
-//            if(zoom != 0){
-//                Log.i("MyMapsActivity", "zoom != 0");
-//                CameraPosition cameraPosition = new CameraPosition.Builder()
-//                        .target(latLng)    // Sets the center of the map to Mountain View
-//                        .zoom(16)                   // Sets the zoom
-//                        .bearing(40)                 // Sets the orientation of the camera to east
-//                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-//                        .build();                   // Creates a CameraPosition from the builder
-//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-//                googleMap.setOnInfoWindowCloseListener(this);
-//            }else{
-//                Log.i("MyMapsActivity", "zoom == 0");
-//                CameraPosition cameraPosition = new CameraPosition.Builder()
-//                        .target(latLng)    // Sets the center of the map to Mountain View
-//                        .zoom(16)                   // Sets the zoom
-//                        .bearing(40)                // Sets the orientation of the camera to east
-//                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-//                        .build();                   // Creates a CameraPosition from the builder
-//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-//                googleMap.setOnInfoWindowCloseListener(this);
-//
-//            }
-//
-//
-//        }
 
     }
 
@@ -1161,16 +1113,20 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+
+
     private void showInstructionalSnackBar(){
         Log.i("MyMapsActivity", "showInstructionalSnackBar()");
-        final int randomNum = 0 + (int)(Math.random() * 3);
 
+
+        Log.i("MyMapsActivity", "showInstructionalSnackBar() : " + randomNum);
 
         boolean hasInstructionalSnackBarBeenAccepted
                 = prefs.getBoolean(snackBarInstructions[randomNum], false);
 
         if(!hasInstructionalSnackBarBeenAccepted) {
-            Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenAccepted()");
+            Log.i("MyMapsActivity", "showInstructionalSnackBar hasInstructionalSnackBarBeenAccepted : "
+                    + hasInstructionalSnackBarBeenAccepted);
 
             if (!hasInstructionalSnackBarBeenShownOnThisLaunch) {
                 hasInstructionalSnackBarBeenShownOnThisLaunch = true;
@@ -1242,6 +1198,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void removeSavedFavBusFromStorage(){
+
+
 
         busCodeOfFavBusStops.clear();
         Log.i("MyMapsActivity", "busCodeOfFavBusStops.size : " + busCodeOfFavBusStops.size());
@@ -1485,7 +1443,8 @@ public class MainActivity extends AppCompatActivity implements
         Snackbar.make(view, "No Buses found in the area", Snackbar.LENGTH_LONG)
                 .show();
 
-        spinner.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(view.INVISIBLE);
+
 
         stopTimerTask();
     }
@@ -1572,7 +1531,7 @@ public class MainActivity extends AppCompatActivity implements
 
         markerHashTable.clear();
         googleMap.clear();
-        spinner.setVisibility(view.VISIBLE);
+        progressBar.setVisibility(view.VISIBLE);
 
         zoom = googleMap.getCameraPosition().zoom;
         bearing = googleMap.getCameraPosition().bearing;
@@ -1586,10 +1545,10 @@ public class MainActivity extends AppCompatActivity implements
     public void removeLoadingIcon() {
         Log.d("MyMapsActivity", "removeLoadingIcon");
 
+        showInstructionalSnackBar();
 
-
-        if(spinner.getVisibility() == View.VISIBLE){
-            spinner.setVisibility(View.INVISIBLE);
+        if(progressBar.getVisibility() == View.VISIBLE){
+            progressBar.setVisibility(view.INVISIBLE);
         }
 
 

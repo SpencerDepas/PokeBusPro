@@ -59,11 +59,12 @@ public class MTABusMapActivity extends AppCompatActivity   {
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.WHITE);
 
-        spinner = (ProgressBar)findViewById(R.id.progressMTA_Map_Activity);
+        spinner = (ProgressBar)findViewById(R.id.spinner);
+
         Log.i("MTABusMapActivity", intent.getStringExtra("maptype"));
         Log.i("MTABusMapActivity", "Brooklyn");
 
-
+        Log.i("MTABusMapActivity", "spinner.getVisibility() : " +        spinner.getVisibility());
         loadMap();
         Log.i("MTABusMapActivity", "not ==");
 
