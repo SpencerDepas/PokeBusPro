@@ -42,8 +42,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-
 
 import com.google.android.gms.maps.OnMapReadyCallback;
 
@@ -53,12 +51,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.fabric.sdk.android.Fabric;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -92,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements
     private Context mContext;
     private boolean isMapOnPressEnabled = false;
     private boolean hasInstructionalSnackBarBeenShownOnThisLaunch = false;
+    private int SDK_LEVEL;
+    private boolean responseAnsweredForRuntimePermission = false;
 
 
     final int  MY_PERMISSIONS_REQUEST_FINE_LOCATION = 68;
@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements
   /*  static double testLat = 40.748441;
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
-
 
 
     @Override
@@ -188,8 +187,8 @@ public class MainActivity extends AppCompatActivity implements
     private void permissionAtRunTime(){
         Log.i("MyMapsActivity", "permissionAtRunTime ");
 
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.M){
+        SDK_LEVEL = android.os.Build.VERSION.SDK_INT;
+        if (SDK_LEVEL >= Build.VERSION_CODES.M){
             // Do something for lollipop and above versions
             hasLocationPermission = permissionCheck();
             Log.i("MyMapsActivity", "permissionCheck hasLocationPermission : " + hasLocationPermission);
@@ -214,6 +213,8 @@ public class MainActivity extends AppCompatActivity implements
 
         } else{
             // do something for phones running an SDK before lollipop
+            responseAnsweredForRuntimePermission = true;
+            hasLocationPermission = true;
             setUpAfterPermissionRequest();
         }
     }
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     googleMap.clear();
                     mLocationProvider = new LocationProvider(this, this);
+
 
                     onMapPresedLatLng = null;
 
@@ -289,10 +291,11 @@ public class MainActivity extends AppCompatActivity implements
 
             if(hasLocationPermission){
 
-                Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
+                Log.i("MyMapsActivity", "hasLocationPermission " + hasLocationPermission);
                 mLocationProvider = new LocationProvider(this, this);
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
+                Log.i("MyMapsActivity", "hasLocationPermission  LocationProvider on" + hasLocationPermission);
                 LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
                 enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
@@ -300,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
             }else {
+                Log.i("MyMapsActivity", "hasLocationPermission " + hasLocationPermission);
 
                 latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
                 onMapPresedLatLng = EMPIRE_STATE_BUILDING_LAT_LNG;
@@ -345,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements
         android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton("Request", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.request_location_dialog_titlle), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -359,11 +363,10 @@ public class MainActivity extends AppCompatActivity implements
                 .create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
-        dialog.getWindow().setLayout(800, 530);//width, height
+        //dialog.getWindow().setLayout(getResources(R.dimen.activity_horizontal_margin), 750);//width, height
 
     }
 
-    boolean responseAnsweredForRuntimePermission = false;
 
     private boolean shouldWeAsk(String permission){
         Log.d("MyMapsActivity", "shouldWeAsk" );
@@ -449,6 +452,14 @@ public class MainActivity extends AppCompatActivity implements
         alert.show();
 
 
+
+    }
+
+
+
+    public void addMarkerToMap(LatLng markerLocation){
+        Log.i("MyMapsActivity", "addMarkerToMap ");
+        googleMap.addMarker(new MarkerOptions().position(markerLocation));
 
     }
 
@@ -759,10 +770,8 @@ public class MainActivity extends AppCompatActivity implements
                             removeFavBusMarkerColor();
 
 
-                            Snackbar.make(view, getString(R.string.removed_fav_bus),
-                                    Snackbar.LENGTH_LONG)
-                                    .show();
-
+                            Toast.makeText(mContext, getString(R.string.removed_fav_bus),
+                                    Toast.LENGTH_LONG).show();;
 
 
                         }  else if (menuItem.getTitle().equals(getString(R.string.about))) {
@@ -770,7 +779,7 @@ public class MainActivity extends AppCompatActivity implements
 
                             //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
 
-                            Intent intent = new Intent(mContext , AboutScreen.class);
+                            Intent intent = new Intent(mContext , AboutAppActivity.class);
                             startActivity(intent);
 
                             mDrawerLayout.closeDrawers();
@@ -885,12 +894,12 @@ public class MainActivity extends AppCompatActivity implements
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
 
                             if(!hasLocationPermission){
+                                Log.d("MyMainActivity", "!hasLocationPermission || SDK_LEVEL < 23" + menuItem.getTitle());
                                 showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
                             }else{
-
-                                Snackbar.make(view, getString(R.string.you_allready_have_permission),
-                                        Snackbar.LENGTH_LONG)
-                                        .show();
+                                
+                                Toast.makeText(mContext, getString(R.string.you_allready_have_permission),
+                                        Toast.LENGTH_LONG).show();;
                             }
 
 
@@ -965,7 +974,7 @@ public class MainActivity extends AppCompatActivity implements
             progressBar.setVisibility(view.VISIBLE);
 
             if(hasLocationPermission){
-                Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
+                Log.i("MyMapsActivity", "hasLocationPermission || SDK_LEVEL < 23 " + hasLocationPermission);
 
 
 //                zoom = 16;
@@ -1146,7 +1155,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "onResume()");
 
         if(hasLocationPermission) {
-            Log.i("MyMapsActivity", "onResume() hasLocationPermission : " + hasLocationPermission);
+            Log.i("MyMapsActivity", "onResume() hasLocationPermission" + hasLocationPermission);
 
             checkPhoneParams();
 
@@ -1414,6 +1423,7 @@ public class MainActivity extends AppCompatActivity implements
         longitude = location.getLongitude();
         latLng = new LatLng(latitude, longitude);
 
+
         googleMap.setMyLocationEnabled(true);
 
 
@@ -1532,6 +1542,7 @@ public class MainActivity extends AppCompatActivity implements
             busCodeOfFavBusStops = loadFavBus();
 
             permissionAtRunTime();
+
 
 
 

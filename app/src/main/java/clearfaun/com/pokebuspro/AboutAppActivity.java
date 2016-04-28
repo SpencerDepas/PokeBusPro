@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -20,7 +21,7 @@ import butterknife.OnClick;
 /**
  * Created by spencer on 3/15/2015.
  */
-public class AboutScreen extends AppCompatActivity {
+public class AboutAppActivity extends AppCompatActivity {
 
 
 
@@ -72,10 +73,19 @@ public class AboutScreen extends AppCompatActivity {
     }
 
 
+    @Override
+    public  boolean  onOptionsItemSelected(MenuItem item) {
+
+
+        this.finish();
+
+
+        return  true;
+    }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
-}
+    }

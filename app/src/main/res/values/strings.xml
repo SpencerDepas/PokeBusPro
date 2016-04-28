@@ -178,4 +178,5 @@
     <string name="confirm">SET</string>
     <string name="dismiss">CANCEL</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="request_location_dialog_titlle">Request</string>
 </resources>

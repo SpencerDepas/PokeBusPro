@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,6 +61,13 @@ public class LicenseActivity extends AppCompatActivity {
         textViewArray[2] = (TextView) findViewById(R.id.textViewThree);
         readTxt(textViewArray);
 
+    }
+
+    @Override
+    public  boolean  onOptionsItemSelected(MenuItem item) {
+
+        this.finish();
+        return  true;
     }
 
 

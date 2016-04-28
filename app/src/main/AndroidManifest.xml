@@ -51,7 +51,7 @@
 
         <activity android:label="@string/app_name"
             android:parentActivityName=".MainActivity"
-            android:name="AboutScreen"/>
+            android:name=".AboutAppActivity"/>
         <activity android:label="@string/app_name"
 
             android:name=".MTABusMapActivity"/>
