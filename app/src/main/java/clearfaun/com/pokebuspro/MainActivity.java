@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-        busCodeOfFavBusStops = loadFavBus();
+        //busCodeOfFavBusStops = loadFavBus();
 
 
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements
                 Log.i("MyMapsActivity", "permissionCheck !hasLocationPermission");
 
                 if(shouldWeAsk(FINE_LOCATION_PERMISSION_ASKED) ){
-                    showAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
+                    showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
                 }else {
                     phonePermissionNotGranted();
                 }
@@ -211,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements
             }
 
 
-            savePermissionAsked("fine_location_permission_has_been_asked");
 
 
         } else{
@@ -241,12 +240,16 @@ public class MainActivity extends AppCompatActivity implements
 
                     hasLocationPermission = true;
                     setUpAfterPermissionRequest();
+                    savePermissionAsked(FINE_LOCATION_PERMISSION_ASKED);
+
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
                 } else {
                     Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
                     hasLocationPermission = false;
+                    savePermissionAsked(FINE_LOCATION_PERMISSION_ASKED);
+
                     setUpAfterPermissionRequest();
 
                 }
@@ -335,8 +338,8 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private void showAlertDialog(String title, String message) {
-        Log.d("MyMapsActivity", "showAlertDialog" );
+    private void showPermissionAlertDialog(String title, String message) {
+        Log.d("MyMapsActivity", "showPermissionAlertDialog" );
 
 
         android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(this)
@@ -355,6 +358,7 @@ public class MainActivity extends AppCompatActivity implements
                 })
                 .create();
         dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setLayout(400, 400);
         dialog.show();
 
     }
@@ -1464,13 +1468,16 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
+
         enableMapOnPress();
 
         if(!oneTimeCall){
             oneTimeCall = true;
 
+            busCodeOfFavBusStops = loadFavBus();
 
             permissionAtRunTime();
+
 
 
         }
