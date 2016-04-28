@@ -887,7 +887,7 @@ public class MainActivity extends AppCompatActivity implements
                             if(!hasLocationPermission){
                                 showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
                             }else{
-                                
+
                                 Snackbar.make(view, getString(R.string.you_allready_have_permission),
                                         Snackbar.LENGTH_LONG)
                                         .show();
@@ -958,7 +958,8 @@ public class MainActivity extends AppCompatActivity implements
 
         }else {
 
-
+            zoom = googleMap.getCameraPosition().zoom;
+            bearing = googleMap.getCameraPosition().bearing;
 
 
             progressBar.setVisibility(view.VISIBLE);
@@ -967,8 +968,8 @@ public class MainActivity extends AppCompatActivity implements
                 Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
 
 
-                zoom = 16;
-                bearing = 40;
+//                zoom = 16;
+//                bearing = 40;
 
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
@@ -998,33 +999,71 @@ public class MainActivity extends AppCompatActivity implements
     private void animateCameraPos(){
         Log.i("MyMapsActivity", "animateCameraPos");
 
-        Log.i("MyMapsActivity", "zoom : " + zoom);
+        Log.i("MyMapsActivity", "animateCameraPos zoom : " + zoom);
         Log.i("MyMapsActivity", "onMapPresedLatLng : " + onMapPresedLatLng);
 
         if(onMapPresedLatLng != null){
-            Log.i("MyMapsActivity", "onMapPresedLatLng != null");
+            Log.i("MyMapsActivity", "animateCameraPos onMapPresedLatLng != null");
+            Log.i("MyMapsActivity", "animateCameraPos zoom : " + zoom);
+            //this is for location from touch or search
+            if(zoom > 4){
+                Log.i("MyMapsActivity", "animateCameraPos bearing != 0");
 
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
-                    .zoom(16)                   // Sets the zoom
-                    .bearing(40)                // Sets the orientation of the camera to east
-                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-            googleMap.setOnInfoWindowCloseListener(this);
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
+                        .zoom(zoom)                   // Sets the zoom
+                        .bearing(bearing)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+                googleMap.setOnInfoWindowCloseListener(this);
+
+            }else{
+                Log.i("MyMapsActivity", "animateCameraPos bearing == 0");
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
+                        .zoom(16)                   // Sets the zoom
+                        .bearing(40)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+                googleMap.setOnInfoWindowCloseListener(this);
+
+            }
+
+
 
         }else {
-            Log.i("MyMapsActivity", "onMapPresedLatLng == null");
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLng)    // Sets the center of the map to Mountain View
-                    .zoom(16)                   // Sets the zoom
-                    .bearing(40)                // Sets the orientation of the camera to east
-                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-            googleMap.setOnInfoWindowCloseListener(this);
+            Log.i("MyMapsActivity", "animateCameraPos onMapPresedLatLng == null");
+            //this is for location from GPS
+
+            if(zoom > 4){
+                Log.i("MyMapsActivity", "animateCameraPos bearing zoom > 4");
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .zoom(zoom)                   // Sets the zoom
+                        .bearing(bearing)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+                googleMap.setOnInfoWindowCloseListener(this);
+
+            }else{
+                Log.i("MyMapsActivity", "animateCameraPos bearing == 0");
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng)    // Sets the center of the map to Mountain View
+                        .zoom(16)                   // Sets the zoom
+                        .bearing(40)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+                googleMap.setOnInfoWindowCloseListener(this);
+
+            }
         }
 
 
@@ -1049,6 +1088,8 @@ public class MainActivity extends AppCompatActivity implements
         if(zoom != 0){
             zoom = googleMap.getCameraPosition().zoom;
             bearing = googleMap.getCameraPosition().bearing;
+            Log.i("MyMapsActivity", "saving zoom :" + zoom);
+            Log.i("MyMapsActivity", "saving bearking : " + bearing);
         }
 
 
