@@ -883,7 +883,16 @@ public class MainActivity extends AppCompatActivity implements
 
                         }else if (menuItem.getTitle().equals(getString(R.string.enable_location))) {
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
-                            showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
+
+                            if(!hasLocationPermission){
+                                showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
+                            }else{
+                                
+                                Snackbar.make(view, getString(R.string.you_allready_have_permission),
+                                        Snackbar.LENGTH_LONG)
+                                        .show();
+                            }
+
 
                         }
 

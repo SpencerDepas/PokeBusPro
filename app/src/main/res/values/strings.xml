@@ -95,6 +95,7 @@
     <!--
        SnackBars
        -->
+    <string name="you_allready_have_permission">Location Enabled</string>
     <string name="turn_on_location_snackbar_request">This is the My Location button. Please enable Location in Settings</string>
     <!--
        Other
