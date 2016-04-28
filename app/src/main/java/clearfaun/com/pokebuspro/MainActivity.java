@@ -567,7 +567,7 @@ public class MainActivity extends AppCompatActivity implements
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
 
 
-                            final String findWhatToPreSelect = prefs.getString(getString(R.string.radius_key), "0");
+                            final String findWhatToPreSelect = prefs.getString(getString(R.string.radius_key), "2");
 
                             int preSelectedIndex = -1;
                             switch (Integer.parseInt(findWhatToPreSelect)) {
@@ -578,7 +578,7 @@ public class MainActivity extends AppCompatActivity implements
                                 case 300:  preSelectedIndex = 2;
                                     break;
                                 default:
-                                    preSelectedIndex = 0;
+                                    preSelectedIndex = 2;
                                     break;
 
 

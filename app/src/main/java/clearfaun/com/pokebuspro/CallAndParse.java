@@ -45,7 +45,7 @@ public class CallAndParse {
 
 
     private String returnHowManyIncomingBuses = "12";
-    private RestAdapter restAdapter;
+
 
     private Gson gson;
 
