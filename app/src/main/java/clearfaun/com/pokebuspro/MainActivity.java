@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements
     private final LatLng EMPIRE_STATE_BUILDING_LAT_LNG = new LatLng(40.748441, -73.985664);
 
     final String DIALOG_TITLE = "Access Phone Location";
-    final String DIALOG_MESSAGE = "WaveBus needs to acces your location to find the bus stops that are close to you.";
+    final String DIALOG_MESSAGE = "WaveBus needs to acces your location to find local bus stops.";
     final String PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     private int randomNum;
         /*static double testLat = 40.6455520;
@@ -358,8 +358,8 @@ public class MainActivity extends AppCompatActivity implements
                 })
                 .create();
         dialog.setCanceledOnTouchOutside(false);
-        dialog.getWindow().setLayout(400, 400);
         dialog.show();
+        dialog.getWindow().setLayout(800, 530);//width, height
 
     }
 
