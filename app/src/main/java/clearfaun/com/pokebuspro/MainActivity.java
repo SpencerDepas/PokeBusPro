@@ -233,9 +233,10 @@ public class MainActivity extends AppCompatActivity implements
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
 
+                    googleMap.clear();
                     mLocationProvider = new LocationProvider(this, this);
 
-
+                    onMapPresedLatLng = null;
 
 
                     hasLocationPermission = true;
@@ -514,10 +515,14 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId()== R.id.my_location_item){
+            if(hasLocationPermission){
+                onMapPresedLatLng = null;
+                newLocationFromLatLng(latLng);
+            }else{
+                Snackbar.make(view, getString(R.string.turn_on_location_snackbar_request), Snackbar.LENGTH_LONG)
+                        .show();
+            }
 
-            onMapPresedLatLng = null;
-
-            newLocationFromLatLng(latLng);
 
         }else if(item.getItemId()== R.id.search_item){
             searchForLocationFromAddress();
@@ -877,10 +882,11 @@ public class MainActivity extends AppCompatActivity implements
                             startActivity(intent);
 
 
+                        }else if (menuItem.getTitle().equals(getString(R.string.enable_location))) {
+                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+                            showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
+
                         }
-
-
-
 
                         savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
 
@@ -1563,11 +1569,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-//        if(!hasLocationPermission && hasInstructionalSnackBarBeenShownOnThisLaunch){
-//            hasInstructionalSnackBarBeenShownOnThisLaunch = true;
-//            Snackbar.make(view, snackBarInstructions[0], Snackbar.LENGTH_LONG)
-//                    .show();
-//        }
     }
 }
 

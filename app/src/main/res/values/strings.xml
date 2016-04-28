@@ -54,8 +54,9 @@
     <string name="set_bus_update_frequency">Change Refresh Rate</string>
 
     <!--
-         PokeBus preferences
+         WaveBus preferences
          -->
+    <string name="enable_location">Enable my Location</string>
     <string name="remove_all_poke_bus">Delete favorite Bus Stops</string>
     <string name="poke_bus_settings">PokeBus Settings</string>
     <string name="current_poke_bus">Current Poke Bus:</string>
@@ -93,6 +94,10 @@
     <string name="my_location_icon">The my location icon will always return you to your current location </string>
     <string name="tap_bus_distances">Tap bus distances to set your favorite bus stops</string>
 
+    <!--
+       SnackBars
+       -->
+    <string name="turn_on_location_snackbar_request">This is the My Location button. Please enable Location in Settings</string>
     <!--
        Other
        -->
