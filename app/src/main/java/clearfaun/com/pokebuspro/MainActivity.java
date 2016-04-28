@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main_nav_draw);
         ButterKnife.bind(this);
         Log.i("MyMapsActivity", "onCreate");

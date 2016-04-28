@@ -8,7 +8,7 @@
     <string name="about_page_info">WaveBus was made by ClearFaun.
                                     WaveBus is licensed by the MTA.</string>
 
-        <string name="removed_fav_bus">Deleted favorite Buses</string>
+    <string name="removed_fav_bus">Deleted favorite Buses</string>
 
     <!--
      Air Plane Mode
@@ -21,14 +21,12 @@
          -->
 
 
-
     <string name="no_connection">No Connection\nPush to try again</string>
 
     <!--
     Keys
     -->
     <string name="fav_bus_key">favorite_bus_key</string>
-
 
 
     <!--
@@ -140,8 +138,6 @@
             -->
 
 
-
-
     <string name="title_list_preference">title_list_preference</string>
     <string name="title_checkbox_preference">title_checkbox_preference</string>
     <string name="summary_checkbox_preference">summary_checkbox_preference</string>
@@ -180,4 +176,5 @@
         closest to you will be chosen. You can remove your Pokebuses in the settings menu.</string>
     <string name="confirm">SET</string>
     <string name="dismiss">CANCEL</string>
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>
