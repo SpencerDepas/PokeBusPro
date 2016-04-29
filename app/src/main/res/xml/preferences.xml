@@ -53,7 +53,7 @@
 
 
         <PreferenceScreen
-            android:title="@string/like_us_on_facebook"
+            android:title="@string/follow_me_on_twitter"
             android:key="@string/facebook_key"
             >
         </PreferenceScreen>

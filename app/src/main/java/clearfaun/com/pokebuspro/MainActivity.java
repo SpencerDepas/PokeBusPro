@@ -894,13 +894,10 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-                        }else if (menuItem.getTitle().equals(getString(R.string.like_us_on_facebook))) {
+                        }else if (menuItem.getTitle().equals(getString(R.string.follow_me_on_twitter))) {
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
                             //toaster("My ZIpcode is :" + parseUser.get("zip_code").toString());
-                            String url = "https://www.facebook.com/ClearFaun?ref=bookmarks";
-                            Intent i = new Intent(Intent.ACTION_VIEW);
-                            i.setData(Uri.parse(url));
-                            startActivity(i);
+                            openTwitterIntent();
 
 
 
@@ -945,6 +942,31 @@ public class MainActivity extends AppCompatActivity implements
                         return true;
                     }
                 });
+    }
+
+    private void openTwitterIntent() {
+        Log.d("MyDetailNational", "openTwitterIntent ");
+        String mTwitterName = "spencerdepas";
+        Log.d("MyDetailNational", "mTwitterName " + mTwitterName);
+        Intent intent = null;
+        try {
+            Log.d("MyDetailNational", "try ");
+            // get the Twitter app if possible
+
+
+
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" +
+                    mTwitterName));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        } catch (Exception e) {
+            Log.d("MyDetailNational", "catch ");
+            Log.d("MyDetailNational", "e :  " + e.toString());
+            // no Twitter app, revert to browser
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" +
+                    mTwitterName));
+        }
+        this.startActivity(intent);
     }
 
 
