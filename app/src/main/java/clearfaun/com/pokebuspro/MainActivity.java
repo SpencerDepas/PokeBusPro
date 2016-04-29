@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean hasInstructionalSnackBarBeenShownOnThisLaunch = false;
     private int SDK_LEVEL;
     private boolean responseAnsweredForRuntimePermission = false;
+    private final int ENABLE_GPS = 799;
 
 
     final int  MY_PERMISSIONS_REQUEST_FINE_LOCATION = 68;
@@ -300,6 +301,15 @@ public class MainActivity extends AppCompatActivity implements
                 enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 
+                boolean isLocationEnabled = isLocationEnabled(this);
+                if(!isLocationEnabled){
+                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
+
+                    latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
+                    onMapPresedLatLng = EMPIRE_STATE_BUILDING_LAT_LNG;
+                    refreshMarkers();
+
+                }
 
 
             }else {
@@ -526,8 +536,20 @@ public class MainActivity extends AppCompatActivity implements
 
         if(item.getItemId()== R.id.my_location_item){
             if(hasLocationPermission){
-                onMapPresedLatLng = null;
-                newLocationFromLatLng(latLng);
+
+
+                boolean isLocationEnabled = isLocationEnabled(this);
+                if(!isLocationEnabled){
+                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
+
+                    Snackbar.make(view, getString(R.string.turn_on_location_snackbar_request), Snackbar.LENGTH_LONG)
+                            .show();
+
+                }else{
+                    onMapPresedLatLng = null;
+                    newLocationFromLatLng(latLng);
+                }
+
             }else{
                 Snackbar.make(view, getString(R.string.turn_on_location_snackbar_request), Snackbar.LENGTH_LONG)
                         .show();
@@ -897,9 +919,20 @@ public class MainActivity extends AppCompatActivity implements
                                 Log.d("MyMainActivity", "!hasLocationPermission || SDK_LEVEL < 23" + menuItem.getTitle());
                                 showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
                             }else{
-                                
-                                Toast.makeText(mContext, getString(R.string.you_allready_have_permission),
-                                        Toast.LENGTH_LONG).show();;
+
+                                boolean isLocationEnabled = isLocationEnabled(mContext);
+                                if(!isLocationEnabled){
+                                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
+
+                                    startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), ENABLE_GPS);
+
+                                    onMapPresedLatLng = null;
+
+                                }else{
+                                    Toast.makeText(mContext, getString(R.string.you_allready_have_permission),
+                                            Toast.LENGTH_LONG).show();;
+                                }
+
                             }
 
 
@@ -920,7 +953,25 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Log.i("MyMapsActivity", "onActivityResult" );
 
+        if(requestCode==ENABLE_GPS) {
+            Log.i("MyMapsActivity", "requestCode==ENABLE_GPS" );
+
+
+            boolean isLocationEnabled = isLocationEnabled(mContext);
+            if(isLocationEnabled){
+                Log.i("MyMapsActivity", "onActivityResult isLocationEnabled" );
+
+
+                onMapPresedLatLng = null;
+                newLocationFromLatLng(latLng);
+            }
+
+        }
+    }
 
     private boolean isLocationEnabled(Context context) {
         int locationMode = 0;
@@ -974,14 +1025,23 @@ public class MainActivity extends AppCompatActivity implements
             progressBar.setVisibility(view.VISIBLE);
 
             if(hasLocationPermission){
-                Log.i("MyMapsActivity", "hasLocationPermission || SDK_LEVEL < 23 " + hasLocationPermission);
+                Log.i("MyMapsActivity", "hasLocationPermission  " + hasLocationPermission);
 
 
 //                zoom = 16;
 //                bearing = 40;
+                boolean isLocationEnabled = isLocationEnabled(this);
+                if(!isLocationEnabled){
+                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
 
-                mLocationProvider.disconnect();
-                mLocationProvider.connect();
+                    selectCorrectLatLng();
+
+                }else{
+                    mLocationProvider.disconnect();
+                    mLocationProvider.connect();
+                }
+
+
 
             }else{
                 Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
