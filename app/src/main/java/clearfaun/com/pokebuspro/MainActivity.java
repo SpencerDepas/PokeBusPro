@@ -43,6 +43,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements
     private final String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
     static GoogleMap googleMap;
 
+    private final String MAP_SELECTION = "Map selection";
     private LatLng onMapPresedLatLng;
     private LatLng latLng;
     private LocationProvider mLocationProvider;
@@ -245,6 +248,11 @@ public class MainActivity extends AppCompatActivity implements
                     setUpAfterPermissionRequest();
                     savePermissionAsked(FINE_LOCATION_PERMISSION_ASKED);
 
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Fine location permission")
+                            .putContentType("Selection")
+                            .putCustomAttribute("runtime permission", "Accepted"));
+
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
@@ -254,6 +262,11 @@ public class MainActivity extends AppCompatActivity implements
                     savePermissionAsked(FINE_LOCATION_PERMISSION_ASKED);
 
                     setUpAfterPermissionRequest();
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Fine location permission")
+                            .putContentType("Selection")
+                            .putCustomAttribute("runtime permission", "Denied"));
 
                 }
 
@@ -399,6 +412,9 @@ public class MainActivity extends AppCompatActivity implements
 
 
         refreshMarkers();
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("Pressed Refresh location fab")
+                .putContentType("Action"));
 
     }
 
@@ -439,6 +455,10 @@ public class MainActivity extends AppCompatActivity implements
                         getWindow().setSoftInputMode(
                                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
                         );
+
+                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                .putContentName("Searched for Bus stop from dialog")
+                                .putContentType("Action"));
 
                     }
 
@@ -548,6 +568,9 @@ public class MainActivity extends AppCompatActivity implements
                 }else{
                     onMapPresedLatLng = null;
                     newLocationFromLatLng(latLng);
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Pressed My Location")
+                            .putContentType("Action"));
                 }
 
             }else{
@@ -568,6 +591,11 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(mContext, MTABusMapActivity.class);
             intent.putExtra("maptype", "Current Map is: " + prefBusMap);
             startActivity(intent);
+
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("Launch Map Activity")
+                    .putContentType("Action")
+                    );
         }
 
 
@@ -581,6 +609,11 @@ public class MainActivity extends AppCompatActivity implements
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                .putContentName("Nav view open")
+                                .putContentType("Action")
+                        );
 
                         mContext = getApplicationContext();
 
@@ -852,6 +885,11 @@ public class MainActivity extends AppCompatActivity implements
 
                                         prefs.edit().putString(getString(R.string.bus_maps_key), "Brooklyn").apply();
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Select Map")
+                                                .putContentType("Selection")
+                                                .putCustomAttribute(MAP_SELECTION, "Brooklyn")
+                                        );
 
 
 
@@ -865,11 +903,22 @@ public class MainActivity extends AppCompatActivity implements
 
                                         Log.d("MyMainActivity", "refreshrate set to 30:");
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Select Map")
+                                                .putContentType("Selection")
+                                                .putCustomAttribute(MAP_SELECTION, "Manhattan")
+                                        );
+
                                     } else if (which == 2) {
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
                                         prefs.edit().putString(getString(R.string.bus_maps_key), "Queens").apply();
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Select Map")
+                                                .putContentType("Selection")
+                                                .putCustomAttribute(MAP_SELECTION, "Queens")
+                                        );
 
                                         Log.d("MyMainActivity", "refreshrate set to 60:");
 
@@ -878,13 +927,22 @@ public class MainActivity extends AppCompatActivity implements
 
                                         prefs.edit().putString(getString(R.string.bus_maps_key), "Bronx").apply();
 
-
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Select Map")
+                                                .putContentType("Selection")
+                                                .putCustomAttribute(MAP_SELECTION, "Bronx")
+                                        );
                                     }else if (which == 4) {
                                         Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
                                         prefs.edit().putString(getString(R.string.bus_maps_key), "Staten Island").apply();
 
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Select Map")
+                                                .putContentType("Selection")
+                                                .putCustomAttribute(MAP_SELECTION, "Staten Island")
+                                        );
                                     }
 
 

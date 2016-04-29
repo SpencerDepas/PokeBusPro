@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -44,7 +47,10 @@ public class NoConnectionActivity extends AppCompatActivity {
 
 
 
-
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("No connection Activity")
+                .putContentType("Activity")
+        );
 
 
 

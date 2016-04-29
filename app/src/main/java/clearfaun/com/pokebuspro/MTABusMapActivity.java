@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
@@ -34,6 +36,7 @@ public class MTABusMapActivity extends AppCompatActivity   {
     SubsamplingScaleImageView imageView;
     SharedPreferences prefs;
     String savedBusMap;
+    private final String MAP_SELECTION = "Map selection";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +187,11 @@ public class MTABusMapActivity extends AppCompatActivity   {
                     prefs.edit().putString(getString(R.string.bus_maps_key), "Brooklyn").apply();
 
                     savedBusMap = "Brooklyn";
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Brooklyn")
+                    );
 
 
                     Log.d("MyMainActivity", "refreshrate set to 20:");
@@ -194,6 +202,12 @@ public class MTABusMapActivity extends AppCompatActivity   {
                     prefs.edit().putString(getString(R.string.bus_maps_key), "Manhattan").apply();
 
                     savedBusMap = "Manhattan";
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Manhattan")
+                    );
                     Log.d("MyMainActivity", "refreshrate set to 30:");
 
                 } else if (which == 2) {
@@ -201,6 +215,12 @@ public class MTABusMapActivity extends AppCompatActivity   {
 
                     prefs.edit().putString(getString(R.string.bus_maps_key), "Queens").apply();
                     savedBusMap = "Queens";
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Queens")
+                    );
 
                     Log.d("MyMainActivity", "refreshrate set to 60:");
 
@@ -210,11 +230,22 @@ public class MTABusMapActivity extends AppCompatActivity   {
                     prefs.edit().putString(getString(R.string.bus_maps_key), "Bronx").apply();
                     savedBusMap = "Bronx";
 
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Bronx")
+                    );
+
                 }else if (which == 4) {
                     Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
 
                     prefs.edit().putString(getString(R.string.bus_maps_key), "Staten Island").apply();
                     savedBusMap = "Staten Island";
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Staten Island")
+                    );
 
                 }
 
@@ -248,8 +279,6 @@ public class MTABusMapActivity extends AppCompatActivity   {
             startActivity(intent);
             this.finish();
         }else{
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
             this.finish();
         }
 
