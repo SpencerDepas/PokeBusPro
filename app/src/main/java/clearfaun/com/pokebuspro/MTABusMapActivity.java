@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -240,8 +242,25 @@ public class MTABusMapActivity extends AppCompatActivity   {
     @Override
     public  boolean  onOptionsItemSelected(MenuItem item) {
 
-        this.finish();
+        if(!isOnline()){
+            Log.i("MyMapsActivity", "!isOnline()");
+            Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
+            startActivity(intent);
+            this.finish();
+        }else{
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
+
         return  true;
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @Override

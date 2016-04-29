@@ -1501,6 +1501,13 @@ public class MainActivity extends AppCompatActivity implements
     public void handleNewLocation(Location location) {
         Log.i("MyMapsActivity", "handleNewLocation ");
 
+        if(!isOnline()){
+            Log.i("MyMapsActivity", "!isOnline()");
+            Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
+
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         latLng = new LatLng(latitude, longitude);

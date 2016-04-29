@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -48,13 +51,23 @@ public class NoConnectionActivity extends AppCompatActivity {
 
     }
 
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
     @SuppressWarnings("unused")
     @OnClick(R.id.no_connection_fab)
     public void mapsActivityIntent(View view) {
         Log.i("MyMapsActivity", "onClick refreshLocation");
 
-        Intent intent = new Intent(mContext , MainActivity.class);
-        startActivity(intent);
+        if(isOnline()){
+            Intent intent = new Intent(mContext , MainActivity.class);
+            startActivity(intent);
+        }
+
 
 
     }
@@ -75,6 +88,13 @@ public class NoConnectionActivity extends AppCompatActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.no_connection_menu, menu);
+        return true;
     }
 
     @Override

@@ -21,7 +21,7 @@
          -->
 
 
-    <string name="no_connection">No Connection\nPush to try again</string>
+    <string name="no_connection">No Connection\nTry again</string>
 
     <!--
     Keys
@@ -54,7 +54,7 @@
     <!--
          WaveBus preferences
          -->
-    <string name="enable_location">Enable Location Permission</string>
+    <string name="enable_location">Enable Location</string>
     <string name="remove_all_poke_bus">Delete favorite Bus Stops</string>
     <string name="poke_bus_settings">PokeBus Settings</string>
     <string name="current_poke_bus">Current Poke Bus:</string>
