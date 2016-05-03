@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent"
+    android:gravity="center"
+    android:layout_height="fill_parent">
 
 
-
-    <ProgressBar
-        style="@style/Base.Widget.AppCompat.ProgressBar"
-        android:id="@+id/progressMTA_Map_Activity"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="visible" />
 
 
     <TextView
@@ -27,22 +17,8 @@
         android:id="@+id/textView2"
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
-        android:layout_below="@+id/progressMTA_Map_Activity" />
+        />
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="right"
-        android:orientation="vertical" >
-
-
-
-
-
-
-
-
-    </RelativeLayout>
 
 
 
