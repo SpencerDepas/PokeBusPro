@@ -43,11 +43,18 @@
     <string name="remove_poke_bus_key">KEY033</string>
     <string name="license_key">KEY44</string>
 
-    <string name="map_preferences">Map Settings</string>
 
+
+
+    <!--
+      Nav view strings
+      -->
     <string name="radius_preference">Set Radius</string>
     <string name="auto_refresh_time">Auto Refresh Time</string>
     <string name="set_bus_update_frequency">Change Refresh Rate</string>
+    <string name="remove_saved_bus_stops">Delete favorite Bus stops</string>
+    <string name="map_preferences">Map Settings</string>
+    <string name="enable_location">Enable Location</string>
 
 
 
@@ -156,7 +163,7 @@
 
 
     <!--
-     This is for pokebus setting popup
+     This is for BusBUs setting popup
      -->
     <string name="set_fav_bus">Set favorite Bus Stop</string>
     <string name="set_fav_bus_body">When you set a favorite Bus Stop when in range it will be displayed automatically</string>

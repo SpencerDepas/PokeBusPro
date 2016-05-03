@@ -9,7 +9,7 @@
                 android:id="@+id/register_to_vote"
                 android:icon="@drawable/ic_panorama_fish_eye_black_24dp"
                 android:entries="@array/radius_entries"
-                android:dialogTitle="@string/set_radius"
+                android:dialogTitle="@string/radius_preference"
                 android:entryValues="@array/radius_entries_values"
                />
 
@@ -36,7 +36,7 @@
 
             <item
 
-                android:title="@string/remove_all_poke_bus"
+                android:title="@string/remove_saved_bus_stops"
                 android:key="@string/remove_poke_bus_key"
                 android:id="@+id/set_my_adress"
                 android:icon="@drawable/ic_delete_black_24dp"

@@ -867,7 +867,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-                        } else if (menuItem.getTitle().equals(getString(R.string.remove_all_poke_bus))) {
+                        } else if (menuItem.getTitle().equals(getString(R.string.remove_saved_bus_stops))) {
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
 
                             //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
