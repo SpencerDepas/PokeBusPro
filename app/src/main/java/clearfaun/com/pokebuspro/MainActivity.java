@@ -590,15 +590,17 @@ public class MainActivity extends AppCompatActivity implements
         }else if(item.getItemId()== R.id.map_item){
             String prefBusMap = prefs.getString("KEY99", "Brooklyn");
 
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("Launch Map Activity")
+                    .putContentType("Action")
+            );
+
             Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
             Intent intent = new Intent(mContext, MTABusMapActivity.class);
             intent.putExtra("maptype", "Current Map is: " + prefBusMap);
             startActivity(intent);
 
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("Launch Map Activity")
-                    .putContentType("Action")
-                    );
+
         }
 
 
@@ -1100,6 +1102,8 @@ public class MainActivity extends AppCompatActivity implements
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" +
                     mTwitterName));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
 
         } catch (Exception e) {
             Log.d("MyDetailNational", "catch ");
@@ -1107,8 +1111,9 @@ public class MainActivity extends AppCompatActivity implements
             // no Twitter app, revert to browser
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" +
                     mTwitterName));
+            startActivity(intent);
+
         }
-        this.startActivity(intent);
     }
 
 
@@ -1821,6 +1826,11 @@ public class MainActivity extends AppCompatActivity implements
                     isMapOnPressEnabled = false;
                     // TODO Auto-generated method stub
                     Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Map on Press for New Location")
+                            .putContentType("Selection")
+                            );
 
                     newLocationFromLatLng(arg0);
                 } else{
