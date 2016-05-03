@@ -24,28 +24,31 @@
 
 
 
-    <ProgressBar
-        android:layout_gravity="center"
-        android:layout_centerHorizontal="true"
+
+
+
+
+    <com.dmitrymalkovich.android.ProgressFloatingActionButton
         android:layout_width="wrap_content"
-        android:visibility="visible"
-        android:id="@+id/spinner"
-        android:layout_height="wrap_content" />
-
-
-
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/map_fab"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_map_white_48dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
 
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-
+    </com.dmitrymalkovich.android.ProgressFloatingActionButton>
 
 
 

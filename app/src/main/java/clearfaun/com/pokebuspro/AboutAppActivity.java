@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+
 import butterknife.Bind;
 
 import butterknife.ButterKnife;
@@ -61,6 +64,11 @@ public class AboutAppActivity extends AppCompatActivity {
 //        callAndParse.getBusStopsAndBusDistances("will be lat lng");
 
 
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("About Screen")
+                .putContentType("Activity")
+          );
+
 
     }
 
@@ -70,6 +78,11 @@ public class AboutAppActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("About Screen image clicked")
+                .putContentType("Action")
+              );
     }
 
 

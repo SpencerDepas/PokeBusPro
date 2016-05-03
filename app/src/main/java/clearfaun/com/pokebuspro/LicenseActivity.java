@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,6 +63,12 @@ public class LicenseActivity extends AppCompatActivity {
         textViewArray[1] = (TextView) findViewById(R.id.textViewTwo);
         textViewArray[2] = (TextView) findViewById(R.id.textViewThree);
         readTxt(textViewArray);
+
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("License Screen")
+                .putContentType("Activity")
+        );
 
     }
 

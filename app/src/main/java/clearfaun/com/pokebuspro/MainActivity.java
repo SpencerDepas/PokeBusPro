@@ -458,7 +458,10 @@ public class MainActivity extends AppCompatActivity implements
 
                         Answers.getInstance().logContentView(new ContentViewEvent()
                                 .putContentName("Searched for Bus stop from dialog")
-                                .putContentType("Action"));
+                                .putContentType("Selection")
+                                .putCustomAttribute("address searched", locationToSearchFor.getText().toString()));
+
+
 
                     }
 
@@ -632,6 +635,7 @@ public class MainActivity extends AppCompatActivity implements
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
 
 
+
                             final String findWhatToPreSelect = prefs.getString(getString(R.string.radius_key), "2");
 
                             int preSelectedIndex = -1;
@@ -650,6 +654,7 @@ public class MainActivity extends AppCompatActivity implements
                             }
 
                             Log.d("AlertDialog", "findWhatToPreSelect : " + findWhatToPreSelect);
+
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
                             CharSequence items[] = new CharSequence[]{"200 Feet", "250 Feet", "300 Feet"};
@@ -678,6 +683,12 @@ public class MainActivity extends AppCompatActivity implements
 
                                         String savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Set radius")
+                                                .putContentType("Action")
+                                                .putCustomAttribute("radius", "200")
+
+                                        );
                                         Log.d("MyMainActivity", "prefs refreshRate:" + findWhatToPreSelect);
 
                                         Log.d("MyMainActivity", "prefs msavedRadius:" + savedRadius);
@@ -695,6 +706,13 @@ public class MainActivity extends AppCompatActivity implements
 
                                         String savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Set radius")
+                                                .putContentType("Action")
+                                                .putCustomAttribute("radius", "250")
+
+                                        );
+
                                         Log.d("MyMainActivity", "prefs refreshRate:" + refreshRate);
 
                                         Log.d("MyMainActivity", "prefs msavedRadius:" + savedRadius);
@@ -709,6 +727,12 @@ public class MainActivity extends AppCompatActivity implements
                                         refreshMarkers();
 
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Set radius")
+                                                .putContentType("Action")
+                                                .putCustomAttribute("radius", "300")
+
+                                        );
                                         String refreshRate = prefs.getString("KEY2", "DICK");
 
                                         String savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
@@ -734,7 +758,10 @@ public class MainActivity extends AppCompatActivity implements
 
                             //prefs.edit().putString("KEY99", "FUCKKK").apply();
 
-
+                            Answers.getInstance().logContentView(new ContentViewEvent()
+                                    .putContentName("Refresh Timer Dialog")
+                                    .putContentType("Action")
+                            );
 
 
                             final String findWhatToPreSelect = prefs.getString(getString(R.string.refresh_time_key), "0");
@@ -775,6 +802,12 @@ public class MainActivity extends AppCompatActivity implements
 
                                         prefs.edit().putString("KEY2", "20").apply();
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Refresh Timer time")
+                                                .putContentType("Selection")
+                                                .putCustomAttribute("time", "20")
+                                        );
+
                                         refreshMarkers();
 
                                         Log.d("MyMainActivity", "refreshrate set to 20:");
@@ -786,6 +819,12 @@ public class MainActivity extends AppCompatActivity implements
 
                                         refreshMarkers();
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Refresh Timer time")
+                                                .putContentType("Selection")
+                                                .putCustomAttribute("time", "30")
+                                        );
+
                                         Log.d("MyMainActivity", "refreshrate set to 30:");
 
                                     } else if (which == 2) {
@@ -795,6 +834,12 @@ public class MainActivity extends AppCompatActivity implements
 
                                         refreshMarkers();
 
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Refresh Timer time")
+                                                .putContentType("Selection")
+                                                .putCustomAttribute("time", "60")
+                                        );
+
                                         Log.d("MyMainActivity", "refreshrate set to 60:");
 
                                     } else if (which == 3) {
@@ -803,6 +848,15 @@ public class MainActivity extends AppCompatActivity implements
                                         prefs.edit().putString("KEY2", "0").apply();
                                         MainActivity mainActivity = new MainActivity();
                                         mainActivity.stopTimerTask();
+
+
+
+                                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                                .putContentName("Refresh Timer time")
+                                                .putContentType("Selection")
+                                                .putCustomAttribute("time", "0")
+                                        );
+
 
                                     }
 
@@ -827,6 +881,12 @@ public class MainActivity extends AppCompatActivity implements
 
                             Toast.makeText(mContext, getString(R.string.removed_fav_bus),
                                     Toast.LENGTH_LONG).show();;
+
+                            Answers.getInstance().logContentView(new ContentViewEvent()
+                                    .putContentName("Deleted favorite Buses")
+                                    .putContentType("Action")
+
+                            );
 
 
                         }  else if (menuItem.getTitle().equals(getString(R.string.about))) {
@@ -957,6 +1017,12 @@ public class MainActivity extends AppCompatActivity implements
                             //toaster("My ZIpcode is :" + parseUser.get("zip_code").toString());
                             openTwitterIntent();
 
+                            Answers.getInstance().logContentView(new ContentViewEvent()
+                                    .putContentName("Follow me on twitter")
+                                    .putContentType("Action")
+
+                            );
+
 
 
                         }else if (menuItem.getTitle().equals(getString(R.string.license))) {
@@ -973,6 +1039,11 @@ public class MainActivity extends AppCompatActivity implements
                             if(!hasLocationPermission){
                                 Log.d("MyMainActivity", "!hasLocationPermission || SDK_LEVEL < 23" + menuItem.getTitle());
                                 showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
+                                Answers.getInstance().logContentView(new ContentViewEvent()
+                                        .putContentName("Enable Location")
+                                        .putContentType("Action")
+                                        .putCustomAttribute("Fine permission enabled", "False")
+                                );
                             }else{
 
                                 boolean isLocationEnabled = isLocationEnabled(mContext);
@@ -983,9 +1054,22 @@ public class MainActivity extends AppCompatActivity implements
 
                                     onMapPresedLatLng = null;
 
+                                    Answers.getInstance().logContentView(new ContentViewEvent()
+                                            .putContentName("Enable Location")
+                                            .putContentType("Action")
+                                            .putCustomAttribute("Fine permission enabled", "true")
+                                            .putCustomAttribute("Enable GPS intent fired", "true")
+                                    );
+
                                 }else{
                                     Toast.makeText(mContext, getString(R.string.you_allready_have_permission),
                                             Toast.LENGTH_LONG).show();;
+
+                                    Answers.getInstance().logContentView(new ContentViewEvent()
+                                            .putContentName("Enable Location")
+                                            .putContentType("Action")
+                                            .putCustomAttribute("Location allready enabled", "true")
+                                    );
                                 }
 
                             }
@@ -1623,6 +1707,10 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "displayDialog interface");
 
 
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("Set Favorite bus stop dialog")
+                .putContentType("Action")
+             );
 
 
         final String finalBuscode = buscode;
@@ -1639,17 +1727,26 @@ public class MainActivity extends AppCompatActivity implements
                 busCodeOfFavBusStops.add(finalBuscode);
                 addMarkers.addPokeBusColor(finalBuscode);
 
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("Set Favorite bus stop dialog")
+                        .putContentType("Selection")
+                        .putCustomAttribute("Fav Bus Stop Set", finalBuscode)
+                );
 
 
             }
         });
         builder.setNegativeButton("DISMISS", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("AlertDialog", "Positive");
+                Log.d("AlertDialog", "dismiss");
                 dialog.dismiss();
 
 
-
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("Set Favorite bus stop dialog")
+                        .putContentType("Selection")
+                        .putCustomAttribute("Fav Bus Stop Dismissed", "Dismissed")
+                );
             }
         });
         builder.show();
