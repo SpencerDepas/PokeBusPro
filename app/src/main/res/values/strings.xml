@@ -1,12 +1,11 @@
 <resources>
-    <string name="app_name">WaveBus</string>
-    <string name="title_activity_maps">WaveBus</string>
-    <string name="NoUI">Poke Bus</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">BusBus</string>
+    <string name="title_activity_maps">BusBus</string>
+     <string name="action_settings">Settings</string>
 
 
-    <string name="about_page_info">WaveBus was made by ClearFaun.
-                                    WaveBus is licensed by the MTA.</string>
+    <string name="about_page_info">BusBus was made by ClearFaun.
+                                    BusBus is licensed by the MTA.</string>
 
     <string name="removed_fav_bus">Deleted favorite Buses</string>
 
@@ -47,21 +46,10 @@
     <string name="map_preferences">Map Settings</string>
 
     <string name="radius_preference">Set Radius</string>
-    <string name="set_radius">Set the range of PokeBus</string>
     <string name="auto_refresh_time">Auto Refresh Time</string>
     <string name="set_bus_update_frequency">Change Refresh Rate</string>
 
-    <!--
-         WaveBus preferences
-         -->
-    <string name="enable_location">Enable Location</string>
-    <string name="remove_all_poke_bus">Delete favorite Bus Stops</string>
-    <string name="poke_bus_settings">PokeBus Settings</string>
-    <string name="current_poke_bus">Current Poke Bus:</string>
-    <string name="place_pokebus_marker">Make a PokeBus with a marker</string>
-    <string name="get_current_poke_bus">Current PokeBus : 301649</string>
-    <string name="pokebus_placement_info">Place marker over desired stop</string>
-    <string name="set_pokebus">Enter 5 digit busCode to set a PokeBus</string>
+
 
 
     <!--
@@ -78,7 +66,7 @@
     <!--
         Get Permission Text view
         -->
-    <string name="turn_permission_on">For Wave Bus to work, we need to access your location. Your location enables us to find which
+    <string name="turn_permission_on">For BusBus to work, we need to access your location. Your location enables us to find which
         buses you need to know about. Please enable the location permission.</string>
     <string name="enable_permission">Enable Permission</string>
 
