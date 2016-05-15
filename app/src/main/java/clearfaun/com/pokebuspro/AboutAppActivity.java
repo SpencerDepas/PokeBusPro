@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
-import butterknife.Bind;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -28,7 +28,7 @@ public class AboutAppActivity extends AppCompatActivity {
 
 
 
-    @Bind(R.id.clearfaun_image)  ImageView clearFaunLogo;
+    @BindView(R.id.clearfaun_image)  ImageView clearFaunLogo;
 
 
     @Override

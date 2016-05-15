@@ -1,5 +1,6 @@
 package clearfaun.com.pokebuspro;
 
+import android.support.design.widget.CoordinatorLayout;
 import android.view.WindowManager;
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -56,7 +57,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-import butterknife.Bind;
+ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -70,6 +71,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.inject.Inject;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -114,10 +117,10 @@ public class MainActivity extends AppCompatActivity implements
     private Bundle savedInstanceState;
     private CallAndParse callAndParse;
 
-    @Bind(R.id.main_content)  View view;
-    @Bind(R.id.progress_bar_activity_main) ProgressBar progressBar;
-    @Bind(R.id.drawer_layout)  DrawerLayout mDrawerLayout;
-    @Bind(R.id.nav_view)  NavigationView navigationView;
+    @BindView(R.id.main_coordinatorLayout) CoordinatorLayout view;
+    @BindView(R.id.progress_bar_activity_main) ProgressBar progressBar;
+    @BindView(R.id.drawer_layout)  DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view)  NavigationView navigationView;
 
     private AddMarkers addMarkers;
     private SupportMapFragment mMap;
@@ -133,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements
   /*  static double testLat = 40.748441;
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
+
+    @Inject
+    PreferenceManager preferenceManager;
 
 
     @Override
@@ -1017,13 +1023,16 @@ public class MainActivity extends AppCompatActivity implements
                         }else if (menuItem.getTitle().equals(getString(R.string.follow_me_on_twitter))) {
                             Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
                             //toaster("My ZIpcode is :" + parseUser.get("zip_code").toString());
-                            openTwitterIntent();
+
 
                             Answers.getInstance().logContentView(new ContentViewEvent()
                                     .putContentName("Follow me on twitter")
                                     .putContentType("Action")
 
                             );
+                            openTwitterIntent();
+
+                            closeDrawer();
 
 
 
@@ -1033,6 +1042,7 @@ public class MainActivity extends AppCompatActivity implements
 
                             Intent intent = new Intent(mContext , LicenseActivity.class);
                             startActivity(intent);
+                            closeDrawer();
 
 
                         }else if (menuItem.getTitle().equals(getString(R.string.enable_location))) {
@@ -1113,7 +1123,9 @@ public class MainActivity extends AppCompatActivity implements
                     mTwitterName));
             startActivity(intent);
 
+
         }
+
     }
 
 

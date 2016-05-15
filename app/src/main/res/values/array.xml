@@ -2,6 +2,12 @@
 <resources>
 
 
+    <string-array name="instructional_snackbar">
+        <item>"Tap map to search"</item>
+        <item>"Tap the Search icon in the toolbar to search for a bus stop in via location"</item>
+        <item>"The my location icon will always return you to your current location"</item>
+        <item>"Tap bus distances to set your favorite bus stops"</item>
+    </string-array>
 
     <string-array name="radius_entries">
         <item>"200 feet"</item>
