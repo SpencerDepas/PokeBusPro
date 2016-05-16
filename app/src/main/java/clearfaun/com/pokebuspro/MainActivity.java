@@ -18,7 +18,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -57,7 +56,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
- import butterknife.BindView;
+import Preference.PreferenceManager;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -72,7 +72,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.inject.Inject;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -84,10 +83,10 @@ public class MainActivity extends AppCompatActivity implements
         GoogleMap.OnInfoWindowCloseListener{
 
 
-    private final String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
-    static GoogleMap googleMap;
+     static GoogleMap googleMap;
 
     private final String MAP_SELECTION = "Map selection";
+    private final String FABRIC_ANSWERS_ACTION = "Action";
     private LatLng onMapPresedLatLng;
     private LatLng latLng;
     private LocationProvider mLocationProvider;
@@ -111,8 +110,7 @@ public class MainActivity extends AppCompatActivity implements
     private Timer timer;
     private TimerTask timerTask;
     private String[] snackBarInstructions = new String[4];
-    private SharedPreferences prefs;
-    private ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
+     private ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
     private boolean enabledGPS;
     private Bundle savedInstanceState;
     private CallAndParse callAndParse;
@@ -137,8 +135,11 @@ public class MainActivity extends AppCompatActivity implements
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
 
-    @Inject
-    PreferenceManager preferenceManager;
+    private PreferenceManager preferenceManager;
+    private String prefBusMap = "Brooklyn";
+    private String savedRadius = "301";
+    String refreshTimerTaskTime = "20";
+
 
 
     @Override
@@ -146,8 +147,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_nav_draw);
         ButterKnife.bind(this);
-        Log.i("MyMapsActivity", "onCreate");
 
+        Log.i("MyMapsActivity", "onCreate");
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -161,11 +162,11 @@ public class MainActivity extends AppCompatActivity implements
         this.savedInstanceState = savedInstanceState;
 
         mContext = getApplicationContext();
+        preferenceManager = new PreferenceManager(mContext);
 
 
 
 
-        prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
         if (navigationView != null) {
             setupDrawerContent(navigationView);
@@ -174,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-        //busCodeOfFavBusStops = loadFavBus();
 
 
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-
+        refreshTimerTaskTime = preferenceManager.getRefreshTime();
 
 
     }
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements
             if(!hasLocationPermission){
                 Log.i("MyMapsActivity", "permissionCheck !hasLocationPermission");
 
-                if(shouldWeAsk(FINE_LOCATION_PERMISSION_ASKED) ){
+                if(preferenceManager.getHasFineLocationPermissionBeenAsked() ){
                     showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
                 }else {
                     phonePermissionNotGranted();
@@ -239,6 +239,8 @@ public class MainActivity extends AppCompatActivity implements
 
                 //this is for onMapReady
                 responseAnsweredForRuntimePermission = true;
+                preferenceManager.saveHasFineLocationPermissionBeenAsked(true);
+
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
@@ -252,7 +254,6 @@ public class MainActivity extends AppCompatActivity implements
 
                     hasLocationPermission = true;
                     setUpAfterPermissionRequest();
-                    savePermissionAsked(FINE_LOCATION_PERMISSION_ASKED);
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
                             .putContentName("Fine location permission")
@@ -265,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements
                 } else {
                     Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
                     hasLocationPermission = false;
-                    savePermissionAsked(FINE_LOCATION_PERMISSION_ASKED);
 
                     setUpAfterPermissionRequest();
 
@@ -305,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements
             snackBarInstructions[3] = getString(R.string.tap_bus_distances);
 
 
-            prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
 
 
@@ -352,15 +351,6 @@ public class MainActivity extends AppCompatActivity implements
         // functionality that depends on this permission.
     }
 
-    private void savePermissionAsked(String permission){
-        Log.d("MyMapsActivity", "savePermissionAsked" );
-        Log.d("MyMapsActivity", "permission : " + permission );
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(permission, false);
-        editor.apply();
-    }
 
     private void phonePermissionNotGranted() {
         Log.d("MyMapsActivity", "phonePermissionNotGranted" );
@@ -397,17 +387,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private boolean shouldWeAsk(String permission){
-        Log.d("MyMapsActivity", "shouldWeAsk" );
-        Log.d("MyMapsActivity", "permission : " + permission );
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        boolean needToAsk = sharedPreferences.getBoolean(permission, true);
-        Log.d("MyMapsActivity", "shouldWeAsk : " + needToAsk );
-        responseAnsweredForRuntimePermission = !needToAsk;
-        return needToAsk;
 
-    }
 
 
 
@@ -420,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements
         refreshMarkers();
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Pressed Refresh location fab")
-                .putContentType("Action"));
+                .putContentType(FABRIC_ANSWERS_ACTION));
 
     }
 
@@ -579,7 +559,7 @@ public class MainActivity extends AppCompatActivity implements
                     newLocationFromLatLng(latLng);
                     Answers.getInstance().logContentView(new ContentViewEvent()
                             .putContentName("Pressed My Location")
-                            .putContentType("Action"));
+                            .putContentType(FABRIC_ANSWERS_ACTION));
                 }
 
             }else{
@@ -594,11 +574,10 @@ public class MainActivity extends AppCompatActivity implements
             mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
         }else if(item.getItemId()== R.id.map_item){
-            String prefBusMap = prefs.getString("KEY99", "Brooklyn");
 
-            Answers.getInstance().logContentView(new ContentViewEvent()
+             Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentName("Launch Map Activity")
-                    .putContentType("Action")
+                    .putContentType(FABRIC_ANSWERS_ACTION)
             );
 
             Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
@@ -623,479 +602,254 @@ public class MainActivity extends AppCompatActivity implements
 
                         Answers.getInstance().logContentView(new ContentViewEvent()
                                 .putContentName("Nav view open")
-                                .putContentType("Action")
+                                .putContentType(FABRIC_ANSWERS_ACTION)
                         );
 
                         mContext = getApplicationContext();
+                        savedRadius =  preferenceManager.getRadius();
+                        prefBusMap = preferenceManager.getBusMapSelection();
 
+                        Intent intent = new Intent(mContext , AboutAppActivity.class);
 
 
+                        switch (menuItem.getTitle().toString()) {
+                            case "Set Radius":
 
-                        String savedRadius = prefs.getString(getString(R.string.radius_key), "NA");
+                                setRadiusNavViewSelection();
 
+                                break;
 
-                        Log.d("MyMainActivity", "prefs msavedRadius:" + savedRadius);
+                            case "Auto Refresh Time":
 
+                                setRefreshTimerNavViewSelection();
 
-                        //Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+                                break;
 
-                        if (menuItem.getTitle().equals(getString(R.string.radius_preference))) {
-                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
+                            case "Delete favorite Bus stops":
 
+                                deleteSavedFavoriteBusesNavViewSelection();
 
+                                break;
 
-                            final String findWhatToPreSelect = prefs.getString(getString(R.string.radius_key), "2");
+                            case "About BusBus":
 
-                            int preSelectedIndex = -1;
-                            switch (Integer.parseInt(findWhatToPreSelect)) {
-                                case 200:  preSelectedIndex = 0;
-                                    break;
-                                case 250:  preSelectedIndex = 1;
-                                    break;
-                                case 300:  preSelectedIndex = 2;
-                                    break;
-                                default:
-                                    preSelectedIndex = 2;
-                                    break;
+                                startActivity(intent);
+                                mDrawerLayout.closeDrawers();
 
+                                break;
+                            case "Select default Bus Map":
 
-                            }
+                                selectDeafultBusMapNavViewSelection();
 
-                            Log.d("AlertDialog", "findWhatToPreSelect : " + findWhatToPreSelect);
+                                break;
+                            case "Follow me on twitter":
 
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
-                            CharSequence items[] = new CharSequence[]{"200 Feet", "250 Feet", "300 Feet"};
-                            builder.setTitle("Set the radius for PokeBus");
-                            builder.setNegativeButton("DISMISS", null);
-                            builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Log.d("AlertDialog", "Positive");
-                                    dialog.dismiss();
-
-                                    Log.d("AlertDialog", "findWhatToPreSelect : " + findWhatToPreSelect);
-
-
-                                    if (which == 0) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
-
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
-
-
-
-                                        prefs.edit().putString(getString(R.string.radius_key), "200").apply();
-                                        progressBar.setVisibility(view.VISIBLE);
-                                        refreshMarkers();
-
-
-
-                                        String savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Set radius")
-                                                .putContentType("Action")
-                                                .putCustomAttribute("radius", "200")
-
-                                        );
-                                        Log.d("MyMainActivity", "prefs refreshRate:" + findWhatToPreSelect);
-
-                                        Log.d("MyMainActivity", "prefs msavedRadius:" + savedRadius);
-
-
-                                        Log.d("MyMainActivity", "radius set to 200:");
-
-                                    } else if (which == 1) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
-
-                                        prefs.edit().putString(getString(R.string.radius_key), "250").apply();
-                                        progressBar.setVisibility(view.VISIBLE);                                       refreshMarkers();
-
-                                        String refreshRate = prefs.getString("KEY2", "DICK");
-
-                                        String savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Set radius")
-                                                .putContentType("Action")
-                                                .putCustomAttribute("radius", "250")
-
-                                        );
-
-                                        Log.d("MyMainActivity", "prefs refreshRate:" + refreshRate);
-
-                                        Log.d("MyMainActivity", "prefs msavedRadius:" + savedRadius);
-
-                                        Log.d("MyMainActivity", "radius set to 250:");
-
-                                    } else if (which == 2) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-
-                                        prefs.edit().putString(getString(R.string.radius_key), "300").apply();
-                                        progressBar.setVisibility(view.VISIBLE);
-                                        refreshMarkers();
-
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Set radius")
-                                                .putContentType("Action")
-                                                .putCustomAttribute("radius", "300")
-
-                                        );
-                                        String refreshRate = prefs.getString("KEY2", "DICK");
-
-                                        String savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
-
-                                        Log.d("MyMainActivity", "prefs refreshRate:" + refreshRate);
-
-                                        Log.d("MyMainActivity", "prefs msavedRadius:" + savedRadius);
-                                        Log.d("MyMainActivity", "radius set to 300:");
-
-                                    }
-
-
-                                }
-                            });
-                            builder.show();
-
-
-
-
-
-                        } else if (menuItem.getTitle().equals(getString(R.string.auto_refresh_time))) {
-                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
-
-                            //prefs.edit().putString("KEY99", "FUCKKK").apply();
-
-                            Answers.getInstance().logContentView(new ContentViewEvent()
-                                    .putContentName("Refresh Timer Dialog")
-                                    .putContentType("Action")
-                            );
-
-
-                            final String findWhatToPreSelect = prefs.getString(getString(R.string.refresh_time_key), "0");
-
-                            int preSelectedIndex = 0;
-                            try {
-                                switch (Integer.parseInt(findWhatToPreSelect)) {
-                                    case 20:
-                                        preSelectedIndex = 0;
-                                        break;
-                                    case 30:
-                                        preSelectedIndex = 1;
-                                        break;
-                                    case 60:
-                                        preSelectedIndex = 2;
-                                        break;
-                                    default:
-                                        preSelectedIndex = 3;
-                                        break;
-
-
-                                }
-                            }catch (Exception e){
-                                preSelectedIndex = 3;
-                            }
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
-                            CharSequence items[] = new CharSequence[]{"20 Secconds", "30 Secconds", "60 Secconds", "OFF"};
-                            builder.setTitle(getString(R.string.set_bus_update_frequency));
-                            builder.setNegativeButton("DISMISS", null);
-                            builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Log.d("AlertDialog", "Positive");
-                                    dialog.dismiss();
-
-                                    if (which == 0) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
-
-                                        prefs.edit().putString("KEY2", "20").apply();
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Refresh Timer time")
-                                                .putContentType("Selection")
-                                                .putCustomAttribute("time", "20")
-                                        );
-
-                                        refreshMarkers();
-
-                                        Log.d("MyMainActivity", "refreshrate set to 20:");
-
-                                    } else if (which == 1) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
-
-                                        prefs.edit().putString("KEY2", "30").apply();
-
-                                        refreshMarkers();
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Refresh Timer time")
-                                                .putContentType("Selection")
-                                                .putCustomAttribute("time", "30")
-                                        );
-
-                                        Log.d("MyMainActivity", "refreshrate set to 30:");
-
-                                    } else if (which == 2) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-
-                                        prefs.edit().putString("KEY2", "60").apply();
-
-                                        refreshMarkers();
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Refresh Timer time")
-                                                .putContentType("Selection")
-                                                .putCustomAttribute("time", "60")
-                                        );
-
-                                        Log.d("MyMainActivity", "refreshrate set to 60:");
-
-                                    } else if (which == 3) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-
-                                        prefs.edit().putString("KEY2", "0").apply();
-                                        MainActivity mainActivity = new MainActivity();
-                                        mainActivity.stopTimerTask();
-
-
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Refresh Timer time")
-                                                .putContentType("Selection")
-                                                .putCustomAttribute("time", "0")
-                                        );
-
-
-                                    }
-
-
-                                }
-                            });
-                            builder.show();
-
-
-
-                        } else if (menuItem.getTitle().equals(getString(R.string.remove_saved_bus_stops))) {
-                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
-
-                            //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
-
-
-                            removeSavedFavBusFromStorage();
-
-                            //removes change of color from icon color
-                            removeFavBusMarkerColor();
-
-
-                            Toast.makeText(mContext, getString(R.string.removed_fav_bus),
-                                    Toast.LENGTH_LONG).show();;
-
-                            Answers.getInstance().logContentView(new ContentViewEvent()
-                                    .putContentName("Deleted favorite Buses")
-                                    .putContentType("Action")
-
-                            );
-
-
-                        }  else if (menuItem.getTitle().equals(getString(R.string.about))) {
-                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
-
-                            //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
-
-                            Intent intent = new Intent(mContext , AboutAppActivity.class);
-                            startActivity(intent);
-
-                            mDrawerLayout.closeDrawers();
-
-
-                        }else if (menuItem.getTitle().equals(getString(R.string.map_preference))) {
-                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
-                            //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog));
-
-                            final String findWhatToPreSelect = prefs.getString(getString(R.string.bus_maps_key), "0");
-
-                            int preSelectedIndex = 0;
-
-                            switch ( findWhatToPreSelect) {
-                                case "Brooklyn":
-                                    preSelectedIndex = 0;
-                                    break;
-                                case "Manhattan":
-                                    preSelectedIndex = 1;
-                                    break;
-                                case "Queens":
-                                    preSelectedIndex = 2;
-                                    break;
-                                case "Bronx":
-                                    preSelectedIndex = 3;
-                                    break;
-                                case "Staten Island":
-                                    preSelectedIndex = 4;
-                                    break;
-                                default:
-                                    preSelectedIndex = 0;
-                                    break;
-
-                            }
-
-
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
-                            CharSequence items[] = new CharSequence[]{"Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"};
-                            builder.setTitle(getString(R.string.select_bus_map_tittle));
-                            builder.setNegativeButton("DISMISS", null);
-                            builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Log.d("AlertDialog", "Positive");
-                                    dialog.dismiss();
-
-                                    if (which == 0) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
-
-                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Brooklyn").apply();
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Select Map")
-                                                .putContentType("Selection")
-                                                .putCustomAttribute(MAP_SELECTION, "Brooklyn")
-                                        );
-
-
-
-                                        Log.d("MyMainActivity", "refreshrate set to 20:");
-
-                                    } else if (which == 1) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
-
-                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Manhattan").apply();
-
-
-                                        Log.d("MyMainActivity", "refreshrate set to 30:");
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Select Map")
-                                                .putContentType("Selection")
-                                                .putCustomAttribute(MAP_SELECTION, "Manhattan")
-                                        );
-
-                                    } else if (which == 2) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-
-                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Queens").apply();
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Select Map")
-                                                .putContentType("Selection")
-                                                .putCustomAttribute(MAP_SELECTION, "Queens")
-                                        );
-
-                                        Log.d("MyMainActivity", "refreshrate set to 60:");
-
-                                    } else if (which == 3) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-
-                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Bronx").apply();
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Select Map")
-                                                .putContentType("Selection")
-                                                .putCustomAttribute(MAP_SELECTION, "Bronx")
-                                        );
-                                    }else if (which == 4) {
-                                        Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-
-                                        prefs.edit().putString(getString(R.string.bus_maps_key), "Staten Island").apply();
-
-
-                                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Select Map")
-                                                .putContentType("Selection")
-                                                .putCustomAttribute(MAP_SELECTION, "Staten Island")
-                                        );
-                                    }
-
-
-                                }
-                            });
-                            builder.show();
-
-
-
-                        }else if (menuItem.getTitle().equals(getString(R.string.follow_me_on_twitter))) {
-                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
-                            //toaster("My ZIpcode is :" + parseUser.get("zip_code").toString());
-
-
-                            Answers.getInstance().logContentView(new ContentViewEvent()
-                                    .putContentName("Follow me on twitter")
-                                    .putContentType("Action")
-
-                            );
-                            openTwitterIntent();
-
-                            closeDrawer();
-
-
-
-                        }else if (menuItem.getTitle().equals(getString(R.string.license))) {
-                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
-                            //toaster("My ZIpcode is :" + parseUser.get("zip_code").toString());
-
-                            Intent intent = new Intent(mContext , LicenseActivity.class);
-                            startActivity(intent);
-                            closeDrawer();
-
-
-                        }else if (menuItem.getTitle().equals(getString(R.string.enable_location))) {
-                            Log.d("MyMainActivity", "menuItem.getTitle():" + menuItem.getTitle());
-
-                            if(!hasLocationPermission){
-                                Log.d("MyMainActivity", "!hasLocationPermission || SDK_LEVEL < 23" + menuItem.getTitle());
-                                showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
                                 Answers.getInstance().logContentView(new ContentViewEvent()
-                                        .putContentName("Enable Location")
-                                        .putContentType("Action")
-                                        .putCustomAttribute("Fine permission enabled", "False")
+                                        .putContentName("Follow me on twitter")
+                                        .putContentType(FABRIC_ANSWERS_ACTION)
+
                                 );
-                            }else{
+                                openTwitterIntent();
+                                closeDrawer();
+                                
+                                break;
+                            case "License":
 
-                                boolean isLocationEnabled = isLocationEnabled(mContext);
-                                if(!isLocationEnabled){
-                                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
+                                intent = new Intent(mContext , LicenseActivity.class);
+                                startActivity(intent);
+                                closeDrawer();
 
-                                    startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), ENABLE_GPS);
 
-                                    onMapPresedLatLng = null;
+                                break;
+                            case "Enable Location":
 
-                                    Answers.getInstance().logContentView(new ContentViewEvent()
-                                            .putContentName("Enable Location")
-                                            .putContentType("Action")
-                                            .putCustomAttribute("Fine permission enabled", "true")
-                                            .putCustomAttribute("Enable GPS intent fired", "true")
-                                    );
+                                enableLocationNavViewSelection();
 
-                                }else{
-                                    Toast.makeText(mContext, getString(R.string.you_allready_have_permission),
-                                            Toast.LENGTH_LONG).show();;
+                                break;
 
-                                    Answers.getInstance().logContentView(new ContentViewEvent()
-                                            .putContentName("Enable Location")
-                                            .putContentType("Action")
-                                            .putCustomAttribute("Location allready enabled", "true")
-                                    );
-                                }
 
-                            }
 
 
                         }
 
-                        savedRadius = prefs.getString(getString(R.string.radius_key), "FUCK");
-
-                        Log.d("MyMainActivity", "final prefs msavedRadius:" + savedRadius);
 
                         return true;
                     }
                 });
+    }
+
+    private void enableLocationNavViewSelection(){
+
+        if(!hasLocationPermission){
+            Log.d("MyMainActivity", "!hasLocationPermission || SDK_LEVEL < 23" );
+            showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("Enable Location")
+                    .putContentType(FABRIC_ANSWERS_ACTION)
+                    .putCustomAttribute("Fine permission enabled", "False")
+            );
+        }else{
+
+            boolean isLocationEnabled = isLocationEnabled(mContext);
+            if(!isLocationEnabled){
+                Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
+
+                startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), ENABLE_GPS);
+
+                onMapPresedLatLng = null;
+
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("Enable Location")
+                        .putContentType(FABRIC_ANSWERS_ACTION)
+                        .putCustomAttribute("Fine permission enabled", "true")
+                        .putCustomAttribute("Enable GPS intent fired", "true")
+                );
+
+            }else{
+                Toast.makeText(mContext, getString(R.string.you_allready_have_permission),
+                        Toast.LENGTH_LONG).show();;
+
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("Enable Location")
+                        .putContentType(FABRIC_ANSWERS_ACTION)
+                        .putCustomAttribute("Location allready enabled", "true")
+                );
+            }
+
+        }
+
+    }
+
+
+
+    private void selectDeafultBusMapNavViewSelection(){
+
+
+        final String findWhatToPreSelect = preferenceManager.getBusMapSelection();
+
+        int preSelectedIndex = 0;
+
+        switch ( findWhatToPreSelect) {
+            case "Brooklyn":
+                preSelectedIndex = 0;
+                break;
+            case "Manhattan":
+                preSelectedIndex = 1;
+                break;
+            case "Queens":
+                preSelectedIndex = 2;
+                break;
+            case "Bronx":
+                preSelectedIndex = 3;
+                break;
+            case "Staten Island":
+                preSelectedIndex = 4;
+                break;
+            default:
+                preSelectedIndex = 0;
+                break;
+
+        }
+
+        CharSequence items[] = new CharSequence[]{"Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"};
+
+        alertDialogWithList(getString(R.string.select_bus_map_tittle), preSelectedIndex, items );
+
+
+
+
+
+    }
+
+
+
+    private void deleteSavedFavoriteBusesNavViewSelection(){
+
+
+        removeSavedFavBusFromStorage();
+
+        //removes change of color from icon color
+        removeFavBusMarkerColor();
+
+
+        Toast.makeText(mContext, getString(R.string.removed_fav_bus),
+                Toast.LENGTH_LONG).show();;
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("Deleted favorite Buses")
+                .putContentType(FABRIC_ANSWERS_ACTION)
+
+        );
+
+    }
+
+    private void setRefreshTimerNavViewSelection(){
+
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("Refresh Timer Dialog")
+                .putContentType(FABRIC_ANSWERS_ACTION)
+        );
+
+
+        final String findWhatToPreSelect = refreshTimerTaskTime;
+
+        int preSelectedIndex = 0;
+        try {
+            switch (Integer.parseInt(findWhatToPreSelect)) {
+                case 20:
+                    preSelectedIndex = 0;
+                    break;
+                case 30:
+                    preSelectedIndex = 1;
+                    break;
+                case 60:
+                    preSelectedIndex = 2;
+                    break;
+                default:
+                    preSelectedIndex = 3;
+                    break;
+
+            }
+        }catch (Exception e){
+            preSelectedIndex = 3;
+        }
+
+        CharSequence items[] = new CharSequence[]{"20 Secconds", "30 Secconds", "60 Secconds", "OFF"};
+        alertDialogWithList(getString(R.string.auto_refresh_time), preSelectedIndex, items);
+
+
+    }
+
+    private void setRadiusNavViewSelection(){
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("Refresh Timer Dialog")
+                .putContentType(FABRIC_ANSWERS_ACTION)
+        );
+
+
+        final String findWhatToPreSelect = savedRadius;
+
+        int preSelectedIndex = -1;
+        switch (Integer.parseInt(findWhatToPreSelect)) {
+            case 200:  preSelectedIndex = 0;
+                break;
+            case 250:  preSelectedIndex = 1;
+                break;
+            case 300:  preSelectedIndex = 2;
+                break;
+            default:
+                preSelectedIndex = 2;
+                break;
+
+
+        }
+
+        CharSequence items[] = new CharSequence[]{"200 Feet", "250 Feet", "300 Feet"};
+        alertDialogWithList(getString(R.string.dialog_set_radius), preSelectedIndex, items);
+
+
     }
 
     private void openTwitterIntent() {
@@ -1133,6 +887,213 @@ public class MainActivity extends AppCompatActivity implements
         addMarkers.removePokeBusColor(busCodeOfFavBusStops);
     }
 
+
+    private void alertDialogWithList(final String tittle, int preSelectedIndex, CharSequence[] items){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(tittle);
+        builder.setNegativeButton(R.string.dimiss, null);
+        builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, final int which) {
+                Log.d("AlertDialog", "Positive");
+                dialog.dismiss();
+
+
+                alertDialogLogic(tittle, which);
+
+            }
+        });
+        builder.show();
+
+
+    }
+
+
+
+    private void alertDialogLogic(String alertDialogTittle, int which){
+
+
+        switch (alertDialogTittle.toLowerCase()) {
+            case "Select your borough":
+                if (which == 0) {
+
+
+                    preferenceManager.saveBusMapSelection("Brooklyn");
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Brooklyn")
+                    );
+
+                    Log.d("MyMainActivity", "refreshrate set to 20:");
+
+                } else if (which == 1) {
+
+                    preferenceManager.saveBusMapSelection("Manhattan");
+                    Log.d("MyMainActivity", "refreshrate set to 30:");
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Manhattan")
+                    );
+
+                } else if (which == 2) {
+                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
+                    preferenceManager.saveBusMapSelection("Queens");
+
+                    preferenceManager.saveBusMapSelection("Queens");
+
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Queens")
+                    );
+
+                    Log.d("MyMainActivity", "refreshrate set to 60:");
+
+                } else if (which == 3) {
+                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
+                    preferenceManager.saveBusMapSelection("Bronx");
+
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Bronx")
+                    );
+                }else if (which == 4) {
+                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
+                    preferenceManager.saveBusMapSelection("Staten Island");
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Select Map")
+                            .putContentType("Selection")
+                            .putCustomAttribute(MAP_SELECTION, "Staten Island")
+                    );
+                }
+                 break;
+            case "Set your radius":
+
+
+                if (which == 0) {
+                    Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
+
+                    preferenceManager.saveRadius("200");
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Set radius")
+                            .putContentType(FABRIC_ANSWERS_ACTION)
+                            .putCustomAttribute("radius", "200")
+
+                    );
+
+
+
+                    Log.d("MyMainActivity", "radius set to 200:");
+
+                } else if (which == 1) {
+                    Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
+
+                    preferenceManager.saveRadius("250");
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Set radius")
+                            .putContentType(FABRIC_ANSWERS_ACTION)
+                            .putCustomAttribute("radius", "250")
+
+                    );
+
+
+
+                    Log.d("MyMainActivity", "radius set to 250:");
+
+                } else if (which == 2) {
+                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
+
+
+                    preferenceManager.saveRadius("300");
+
+
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Set radius")
+                            .putContentType(FABRIC_ANSWERS_ACTION)
+                            .putCustomAttribute("radius", "300")
+
+                    );
+
+
+                }
+
+                progressBar.setVisibility(view.VISIBLE);
+                refreshMarkers();
+
+                break;
+            case "Auto Refresh Time":
+
+                if (which == 0) {
+                    Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
+
+                    refreshMarkers();
+                    preferenceManager.saveRefreshTime("20");
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Refresh Timer time")
+                            .putContentType("Selection")
+                            .putCustomAttribute("time", "20")
+                    );
+
+
+                    Log.d("MyMainActivity", "refreshrate set to 20:");
+
+                } else if (which == 1) {
+                    Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
+
+                    refreshMarkers();
+                    preferenceManager.saveRefreshTime("30");
+
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Refresh Timer time")
+                            .putContentType("Selection")
+                            .putCustomAttribute("time", "30")
+                    );
+
+                    Log.d("MyMainActivity", "refreshrate set to 30:");
+
+                } else if (which == 2) {
+
+                    refreshMarkers();
+                    preferenceManager.saveRefreshTime("60");
+
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Refresh Timer time")
+                            .putContentType("Selection")
+                            .putCustomAttribute("time", "60")
+                    );
+
+                    Log.d("MyMainActivity", "refreshrate set to 60:");
+
+                } else if (which == 3) {
+
+                    preferenceManager.saveRefreshTime("0");
+                    MainActivity mainActivity = new MainActivity();
+                    mainActivity.stopTimerTask();
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Refresh Timer time")
+                            .putContentType("Selection")
+                            .putCustomAttribute("time", "0")
+                    );
+
+
+                }
+
+                break;
+        }
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -1424,50 +1385,50 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    private void showInstructionalSnackBar(){
-        Log.i("MyMapsActivity", "showInstructionalSnackBar()");
-
-
-        Log.i("MyMapsActivity", "showInstructionalSnackBar() : " + randomNum);
-
-        boolean hasInstructionalSnackBarBeenAccepted
-                = prefs.getBoolean(snackBarInstructions[randomNum], false);
-
-        if(!hasInstructionalSnackBarBeenAccepted) {
-            Log.i("MyMapsActivity", "showInstructionalSnackBar hasInstructionalSnackBarBeenAccepted : "
-                    + hasInstructionalSnackBarBeenAccepted);
-
-            Log.i("MyMapsActivity", "showInstructionalSnackBar hasInstructionalSnackBarBeenShownOnThisLaunch : "
-                    + hasInstructionalSnackBarBeenShownOnThisLaunch);
-
-            if (!hasInstructionalSnackBarBeenShownOnThisLaunch) {
-                hasInstructionalSnackBarBeenShownOnThisLaunch = true;
-
-                Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenShownOnThisLaunch()");
-                Snackbar snackbar = Snackbar
-                        .make(view, snackBarInstructions[randomNum], Snackbar.LENGTH_LONG)
-                        .setAction("GOT IT", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenShownOnThisLaunch() onclick");
-                                SharedPreferences.Editor editor = prefs.edit();
-
-                                editor.putBoolean(snackBarInstructions[randomNum], true);
-                                editor.commit();
-
-                            }
-                        });
-
-                snackbar.show();
-
-
-            }
-
-        }
-
-
-    }
+//    private void showInstructionalSnackBar(){
+//        Log.i("MyMapsActivity", "showInstructionalSnackBar()");
+//
+//
+//        Log.i("MyMapsActivity", "showInstructionalSnackBar() : " + randomNum);
+//
+//        boolean hasInstructionalSnackBarBeenAccepted
+//                = prefs.getBoolean(snackBarInstructions[randomNum], false);
+//
+//        if(!hasInstructionalSnackBarBeenAccepted) {
+//            Log.i("MyMapsActivity", "showInstructionalSnackBar hasInstructionalSnackBarBeenAccepted : "
+//                    + hasInstructionalSnackBarBeenAccepted);
+//
+//            Log.i("MyMapsActivity", "showInstructionalSnackBar hasInstructionalSnackBarBeenShownOnThisLaunch : "
+//                    + hasInstructionalSnackBarBeenShownOnThisLaunch);
+//
+//            if (!hasInstructionalSnackBarBeenShownOnThisLaunch) {
+//                hasInstructionalSnackBarBeenShownOnThisLaunch = true;
+//
+//                Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenShownOnThisLaunch()");
+//                Snackbar snackbar = Snackbar
+//                        .make(view, snackBarInstructions[randomNum], Snackbar.LENGTH_LONG)
+//                        .setAction("GOT IT", new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//
+//                                Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenShownOnThisLaunch() onclick");
+//                                SharedPreferences.Editor editor = prefs.edit();
+//
+//                                editor.putBoolean(snackBarInstructions[randomNum], true);
+//                                editor.commit();
+//
+//                            }
+//                        });
+//
+//                snackbar.show();
+//
+//
+//            }
+//
+//        }
+//
+//
+//    }
 
 
 
@@ -1519,26 +1480,22 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    private void deletePrefs(){
-
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.commit();
-
-    }
 
     public void startTimerTask() {
         Log.i("MyMapsActivity", "startTimerTask()");
-        String timeInMSString= prefs.getString(mContext.getString(R.string.refresh_time_key), "20000");
 
-        if(timeInMSString.equals("OFF")){
-            timeInMSString = "0";
+
+
+
+
+        if(refreshTimerTaskTime.equals("OFF")){
+            refreshTimerTaskTime = "0";
         }else{
 
 
-            Log.i("MyMapsActivity", "timeInMSString()" + timeInMSString);
+            Log.i("MyMapsActivity", "refreshTimerTaskTime()" + refreshTimerTaskTime);
 
-            int timeInMS = Integer.parseInt(timeInMSString) * 1000;
+            int timeInMS = Integer.parseInt(refreshTimerTaskTime) * 1000;
             Log.i("MyMapsActivity", "timeInMS()" + timeInMS);
             if(timeInMS != 0) {
                 //set a new Timer
@@ -1689,7 +1646,6 @@ public class MainActivity extends AppCompatActivity implements
     private void selectCorrectLatLng(){
         Log.i("MyMapsActivity ", "selectCorrectLatLng " );
 
-        String radius = prefs.getString("KEY1", "301");
 
         if(callAndParse == null){
             callAndParse = new CallAndParse(MainActivity.this);
@@ -1698,9 +1654,9 @@ public class MainActivity extends AppCompatActivity implements
 
         if(onMapPresedLatLng != null){
 
-            callAndParse.getBusStopsAndBusDistances(onMapPresedLatLng, busCodeOfFavBusStops, radius);
+            callAndParse.getBusStopsAndBusDistances(onMapPresedLatLng, busCodeOfFavBusStops, savedRadius);
         }else{
-            callAndParse.getBusStopsAndBusDistances(latLng, busCodeOfFavBusStops, radius);
+            callAndParse.getBusStopsAndBusDistances(latLng, busCodeOfFavBusStops, savedRadius);
         }
     }
 
@@ -1726,7 +1682,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Set Favorite bus stop dialog")
-                .putContentType("Action")
+                .putContentType(FABRIC_ANSWERS_ACTION)
              );
 
 
@@ -1887,7 +1843,7 @@ public class MainActivity extends AppCompatActivity implements
     public void removeLoadingIcon() {
         Log.d("MyMapsActivity", "removeLoadingIcon");
 
-        showInstructionalSnackBar();
+        //showInstructionalSnackBar();
 
         if(progressBar.getVisibility() == View.VISIBLE){
             progressBar.setVisibility(view.INVISIBLE);

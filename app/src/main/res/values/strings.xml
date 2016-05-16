@@ -60,7 +60,7 @@
          BUS MAPS
          -->
 
-    <string name="select_bus_map_tittle"> Select your borough</string>
+    <string name="select_bus_map_tittle">Select your borough</string>
     <string name="map_preference">Select default Bus Map</string>
     <string name="bus_maps_key">KEY99</string>
     <string name="bus_maps">Bus Map</string>
@@ -97,7 +97,7 @@
     <string name="other">Other</string>
     <string name="follow_me_on_twitter">Follow me on twitter</string>
     <string name="bus_map">Select your preferred Bus Map</string>
-    <string name="about">About</string>
+    <string name="about">About BusBus</string>
     <string name="license">License</string>
 
     <!--
@@ -169,4 +169,6 @@
     <string name="dismiss">CANCEL</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="request_location_dialog_titlle">Request</string>
+    <string name="dimiss">DISMISS</string>
+    <string name="dialog_set_radius">Set your radius</string>
 </resources>
