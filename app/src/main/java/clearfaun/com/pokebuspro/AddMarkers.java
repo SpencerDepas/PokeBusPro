@@ -413,7 +413,7 @@ public class AddMarkers {
         MarkerManager markerManager = MarkerManager.getInstance();
         Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
- 
+
 
         if(arrayList.size() > 0){
             for (int i = 0; i < arrayList.size(); i++) {
