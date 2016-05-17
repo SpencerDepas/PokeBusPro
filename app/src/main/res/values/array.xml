@@ -21,6 +21,28 @@
         <item>"300"</item>
     </string-array>
 
+    <string-array name="timer_entries_values">
+        <item>"20"</item>
+        <item>"30"</item>
+        <item>"60"</item>
+        <item>"0"</item>
+    </string-array>
+
+    <string-array name="timer_entries">
+        <item>"20 Seconds"</item>
+        <item>"30 Seconds"</item>
+        <item>"60 Seconds"</item>
+        <item>"OFF"</item>
+    </string-array>
+
+    <string-array name="boroughs">
+        <item>"Brooklyn"</item>
+        <item>"Manhattan"</item>
+        <item>"Queens"</item>
+        <item>"Bronx"</item>
+        <item>"Staten Island"</item>
+    </string-array>
+
 
 
     <string-array name="auto_refresh_entries">

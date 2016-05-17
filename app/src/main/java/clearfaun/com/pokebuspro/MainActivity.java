@@ -118,11 +118,23 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
+    @BindArray(R.array.boroughs)
+    protected String [] boroughs;
+
     @BindArray(R.array.radius_entries)
     protected String [] radiusEntries;
 
     @BindArray(R.array.radius_entries_values)
     protected String [] radiusEntriesValues;
+
+    @BindArray(R.array.timer_entries)
+    protected String [] timerTaskEntries;
+
+    @BindArray(R.array.timer_entries_values)
+    protected String [] timerTaskEntriesValues;
+
+
+
 
     @BindView(R.id.main_coordinatorLayout) CoordinatorLayout view;
     @BindView(R.id.progress_bar_activity_main) ProgressBar progressBar;
@@ -197,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         refreshTimerTaskTime = preferenceManager.getRefreshTime();
+        savedRadius =  preferenceManager.getRadius();
 
 
     }
@@ -618,7 +631,6 @@ public class MainActivity extends AppCompatActivity implements
                         );
 
                         mContext = getApplicationContext();
-                        savedRadius =  preferenceManager.getRadius();
                         prefBusMap = preferenceManager.getBusMapSelection();
 
                         Intent intent = new Intent(mContext , AboutAppActivity.class);
@@ -763,9 +775,8 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
-        CharSequence items[] = new CharSequence[]{"Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"};
 
-        alertDialogWithList(getString(R.string.select_bus_map_tittle), preSelectedIndex, items );
+        alertDialogWithList(getString(R.string.select_bus_map_tittle), preSelectedIndex, boroughs );
 
 
 
@@ -830,8 +841,8 @@ public class MainActivity extends AppCompatActivity implements
             preSelectedIndex = 3;
         }
 
-        CharSequence items[] = new CharSequence[]{"20 Secconds", "30 Secconds", "60 Secconds", "OFF"};
-        alertDialogWithList(getString(R.string.auto_refresh_time), preSelectedIndex, items);
+
+         alertDialogWithList(getString(R.string.auto_refresh_time), preSelectedIndex, timerTaskEntries);
 
 
     }
@@ -867,13 +878,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void openTwitterIntent() {
-        Log.d("MyDetailNational", "openTwitterIntent ");
         String mTwitterName = "spencerdepas";
-        Log.d("MyDetailNational", "mTwitterName " + mTwitterName);
         Intent intent = null;
         try {
-            Log.d("MyDetailNational", "try ");
-            // get the Twitter app if possible
+             // get the Twitter app if possible
 
 
 
@@ -884,8 +892,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         } catch (Exception e) {
-            Log.d("MyDetailNational", "catch ");
-            Log.d("MyDetailNational", "e :  " + e.toString());
+             Log.d("MyMapsActivity", "e :  " + e.toString());
             // no Twitter app, revert to browser
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" +
                     mTwitterName));
@@ -899,7 +906,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    private void alertDialogWithList(final String tittle, int preSelectedIndex, final CharSequence[] items){
+    private void alertDialogWithList(final String tittle, int preSelectedIndex, final String[] items){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(tittle);
@@ -909,8 +916,7 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d("AlertDialog", "Positive");
                 dialog.dismiss();
 
-                preferenceManager.saveRadius(radiusEntriesValues[which]);
-                savedRadius = radiusEntriesValues[which];
+
                 alertDialogLogic(tittle, which);
 
             }
@@ -924,172 +930,62 @@ public class MainActivity extends AppCompatActivity implements
 
     private void alertDialogLogic(String alertDialogTittle, int which){
 
+        Log.d("MyMapsActivity", "alertDialogTittle.toLowerCase() : " + alertDialogTittle.toLowerCase());
+
+        Log.d("MyMapsActivity", " which : " + which);
+
+
 
         switch (alertDialogTittle.toLowerCase()) {
-            case "Select your borough":
-                if (which == 0) {
+            case "select your borough":
+
+                Log.d("MyMapsActivity", "alertDialogLogic Select your borough boroughs[which] : " + boroughs[which]);
 
 
-                    preferenceManager.saveBusMapSelection("Brooklyn");
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Brooklyn")
-                    );
-
-                    Log.d("MyMainActivity", "refreshrate set to 20:");
-
-                } else if (which == 1) {
-
-                    preferenceManager.saveBusMapSelection("Manhattan");
-                    Log.d("MyMainActivity", "refreshrate set to 30:");
-
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Manhattan")
-                    );
-
-                } else if (which == 2) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-                    preferenceManager.saveBusMapSelection("Queens");
-
-                    preferenceManager.saveBusMapSelection("Queens");
+                preferenceManager.saveBusMapSelection(boroughs[which]);
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("Select Map")
+                        .putContentType("Selection")
+                        .putCustomAttribute(MAP_SELECTION, boroughs[which])
+                );
 
 
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Queens")
-                    );
-
-                    Log.d("MyMainActivity", "refreshrate set to 60:");
-
-                } else if (which == 3) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-                    preferenceManager.saveBusMapSelection("Bronx");
-
-
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Bronx")
-                    );
-                }else if (which == 4) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-                    preferenceManager.saveBusMapSelection("Staten Island");
-
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Staten Island")
-                    );
-                }
                  break;
-            case "Set your radius":
+            case "set your radius":
 
+                Log.d("MyMapsActivity", "alertDialogLogic Select your radius radius[which] : " + radiusEntriesValues[which]);
 
-                if (which == 0) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
+                MarkerManager markerManager = MarkerManager.getInstance();
 
-                    preferenceManager.saveRadius("200");
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Set radius")
-                            .putContentType(FABRIC_ANSWERS_ACTION)
-                            .putCustomAttribute("radius", "200")
+                Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
-                    );
+                markerHashTable.clear();
+                googleMap.clear();
 
+                savedRadius = radiusEntriesValues[which];
+                preferenceManager.saveRadius(radiusEntriesValues[which]);
 
+                preferenceManager.saveRadius(radiusEntriesValues[which]);
+                Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("Set radius")
+                        .putContentType(FABRIC_ANSWERS_ACTION)
+                        .putCustomAttribute("radius", radiusEntriesValues[which])
 
-                    Log.d("MyMainActivity", "radius set to 200:");
+                );
 
-                } else if (which == 1) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
-
-                    preferenceManager.saveRadius("250");
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Set radius")
-                            .putContentType(FABRIC_ANSWERS_ACTION)
-                            .putCustomAttribute("radius", "250")
-
-                    );
-
-
-
-                    Log.d("MyMainActivity", "radius set to 250:");
-
-                } else if (which == 2) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
-
-
-                    preferenceManager.saveRadius("300");
-
-
-
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Set radius")
-                            .putContentType(FABRIC_ANSWERS_ACTION)
-                            .putCustomAttribute("radius", "300")
-
-                    );
-
-
-                }
 
                 progressBar.setVisibility(view.VISIBLE);
                 refreshMarkers();
 
                 break;
-            case "Auto Refresh Time":
-
-                if (which == 0) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
-
-                    refreshMarkers();
-                    preferenceManager.saveRefreshTime("20");
-
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Refresh Timer time")
-                            .putContentType("Selection")
-                            .putCustomAttribute("time", "20")
-                    );
+            case "auto refresh time":
 
 
-                    Log.d("MyMainActivity", "refreshrate set to 20:");
+                if(timerTaskEntriesValues[which] == "0"){
 
-                } else if (which == 1) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
+                    refreshTimerTaskTime = timerTaskEntriesValues[which];
+                    preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
 
-                    refreshMarkers();
-                    preferenceManager.saveRefreshTime("30");
-
-
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Refresh Timer time")
-                            .putContentType("Selection")
-                            .putCustomAttribute("time", "30")
-                    );
-
-                    Log.d("MyMainActivity", "refreshrate set to 30:");
-
-                } else if (which == 2) {
-
-                    refreshMarkers();
-                    preferenceManager.saveRefreshTime("60");
-
-
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Refresh Timer time")
-                            .putContentType("Selection")
-                            .putCustomAttribute("time", "60")
-                    );
-
-                    Log.d("MyMainActivity", "refreshrate set to 60:");
-
-                } else if (which == 3) {
-
-                    preferenceManager.saveRefreshTime("0");
                     MainActivity mainActivity = new MainActivity();
                     mainActivity.stopTimerTask();
 
@@ -1099,8 +995,21 @@ public class MainActivity extends AppCompatActivity implements
                             .putCustomAttribute("time", "0")
                     );
 
+                }else{
+
+                    refreshTimerTaskTime = timerTaskEntriesValues[which];
+                    preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
+                    refreshMarkers();
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("Refresh Timer time")
+                            .putContentType("Selection")
+                            .putCustomAttribute("time", timerTaskEntriesValues[which])
+                    );
+
 
                 }
+
 
                 break;
         }
