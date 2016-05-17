@@ -413,11 +413,18 @@ public class AddMarkers {
         MarkerManager markerManager = MarkerManager.getInstance();
         Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
+        Log.i("AddMarkerstz", "arrayList.get(0) : " + arrayList.get(0));
+
+
         if(arrayList.size() > 0){
             for (int i = 0; i < arrayList.size(); i++) {
 
+                Log.i("AddMarkerstz", "arrayList.get(i) : " + arrayList.get(i));
+
                 Marker marker = markerHashTable.get(arrayList.get(i));
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+                marker.hideInfoWindow();
+                marker.showInfoWindow();
             }
         }
 

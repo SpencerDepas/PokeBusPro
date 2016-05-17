@@ -57,6 +57,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import Preference.PreferenceManager;
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -110,10 +111,18 @@ public class MainActivity extends AppCompatActivity implements
     private Timer timer;
     private TimerTask timerTask;
     private String[] snackBarInstructions = new String[4];
-     private ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
+    private ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
     private boolean enabledGPS;
     private Bundle savedInstanceState;
     private CallAndParse callAndParse;
+
+
+
+    @BindArray(R.array.radius_entries)
+    protected String [] radiusEntries;
+
+    @BindArray(R.array.radius_entries_values)
+    protected String [] radiusEntriesValues;
 
     @BindView(R.id.main_coordinatorLayout) CoordinatorLayout view;
     @BindView(R.id.progress_bar_activity_main) ProgressBar progressBar;
@@ -137,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private PreferenceManager preferenceManager;
     private String prefBusMap = "Brooklyn";
-    private String savedRadius = "301";
+    private String savedRadius = "300";
     String refreshTimerTaskTime = "20";
 
 
@@ -199,14 +208,17 @@ public class MainActivity extends AppCompatActivity implements
 
         SDK_LEVEL = android.os.Build.VERSION.SDK_INT;
         if (SDK_LEVEL >= Build.VERSION_CODES.M){
-            // Do something for lollipop and above versions
+            // ask runtime for lollipop and above versions
             hasLocationPermission = permissionCheck();
             Log.i("MyMapsActivity", "permissionCheck hasLocationPermission : " + hasLocationPermission);
 
             if(!hasLocationPermission){
                 Log.i("MyMapsActivity", "permissionCheck !hasLocationPermission");
 
-                if(preferenceManager.getHasFineLocationPermissionBeenAsked() ){
+                boolean hasFineLocationBeenRequested =
+                        preferenceManager.getHasFineLocationPermissionBeenAsked();
+                if(!hasFineLocationBeenRequested){
+                    //if it has not been asked, ask!
                     showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
                 }else {
                     phonePermissionNotGranted();
@@ -651,7 +663,7 @@ public class MainActivity extends AppCompatActivity implements
                                 );
                                 openTwitterIntent();
                                 closeDrawer();
-                                
+
                                 break;
                             case "License":
 
@@ -766,10 +778,11 @@ public class MainActivity extends AppCompatActivity implements
     private void deleteSavedFavoriteBusesNavViewSelection(){
 
 
-        removeSavedFavBusFromStorage();
 
         //removes change of color from icon color
-        removeFavBusMarkerColor();
+        addMarkers.removePokeBusColor(busCodeOfFavBusStops);
+
+        removeSavedFavBusFromStorage();
 
 
         Toast.makeText(mContext, getString(R.string.removed_fav_bus),
@@ -780,6 +793,8 @@ public class MainActivity extends AppCompatActivity implements
                 .putContentType(FABRIC_ANSWERS_ACTION)
 
         );
+
+        closeDrawer();
 
     }
 
@@ -846,8 +861,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
-        CharSequence items[] = new CharSequence[]{"200 Feet", "250 Feet", "300 Feet"};
-        alertDialogWithList(getString(R.string.dialog_set_radius), preSelectedIndex, items);
+         alertDialogWithList(getString(R.string.dialog_set_radius), preSelectedIndex, radiusEntries);
 
 
     }
@@ -883,12 +897,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void removeFavBusMarkerColor(){
-        addMarkers.removePokeBusColor(busCodeOfFavBusStops);
-    }
 
 
-    private void alertDialogWithList(final String tittle, int preSelectedIndex, CharSequence[] items){
+    private void alertDialogWithList(final String tittle, int preSelectedIndex, final CharSequence[] items){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(tittle);
@@ -898,7 +909,8 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d("AlertDialog", "Positive");
                 dialog.dismiss();
 
-
+                preferenceManager.saveRadius(radiusEntriesValues[which]);
+                savedRadius = radiusEntriesValues[which];
                 alertDialogLogic(tittle, which);
 
             }
@@ -1110,6 +1122,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 onMapPresedLatLng = null;
                 newLocationFromLatLng(latLng);
+                closeDrawer();
             }
 
         }
