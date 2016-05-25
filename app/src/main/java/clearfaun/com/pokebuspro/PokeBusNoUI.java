@@ -1,26 +1,19 @@
 package clearfaun.com.pokebuspro;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.widget.Toast;
-import android.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.Properties;
+import task.ToastMessageTask;
 
 /**
  * Created by spencer on 3/4/2015.

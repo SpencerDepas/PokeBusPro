@@ -85,7 +85,7 @@ ADDED from AndroidManifest.xml:27:9
 		ADDED from AndroidManifest.xml:28:13
 	android:value
 		ADDED from AndroidManifest.xml:29:13
-activity#clearfaun.com.pokebuspro.MainActivity
+activity#ui.activity.MainActivity
 ADDED from AndroidManifest.xml:31:9
 	android:label
 		ADDED from AndroidManifest.xml:36:13
@@ -119,13 +119,13 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:46:17
 	android:name
 		ADDED from AndroidManifest.xml:46:27
-activity#clearfaun.com.pokebuspro.AboutAppActivity
+activity#ui.activity.AboutAppActivity
 ADDED from AndroidManifest.xml:49:9
 	android:label
 		ADDED from AndroidManifest.xml:49:19
 	android:name
 		ADDED from AndroidManifest.xml:49:52
-activity#clearfaun.com.pokebuspro.MTABusMapActivity
+activity#ui.activity.BoroughBusMapActivity
 ADDED from AndroidManifest.xml:50:9
 	android:label
 		ADDED from AndroidManifest.xml:50:19
@@ -137,13 +137,13 @@ ADDED from AndroidManifest.xml:51:9
 		ADDED from AndroidManifest.xml:51:19
 	android:name
 		ADDED from AndroidManifest.xml:51:52
-activity#clearfaun.com.pokebuspro.NoConnectionActivity
+activity#ui.activity.NoConnectionActivity
 ADDED from AndroidManifest.xml:52:9
 	android:label
 		ADDED from AndroidManifest.xml:52:19
 	android:name
 		ADDED from AndroidManifest.xml:52:52
-activity#clearfaun.com.pokebuspro.LicenseActivity
+activity#ui.activity.LicenseActivity
 ADDED from AndroidManifest.xml:53:9
 	android:label
 		ADDED from AndroidManifest.xml:53:19
