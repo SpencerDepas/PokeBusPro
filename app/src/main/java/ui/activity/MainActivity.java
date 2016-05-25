@@ -44,6 +44,9 @@ import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -69,6 +72,8 @@ import client.CallAndParse;
 import ui.activity.interfaces.DialogPopupListner;
 import ui.activity.interfaces.FirstBusStopHasBeenDisplayed;
 import ui.activity.interfaces.NoBusesInAreaInterface;
+import ui.component.ToolbarActionItemTarget;
+import ui.component.ViewTargets;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -167,8 +172,8 @@ public class MainActivity extends AppCompatActivity implements
     private PreferenceManager preferenceManager;
     private String prefBusMap = "Brooklyn";
     private String savedRadius = "300";
-    String refreshTimerTaskTime = "20";
-
+    private String refreshTimerTaskTime = "20";
+    private Toolbar toolbar;
 
 
     @Override
@@ -180,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "onCreate");
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
         final ActionBar ab = getSupportActionBar();
@@ -607,6 +612,7 @@ public class MainActivity extends AppCompatActivity implements
             mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
         }else if(item.getItemId()== R.id.map_item){
+
 
              Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentName("Launch Map Activity")
@@ -1137,6 +1143,8 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+
+
     private void animateCameraPos(){
         Log.i("MyMapsActivity", "animateCameraPos");
 
@@ -1150,66 +1158,51 @@ public class MainActivity extends AppCompatActivity implements
             if(zoom > 4){
                 Log.i("MyMapsActivity", "animateCameraPos bearing != 0");
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
-                        .zoom(zoom)                   // Sets the zoom
-                        .bearing(bearing)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-                googleMap.setOnInfoWindowCloseListener(this);
+                animateCamera(onMapPresedLatLng, zoom, bearing);
+
 
             }else{
                 Log.i("MyMapsActivity", "animateCameraPos bearing == 0");
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(onMapPresedLatLng)    // Sets the center of the map to Mountain View
-                        .zoom(16)                   // Sets the zoom
-                        .bearing(40)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-                googleMap.setOnInfoWindowCloseListener(this);
+
+                animateCamera(onMapPresedLatLng, 16, 40);
+
+
 
             }
 
 
 
-        }else {
-            Log.i("MyMapsActivity", "animateCameraPos onMapPresedLatLng == null");
-            //this is for location from GPS
+        }else if(zoom > 4){
+            Log.i("MyMapsActivity", "animateCameraPos bearing zoom > 4");
 
-            if(zoom > 4){
-                Log.i("MyMapsActivity", "animateCameraPos bearing zoom > 4");
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(zoom)                   // Sets the zoom
-                        .bearing(bearing)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-                googleMap.setOnInfoWindowCloseListener(this);
+            animateCamera(latLng, zoom, bearing);
 
-            }else{
-                Log.i("MyMapsActivity", "animateCameraPos bearing == 0");
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng)    // Sets the center of the map to Mountain View
-                        .zoom(16)                   // Sets the zoom
-                        .bearing(40)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-                googleMap.setOnInfoWindowCloseListener(this);
 
-            }
+        }else{
+            Log.i("MyMapsActivity", "animateCameraPos bearing == 0");
+
+            animateCamera(latLng, 16, 40);
+
         }
+
 
 
     }
 
+
+    private void animateCamera(LatLng target,float zoom, float bearing ){
+
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(target)    // Sets the center of the map to Mountain View
+                .zoom(zoom)                   // Sets the zoom
+                .bearing(bearing)                // Sets the orientation of the camera to east
+                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
+        googleMap.setOnInfoWindowCloseListener(this);
+    }
 
 
 
@@ -1311,14 +1304,31 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
+        showInstructionalSnackBar();
+
+
     }
 
 
 
-//    private void showInstructionalSnackBar(){
-//        Log.i("MyMapsActivity", "showInstructionalSnackBar()");
-//
-//
+    private void showInstructionalSnackBar(){
+        Log.i("MyMapsActivity", "showInstructionalSnackBar()");
+
+        //MenuItem item = new MenuItem(R.id.map_item);
+        ToolbarActionItemTarget navigationButtonViewTarget = new ToolbarActionItemTarget(toolbar, R.id.map_item);
+       
+            //ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
+            new ShowcaseView.Builder(this)
+
+
+                    .withMaterialShowcase()
+                    .setTarget(navigationButtonViewTarget)
+                    .setContentText("Here's how to highlight items on a toolbar")
+                    .build()
+                    .show();
+
+
+
 //        Log.i("MyMapsActivity", "showInstructionalSnackBar() : " + randomNum);
 //
 //        boolean hasInstructionalSnackBarBeenAccepted
@@ -1356,9 +1366,9 @@ public class MainActivity extends AppCompatActivity implements
 //            }
 //
 //        }
-//
-//
-//    }
+
+
+    }
 
 
 
@@ -1778,6 +1788,8 @@ public class MainActivity extends AppCompatActivity implements
         if(progressBar.getVisibility() == View.VISIBLE){
             progressBar.setVisibility(view.INVISIBLE);
         }
+
+
 
 
 

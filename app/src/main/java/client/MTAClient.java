@@ -33,7 +33,7 @@ public class MTAClient {
 
 
             adapter = new RestAdapter.Builder()
-                    .setEndpoint(BuildConfig.HOST)
+                    .setEndpoint("horku")
                     .setLogLevel(RestAdapter.LogLevel.FULL)
                     .setConverter(new GsonConverter(gson))
                     .build();
