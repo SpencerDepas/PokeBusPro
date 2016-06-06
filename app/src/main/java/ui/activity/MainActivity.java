@@ -332,10 +332,10 @@ public class MainActivity extends AppCompatActivity implements
             callAndParse = new CallAndParse(MainActivity.this);
 
 
-            snackBarInstructions[0] = getString(R.string.tap_for_search);
-            snackBarInstructions[1] = getString(R.string.tap_search_icon);
-            snackBarInstructions[2] = getString(R.string.my_location_icon);
-            snackBarInstructions[3] = getString(R.string.tap_bus_distances);
+//            snackBarInstructions[0] = getString(R.string.tap_for_search);
+//            snackBarInstructions[1] = getString(R.string.tap_search_icon);
+//            snackBarInstructions[2] = getString(R.string.my_location_icon);
+//            snackBarInstructions[3] = getString(R.string.tap_bus_distances);
 
 
 
@@ -469,7 +469,7 @@ public class MainActivity extends AppCompatActivity implements
                         // edit text
                         Log.i("MyMapsActivity", "DialogInterface onClick ");
 
-                        getLatLngForSearchLocationFromAddress(locationToSearchFor.getText().toString());
+                        getLatLngForSearchLocationFromAddress(locationToSearchFor.getText().toString() + "new york ny");
 
                         getWindow().setSoftInputMode(
                                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
