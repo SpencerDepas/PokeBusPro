@@ -19,6 +19,12 @@ public class NavigationViewItems {
 
     public static final String ENABLE_LOCATION = "Enable Location";
 
+    public static final String DIALOG_TITTLE_BOROUGH = "select your borough";
+    public static final String DIALOG_TITTLE_SET_RADIUS = "set your radius";
+    public static final String DIALOG_TITTLE_AUTO_REFRESH_TIME = "auto refresh time";
+
+
+
 
 
 }

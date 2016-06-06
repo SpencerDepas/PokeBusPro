@@ -24,16 +24,14 @@ public class AddMarkers {
 //    static LatLng[] markerLocation;
 //    static Marker[] marker;
 
-
+    private Hashtable<String, Marker> markerHashTable;
     FirstBusStopHasBeenDisplayed firstBusStopHasBeenDisplayed = null;
-
+    private ArrayList<String> favBuses;
 
 
     private static AddMarkers addMarkers;
-    private MainActivity mainActivity;
 
     private AddMarkers(){
-        mainActivity = new MainActivity();
 
     }
 
@@ -56,6 +54,8 @@ public class AddMarkers {
 
         Log.i("AddMarkers", "addMarkerToMapWithBusDistances" );
 
+        this.favBuses = favBuses;
+
         int incomingBusesSize = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
                 .getMonitoredStopVisit()
                 .size();
@@ -75,7 +75,7 @@ public class AddMarkers {
 
         MarkerManager markerManager = MarkerManager.getInstance();
 
-        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+        markerHashTable = markerManager.getMarkerHashTable();
 
 
         Marker marker = markerHashTable.get(busCode);
@@ -89,8 +89,11 @@ public class AddMarkers {
 
             marker.setTitle(busCode + busName);
             marker.setSnippet(allbusNamesAndDistances);
-            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-
+            //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+            if(marker.isInfoWindowShown()){
+                marker.hideInfoWindow();
+                marker.showInfoWindow();
+            }
 
         }else{
             Log.i("AddMarkers", "markerHashTable.containsKey(hash) make new marker  : " + busName);
@@ -129,6 +132,8 @@ public class AddMarkers {
 
         firstBusStopHasBeenDisplayed.removeLoadingIcon();
 
+
+        openLastOpenSnippet(PopupAdapterForMapMarkers.markerCurrentKey);
 
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
@@ -321,7 +326,7 @@ public class AddMarkers {
 
     }
 
-    static String lastOpenSnippet;
+    String lastOpenSnippet;
 
     public void setLastOpenMarker(){
 
@@ -363,17 +368,26 @@ public class AddMarkers {
     }
 
 
-    public static void openClosestSnippet(String testParam){
-        //this should open
-        //1 last open snippet
-        //2 closest pokebus
-        //3 closet snippet
+    public void openLastOpenSnippet(String lastOpenSnippetKey){
+
+        if(!lastOpenSnippetKey.equals("")){
+
+            Marker marker = markerHashTable.get(lastOpenSnippetKey);
+            if(marker != null){
+                marker.hideInfoWindow();
+                marker.showInfoWindow();
+            }
 
 
 
+        }else{
 
-        //marker[busInfoIndex].showInfoWindow();
-        //busInfo.get(busInfoIndex).setAddedToPopup(true);
+            //if nothing was open before
+            //lets open the closet fav bus stop
+            showFavBusStopSnippet();
+
+
+        }
 
     }
     static double distFrom(double lat1, double lng1, double lat2, double lng2) {
@@ -397,18 +411,29 @@ public class AddMarkers {
     public void addPokeBusColor(String busCode){
         Log.i("AddMarkerstz", "addPokeBusColor");
 
-        MarkerManager markerManager = MarkerManager.getInstance();
-
-        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-
 
         Marker marker = markerHashTable.get(busCode);
 
+
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
 
-        marker.hideInfoWindow();
-        marker.showInfoWindow();
 
+
+
+    }
+
+    private void showFavBusStopSnippet(){
+
+        for(int i = 0 ; i < favBuses.size(); i ++){
+
+            Marker marker = markerHashTable.get(favBuses.get(i));
+
+            if (marker!= null){
+                marker.hideInfoWindow();
+                marker.showInfoWindow();
+
+            }
+        }
 
     }
 
@@ -427,8 +452,10 @@ public class AddMarkers {
                 if(marker != null){
                     //this is because you may delete an icon you can not see
                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-                    marker.hideInfoWindow();
-                    marker.showInfoWindow();
+                    if(marker.isInfoWindowShown()){
+                        marker.hideInfoWindow();
+                        marker.showInfoWindow();
+                    }
                 }
 
             }
@@ -439,10 +466,7 @@ public class AddMarkers {
 
 
 
-    public static void updateMarkersToMap(String testParam) {
 
-
-    }
 
 
 }

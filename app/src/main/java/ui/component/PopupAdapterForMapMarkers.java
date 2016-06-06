@@ -21,8 +21,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
     private View popup = null;
     private LayoutInflater inflater = null;
     private MainActivity mainActivity;
-
-    static boolean isMarkerOpen = false;
+    public static String markerCurrentKey = "";
 
     public static DialogPopupListner popupListner = null;
 
@@ -52,11 +51,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
             popup = inflater.inflate(R.layout.popup_snippet, null);
         }
 
-        if(marker.isInfoWindowShown()){
-            isMarkerOpen = true;
-        }else{
-            isMarkerOpen = false;
-        }
+
 
         mainActivity = new MainActivity();
 
@@ -84,7 +79,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
         //MainActivity.busInfo.get(i).setAddedToPopup(true);
 
 
-
+        markerCurrentKey  = marker.getTitle().substring(0, 6);
         final String fBusCode = marker.getTitle().substring(0, 6);
         mainActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override

@@ -517,6 +517,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
+
     private void getLatLngForSearchLocationFromAddress(String location){
         Log.i("MyMapsActivity", "getLatLngForSearchLocationFromAddress ");
         List<Address> addressList = null;
@@ -946,7 +947,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         switch (alertDialogTittle.toLowerCase()) {
-            case "select your borough":
+            case NavigationViewItems.DIALOG_TITTLE_BOROUGH:
 
                 Log.d("MyMapsActivity", "alertDialogLogic Select your borough boroughs[which] : " + boroughs[which]);
 
@@ -960,7 +961,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
                  break;
-            case "set your radius":
+            case NavigationViewItems.DIALOG_TITTLE_SET_RADIUS:
 
                 Log.d("MyMapsActivity", "alertDialogLogic Select your radius radius[which] : " + radiusEntriesValues[which]);
 
@@ -987,7 +988,7 @@ public class MainActivity extends AppCompatActivity implements
                 refreshMarkers();
 
                 break;
-            case "auto refresh time":
+            case NavigationViewItems.DIALOG_TITTLE_AUTO_REFRESH_TIME:
 
 
                 if(timerTaskEntriesValues[which] == "0"){
@@ -995,8 +996,8 @@ public class MainActivity extends AppCompatActivity implements
                     refreshTimerTaskTime = timerTaskEntriesValues[which];
                     preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
 
-                    MainActivity mainActivity = new MainActivity();
-                    mainActivity.stopTimerTask();
+                    stopTimerTask();
+                    Log.i("MyMapsActivity", "mainActivity.stopTimerTask();" );
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
                             .putContentName("Refresh Timer time")
@@ -1009,6 +1010,10 @@ public class MainActivity extends AppCompatActivity implements
                     refreshTimerTaskTime = timerTaskEntriesValues[which];
                     preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
                     refreshMarkers();
+                    stopTimerTask();
+
+                    startTimerTask();
+                    Log.i("MyMapsActivity", " refreshMarkers();" );
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
                             .putContentName("Refresh Timer time")
@@ -1274,6 +1279,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
         Log.i("MyMapsActivity", "onResume()");
 
+        Log.i("MyMapsActivity", "onResume() hasLocationPermission: " + hasLocationPermission);
+
         if(hasLocationPermission) {
             Log.i("MyMapsActivity", "onResume() hasLocationPermission" + hasLocationPermission);
 
@@ -1299,7 +1306,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
-        showInstructionalSnackBar();
+        //showInstructionalSnackBar();
 
 
     }
@@ -1423,6 +1430,7 @@ public class MainActivity extends AppCompatActivity implements
     public void startTimerTask() {
         Log.i("MyMapsActivity", "startTimerTask()");
 
+        Log.i("MyMapsActivity", "refreshTimerTaskTime : " + refreshTimerTaskTime);
 
 
 
@@ -1453,7 +1461,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void stopTimerTask() {
+    public void stopTimerTask() {
         Log.i("MyMapsActivity", "stopTimerTask()" );
         //stop the timer, if it's not already null
         if (timer != null) {
@@ -1700,6 +1708,7 @@ public class MainActivity extends AppCompatActivity implements
             permissionAtRunTime();
 
 
+            startTimerTask();
 
 
         }
