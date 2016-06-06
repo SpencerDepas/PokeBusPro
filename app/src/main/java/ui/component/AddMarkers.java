@@ -9,7 +9,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Random;
 
 import clearfaun.com.pokebuspro.R;
 import model.DistancesExample;
@@ -30,10 +33,8 @@ public class AddMarkers {
 
 
     private static AddMarkers addMarkers;
+    private String randomMarkeyKey = "";
 
-    private AddMarkers(){
-
-    }
 
 
     public void setInterface(FirstBusStopHasBeenDisplayed newfirstBusStopHasBeenDisplayed){
@@ -77,8 +78,8 @@ public class AddMarkers {
 
         markerHashTable = markerManager.getMarkerHashTable();
 
-
         Marker marker = markerHashTable.get(busCode);
+        randomMarkeyKey = busCode + busName;
         if(marker != null){
             Log.i("AddMarkers", "markerHashTable.containsKey(hash) use old marker : " + busName);
             //use old
@@ -133,7 +134,7 @@ public class AddMarkers {
         firstBusStopHasBeenDisplayed.removeLoadingIcon();
 
 
-        openLastOpenSnippet(PopupAdapterForMapMarkers.markerCurrentKey);
+        openSnippet(PopupAdapterForMapMarkers.markerCurrentKey);
 
         Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
     }
@@ -326,53 +327,19 @@ public class AddMarkers {
 
     }
 
-    String lastOpenSnippet;
-
-    public void setLastOpenMarker(){
-
-    }
-
-    public static void whatSnippetIsOpen(){
-        Log.i("AddMarkers", "  whatSnippetIsOpen() ");
-
-//        lastOpenSnippet = null;
-//        if(marker != null) {
-//            Log.i("AddMarkers", "  AddMarkers.marker() length" + AddMarkers.marker.length );
-//            for (Marker marker : AddMarkers.marker) {
-//
-//                if (marker.isInfoWindowShown()) {
-//                    lastOpenSnippet = marker.getTitle();
-//                    Log.i("AddMarkers", "  lastOpenSnippet " + lastOpenSnippet);
-//                    break;
-//                }
-//            }
-//        }
-
-    }
 
 
 
-    public static void openSnippetWithIndex(int index ){
-//        Log.i("AddMarkersa", "  MainActivity.busInfoIndexForBusName  " + index);
-//        Log.i("AddMarkersa", "  openSnippetWithIndex id " + marker[index].getId());
-//
-//        Log.i("AddMarkersa", "  openSnippetWithIndex  tittle" + marker[index].getTitle());
-//        Log.i("AddMarkersa", "  openSnippetWithIndex  snippet" + marker[index].getSnippet());
-//
-//        fromOpenSnippetWithIndex = true;
-//        marker[index].hideInfoWindow();
-//        marker[index].showInfoWindow();
 
 
 
-    }
+    public void openSnippet(String lastOpenSnippetKey){
 
-
-    public void openLastOpenSnippet(String lastOpenSnippetKey){
+        Marker marker = markerHashTable.get(lastOpenSnippetKey);
 
         if(!lastOpenSnippetKey.equals("")){
 
-            Marker marker = markerHashTable.get(lastOpenSnippetKey);
+            marker = markerHashTable.get(lastOpenSnippetKey);
             if(marker != null){
                 marker.hideInfoWindow();
                 marker.showInfoWindow();
@@ -380,14 +347,39 @@ public class AddMarkers {
 
 
 
-        }else{
+        }
+
+        if(marker == null){
 
             //if nothing was open before
             //lets open the closet fav bus stop
-            showFavBusStopSnippet();
+
+            if(favBuses.size()> 0){
+                showFavBusStopSnippet();
+
+            }else {
+                //if no fav buses we need a snippet to open
+                Log.i("AddMarkerstz", " randomMarkeyKey " + randomMarkeyKey);
+
+                marker = markerHashTable.get(randomMarkeyKey);
+
+                if(marker != null){
+                    marker.hideInfoWindow();
+                    marker.showInfoWindow();
+                }
+
+
+            }
 
 
         }
+
+    }
+
+    private void openRandomSnippet(){
+
+
+
 
     }
     static double distFrom(double lat1, double lng1, double lat2, double lng2) {
