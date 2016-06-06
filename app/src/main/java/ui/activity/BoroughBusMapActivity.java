@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import Preference.PreferenceManager;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import clearfaun.com.pokebuspro.R;
@@ -35,9 +37,10 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
 
     private ProgressBar spinner;
     SubsamplingScaleImageView imageView;
-    SharedPreferences prefs;
     String savedBusMap;
     private final String MAP_SELECTION = "Map selection";
+    private PreferenceManager preferenceManager;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,29 +58,26 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
         upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
-        Intent intent = getIntent();
-        savedBusMap = intent.getStringExtra("maptype");
-
-        Log.i("BoroughBusMapActivity", "intent " + intent.getStringExtra("maptype"));
-
-        savedBusMap = savedBusMap.substring(16);
-        Log.i("BoroughBusMapActivity", "savedBusMap " + savedBusMap);
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.WHITE);
 
+        mContext = getApplicationContext();
+        preferenceManager = new PreferenceManager(mContext);
+
+
+
+        savedBusMap = preferenceManager.getBusMapSelection();
+
+
         spinner = (ProgressBar)findViewById(R.id.spinner);
 
-        Log.i("BoroughBusMapActivity", intent.getStringExtra("maptype"));
-        Log.i("BoroughBusMapActivity", "Brooklyn");
 
-        Log.i("BoroughBusMapActivity", "spinner.getVisibility() : " +        spinner.getVisibility());
+
+
+        Log.d("BoroughBusMapActivity", "savedBusMap:" + savedBusMap);
+
         loadMap();
-        Log.i("BoroughBusMapActivity", "not ==");
 
-
-
-
-        prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
 
     }
@@ -87,23 +87,23 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
 
 
 
-        if(savedBusMap.equals("Brooklyn")){
+        if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_BROOKLYN)){
             Log.i("BoroughBusMapActivity", "in bk");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busbklnmap.jpg"));
-        }else if(savedBusMap.equals("Manhattan")){
+        }else if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_MANHATTAN)){
             Log.i("BoroughBusMapActivity", "in mn");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("manbusmap.jpg"));
-        }else if(savedBusMap.equals("Queens")){
+        }else if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_QUEENS)){
             Log.i("BoroughBusMapActivity", "in qns");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busqnsmap.jpg"));
-        }else if(savedBusMap.equals("Bronx")){
+        }else if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_BRONX)){
             Log.i("BoroughBusMapActivity", "in bx");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busbxmap.jpg"));
-        }else if(savedBusMap.equals("Staten Island")){
+        }else if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_STATEN_ISLAND)){
             Log.i("BoroughBusMapActivity", "in si");
             imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("bussimap.jpg"));
@@ -134,26 +134,24 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
 
     private int findPreselectedIndex(){
 
-        String findWhatToPreSelect = prefs.getString(getString(R.string.bus_maps_key), "0");
 
-        String prefBusMap = prefs.getString(getString(R.string.bus_maps_key), "Brooklyn");
 
         int preSelectedIndex = 0;
 
-        switch ( prefBusMap) {
-            case "Brooklyn":
+        switch ( savedBusMap) {
+            case PreferenceManager.BUS_MAP_SELECTION_BROOKLYN:
                 preSelectedIndex = 0;
                 break;
-            case "Manhattan":
+            case PreferenceManager.BUS_MAP_SELECTION_MANHATTAN:
                 preSelectedIndex = 1;
                 break;
-            case "Queens":
+            case PreferenceManager.BUS_MAP_SELECTION_QUEENS:
                 preSelectedIndex = 2;
                 break;
-            case "Bronx":
+            case PreferenceManager.BUS_MAP_SELECTION_BRONX:
                 preSelectedIndex = 3;
                 break;
-            case "Staten Island":
+            case PreferenceManager.BUS_MAP_SELECTION_STATEN_ISLAND:
                 preSelectedIndex = 4;
                 break;
             default:
@@ -178,75 +176,41 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
         builder.setNegativeButton("DISMISS", null);
         builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("AlertDialog", "Positive");
+                Log.d("BoroughBusMapActivity", "Positive");
                 spinner.setVisibility(View.VISIBLE);
                 dialog.dismiss();
 
                 if (which == 0) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 0);
+                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 0);
 
-                    prefs.edit().putString(getString(R.string.bus_maps_key), "Brooklyn").apply();
+                    saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_BROOKLYN);
 
-                    savedBusMap = "Brooklyn";
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Brooklyn")
-                    );
-
-
-                    Log.d("MyMainActivity", "refreshrate set to 20:");
 
                 } else if (which == 1) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 1);
+                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 1);
 
-                    prefs.edit().putString(getString(R.string.bus_maps_key), "Manhattan").apply();
+                    saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_MANHATTAN);
 
-                    savedBusMap = "Manhattan";
-
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Manhattan")
-                    );
-                    Log.d("MyMainActivity", "refreshrate set to 30:");
 
                 } else if (which == 2) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
+                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 2);
 
-                    prefs.edit().putString(getString(R.string.bus_maps_key), "Queens").apply();
-                    savedBusMap = "Queens";
+                    saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_QUEENS);
 
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Queens")
-                    );
 
-                    Log.d("MyMainActivity", "refreshrate set to 60:");
 
                 } else if (which == 3) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
+                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 2);
 
-                    prefs.edit().putString(getString(R.string.bus_maps_key), "Bronx").apply();
-                    savedBusMap = "Bronx";
+                    saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_BRONX);
 
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Bronx")
-                    );
 
                 }else if (which == 4) {
-                    Log.d("MyMainActivity", "menuItem.getTitle():" + 2);
+                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 2);
 
-                    prefs.edit().putString(getString(R.string.bus_maps_key), "Staten Island").apply();
-                    savedBusMap = "Staten Island";
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Select Map")
-                            .putContentType("Selection")
-                            .putCustomAttribute(MAP_SELECTION, "Staten Island")
-                    );
+
+                    saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_STATEN_ISLAND);
+
 
                 }
 
@@ -256,6 +220,19 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
             }
         });
         builder.show();
+    }
+
+    private void saveMapSelection(String mapSelection){
+
+        preferenceManager.saveBusMapSelection(mapSelection);
+        savedBusMap = mapSelection;
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("Select Map")
+                .putContentType("Selection")
+                .putCustomAttribute(MAP_SELECTION, mapSelection)
+        );
+
+
     }
 
 

@@ -424,9 +424,13 @@ public class AddMarkers {
                 Log.i("AddMarkerstz", "arrayList.get(i) : " + arrayList.get(i));
 
                 Marker marker = markerHashTable.get(arrayList.get(i));
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-                marker.hideInfoWindow();
-                marker.showInfoWindow();
+                if(marker != null){
+                    //this is because you may delete an icon you can not see
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+                    marker.hideInfoWindow();
+                    marker.showInfoWindow();
+                }
+
             }
         }
 

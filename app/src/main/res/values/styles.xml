@@ -5,8 +5,18 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.DesignBaddAss" parent="Base.Theme.DesignDemo"></style>
+    <style name="Theme.DesignBaddAss"
+        parent="Base.Theme.DesignDemo"></style>
 
+    <style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#03A9F4</item>
+
+        <item name="colorPrimaryDark">#0288D1</item>
+        <item name="colorAccent">#FFEB3B</item>
+        <item name="colorControlActivated">#03A9F4</item>
+        <item name="android:textColorHint">#03A9F4</item>
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
 
     <style name="menu_labels_style">
 
@@ -45,15 +55,6 @@
     </style>
 
 
-    <style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#03A9F4</item>
-
-        <item name="colorPrimaryDark">#0288D1</item>
-        <item name="colorAccent">#FFEB3B</item>
-        <item name="colorControlActivated">#03A9F4</item>
-        <item name="android:textColorHint">#03A9F4</item>
-        <item name="android:windowBackground">@color/window_background</item>
-    </style>
 
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">

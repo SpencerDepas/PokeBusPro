@@ -53,7 +53,8 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    compile 'com.github.amlcurran.showcaseview:library:5.4.3'
+    //want to add this when I have time
+    //compile 'com.github.amlcurran.showcaseview:library:5.4.3'
 
 
 

@@ -44,9 +44,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -63,6 +61,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import model.NavigationViewItems;
 import ui.component.AddMarkers;
 import clearfaun.com.pokebuspro.LocationProvider;
 import ui.component.MarkerManager;
@@ -72,8 +71,6 @@ import client.CallAndParse;
 import ui.activity.interfaces.DialogPopupListner;
 import ui.activity.interfaces.FirstBusStopHasBeenDisplayed;
 import ui.activity.interfaces.NoBusesInAreaInterface;
-import ui.component.ToolbarActionItemTarget;
-import ui.component.ViewTargets;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -126,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements
     private String[] snackBarInstructions = new String[4];
     private ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
     private boolean enabledGPS;
-    private Bundle savedInstanceState;
     private CallAndParse callAndParse;
 
 
@@ -170,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements
     static LatLng latLngEMPIRE ;*/
 
     private PreferenceManager preferenceManager;
-    private String prefBusMap = "Brooklyn";
+    private String prefBusMap = PreferenceManager.BUS_MAP_SELECTION_BROOKLYN;
     private String savedRadius = "300";
     private String refreshTimerTaskTime = "20";
     private Toolbar toolbar;
@@ -193,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements
         ab.setDisplayHomeAsUpEnabled(true);
 
 
-        this.savedInstanceState = savedInstanceState;
 
         mContext = getApplicationContext();
         preferenceManager = new PreferenceManager(mContext);
@@ -651,36 +646,36 @@ public class MainActivity extends AppCompatActivity implements
 
 
                         switch (menuItem.getTitle().toString()) {
-                            case "Set Radius":
+                            case NavigationViewItems.SET_RADIUS:
 
                                 setRadiusNavViewSelection();
 
                                 break;
 
-                            case "Auto Refresh Time":
+                            case NavigationViewItems.SET_AUTO_REFRESH_TIME:
 
                                 setRefreshTimerNavViewSelection();
 
                                 break;
 
-                            case "Delete favorite Bus stops":
+                            case NavigationViewItems.DELETE_SAVED_BUS_STOPS:
 
                                 deleteSavedFavoriteBusesNavViewSelection();
 
                                 break;
 
-                            case "About BusBus":
+                            case NavigationViewItems.ABOUT_BUSBUS:
 
                                 startActivity(intent);
                                 mDrawerLayout.closeDrawers();
 
                                 break;
-                            case "Select default Bus Map":
+                            case NavigationViewItems.SELECT_FAV_MAP:
 
                                 selectDeafultBusMapNavViewSelection();
 
                                 break;
-                            case "Follow me on twitter":
+                            case NavigationViewItems.FOLLOW_ME_ON_TWITTER:
 
                                 Answers.getInstance().logContentView(new ContentViewEvent()
                                         .putContentName("Follow me on twitter")
@@ -691,7 +686,7 @@ public class MainActivity extends AppCompatActivity implements
                                 closeDrawer();
 
                                 break;
-                            case "License":
+                            case NavigationViewItems.LICENSE:
 
                                 intent = new Intent(mContext , LicenseActivity.class);
                                 startActivity(intent);
@@ -699,7 +694,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
                                 break;
-                            case "Enable Location":
+                            case NavigationViewItems.ENABLE_LOCATION:
 
                                 enableLocationNavViewSelection();
 
@@ -768,19 +763,19 @@ public class MainActivity extends AppCompatActivity implements
         int preSelectedIndex = 0;
 
         switch ( findWhatToPreSelect) {
-            case "Brooklyn":
+            case PreferenceManager.BUS_MAP_SELECTION_BROOKLYN:
                 preSelectedIndex = 0;
                 break;
-            case "Manhattan":
+            case PreferenceManager.BUS_MAP_SELECTION_MANHATTAN:
                 preSelectedIndex = 1;
                 break;
-            case "Queens":
+            case PreferenceManager.BUS_MAP_SELECTION_QUEENS:
                 preSelectedIndex = 2;
                 break;
-            case "Bronx":
+            case PreferenceManager.BUS_MAP_SELECTION_BRONX:
                 preSelectedIndex = 3;
                 break;
-            case "Staten Island":
+            case PreferenceManager.BUS_MAP_SELECTION_STATEN_ISLAND:
                 preSelectedIndex = 4;
                 break;
             default:
@@ -1315,17 +1310,21 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "showInstructionalSnackBar()");
 
         //MenuItem item = new MenuItem(R.id.map_item);
-        ToolbarActionItemTarget navigationButtonViewTarget = new ToolbarActionItemTarget(toolbar, R.id.map_item);
-       
-            //ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
-            new ShowcaseView.Builder(this)
+//        ToolbarActionItemTarget navigationButtonViewTarget = new ToolbarActionItemTarget(toolbar, R.id.my_location_item);
+//
+//            //ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
+//            new ShowcaseView.Builder(this)
+//
+//
+//                    .withMaterialShowcase()
+//                    .setTarget(navigationButtonViewTarget)
+//                    .setStyle(R.style.CustomShowcaseTheme2)
+//                    .setContentText("Here's how to return to your current location")
+//                    .build()
+//                    .show();
 
 
-                    .withMaterialShowcase()
-                    .setTarget(navigationButtonViewTarget)
-                    .setContentText("Here's how to highlight items on a toolbar")
-                    .build()
-                    .show();
+
 
 
 
@@ -1794,6 +1793,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     }
+
 }
 
 

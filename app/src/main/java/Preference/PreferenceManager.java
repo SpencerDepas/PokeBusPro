@@ -24,6 +24,13 @@ import clearfaun.com.pokebuspro.R;
     private static int randomNum = 0;
 
 
+    public static final String BUS_MAP_SELECTION_BROOKLYN = "Brooklyn";
+    public static final String BUS_MAP_SELECTION_QUEENS = "Queens";
+    public static final String BUS_MAP_SELECTION_MANHATTAN = "Manhattan";
+    public static final String BUS_MAP_SELECTION_BRONX = "Bronx";
+    public static final String BUS_MAP_SELECTION_STATEN_ISLAND = "Staten Island";
+
+
     @BindArray(R.array.instructional_snackbar)
     protected String [] instructions;
 
