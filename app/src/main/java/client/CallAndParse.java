@@ -39,6 +39,7 @@ public class CallAndParse {
 
 
     private Gson gson;
+    public static int busStopsSize = 0;
 
     final private String MTA_BUS_STOP_API = "http://pokebuspro-api.herokuapp.com/bus_time";
     //final private String MTA_BUS_DISTANCE_API = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_301649&MaximumStopVisits=3";
@@ -99,8 +100,7 @@ public class CallAndParse {
 
                 Log.i("MyCallAndParse", "get bus stops local : " + busStopExample.getData().toString());
 
-                Log.i("MyCallAndParse", "get bus stops size : " + busStopExample.getData().getStops().size());
-
+                busStopsSize = busStopExample.getData().getStops().size();
 
                 //only make a call if we have bus stops
                 if(busStopExample.getData().getStops().size() > 0){
