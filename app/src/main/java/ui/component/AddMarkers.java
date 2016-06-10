@@ -9,10 +9,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Random;
 
 import clearfaun.com.pokebuspro.R;
 import model.DistancesExample;
@@ -91,10 +88,12 @@ public class AddMarkers {
             marker.setTitle(busCode + busName);
             marker.setSnippet(allbusNamesAndDistances);
             //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-            if(marker.isInfoWindowShown()){
-                marker.hideInfoWindow();
-                marker.showInfoWindow();
-            }
+            Log.i("AddMarkerstz", " addMarkerToMapWithBusDistances " + marker.getId().toString());
+
+            refreshMarkerSnippet(marker);
+
+            markerHashTable.put(busCode, marker);
+
 
         }else{
             Log.i("AddMarkers", "markerHashTable.containsKey(hash) make new marker  : " + busName);
@@ -105,6 +104,18 @@ public class AddMarkers {
             marker.setTitle(busCode + busName);
             marker.setSnippet(allbusNamesAndDistances);
 
+            markerHashTable.put(busCode, marker);
+
+
+
+
+            for(int i = 0 ; i < favBuses.size(); i ++){
+
+                if (favBuses.get(i).equals(busCode)){
+                    Log.i("AddMarkers", "  I R FAV BUS " );
+                    addPokeBusColor(busCode);
+                }
+            }
         }
 
 
@@ -115,19 +126,12 @@ public class AddMarkers {
 
 
 
-        markerHashTable.put(busCode, marker);
 
 
 
         Log.i("AddMarkers", "  favBuses.size :  " + favBuses.size() );
 
-        for(int i = 0 ; i < favBuses.size(); i ++){
 
-            if (favBuses.get(i).equals(busCode)){
-                Log.i("AddMarkers", "  I R FAV BUS " );
-                addPokeBusColor(busCode);
-            }
-        }
 
 
 
@@ -340,10 +344,10 @@ public class AddMarkers {
         if(!lastOpenSnippetKey.equals("")){
 
             marker = markerHashTable.get(lastOpenSnippetKey);
-            if(marker != null){
-                marker.hideInfoWindow();
-                marker.showInfoWindow();
-            }
+            Log.i("AddMarkerstz", " openSnippet " + marker.getId().toString());
+
+            refreshMarkerSnippet(marker);
+
 
 
 
@@ -363,10 +367,8 @@ public class AddMarkers {
 
                 marker = markerHashTable.get(randomMarkeyKey);
 
-                if(marker != null){
-                    marker.hideInfoWindow();
-                    marker.showInfoWindow();
-                }
+                displayMarker(marker);
+
 
 
             }
@@ -375,6 +377,25 @@ public class AddMarkers {
         }
 
     }
+
+    private void displayMarker(Marker marker){
+        Log.i("AddMarkerstz", " displayMarker ");
+
+        if(marker != null){
+            Log.i("AddMarkerstz", " displayMarker " + marker.getId().toString());
+            marker.showInfoWindow();
+        }
+    }
+
+    private void refreshMarkerSnippet(Marker marker){
+        Log.i("AddMarkerstz", " refreshMarkerSnippet " + marker.getId().toString());
+
+        if(marker.isInfoWindowShown()){
+            marker.hideInfoWindow();
+            marker.showInfoWindow();
+        }
+    }
+
 
     private void openRandomSnippet(){
 
@@ -404,10 +425,16 @@ public class AddMarkers {
         Log.i("AddMarkerstz", "addPokeBusColor");
 
 
+
         Marker marker = markerHashTable.get(busCode);
 
+        if (marker != null){
+            Log.i("AddMarkers", "  I R FAV BUS " );
 
-        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
+
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
+
+        }
 
 
 
@@ -420,11 +447,8 @@ public class AddMarkers {
 
             Marker marker = markerHashTable.get(favBuses.get(i));
 
-            if (marker!= null){
-                marker.hideInfoWindow();
-                marker.showInfoWindow();
-
-            }
+            displayMarker(marker);
+            break;
         }
 
     }
@@ -444,10 +468,8 @@ public class AddMarkers {
                 if(marker != null){
                     //this is because you may delete an icon you can not see
                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-                    if(marker.isInfoWindowShown()){
-                        marker.hideInfoWindow();
-                        marker.showInfoWindow();
-                    }
+                    Log.i("AddMarkerstz", " removePokeBusColor " + marker.getId().toString());
+                    refreshMarkerSnippet(marker);
                 }
 
             }
