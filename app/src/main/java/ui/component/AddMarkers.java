@@ -34,13 +34,12 @@ public class AddMarkers {
     private String randomMarkeyKey = "";
 
 
-
-    public void setInterface(FirstBusStopHasBeenDisplayed newfirstBusStopHasBeenDisplayed){
+    public void setInterface(FirstBusStopHasBeenDisplayed newfirstBusStopHasBeenDisplayed) {
         firstBusStopHasBeenDisplayed = newfirstBusStopHasBeenDisplayed;
     }
 
-    public static synchronized AddMarkers getInstance(){
-        if(addMarkers == null){
+    public static synchronized AddMarkers getInstance() {
+        if (addMarkers == null) {
             addMarkers = new AddMarkers();
         }
         return addMarkers;
@@ -50,19 +49,19 @@ public class AddMarkers {
     public void addMarkerToMapWithBusDistances(DistancesExample distancesExample, String busCode,
                                                LatLng busStopLatLng, ArrayList<String> favBuses) {
 
-        Log.i("AddMarkers", "addMarkerToMapWithBusDistances" );
+        Log.i("AddMarkers", "addMarkerToMapWithBusDistances");
 
         this.favBuses = favBuses;
-        CallAndParse.busStopsSize --;
+        CallAndParse.busStopsSize--;
 
         int incomingBusesSize = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
                 .getMonitoredStopVisit()
                 .size();
 
-        Log.i("AddMarkers", "addMarkerToMapWithBusDistances" );
+        Log.i("AddMarkers", "addMarkerToMapWithBusDistances");
 
 
-        String busName = getBusName( distancesExample, incomingBusesSize);
+        String busName = getBusName(distancesExample, incomingBusesSize);
 
 
         String allbusNamesAndDistances = putBusStopsInStackedString(distancesExample, incomingBusesSize);
@@ -78,12 +77,11 @@ public class AddMarkers {
 
         Marker marker = markerHashTable.get(busCode);
         randomMarkeyKey = busCode + busName;
-        if(marker != null){
+        if (marker != null) {
             Log.i("AddMarkers", "markerHashTable.containsKey(hash) use old marker : " + busName);
             //use old
             //we do not need to re add it to the screen
             //we do need to delete the old info
-
 
 
             marker.setTitle(busCode + busName);
@@ -96,7 +94,7 @@ public class AddMarkers {
             markerHashTable.put(busCode, marker);
 
 
-        }else{
+        } else {
             Log.i("AddMarkers", "markerHashTable.containsKey(hash) make new marker  : " + busName);
             //make new
             markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
@@ -108,38 +106,23 @@ public class AddMarkers {
             markerHashTable.put(busCode, marker);
 
 
+            for (int i = 0; i < favBuses.size(); i++) {
 
-
-            for(int i = 0 ; i < favBuses.size(); i ++){
-
-                if (favBuses.get(i).equals(busCode)){
-                    Log.i("AddMarkers", "  I R FAV BUS " );
+                if (favBuses.get(i).equals(busCode)) {
+                    Log.i("AddMarkers", "  I R FAV BUS ");
                     addPokeBusColor(busCode);
                 }
             }
         }
 
 
-
-
-
-
-
-
-
-
-
-
-        Log.i("AddMarkers", "  favBuses.size :  " + favBuses.size() );
-
-
-
+        Log.i("AddMarkers", "  favBuses.size :  " + favBuses.size());
 
 
         firstBusStopHasBeenDisplayed.removeLoadingIcon();
 
-        if(CallAndParse.busStopsSize == 0){
-            Log.i("AddMarkerstz", "  called onece?  " );
+        if (CallAndParse.busStopsSize == 0) {
+            Log.i("AddMarkerstz", "  called onece?  ");
 
 
             openSnippet(PopupAdapterForMapMarkers.markerCurrentKey);
@@ -147,22 +130,21 @@ public class AddMarkers {
         }
 
 
-        Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " );
+        Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ");
     }
 
-    private String getBusName(DistancesExample distancesExample, int incomingBusesSize){
+    private String getBusName(DistancesExample distancesExample, int incomingBusesSize) {
         //this is for when no buses are incoming
-
 
 
         String busName;
 
-        if(incomingBusesSize == 0){
+        if (incomingBusesSize == 0) {
 
 
             busName = "Not available";
 
-        }else{
+        } else {
 
             busName = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
                     .getMonitoredStopVisit()
@@ -179,17 +161,14 @@ public class AddMarkers {
 
     }
 
-    private String putBusStopsInStackedString(DistancesExample distancesExample, int incomingBusesSize){
-        Log.i("AddMarkers", "putBusStopsInStackedString" );
-
-
+    private String putBusStopsInStackedString(DistancesExample distancesExample, int incomingBusesSize) {
+        Log.i("AddMarkers", "putBusStopsInStackedString");
 
 
         String allbusNamesAndDistances = "";
 
         //long startTime = System.nanoTime();
-        for(int i = 0; i < incomingBusesSize; i ++){
-
+        for (int i = 0; i < incomingBusesSize; i++) {
 
 
             String busNamec = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
@@ -223,39 +202,38 @@ public class AddMarkers {
             //Log.i("AddMarkerss", "distance : "  + distance );
         }
 
-        if(allbusNamesAndDistances.length() < 1 ){
+        if (allbusNamesAndDistances.length() < 1) {
             allbusNamesAndDistances = "No incoming busses";
         }
 
         return allbusNamesAndDistances;
     }
 
-    public void addDistancesToMarkers(DistancesExample distancesExample, Marker marker ){
-        Log.i("AddMarkers", "  addDistancesToMarkers " );
+    public void addDistancesToMarkers(DistancesExample distancesExample, Marker marker) {
+        Log.i("AddMarkers", "  addDistancesToMarkers ");
 
-        Log.i("AddMarkers", "  distence length : " +  distancesExample.getSiri().getServiceDelivery()
+        Log.i("AddMarkers", "  distence length : " + distancesExample.getSiri().getServiceDelivery()
                 .getStopMonitoringDelivery()
                 .get(0)
                 .getMonitoredStopVisit()
-        .size());
+                .size());
 
 
-        if(distancesExample.getSiri().getServiceDelivery()
+        if (distancesExample.getSiri().getServiceDelivery()
                 .getStopMonitoringDelivery()
                 .get(0)
                 .getMonitoredStopVisit()
-                .size() > 0){
+                .size() > 0) {
             //make sure we have a distance
-
 
 
             //distance
 
-            if(distancesExample.getSiri().getServiceDelivery()
+            if (distancesExample.getSiri().getServiceDelivery()
                     .getStopMonitoringDelivery()
                     .get(0)
                     .getMonitoredStopVisit()
-                    .size() == 1){
+                    .size() == 1) {
                 //returns one distances
                 marker.setSnippet(distancesExample.getSiri().getServiceDelivery()
                         .getStopMonitoringDelivery().get(0)
@@ -269,11 +247,11 @@ public class AddMarkers {
                 );
 
 
-            }else if (distancesExample.getSiri().getServiceDelivery()
+            } else if (distancesExample.getSiri().getServiceDelivery()
                     .getStopMonitoringDelivery()
                     .get(0)
                     .getMonitoredStopVisit()
-                    .size() == 2){
+                    .size() == 2) {
 
                 //returns two distances
 
@@ -332,31 +310,23 @@ public class AddMarkers {
                 );
             }
 
-        }else{
+        } else {
             marker.setSnippet("Not available");
         }
 
     }
 
 
+    public void openSnippet(String lastOpenSnippetKey) {
 
 
+        if (!lastOpenSnippetKey.equals("")) {
 
 
-
-    public void openSnippet(String lastOpenSnippetKey){
-
-
-        if(!lastOpenSnippetKey.equals("")){
+            openAfterItsBeenOpenSnippet(lastOpenSnippetKey);
 
 
-            openAfterItsBeenOpenSnippet( lastOpenSnippetKey);
-
-
-
-
-
-        }else {
+        } else {
 
 
             firstTimeOpenSnippet();
@@ -365,13 +335,13 @@ public class AddMarkers {
 
     }
 
-    private void firstTimeOpenSnippet(){
-        Log.i("AddMarkerstz", " firstTimeOpenSnippet " );
+    private void firstTimeOpenSnippet() {
+        Log.i("AddMarkerstz", " firstTimeOpenSnippet ");
 
-        if(favBuses.size()> 0){
+        if (favBuses.size() > 0) {
             showFavBusStopSnippet();
 
-        }else {
+        } else {
 
 
             //if no fav buses we need a snippet to open
@@ -381,51 +351,45 @@ public class AddMarkers {
             displayMarker(marker);
 
 
-
         }
 
     }
 
-    private void openAfterItsBeenOpenSnippet(String lastOpenSnippetKey){
-        Log.i("AddMarkerstz", " openAfterItsBeenOpenSnippet " );
+    private void openAfterItsBeenOpenSnippet(String lastOpenSnippetKey) {
+        Log.i("AddMarkerstz", " openAfterItsBeenOpenSnippet ");
 
         Marker marker = markerHashTable.get(lastOpenSnippetKey);
 
 
-        if(marker != null){
-            if(marker.isInfoWindowShown()){
+        if (marker != null) {
+            if (marker.isInfoWindowShown()) {
 
                 Log.i("AddMarkerstz", " openSnippet " + marker.getId().toString());
 
                 refreshMarkerSnippet(marker);
 
 
-
-
             }
         }
 
 
-
-
-
     }
 
-    private void displayMarker(Marker marker){
+    private void displayMarker(Marker marker) {
         Log.i("AddMarkerstz", " displayMarker ");
 
-        if(marker != null){
+        if (marker != null) {
             Log.i("AddMarkerstz", " displayMarker " + marker.getId().toString());
             marker.showInfoWindow();
         }
     }
 
-    private void refreshMarkerSnippet(Marker marker){
+    private void refreshMarkerSnippet(Marker marker) {
         Log.i("AddMarkerstz", " refreshMarkerSnippet " + marker.getTitle().toString());
 
         Log.i("AddMarkerstz", " marker.isInfoWindowShown() " + marker.isInfoWindowShown());
 
-        if(marker.isInfoWindowShown()){
+        if (marker.isInfoWindowShown()) {
             Log.i("AddMarkerstz", "this is the refresh refreshMarkerSnippet " + marker.getId().toString());
 
             marker.hideInfoWindow();
@@ -434,39 +398,37 @@ public class AddMarkers {
     }
 
 
-    private void openRandomSnippet(){
-
-
+    private void openRandomSnippet() {
 
 
     }
+
     static double distFrom(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLng = Math.toRadians(lng2-lng1);
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
         Log.i("AddMarkers", " dLat = " + lat1);
         Log.i("AddMarkers", " dLng = " + lng1);
         Log.i("AddMarkers", " dLat = " + lat2);
         Log.i("AddMarkers", " dLng = " + lng2);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         float dist = (float) (earthRadius * c);
         Log.i("AddMarkers", " dist = " + dist);
         return dist;
     }
 
 
-    public void addPokeBusColor(String busCode){
+    public void addPokeBusColor(String busCode) {
         Log.i("AddMarkers", "addPokeBusColor");
-
 
 
         Marker marker = markerHashTable.get(busCode);
 
-        if (marker != null){
-            Log.i("AddMarkers", "  I R FAV BUS " );
+        if (marker != null) {
+            Log.i("AddMarkers", "  I R FAV BUS ");
 
 
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
@@ -474,13 +436,11 @@ public class AddMarkers {
         }
 
 
-
-
     }
 
-    private void showFavBusStopSnippet(){
+    private void showFavBusStopSnippet() {
 
-        for(int i = 0 ; i < favBuses.size(); i ++){
+        for (int i = 0; i < favBuses.size(); i++) {
 
             Marker marker = markerHashTable.get(favBuses.get(i));
 
@@ -495,14 +455,13 @@ public class AddMarkers {
         Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
 
-
-        if(arrayList.size() > 0){
+        if (arrayList.size() > 0) {
             for (int i = 0; i < arrayList.size(); i++) {
 
                 Log.i("AddMarkers", "arrayList.get(i) : " + arrayList.get(i));
 
                 Marker marker = markerHashTable.get(arrayList.get(i));
-                if(marker != null){
+                if (marker != null) {
                     //this is because you may delete an icon you can not see
                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
                     Log.i("AddMarkers", " removePokeBusColor " + marker.getId().toString());
@@ -514,10 +473,6 @@ public class AddMarkers {
 
 
     }
-
-
-
-
 
 
 }
