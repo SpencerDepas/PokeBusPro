@@ -9,7 +9,7 @@
             android:gravity="center"
 
 
-            android:src="@drawable/clearfaunbutton"/>
+            android:src="@mipmap/ic_launcher"/>
     </item>
 
 </layer-list>
