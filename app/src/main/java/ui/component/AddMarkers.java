@@ -312,7 +312,7 @@ public class AddMarkers {
     }
 
     public void removePokeBusColor(ArrayList<String> arrayList) {
-        
+
         MarkerManager markerManager = MarkerManager.getInstance();
         Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
