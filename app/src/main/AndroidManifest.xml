@@ -61,11 +61,6 @@
             android:name="ui.activity.LicenseActivity"/>
 
 
-
-
-        <service
-            android:name=".Service"
-            android:exported="false"/>
         <meta-data android:name="com.crashlytics.ApiKey" android:value="bba7075dbe466747913fe0d3bc5d05a86a6f0fcb"/>
     </application>
 
