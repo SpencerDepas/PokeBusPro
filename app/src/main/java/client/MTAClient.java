@@ -31,7 +31,6 @@ public class MTAClient {
                     .create();
 
 
-
             adapter = new RestAdapter.Builder()
                     .setEndpoint("horku")
                     .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -43,12 +42,12 @@ public class MTAClient {
         }
     }
 
-    public DistancesExample getBusDistances(String buscode,  String returnHowManyBuses) {
+    public DistancesExample getBusDistances(String buscode, String returnHowManyBuses) {
         return client.getBusDistancesFromStopTwo(buscode, returnHowManyBuses);
     }
 
 
-    public DistancesExample getBusStopsAndBusDistances(String buscode,  String returnHowManyBuses) {
+    public DistancesExample getBusStopsAndBusDistances(String buscode, String returnHowManyBuses) {
         return client.getBusDistancesFromStopTwo(buscode, returnHowManyBuses);
     }
 

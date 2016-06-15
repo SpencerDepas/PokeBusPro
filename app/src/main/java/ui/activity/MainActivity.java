@@ -84,14 +84,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-
 public class MainActivity extends AppCompatActivity implements
         LocationProvider.LocationCallback,
         DialogPopupListner,
         NoBusesInAreaInterface,
         FirstBusStopHasBeenDisplayed,
-        OnMapReadyCallback ,
-        GoogleMap.OnInfoWindowCloseListener{
+        OnMapReadyCallback,
+        GoogleMap.OnInfoWindowCloseListener {
 
 
     public static GoogleMap googleMap;
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements
     private final int ENABLE_GPS = 799;
 
 
-    final int  MY_PERMISSIONS_REQUEST_FINE_LOCATION = 68;
+    final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 68;
 
     private boolean hasLocationPermission;
 
@@ -126,29 +125,30 @@ public class MainActivity extends AppCompatActivity implements
     private CallAndParse callAndParse;
 
 
-
     @BindArray(R.array.boroughs)
-    protected String [] boroughs;
+    protected String[] boroughs;
 
     @BindArray(R.array.radius_entries)
-    protected String [] radiusEntries;
+    protected String[] radiusEntries;
 
     @BindArray(R.array.radius_entries_values)
-    protected String [] radiusEntriesValues;
+    protected String[] radiusEntriesValues;
 
     @BindArray(R.array.timer_entries)
-    protected String [] timerTaskEntries;
+    protected String[] timerTaskEntries;
 
     @BindArray(R.array.timer_entries_values)
-    protected String [] timerTaskEntriesValues;
+    protected String[] timerTaskEntriesValues;
 
 
-
-
-    @BindView(R.id.main_coordinatorLayout) CoordinatorLayout view;
-    @BindView(R.id.progress_bar_activity_main) ProgressBar progressBar;
-    @BindView(R.id.drawer_layout)  DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_view)  NavigationView navigationView;
+    @BindView(R.id.main_coordinatorLayout)
+    CoordinatorLayout view;
+    @BindView(R.id.progress_bar_activity_main)
+    ProgressBar progressBar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     private AddMarkers addMarkers;
     private SupportMapFragment mMap;
@@ -189,12 +189,8 @@ public class MainActivity extends AppCompatActivity implements
         ab.setDisplayHomeAsUpEnabled(true);
 
 
-
         mContext = getApplicationContext();
         preferenceManager = new PreferenceManager(mContext);
-
-
-
 
 
         if (navigationView != null) {
@@ -202,59 +198,50 @@ public class MainActivity extends AppCompatActivity implements
         }
 
 
-
-
-
-
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mMap.getMapAsync(this);
 
 
-
         //for instructional snackbar
-        randomNum = 0 + (int)(Math.random() * 3);
-
+        randomNum = 0 + (int) (Math.random() * 3);
 
 
         refreshTimerTaskTime = preferenceManager.getRefreshTime();
-        savedRadius =  preferenceManager.getRadius();
+        savedRadius = preferenceManager.getRadius();
 
 
     }
 
 
-
-    private void permissionAtRunTime(){
+    private void permissionAtRunTime() {
         Log.i("MyMapsActivity", "permissionAtRunTime ");
 
         SDK_LEVEL = android.os.Build.VERSION.SDK_INT;
-        if (SDK_LEVEL >= Build.VERSION_CODES.M){
+        if (SDK_LEVEL >= Build.VERSION_CODES.M) {
             // ask runtime for lollipop and above versions
             hasLocationPermission = permissionCheck();
             Log.i("MyMapsActivity", "permissionCheck hasLocationPermission : " + hasLocationPermission);
 
-            if(!hasLocationPermission){
+            if (!hasLocationPermission) {
                 Log.i("MyMapsActivity", "permissionCheck !hasLocationPermission");
 
                 boolean hasFineLocationBeenRequested =
                         preferenceManager.getHasFineLocationPermissionBeenAsked();
-                if(!hasFineLocationBeenRequested){
+                if (!hasFineLocationBeenRequested) {
                     //if it has not been asked, ask!
                     showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
-                }else {
+                } else {
                     phonePermissionNotGranted();
                 }
 
-            }else{
+            } else {
                 responseAnsweredForRuntimePermission = true;
                 hasLocationPermission = true;
                 setUpAfterPermissionRequest();
             }
 
 
-
-
-        } else{
+        } else {
             // do something for phones running an SDK before lollipop
             responseAnsweredForRuntimePermission = true;
             hasLocationPermission = true;
@@ -297,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements
                     // contacts-related task you need to do.
 
                 } else {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED" );
+                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED");
                     hasLocationPermission = false;
 
                     setUpAfterPermissionRequest();
@@ -318,11 +305,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void setUpAfterPermissionRequest(){
-        Log.i("MyMapsActivity ", "setUpAfterPermissionRequest" );
+    private void setUpAfterPermissionRequest() {
+        Log.i("MyMapsActivity ", "setUpAfterPermissionRequest");
 
-        if(responseAnsweredForRuntimePermission){
-            Log.i("MyMapsActivity ", "responseAnsweredForRuntimePermission : " + responseAnsweredForRuntimePermission );
+        if (responseAnsweredForRuntimePermission) {
+            Log.i("MyMapsActivity ", "responseAnsweredForRuntimePermission : " + responseAnsweredForRuntimePermission);
 
             addMarkers = AddMarkers.getInstance();
             addMarkers.setInterface(MainActivity.this);
@@ -338,10 +325,7 @@ public class MainActivity extends AppCompatActivity implements
 //            snackBarInstructions[3] = getString(R.string.tap_bus_distances);
 
 
-
-
-
-            if(hasLocationPermission){
+            if (hasLocationPermission) {
 
                 Log.i("MyMapsActivity", "hasLocationPermission " + hasLocationPermission);
                 mLocationProvider = new LocationProvider(this, this);
@@ -353,8 +337,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
                 boolean isLocationEnabled = isLocationEnabled(this);
-                if(!isLocationEnabled){
-                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
+                if (!isLocationEnabled) {
+                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
                     latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
                     onMapPresedLatLng = EMPIRE_STATE_BUILDING_LAT_LNG;
@@ -363,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
 
-            }else {
+            } else {
                 Log.i("MyMapsActivity", "hasLocationPermission " + hasLocationPermission);
 
                 latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
@@ -374,10 +358,7 @@ public class MainActivity extends AppCompatActivity implements
             }
 
 
-
         }
-
-
 
 
         // permission denied, boo! Disable the
@@ -386,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void phonePermissionNotGranted() {
-        Log.d("MyMapsActivity", "phonePermissionNotGranted" );
+        Log.d("MyMapsActivity", "phonePermissionNotGranted");
         mMap.getMapAsync(this);
         hasLocationPermission = false;
         setUpAfterPermissionRequest();
@@ -395,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showPermissionAlertDialog(String title, String message) {
-        Log.d("MyMapsActivity", "showPermissionAlertDialog" );
+        Log.d("MyMapsActivity", "showPermissionAlertDialog");
 
 
         android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(this)
@@ -420,10 +401,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-
-
-
     @SuppressWarnings("unused")
     @OnClick(R.id.refresh_location_fab)
     public void refreshLocation(View view) {
@@ -443,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         //brings up keyboard
-        InputMethodManager inputMethodManager=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInputFromWindow(view.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
 
         LayoutInflater li = LayoutInflater.from(MainActivity.this);
@@ -452,7 +429,6 @@ public class MainActivity extends AppCompatActivity implements
 
         final EditText locationToSearchFor = (EditText) alertDialogView
                 .findViewById(R.id.seacrhed_address);
-
 
 
         final android.support.v7.app.AlertDialog.Builder alertDialogBuilder =
@@ -481,11 +457,10 @@ public class MainActivity extends AppCompatActivity implements
                                 .putCustomAttribute("address searched", locationToSearchFor.getText().toString()));
 
 
-
                     }
 
                 });
-        alertDialogBuilder.setNegativeButton("Cancel",  new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // get user input and set it to result
@@ -504,25 +479,14 @@ public class MainActivity extends AppCompatActivity implements
         alert.show();
 
 
-
     }
 
 
-
-    public void addMarkerToMap(LatLng markerLocation){
-        Log.i("MyMapsActivity", "addMarkerToMap ");
-        googleMap.addMarker(new MarkerOptions().position(markerLocation));
-
-    }
-
-
-
-
-    private void getLatLngForSearchLocationFromAddress(String location){
+    private void getLatLngForSearchLocationFromAddress(String location) {
         Log.i("MyMapsActivity", "getLatLngForSearchLocationFromAddress ");
         List<Address> addressList = null;
 
-        if (location != null && location.length() > 0 ) {
+        if (location != null && location.length() > 0) {
             Geocoder geocoder = new Geocoder(this);
             try {
                 addressList = geocoder.getFromLocationName(location, 2);
@@ -532,12 +496,11 @@ public class MainActivity extends AppCompatActivity implements
             }
 
 
-
-            if(addressList.size() > 0){
+            if (addressList.size() > 0) {
                 Address address = addressList.get(0);
                 LatLng onSearchLatLng = new LatLng(address.getLatitude(), address.getLongitude());
                 newLocationFromLatLng(onSearchLatLng);
-            }else {
+            } else {
                 Snackbar.make(view, getString(R.string.location_not_found), Snackbar.LENGTH_LONG)
                         .show();
             }
@@ -547,12 +510,12 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private boolean permissionCheck(){
+    private boolean permissionCheck() {
         Log.i("MyMapsActivity ", "permissionCheck");
         int permissionCheck = ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
-        if(permissionCheck == 0){
+        if (permissionCheck == 0) {
             return true;
         }
 
@@ -563,12 +526,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-
-
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.my_main_actvity_menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -577,18 +536,18 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId()== R.id.my_location_item){
-            if(hasLocationPermission){
+        if (item.getItemId() == R.id.my_location_item) {
+            if (hasLocationPermission) {
 
 
                 boolean isLocationEnabled = isLocationEnabled(this);
-                if(!isLocationEnabled){
-                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
+                if (!isLocationEnabled) {
+                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
                     Snackbar.make(view, getString(R.string.turn_on_location_snackbar_request), Snackbar.LENGTH_LONG)
                             .show();
 
-                }else{
+                } else {
                     onMapPresedLatLng = null;
                     newLocationFromLatLng(latLng);
                     Answers.getInstance().logContentView(new ContentViewEvent()
@@ -596,21 +555,21 @@ public class MainActivity extends AppCompatActivity implements
                             .putContentType(FABRIC_ANSWERS_ACTION));
                 }
 
-            }else{
+            } else {
                 Snackbar.make(view, getString(R.string.turn_on_location_snackbar_request), Snackbar.LENGTH_LONG)
                         .show();
             }
 
 
-        }else if(item.getItemId()== R.id.search_item){
+        } else if (item.getItemId() == R.id.search_item) {
             searchForLocationFromAddress();
-        }else if(item.getItemId()== android.R.id.home){
+        } else if (item.getItemId() == android.R.id.home) {
             mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
-        }else if(item.getItemId()== R.id.map_item){
+        } else if (item.getItemId() == R.id.map_item) {
 
 
-             Answers.getInstance().logContentView(new ContentViewEvent()
+            Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentName("Launch Map Activity")
                     .putContentType(FABRIC_ANSWERS_ACTION)
             );
@@ -627,7 +586,9 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void closeDrawer() {mDrawerLayout.closeDrawer(Gravity.LEFT);}
+    public void closeDrawer() {
+        mDrawerLayout.closeDrawer(Gravity.LEFT);
+    }
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
@@ -643,7 +604,7 @@ public class MainActivity extends AppCompatActivity implements
                         mContext = getApplicationContext();
                         prefBusMap = preferenceManager.getBusMapSelection();
 
-                        Intent intent = new Intent(mContext , AboutAppActivity.class);
+                        Intent intent = new Intent(mContext, AboutAppActivity.class);
 
 
                         switch (menuItem.getTitle().toString()) {
@@ -689,7 +650,7 @@ public class MainActivity extends AppCompatActivity implements
                                 break;
                             case NavigationViewItems.LICENSE:
 
-                                intent = new Intent(mContext , LicenseActivity.class);
+                                intent = new Intent(mContext, LicenseActivity.class);
                                 startActivity(intent);
                                 closeDrawer();
 
@@ -702,8 +663,6 @@ public class MainActivity extends AppCompatActivity implements
                                 break;
 
 
-
-
                         }
 
 
@@ -712,21 +671,21 @@ public class MainActivity extends AppCompatActivity implements
                 });
     }
 
-    private void enableLocationNavViewSelection(){
+    private void enableLocationNavViewSelection() {
 
-        if(!hasLocationPermission){
-            Log.d("MyMainActivity", "!hasLocationPermission || SDK_LEVEL < 23" );
+        if (!hasLocationPermission) {
+            Log.d("MyMainActivity", "!hasLocationPermission || SDK_LEVEL < 23");
             showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
             Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentName("Enable Location")
                     .putContentType(FABRIC_ANSWERS_ACTION)
                     .putCustomAttribute("Fine permission enabled", "False")
             );
-        }else{
+        } else {
 
             boolean isLocationEnabled = isLocationEnabled(mContext);
-            if(!isLocationEnabled){
-                Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
+            if (!isLocationEnabled) {
+                Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
                 startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), ENABLE_GPS);
 
@@ -739,9 +698,10 @@ public class MainActivity extends AppCompatActivity implements
                         .putCustomAttribute("Enable GPS intent fired", "true")
                 );
 
-            }else{
+            } else {
                 Toast.makeText(mContext, getString(R.string.you_allready_have_permission),
-                        Toast.LENGTH_LONG).show();;
+                        Toast.LENGTH_LONG).show();
+                ;
 
                 Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName("Enable Location")
@@ -755,15 +715,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-    private void selectDeafultBusMapNavViewSelection(){
+    private void selectDeafultBusMapNavViewSelection() {
 
 
         final String findWhatToPreSelect = preferenceManager.getBusMapSelection();
 
         int preSelectedIndex = 0;
 
-        switch ( findWhatToPreSelect) {
+        switch (findWhatToPreSelect) {
             case PreferenceManager.BUS_MAP_SELECTION_BROOKLYN:
                 preSelectedIndex = 0;
                 break;
@@ -786,18 +745,13 @@ public class MainActivity extends AppCompatActivity implements
         }
 
 
-        alertDialogWithList(getString(R.string.select_bus_map_tittle), preSelectedIndex, boroughs );
-
-
-
+        alertDialogWithList(getString(R.string.select_bus_map_tittle), preSelectedIndex, boroughs);
 
 
     }
 
 
-
-    private void deleteSavedFavoriteBusesNavViewSelection(){
-
+    private void deleteSavedFavoriteBusesNavViewSelection() {
 
 
         //removes change of color from icon color
@@ -807,7 +761,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
         Toast.makeText(mContext, getString(R.string.removed_fav_bus),
-                Toast.LENGTH_LONG).show();;
+                Toast.LENGTH_LONG).show();
+        ;
 
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Deleted favorite Buses")
@@ -819,7 +774,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private void setRefreshTimerNavViewSelection(){
+    private void setRefreshTimerNavViewSelection() {
 
 
         Answers.getInstance().logContentView(new ContentViewEvent()
@@ -847,17 +802,17 @@ public class MainActivity extends AppCompatActivity implements
                     break;
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             preSelectedIndex = 3;
         }
 
 
-         alertDialogWithList(getString(R.string.auto_refresh_time), preSelectedIndex, timerTaskEntries);
+        alertDialogWithList(getString(R.string.auto_refresh_time), preSelectedIndex, timerTaskEntries);
 
 
     }
 
-    private void setRadiusNavViewSelection(){
+    private void setRadiusNavViewSelection() {
 
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Refresh Timer Dialog")
@@ -869,11 +824,14 @@ public class MainActivity extends AppCompatActivity implements
 
         int preSelectedIndex = -1;
         switch (Integer.parseInt(findWhatToPreSelect)) {
-            case 200:  preSelectedIndex = 0;
+            case 200:
+                preSelectedIndex = 0;
                 break;
-            case 250:  preSelectedIndex = 1;
+            case 250:
+                preSelectedIndex = 1;
                 break;
-            case 300:  preSelectedIndex = 2;
+            case 300:
+                preSelectedIndex = 2;
                 break;
             default:
                 preSelectedIndex = 2;
@@ -882,7 +840,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
-         alertDialogWithList(getString(R.string.dialog_set_radius), preSelectedIndex, radiusEntries);
+        alertDialogWithList(getString(R.string.dialog_set_radius), preSelectedIndex, radiusEntries);
 
 
     }
@@ -891,8 +849,7 @@ public class MainActivity extends AppCompatActivity implements
         String mTwitterName = "spencerdepas";
         Intent intent = null;
         try {
-             // get the Twitter app if possible
-
+            // get the Twitter app if possible
 
 
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" +
@@ -902,7 +859,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         } catch (Exception e) {
-             Log.d("MyMapsActivity", "e :  " + e.toString());
+            Log.d("MyMapsActivity", "e :  " + e.toString());
             // no Twitter app, revert to browser
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" +
                     mTwitterName));
@@ -914,9 +871,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-
-    private void alertDialogWithList(final String tittle, int preSelectedIndex, final String[] items){
+    private void alertDialogWithList(final String tittle, int preSelectedIndex, final String[] items) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(tittle);
@@ -937,13 +892,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-    private void alertDialogLogic(String alertDialogTittle, int which){
+    private void alertDialogLogic(String alertDialogTittle, int which) {
 
         Log.d("MyMapsActivity", "alertDialogTittle.toLowerCase() : " + alertDialogTittle.toLowerCase());
 
         Log.d("MyMapsActivity", " which : " + which);
-
 
 
         switch (alertDialogTittle.toLowerCase()) {
@@ -960,7 +913,7 @@ public class MainActivity extends AppCompatActivity implements
                 );
 
 
-                 break;
+                break;
             case NavigationViewItems.DIALOG_TITTLE_SET_RADIUS:
 
                 Log.d("MyMapsActivity", "alertDialogLogic Select your radius radius[which] : " + radiusEntriesValues[which]);
@@ -991,13 +944,13 @@ public class MainActivity extends AppCompatActivity implements
             case NavigationViewItems.DIALOG_TITTLE_AUTO_REFRESH_TIME:
 
 
-                if(timerTaskEntriesValues[which] == "0"){
+                if (timerTaskEntriesValues[which] == "0") {
 
                     refreshTimerTaskTime = timerTaskEntriesValues[which];
                     preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
 
                     stopTimerTask();
-                    Log.i("MyMapsActivity", "mainActivity.stopTimerTask();" );
+                    Log.i("MyMapsActivity", "mainActivity.stopTimerTask();");
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
                             .putContentName("Refresh Timer time")
@@ -1005,7 +958,7 @@ public class MainActivity extends AppCompatActivity implements
                             .putCustomAttribute("time", "0")
                     );
 
-                }else{
+                } else {
 
                     refreshTimerTaskTime = timerTaskEntriesValues[which];
                     preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
@@ -1013,7 +966,7 @@ public class MainActivity extends AppCompatActivity implements
                     stopTimerTask();
 
                     startTimerTask();
-                    Log.i("MyMapsActivity", " refreshMarkers();" );
+                    Log.i("MyMapsActivity", " refreshMarkers();");
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
                             .putContentName("Refresh Timer time")
@@ -1032,15 +985,15 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.i("MyMapsActivity", "onActivityResult" );
+        Log.i("MyMapsActivity", "onActivityResult");
 
-        if(requestCode==ENABLE_GPS) {
-            Log.i("MyMapsActivity", "requestCode==ENABLE_GPS" );
+        if (requestCode == ENABLE_GPS) {
+            Log.i("MyMapsActivity", "requestCode==ENABLE_GPS");
 
 
             boolean isLocationEnabled = isLocationEnabled(mContext);
-            if(isLocationEnabled){
-                Log.i("MyMapsActivity", "onActivityResult isLocationEnabled" );
+            if (isLocationEnabled) {
+                Log.i("MyMapsActivity", "onActivityResult isLocationEnabled");
 
 
                 onMapPresedLatLng = null;
@@ -1055,7 +1008,7 @@ public class MainActivity extends AppCompatActivity implements
         int locationMode = 0;
         String locationProviders;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             try {
                 locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
 
@@ -1065,16 +1018,13 @@ public class MainActivity extends AppCompatActivity implements
 
             return locationMode != Settings.Secure.LOCATION_MODE_OFF;
 
-        }else{
+        } else {
             locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             return !TextUtils.isEmpty(locationProviders);
         }
 
 
     }
-
-
-
 
 
     private boolean isOnline() {
@@ -1085,16 +1035,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void refreshMarkers(){
+    private void refreshMarkers() {
         Log.i("MyMapsActivity", "refreshMarkers");
 
-        if(!isOnline()){
+        if (!isOnline()) {
             Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(getApplicationContext() , NoConnectionActivity.class);
+            Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
 
 
-        }else {
+        } else {
 
             zoom = googleMap.getCameraPosition().zoom;
             bearing = googleMap.getCameraPosition().bearing;
@@ -1102,26 +1052,25 @@ public class MainActivity extends AppCompatActivity implements
 
             progressBar.setVisibility(view.VISIBLE);
 
-            if(hasLocationPermission){
+            if (hasLocationPermission) {
                 Log.i("MyMapsActivity", "hasLocationPermission  " + hasLocationPermission);
 
 
 //                zoom = 16;
 //                bearing = 40;
                 boolean isLocationEnabled = isLocationEnabled(this);
-                if(!isLocationEnabled){
-                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled" );
+                if (!isLocationEnabled) {
+                    Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
                     selectCorrectLatLng();
 
-                }else{
+                } else {
                     mLocationProvider.disconnect();
                     mLocationProvider.connect();
                 }
 
 
-
-            }else{
+            } else {
                 Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
 
                 selectCorrectLatLng();
@@ -1137,60 +1086,75 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onInfoWindowClose(Marker marker) {
-        Log.i("PopupAdapterForMapMark", "  onInfoWindowClose " );
+        Log.i("PopupAdapterForMapMark", "  onInfoWindowClose ");
 
-         enableMapOnPress();
+        enableMapOnPress();
 
     }
 
 
-
-    private void animateCameraPos(){
+    private void animateCameraPos() {
         Log.i("MyMapsActivity", "animateCameraPos");
 
         Log.i("MyMapsActivity", "animateCameraPos zoom : " + zoom);
         Log.i("MyMapsActivity", "onMapPresedLatLng : " + onMapPresedLatLng);
 
-        if(onMapPresedLatLng != null){
+        if (onMapPresedLatLng != null) {
             Log.i("MyMapsActivity", "animateCameraPos onMapPresedLatLng != null");
             Log.i("MyMapsActivity", "animateCameraPos zoom : " + zoom);
             //this is for location from touch or search
-            if(zoom > 4){
+            if (zoom > 4) {
                 Log.i("MyMapsActivity", "animateCameraPos bearing != 0");
 
                 animateCamera(onMapPresedLatLng, zoom, bearing);
 
 
-            }else{
+            } else {
                 Log.i("MyMapsActivity", "animateCameraPos bearing == 0");
 
                 animateCamera(onMapPresedLatLng, 16, 40);
 
 
+            }
+
+
+        } else if (zoom > 4) {
+            Log.i("MyMapsActivity", "animateCameraPos bearing zoom > 4");
+
+
+            if (latLng.latitude == 0) {
+                Log.i("MyMapsActivity ", "latLng.latitude == 0");
+
+                animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, zoom, bearing);
+
+            }else {
+                animateCamera(latLng, zoom, bearing);
 
             }
 
 
 
-        }else if(zoom > 4){
-            Log.i("MyMapsActivity", "animateCameraPos bearing zoom > 4");
-
-            animateCamera(latLng, zoom, bearing);
-
-
-        }else{
+        } else {
             Log.i("MyMapsActivity", "animateCameraPos bearing == 0");
 
-            animateCamera(latLng, 16, 40);
+
+            if (latLng.latitude == 0) {
+                Log.i("MyMapsActivity ", "latLng.latitude == 0");
+
+                animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, 16, 40);
+
+            }else {
+                animateCamera(latLng, 16, 40);
+
+            }
 
         }
-
 
 
     }
 
 
-    private void animateCamera(LatLng target,float zoom, float bearing ){
+    private void animateCamera(LatLng target, float zoom, float bearing) {
 
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -1205,21 +1169,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-
-
-
-
     public void onPause() {
         super.onPause();
         Log.i("MyMapsActivity", "onPause()");
 
-//        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
+        preferenceManager.saveLatLng(latLng);
 
-        //AddMarkers.whatSnippetIsOpen();
-        if(zoom != 0){
+        if (zoom != 0) {
             zoom = googleMap.getCameraPosition().zoom;
             bearing = googleMap.getCameraPosition().bearing;
             Log.i("MyMapsActivity", "saving zoom :" + zoom);
@@ -1227,12 +1184,8 @@ public class MainActivity extends AppCompatActivity implements
         }
 
 
-
-
-
         stopTimerTask();
         saveFavBus();
-
 
 
     }
@@ -1281,7 +1234,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.i("MyMapsActivity", "onResume() hasLocationPermission: " + hasLocationPermission);
 
-        if(hasLocationPermission) {
+        if (hasLocationPermission) {
             Log.i("MyMapsActivity", "onResume() hasLocationPermission" + hasLocationPermission);
 
             checkPhoneParams();
@@ -1296,12 +1249,10 @@ public class MainActivity extends AppCompatActivity implements
             //showInstructionalSnackBar();
 
 
-        }else{
-
+        } else {
 
 
             setUpAfterPermissionRequest();
-
 
 
         }
@@ -1312,74 +1263,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-    private void showInstructionalSnackBar(){
-        Log.i("MyMapsActivity", "showInstructionalSnackBar()");
-
-        //MenuItem item = new MenuItem(R.id.map_item);
-//        ToolbarActionItemTarget navigationButtonViewTarget = new ToolbarActionItemTarget(toolbar, R.id.my_location_item);
-//
-//            //ViewTarget navigationButtonViewTarget = ViewTargets.navigationButtonViewTarget(toolbar);
-//            new ShowcaseView.Builder(this)
-//
-//
-//                    .withMaterialShowcase()
-//                    .setTarget(navigationButtonViewTarget)
-//                    .setStyle(R.style.CustomShowcaseTheme2)
-//                    .setContentText("Here's how to return to your current location")
-//                    .build()
-//                    .show();
-
-
-
-
-
-
-//        Log.i("MyMapsActivity", "showInstructionalSnackBar() : " + randomNum);
-//
-//        boolean hasInstructionalSnackBarBeenAccepted
-//                = prefs.getBoolean(snackBarInstructions[randomNum], false);
-//
-//        if(!hasInstructionalSnackBarBeenAccepted) {
-//            Log.i("MyMapsActivity", "showInstructionalSnackBar hasInstructionalSnackBarBeenAccepted : "
-//                    + hasInstructionalSnackBarBeenAccepted);
-//
-//            Log.i("MyMapsActivity", "showInstructionalSnackBar hasInstructionalSnackBarBeenShownOnThisLaunch : "
-//                    + hasInstructionalSnackBarBeenShownOnThisLaunch);
-//
-//            if (!hasInstructionalSnackBarBeenShownOnThisLaunch) {
-//                hasInstructionalSnackBarBeenShownOnThisLaunch = true;
-//
-//                Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenShownOnThisLaunch()");
-//                Snackbar snackbar = Snackbar
-//                        .make(view, snackBarInstructions[randomNum], Snackbar.LENGTH_LONG)
-//                        .setAction("GOT IT", new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//
-//                                Log.i("MyMapsActivity", "!hasInstructionalSnackBarBeenShownOnThisLaunch() onclick");
-//                                SharedPreferences.Editor editor = prefs.edit();
-//
-//                                editor.putBoolean(snackBarInstructions[randomNum], true);
-//                                editor.commit();
-//
-//                            }
-//                        });
-//
-//                snackbar.show();
-//
-//
-//            }
-//
-//        }
-
-
-    }
-
-
-
-
-    private void checkPhoneParams(){
+    private void checkPhoneParams() {
 
         boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
@@ -1416,15 +1300,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void removeSavedFavBusFromStorage(){
-
+    private void removeSavedFavBusFromStorage() {
 
 
         busCodeOfFavBusStops.clear();
         Log.i("MyMapsActivity", "busCodeOfFavBusStops.size : " + busCodeOfFavBusStops.size());
     }
-
-
 
 
     public void startTimerTask() {
@@ -1433,18 +1314,16 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "refreshTimerTaskTime : " + refreshTimerTaskTime);
 
 
-
-
-        if(refreshTimerTaskTime.equals("OFF")){
+        if (refreshTimerTaskTime.equals("OFF")) {
             refreshTimerTaskTime = "0";
-        }else{
+        } else {
 
 
             Log.i("MyMapsActivity", "refreshTimerTaskTime()" + refreshTimerTaskTime);
 
             int timeInMS = Integer.parseInt(refreshTimerTaskTime) * 1000;
             Log.i("MyMapsActivity", "timeInMS()" + timeInMS);
-            if(timeInMS != 0) {
+            if (timeInMS != 0) {
                 //set a new Timer
                 timer = new Timer();
                 //initialize the TimerTask's job
@@ -1455,22 +1334,19 @@ public class MainActivity extends AppCompatActivity implements
                 timer.schedule(timerTask, 20000, timeInMS);
 
 
-
             }
 
         }
     }
 
     public void stopTimerTask() {
-        Log.i("MyMapsActivity", "stopTimerTask()" );
+        Log.i("MyMapsActivity", "stopTimerTask()");
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
             timer = null;
         }
     }
-
-
 
 
     private void initializeTimerTask() {
@@ -1482,21 +1358,16 @@ public class MainActivity extends AppCompatActivity implements
                 selectCorrectLatLng();
 
 
-
             }
         };
     }
 
 
-
-
-
     private void saveFavBus() {
-        Log.i("MyMapsActivity","saveFavBus()");
+        Log.i("MyMapsActivity", "saveFavBus()");
 
 
-
-        if(busCodeOfFavBusStops != null){
+        if (busCodeOfFavBusStops != null) {
 
             try {
                 FileOutputStream fos = mContext.openFileOutput(getResources().getString(R.string.fav_bus_key), Context.MODE_PRIVATE);
@@ -1514,57 +1385,39 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private ArrayList<String> loadFavBus() {
-        Log.i("MyMapsActivity","loadFavBus");
+        Log.i("MyMapsActivity", "loadFavBus");
 
-        try{
+        try {
             FileInputStream fis = this.openFileInput(getResources().getString(R.string.fav_bus_key));
             ObjectInputStream is = new ObjectInputStream(fis);
-            ArrayList<String> favBuses = (ArrayList)  is.readObject();
+            ArrayList<String> favBuses = (ArrayList) is.readObject();
             is.close();
             fis.close();
-            Log.i("MyMapsActivity","favBuses.size()" + favBuses.size());
+            Log.i("MyMapsActivity", "favBuses.size()" + favBuses.size());
             return favBuses;
 
-        }catch(Exception e) {
-            Log.i("MyMapsActivity", "e : " + e );
+        } catch (Exception e) {
+            Log.i("MyMapsActivity", "e : " + e);
             e.printStackTrace();
         }
-        Log.i("MyMapsActivity","loadFavBus return dud");
+        Log.i("MyMapsActivity", "loadFavBus return dud");
         return new ArrayList<>();
 
 
     }
 
 
-
-    double distFrom(double lat1, double lng1, double lat2, double lng2) {
-        double earthRadius = 6371000; //meters
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLng = Math.toRadians(lng2-lng1);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        float dist = (float) (earthRadius * c);
-
-        return dist;
-    }
-
-
-    private void toaster(String string){
+    private void toaster(String string) {
         Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_LONG);
         toast.show();
     }
-
-
-
 
 
     @Override
     public void handleNewLocation(Location location) {
         Log.i("MyMapsActivity", "handleNewLocation ");
 
-        if(!isOnline()){
+        if (!isOnline()) {
             Log.i("MyMapsActivity", "!isOnline()");
             Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
@@ -1584,28 +1437,46 @@ public class MainActivity extends AppCompatActivity implements
         selectCorrectLatLng();
 
 
-
-
-
-
     }
 
-    private void selectCorrectLatLng(){
-        Log.i("MyMapsActivity ", "selectCorrectLatLng " );
+    private void selectCorrectLatLng() {
+        Log.i("MyMapsActivity ", "selectCorrectLatLng ");
 
 
-        if(callAndParse == null){
+        if (callAndParse == null) {
             callAndParse = new CallAndParse(MainActivity.this);
         }
 
 
-        if(onMapPresedLatLng != null){
+        if (onMapPresedLatLng != null) {
 
             callAndParse.getBusStopsAndBusDistances(onMapPresedLatLng, busCodeOfFavBusStops, savedRadius);
-        }else{
+        } else {
+
+            if (latLng == null) {
+                Log.i("MyMapsActivity ", "Used prefrence manager latLng ");
+
+                latLng = preferenceManager.getLatLng();
+
+
+            }else{
+
+                if (latLng.latitude == 0) {
+                    Log.i("MyMapsActivity ", "latLng.latitude == 0");
+
+                    latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
+                }
+
+            }
+            Log.i("MyMapsActivity ", "getBusStopsAndBusDistances");
+
+            Log.i("MyMapsActivity ", "latLng : " + latLng.latitude);
+
             callAndParse.getBusStopsAndBusDistances(latLng, busCodeOfFavBusStops, savedRadius);
+
         }
     }
+
 
     @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -1620,8 +1491,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-
     @Override
     public void displayDialog(String buscode) {
         Log.i("MyMapsActivity", "displayDialog interface");
@@ -1630,17 +1499,17 @@ public class MainActivity extends AppCompatActivity implements
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Set Favorite bus stop dialog")
                 .putContentType(FABRIC_ANSWERS_ACTION)
-             );
+        );
 
 
         final String finalBuscode = buscode;
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.set_fav_bus));
         builder.setMessage("BusCode: " + finalBuscode
-                + "\n" + "\n" +  getString(R.string.set_fav_bus_body));
-        builder.setPositiveButton("SET", new DialogInterface.OnClickListener()  {
+                + "\n" + "\n" + getString(R.string.set_fav_bus_body));
+        builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Log.d( "AlertDialog", "Positive" );
+                Log.d("AlertDialog", "Positive");
                 dialog.dismiss();
 
 
@@ -1696,11 +1565,9 @@ public class MainActivity extends AppCompatActivity implements
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
 
-
-
         enableMapOnPress();
 
-        if(!oneTimeCall){
+        if (!oneTimeCall) {
             oneTimeCall = true;
 
             busCodeOfFavBusStops = loadFavBus();
@@ -1714,12 +1581,9 @@ public class MainActivity extends AppCompatActivity implements
         }
 
 
-
-
-
     }
 
-    public void disableMapOnPress(){
+    public void disableMapOnPress() {
         Log.d("MyMapsActivity", "disableMapOnPress");
         googleMap.setOnMapClickListener(null);
         Log.d("MyMapsActivity", "i work once fEnable : " + isMapOnPressEnabled);
@@ -1727,8 +1591,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-    public void enableMapOnPress(){
+    public void enableMapOnPress() {
         Log.d("MyMapsActivity", "enableMapOnPress");
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -1738,7 +1601,7 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d("MyMapsActivity", "onMapClick");
 
                 //Log.d("MyMapsActivity", "fEnable : " + fEnable);
-                if(isMapOnPressEnabled) {
+                if (isMapOnPressEnabled) {
                     isMapOnPressEnabled = false;
                     // TODO Auto-generated method stub
                     Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
@@ -1746,15 +1609,14 @@ public class MainActivity extends AppCompatActivity implements
                     Answers.getInstance().logContentView(new ContentViewEvent()
                             .putContentName("Map on Press for New Location")
                             .putContentType("Selection")
-                            );
+                    );
 
                     newLocationFromLatLng(arg0);
-                } else{
+                } else {
 
                     isMapOnPressEnabled = true;
                     //Log.d("MyMapsActivity", "isMapOnPressEnabled : " + isMapOnPressEnabled);
                 }
-
 
 
             }
@@ -1763,14 +1625,12 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private void newLocationFromLatLng(LatLng latLng){
+    private void newLocationFromLatLng(LatLng latLng) {
         Log.d("MyMapsActivity", "newLocationFromLatLng");
 
         MarkerManager markerManager = MarkerManager.getInstance();
 
         Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-
-
 
 
         onMapPresedLatLng = latLng;
@@ -1793,12 +1653,13 @@ public class MainActivity extends AppCompatActivity implements
 
         //showInstructionalSnackBar();
 
-        if(progressBar.getVisibility() == View.VISIBLE){
+        if (progressBar.getVisibility() == View.VISIBLE) {
             progressBar.setVisibility(view.INVISIBLE);
+            if(latLng == EMPIRE_STATE_BUILDING_LAT_LNG){
+                Snackbar.make(view, "Location not available", Snackbar.LENGTH_LONG)
+                        .show();
+            }
         }
-
-
-
 
 
     }

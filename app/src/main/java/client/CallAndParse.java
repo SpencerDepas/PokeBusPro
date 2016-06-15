@@ -27,7 +27,6 @@ import ui.activity.interfaces.NoBusesInAreaInterface;
 public class CallAndParse {
 
 
-
     private NoBusesInAreaInterface noBusINterFace = null;
     //private final String API_KEY = "AIzaSyAljUMfpi4WiIiLi7nHTWakvYz_PS23Pyw";
 
@@ -45,10 +44,7 @@ public class CallAndParse {
     //final private String MTA_BUS_DISTANCE_API = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_301649&MaximumStopVisits=3";
 
 
-    SharedPreferences prefs;
-
-    public CallAndParse(NoBusesInAreaInterface noBusINterFace){
-
+    public CallAndParse(NoBusesInAreaInterface noBusINterFace) {
 
 
         this.noBusINterFace = noBusINterFace;
@@ -63,6 +59,7 @@ public class CallAndParse {
         Log.i("MyCallAndParse", "getBusStopsAndBusDistances");
 
         this.favBusStops = favBusStops;
+
 
         Log.i("MyCallAndParse", "favBusStops. size : " + favBusStops.size());
 
@@ -88,8 +85,6 @@ public class CallAndParse {
         //String lng = "-73.9838934";
 
 
-
-
         bussStopInterface.getBusStop(prefRadius, lat, lng, new Callback<BusStopExample>() {
 
 
@@ -103,12 +98,11 @@ public class CallAndParse {
                 busStopsSize = busStopExample.getData().getStops().size();
 
                 //only make a call if we have bus stops
-                if(busStopExample.getData().getStops().size() > 0){
+                if (busStopExample.getData().getStops().size() > 0) {
                     makeBusDistanceThreads(busStopExample);
-                }else {
+                } else {
                     noBusINterFace.noBususFound();
                 }
-
 
 
             }
@@ -125,14 +119,12 @@ public class CallAndParse {
 
     }
 
-    private void makeBusDistanceThreads(BusStopExample busStopExample){
-        Log.i("MyCallAndParse", "makeBusDistanceThreads" );
+    private void makeBusDistanceThreads(BusStopExample busStopExample) {
+        Log.i("MyCallAndParse", "makeBusDistanceThreads");
 
 
-
-
-        for(int i = 0 ; i <  busStopExample.getData().getStops().size(); i ++){
-            Log.i("MyCallAndParse", "makeBusDistanceThreads buscode for loop " +  busStopExample.getData().getStops().get(i).getCode());
+        for (int i = 0; i < busStopExample.getData().getStops().size(); i++) {
+            Log.i("MyCallAndParse", "makeBusDistanceThreads buscode for loop " + busStopExample.getData().getStops().get(i).getCode());
             LatLng busStopLatLng = new LatLng(busStopExample.getData().getStops().get(i).getLat(), busStopExample.getData().getStops().get(i).getLon());
             GetBusDistancesLongOperation getBusDistancesLongOperation = new GetBusDistancesLongOperation(busStopLatLng);
             getBusDistancesLongOperation.execute(busStopExample.getData().getStops().get(i).getCode());
@@ -142,13 +134,12 @@ public class CallAndParse {
     }
 
 
-
-    public void getBusStopsDistances(String busCode,  LatLng busStopLatLng) {
+    public void getBusStopsDistances(String busCode, LatLng busStopLatLng) {
         Log.i("MyCallAndParse", " getBusStopsDistances   ");
 
 
         final String finalBusCode = busCode;
-        final LatLng finalbusStopLatLng =  busStopLatLng;
+        final LatLng finalbusStopLatLng = busStopLatLng;
         Log.i("MyCallAndParse", " getBusStopsDistances   busCode  : " + busCode);
         //Retrofit
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -160,7 +151,7 @@ public class CallAndParse {
 
         GetBussStopInterface bussStopInterface = restAdapter.create(GetBussStopInterface.class);
 
-        bussStopInterface.getBusDistancesFromStop("MTA_" + busCode, returnHowManyIncomingBuses,  new Callback<DistancesExample>() {
+        bussStopInterface.getBusDistancesFromStop("MTA_" + busCode, returnHowManyIncomingBuses, new Callback<DistancesExample>() {
 
 
             @Override
@@ -173,13 +164,10 @@ public class CallAndParse {
                         .size()
                 );
 
-                Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode );
+                Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode);
                 AddMarkers addMarkers = AddMarkers.getInstance();
                 addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode,
                         finalbusStopLatLng, favBusStops);
-
-
-
 
 
             }
@@ -197,42 +185,37 @@ public class CallAndParse {
     }
 
 
-
     public class GetBusDistancesLongOperation extends AsyncTask<String, Void, Void> {
         private LatLng busStopLatLng;
         private String busCode;
 
-        public GetBusDistancesLongOperation(LatLng busStopLatLng){
+        public GetBusDistancesLongOperation(LatLng busStopLatLng) {
             this.busStopLatLng = busStopLatLng;
         }
 
         @Override
         protected Void doInBackground(String... params) {
-            Log.i("MyCallAndParse", "GetBusDistancesLongOperation" );
+            Log.i("MyCallAndParse", "GetBusDistancesLongOperation");
             busCode = params[0];
-            Log.i("MyCallAndParse", "GetBusDistancesLongOperation params.toString() : " +  busCode);
-
+            Log.i("MyCallAndParse", "GetBusDistancesLongOperation params.toString() : " + busCode);
 
 
             getBusStopsDistances(busCode, busStopLatLng);
 
-            Log.i("MyCallAndParse", "post getBusStopsDistances"  + busCode);
+            Log.i("MyCallAndParse", "post getBusStopsDistances" + busCode);
 
-           return null;
+            return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            Log.i("MyCallAndParse", "onPostExecute" );
+            Log.i("MyCallAndParse", "onPostExecute");
 
 
-            Log.i("MyCallAndParse", "onPostExecute busCode : " + busCode );
+            Log.i("MyCallAndParse", "onPostExecute busCode : " + busCode);
         }
 
     }
-
-
-
 
 
 }

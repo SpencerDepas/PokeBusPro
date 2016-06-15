@@ -3,6 +3,8 @@ package Preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import javax.inject.Inject;
 
 import butterknife.BindArray;
@@ -10,7 +12,8 @@ import clearfaun.com.pokebuspro.R;
 
 /**
  * Created by SpencerDepas on 5/14/16.
- */public class PreferenceManager {
+ */
+public class PreferenceManager {
 
     private static String PREF_NAME = "prefs";
 
@@ -18,6 +21,8 @@ import clearfaun.com.pokebuspro.R;
     private static final String RADIUS = "KEY1";
     private static final String REFRESH_TIME = "KEY2";
     private static final String FINE_LOCATION_PERMISSION_ASKED = "fine_location_permission_has_been_asked";
+    private static final String LAST_KNOWN_LAT = "last_known_lat";
+    private static final String LAST_KNOWN_LNG = "last_known_lng";
 
 
     private static final String HAS_INSTRUCTIONAL_SNACKBAR_BEEN_DISMISSED = "KEY2";
@@ -32,32 +37,45 @@ import clearfaun.com.pokebuspro.R;
 
 
     @BindArray(R.array.instructional_snackbar)
-    protected String [] instructions;
+    protected String[] instructions;
 
     SharedPreferences sharedPreferences;
 
 
-    public PreferenceManager(Context mContext){
+    public PreferenceManager(Context mContext) {
         sharedPreferences = mContext.getSharedPreferences(
                 PREF_NAME, Context.MODE_PRIVATE);
     }
 
 
-
     public boolean getHasFineLocationPermissionBeenAsked() {
-         return this.sharedPreferences.getBoolean(FINE_LOCATION_PERMISSION_ASKED, false);
+        return this.sharedPreferences.getBoolean(FINE_LOCATION_PERMISSION_ASKED, false);
 
     }
 
     public void saveHasFineLocationPermissionBeenAsked(boolean value) {
         saveValue(FINE_LOCATION_PERMISSION_ASKED, value);
-
     }
+
+    public void saveLatLng(LatLng value) {
+        saveValue(LAST_KNOWN_LAT, value.latitude);
+        saveValue(LAST_KNOWN_LNG, value.longitude);
+    }
+
+    public LatLng getLatLng() {
+        LatLng latLng = new LatLng(
+                this.sharedPreferences.getLong(LAST_KNOWN_LAT, 0),
+                this.sharedPreferences.getLong(LAST_KNOWN_LNG, 0));
+
+        return latLng;
+    }
+
+
     public boolean getHasInstructionalSnackBarBeenDismissed() {
         return this.sharedPreferences.getBoolean(HAS_INSTRUCTIONAL_SNACKBAR_BEEN_DISMISSED, false);
     }
 
-    public void saveHasInstructionalSnackBarBeenDismissed(boolean value){
+    public void saveHasInstructionalSnackBarBeenDismissed(boolean value) {
         saveValue(HAS_INSTRUCTIONAL_SNACKBAR_BEEN_DISMISSED, value);
     }
 
@@ -67,7 +85,7 @@ import clearfaun.com.pokebuspro.R;
     }
 
     public boolean getinstructionalSnackbar() {
-        randomNum = 0 + (int)(Math.random() * 3);
+        randomNum = 0 + (int) (Math.random() * 3);
         return this.sharedPreferences.getBoolean(instructions[randomNum], false);
 
     }
@@ -88,8 +106,6 @@ import clearfaun.com.pokebuspro.R;
         return this.sharedPreferences.getString(RADIUS, "300");
 
     }
-
-
 
 
     public void saveRadius(String radius) {
@@ -120,6 +136,15 @@ import clearfaun.com.pokebuspro.R;
         editor.putBoolean(key, value);
         editor.commit();
     }
+
+
+    public void saveValue(String key, double value) {
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        editor.putLong(key, Double.doubleToRawLongBits(value));
+        editor.commit();
+
+    }
+
 
 }
 
