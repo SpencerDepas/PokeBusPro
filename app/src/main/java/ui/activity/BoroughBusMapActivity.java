@@ -31,7 +31,7 @@ import clearfaun.com.pokebuspro.R;
 /**
  * Created by spencer on 3/16/2015.
  */
-public class BoroughBusMapActivity extends AppCompatActivity   {
+public class BoroughBusMapActivity extends AppCompatActivity {
 
     private ProgressBar spinner;
     SubsamplingScaleImageView imageView;
@@ -63,13 +63,10 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
         preferenceManager = new PreferenceManager(mContext);
 
 
-
         savedBusMap = preferenceManager.getBusMapSelection();
 
 
-        spinner = (ProgressBar)findViewById(R.id.spinner);
-
-
+        spinner = (ProgressBar) findViewById(R.id.spinner);
 
 
         Log.d("BoroughBusMapActivity", "savedBusMap:" + savedBusMap);
@@ -77,52 +74,55 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
         loadMap();
 
 
-
     }
 
-    private void loadMap(){
+    private void loadMap() {
         Log.i("BoroughBusMapActivity", "loadMap");
 
 
-
-        if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_BROOKLYN)){
+        if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_BROOKLYN)) {
             Log.i("BoroughBusMapActivity", "in bk");
-            imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
+            imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busbklnmap.jpg"));
-        }else if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_MANHATTAN)){
+        } else if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_MANHATTAN)) {
             Log.i("BoroughBusMapActivity", "in mn");
-            imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
+            imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("manbusmap.jpg"));
-        }else if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_QUEENS)){
+        } else if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_QUEENS)) {
             Log.i("BoroughBusMapActivity", "in qns");
-            imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
+            imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busqnsmap.jpg"));
-        }else if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_BRONX)){
+        } else if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_BRONX)) {
             Log.i("BoroughBusMapActivity", "in bx");
-            imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
+            imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busbxmap.jpg"));
-        }else if(savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_STATEN_ISLAND)){
+        } else if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_STATEN_ISLAND)) {
             Log.i("BoroughBusMapActivity", "in si");
-            imageView = (SubsamplingScaleImageView)findViewById(R.id.imageView);
+            imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("bussimap.jpg"));
 
         }
 
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
             @Override
-            public void onReady() { }
+            public void onReady() {
+            }
+
             @Override
             public void onImageLoaded() {
                 spinner.setVisibility(View.INVISIBLE);
             }
+
             @Override
             public void onPreviewLoadError(Exception e) {
 
             }
+
             @Override
             public void onImageLoadError(Exception e) {
 
             }
+
             @Override
             public void onTileLoadError(Exception e) {
 
@@ -130,13 +130,12 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
         });
     }
 
-    private int findPreselectedIndex(){
-
+    private int findPreselectedIndex() {
 
 
         int preSelectedIndex = 0;
 
-        switch ( savedBusMap) {
+        switch (savedBusMap) {
             case PreferenceManager.BUS_MAP_SELECTION_BROOKLYN:
                 preSelectedIndex = 0;
                 break;
@@ -161,11 +160,10 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
     }
 
 
-    private void selectMapDialog(){
+    private void selectMapDialog() {
 
 
         int preSelectedIndex = findPreselectedIndex();
-
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(BoroughBusMapActivity.this, R.style.AppCompatAlertDialogStyle);
@@ -196,14 +194,13 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
                     saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_QUEENS);
 
 
-
                 } else if (which == 3) {
                     Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 2);
 
                     saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_BRONX);
 
 
-                }else if (which == 4) {
+                } else if (which == 4) {
                     Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 2);
 
 
@@ -220,7 +217,7 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
         builder.show();
     }
 
-    private void saveMapSelection(String mapSelection){
+    private void saveMapSelection(String mapSelection) {
 
         preferenceManager.saveBusMapSelection(mapSelection);
         savedBusMap = mapSelection;
@@ -234,8 +231,6 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
     }
 
 
-
-
     @SuppressWarnings("unused")
     @OnClick(R.id.map_fab)
     public void selectMap(View view) {
@@ -247,18 +242,18 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
     }
 
     @Override
-    public  boolean  onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(!isOnline()){
+        if (!isOnline()) {
             Log.i("MyMapsActivity", "!isOnline()");
             Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
             this.finish();
-        }else{
+        } else {
             this.finish();
         }
 
-        return  true;
+        return true;
     }
 
     private boolean isOnline() {
@@ -272,8 +267,6 @@ public class BoroughBusMapActivity extends AppCompatActivity   {
     protected void onResume() {
         super.onResume();
     }
-
-
 
 
 }

@@ -16,20 +16,20 @@ public class MarkerManager {
     //private List<Crime> mCrimes;
     private Hashtable<String, Marker> markerHashTable;
 
-    public static synchronized MarkerManager getInstance(){
-        if(sMarkerManager == null){
+    public static synchronized MarkerManager getInstance() {
+        if (sMarkerManager == null) {
             sMarkerManager = new MarkerManager();
         }
         return sMarkerManager;
     }
 
-    private MarkerManager(){
+    private MarkerManager() {
         Log.i("MarkerManager", " ");
 
     }
 
-    public Hashtable<String, Marker> getMarkerHashTable(){
-        if(markerHashTable == null){
+    public Hashtable<String, Marker> getMarkerHashTable() {
+        if (markerHashTable == null) {
             markerHashTable = new Hashtable<String, Marker>();
         }
 

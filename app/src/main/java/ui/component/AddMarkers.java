@@ -117,7 +117,6 @@ public class AddMarkers {
         Log.i("AddMarkers", "  favBuses.size :  " + favBuses.size());
 
 
-
         if (CallAndParse.busStopsSize == 0) {
             //called once
             Log.i("AddMarkerstz", "  called onece?  ");

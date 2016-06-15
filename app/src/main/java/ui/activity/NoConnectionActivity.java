@@ -47,13 +47,10 @@ public class NoConnectionActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
 
-
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("No connection Activity")
                 .putContentType("Activity")
         );
-
-
 
 
     }
@@ -70,11 +67,10 @@ public class NoConnectionActivity extends AppCompatActivity {
     public void mapsActivityIntent(View view) {
         Log.i("MyMapsActivity", "onClick refreshLocation");
 
-        if(isOnline()){
-            Intent intent = new Intent(mContext , MainActivity.class);
+        if (isOnline()) {
+            Intent intent = new Intent(mContext, MainActivity.class);
             startActivity(intent);
         }
-
 
 
     }
@@ -84,7 +80,7 @@ public class NoConnectionActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
-        if(item.getItemId()== R.id.map_item){
+        if (item.getItemId() == R.id.map_item) {
             String prefBusMap = prefs.getString("KEY99", "Brooklyn");
 
             Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);

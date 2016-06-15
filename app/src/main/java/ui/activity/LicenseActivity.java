@@ -37,9 +37,6 @@ public class LicenseActivity extends AppCompatActivity {
     private StringTokenizer tokenizer;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,10 +72,10 @@ public class LicenseActivity extends AppCompatActivity {
     }
 
     @Override
-    public  boolean  onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
         this.finish();
-        return  true;
+        return true;
     }
 
 
@@ -89,8 +86,8 @@ public class LicenseActivity extends AppCompatActivity {
         inputStream[1] = getResources().openRawResource(R.raw.licensetwo);
         inputStream[2] = getResources().openRawResource(R.raw.license_three);
         //     InputStream inputStream = getResources().openRawResource(R.raw.internals);
-        for (int z = 0; z < inputStream.length; z ++){
-                System.out.println(inputStream);
+        for (int z = 0; z < inputStream.length; z++) {
+            System.out.println(inputStream);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
             int i;

@@ -16,7 +16,7 @@ import ui.activity.interfaces.DialogPopupListner;
 /**
  * Created by spencer on 2/25/2015.
  */
-public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
+public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
 
     private View popup = null;
     private LayoutInflater inflater = null;
@@ -30,15 +30,10 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
     }
 
 
-
     @Override
     public View getInfoWindow(Marker marker) {
         return (null);
     }
-
-
-
-
 
 
     @SuppressLint("InflateParams")
@@ -52,7 +47,6 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
         }
 
 
-
         mainActivity = new MainActivity();
 
         TextView busCode = (TextView) popup.findViewById(R.id.bus_code);
@@ -60,7 +54,6 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
 
 
         //BusInfo.setCurrentDisplayedBusName(MainActivity.busInfo.get(i).busName);
-
 
 
         busCode.setText(marker.getTitle() + "\n" +
@@ -74,18 +67,17 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
         busCode.setText(marker.getTitle().substring(0, 6));
 
 
-
         distances.setText(marker.getSnippet());
         //MainActivity.busInfo.get(i).setAddedToPopup(true);
 
 
-        markerCurrentKey  = marker.getTitle().substring(0, 6);
+        markerCurrentKey = marker.getTitle().substring(0, 6);
         final String fBusCode = marker.getTitle().substring(0, 6);
         mainActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker Pin) {
 
-                Log.i("PopupAdapterForMapMark", "  setOnInfoWindowClickListener " );
+                Log.i("PopupAdapterForMapMark", "  setOnInfoWindowClickListener ");
 
 
                 popupListner.displayDialog(fBusCode);
@@ -96,10 +88,6 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter{
 
 
         mainActivity.disableMapOnPress();
-
-
-
-
 
 
         return (popup);

@@ -1127,11 +1127,10 @@ public class MainActivity extends AppCompatActivity implements
 
                 animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, zoom, bearing);
 
-            }else {
+            } else {
                 animateCamera(latLng, zoom, bearing);
 
             }
-
 
 
         } else {
@@ -1143,7 +1142,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, 16, 40);
 
-            }else {
+            } else {
                 animateCamera(latLng, 16, 40);
 
             }
@@ -1459,7 +1458,7 @@ public class MainActivity extends AppCompatActivity implements
                 latLng = preferenceManager.getLatLng();
 
 
-            }else{
+            } else {
 
                 if (latLng.latitude == 0) {
                     Log.i("MyMapsActivity ", "latLng.latitude == 0");
@@ -1655,7 +1654,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (progressBar.getVisibility() == View.VISIBLE) {
             progressBar.setVisibility(view.INVISIBLE);
-            if(latLng == EMPIRE_STATE_BUILDING_LAT_LNG){
+            if (latLng == EMPIRE_STATE_BUILDING_LAT_LNG) {
                 Snackbar.make(view, "Location not available", Snackbar.LENGTH_LONG)
                         .show();
             }

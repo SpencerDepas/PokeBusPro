@@ -59,6 +59,7 @@ public class LocationProvider implements
     }
 
     boolean fromOnResume;
+
     public void connect() {
         mGoogleApiClient.connect();
     }
@@ -69,7 +70,9 @@ public class LocationProvider implements
             mGoogleApiClient.disconnect();
         }
     }
+
     static Location lPLocation;
+
     @Override
     public void onConnected(Bundle bundle) {
         Log.i("LocationProvider", "Location services connected.");
@@ -77,8 +80,7 @@ public class LocationProvider implements
         lPLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (lPLocation == null) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-        else {
+        } else {
             mLocationCallback.handleNewLocation(lPLocation);
             Log.i("LocationProvider", "Location services connected have location.");
         }
@@ -99,7 +101,7 @@ public class LocationProvider implements
          */
         if (connectionResult.hasResolution() && mContext instanceof Activity) {
             try {
-                Activity activity = (Activity)mContext;
+                Activity activity = (Activity) mContext;
                 // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(activity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
             /*

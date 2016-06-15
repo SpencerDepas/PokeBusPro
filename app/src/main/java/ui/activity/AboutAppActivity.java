@@ -28,8 +28,8 @@ import clearfaun.com.pokebuspro.R;
 public class AboutAppActivity extends AppCompatActivity {
 
 
-
-    @BindView(R.id.clearfaun_image)  ImageView clearFaunLogo;
+    @BindView(R.id.clearfaun_image)
+    ImageView clearFaunLogo;
 
 
     @Override
@@ -68,7 +68,7 @@ public class AboutAppActivity extends AppCompatActivity {
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("About Screen")
                 .putContentType("Activity")
-          );
+        );
 
 
     }
@@ -83,18 +83,18 @@ public class AboutAppActivity extends AppCompatActivity {
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("About Screen image clicked")
                 .putContentType("Action")
-              );
+        );
     }
 
 
     @Override
-    public  boolean  onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
 
         this.finish();
 
 
-        return  true;
+        return true;
     }
 
 
@@ -102,4 +102,4 @@ public class AboutAppActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
-    }
+}
