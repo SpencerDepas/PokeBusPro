@@ -42,6 +42,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
@@ -61,6 +62,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 import model.NavigationViewItems;
 import ui.component.AddMarkers;
 import clearfaun.com.pokebuspro.LocationProvider;
@@ -177,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_nav_draw);
         ButterKnife.bind(this);
+        Fabric.with(this, new Crashlytics());
 
         Log.i("MyMapsActivity", "onCreate");
 
@@ -265,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
 
+                    closeDrawer();
                     googleMap.clear();
                     mLocationProvider = new LocationProvider(this, this);
 
@@ -286,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements
                 } else {
                     Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED");
                     hasLocationPermission = false;
-
+                    closeDrawer();
                     setUpAfterPermissionRequest();
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
@@ -1173,7 +1177,6 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "onPause()");
 
 
-        preferenceManager.saveLatLng(latLng);
 
         if (zoom != 0) {
             zoom = googleMap.getCameraPosition().zoom;

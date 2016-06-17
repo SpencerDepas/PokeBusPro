@@ -18,6 +18,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
+import Preference.PreferenceManager;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import clearfaun.com.pokebuspro.R;
@@ -29,8 +30,9 @@ import io.fabric.sdk.android.Fabric;
  */
 public class NoConnectionActivity extends AppCompatActivity {
 
-    private SharedPreferences prefs;
     private Context mContext;
+    private PreferenceManager preferenceManager;
+    private String prefBusMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +71,12 @@ public class NoConnectionActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @OnClick(R.id.no_connection_fab)
     public void mapsActivityIntent(View view) {
-        Log.i("MyMapsActivity", "onClick refreshLocation");
+        Log.i("NoConnectionActivity", "onClick refreshLocation");
 
-       
-        Intent intent = new Intent(mContext, MainActivity.class);
-        startActivity(intent);
-
+        if (isOnline()) {
+            Intent intent = new Intent(mContext, MainActivity.class);
+            startActivity(intent);
+        }
 
 
     }
@@ -82,14 +84,10 @@ public class NoConnectionActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        prefs = getSharedPreferences("pokeBusCodePrefs", Context.MODE_PRIVATE);
 
         if (item.getItemId() == R.id.map_item) {
-            String prefBusMap = prefs.getString("KEY99", "Brooklyn");
 
-            Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
             Intent intent = new Intent(mContext, BoroughBusMapActivity.class);
-            intent.putExtra("maptype", "Current Map is: " + prefBusMap);
             startActivity(intent);
         }
 
@@ -108,7 +106,7 @@ public class NoConnectionActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        Log.i("AirplaneMode", "onPause() enabledAirplaneMode");
+        Log.i("NoConnectionActivity", "onPause() enabledAirplaneMode");
         this.finish();
         System.exit(0);
 
