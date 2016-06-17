@@ -1657,7 +1657,9 @@ public class MainActivity extends AppCompatActivity implements
 
         if (progressBar.getVisibility() == View.VISIBLE) {
             progressBar.setVisibility(view.INVISIBLE);
-            if (latLng == EMPIRE_STATE_BUILDING_LAT_LNG) {
+            if (onMapPresedLatLng.equals(EMPIRE_STATE_BUILDING_LAT_LNG) ) {
+                Log.d("MyMapsActivity", "latLng.equals(EMPIRE_STATE_BUILDING_LAT_LNG)");
+
                 Snackbar.make(view, "Location not available", Snackbar.LENGTH_LONG)
                         .show();
             }
