@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -26,6 +27,7 @@ import Preference.PreferenceManager;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import clearfaun.com.pokebuspro.R;
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -45,6 +47,8 @@ public class BoroughBusMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.coordinator_borough_map);
         ButterKnife.bind(this);
+        Fabric.with(this, new Crashlytics());
+
         Log.i("BoroughBusMapActivity", "onCreate");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);

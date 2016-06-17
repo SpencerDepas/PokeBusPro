@@ -14,12 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import clearfaun.com.pokebuspro.R;
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -35,6 +37,8 @@ public class NoConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.no_connection_coord);
         ButterKnife.bind(this);
+        Fabric.with(this, new Crashlytics());
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -67,10 +71,10 @@ public class NoConnectionActivity extends AppCompatActivity {
     public void mapsActivityIntent(View view) {
         Log.i("MyMapsActivity", "onClick refreshLocation");
 
-        if (isOnline()) {
-            Intent intent = new Intent(mContext, MainActivity.class);
-            startActivity(intent);
-        }
+       
+        Intent intent = new Intent(mContext, MainActivity.class);
+        startActivity(intent);
+
 
 
     }
