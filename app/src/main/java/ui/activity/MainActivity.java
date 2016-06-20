@@ -3,7 +3,6 @@ package ui.activity;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.WindowManager;
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,8 +12,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -29,7 +26,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -54,7 +50,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import Preference.PreferenceManager;
@@ -73,7 +68,7 @@ import client.CallAndParse;
 import ui.activity.interfaces.DialogPopupListner;
 import ui.activity.interfaces.FirstBusStopHasBeenDisplayed;
 import ui.activity.interfaces.NoBusesInAreaInterface;
-import utils.AnswersManager;
+import model.AnswersManager;
 import utils.SystemStatus;
 
 import java.io.FileInputStream;
@@ -117,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private boolean hasLocationPermission;
 
-     private float zoom = 16;
+    private float zoom = 16;
     private float bearing = 40;
     private Timer timer;
     private TimerTask timerTask;
@@ -159,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements
     final String DIALOG_TITLE = "Access Phone Location";
     final String DIALOG_MESSAGE = "WaveBus needs to acces your location to find local bus stops.";
     final String PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private int randomNum;
+
         /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
     //EMPIRE STATE BUILDING
@@ -207,8 +202,7 @@ public class MainActivity extends AppCompatActivity implements
         mMap.getMapAsync(this);
 
 
-        //for instructional snackbar
-        randomNum = 0 + (int) (Math.random() * 3);
+
 
 
         refreshTimerTaskTime = preferenceManager.getRefreshTime();
@@ -640,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements
                                 break;
                             case NavigationViewItems.SELECT_FAV_MAP:
 
-                                selectDeafultBusMapNavViewSelection();
+                                selectDefaultBusMapNavViewSelection();
 
                                 break;
                             case NavigationViewItems.FOLLOW_ME_ON_TWITTER:
@@ -721,7 +715,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void selectDeafultBusMapNavViewSelection() {
+    private void selectDefaultBusMapNavViewSelection() {
 
 
         final String findWhatToPreSelect = preferenceManager.getBusMapSelection();
@@ -1013,11 +1007,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-
-
-
-
     private void refreshMarkers() {
         Log.i("MyMapsActivity", "refreshMarkers");
 
@@ -1216,7 +1205,6 @@ public class MainActivity extends AppCompatActivity implements
         if (hasLocationPermission) {
             Log.i("MyMapsActivity", "onResume() hasLocationPermission" + hasLocationPermission);
 
-            
 
             systemStatus.checkPhoneParams();
 
@@ -1239,42 +1227,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         //showInstructionalSnackBar();
-
-
-    }
-
-
-    private void checkPhoneParams() {
-
-        boolean enabledAirplaneMode = SystemStatus.isAirplaneModeOn(this);
-
-        if (!systemStatus.isOnline()) {
-            Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
-            startActivity(intent);
-            this.finish();
-
-        } else if (!systemStatus.isLocationEnabled()) {
-
-
-            Log.i("MyMapsActivity", "!isLocationEnabled(mContext)");
-
-
-        } else if (enabledAirplaneMode) {
-            Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
-
-
-            Intent intent = new Intent(mContext, NoConnectionActivity.class);
-            startActivity(intent);
-            this.finish();
-
-        }
-
-        if (!enabledGPS) {
-            Log.i("MyMapsActivity", "!enabledGPS");
-
-            toaster("Turn on GPS for best results");
-        }
 
 
     }
@@ -1387,10 +1339,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void toaster(String string) {
-        Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_LONG);
-        toast.show();
-    }
+
 
 
     @Override
@@ -1456,8 +1405,6 @@ public class MainActivity extends AppCompatActivity implements
 
         }
     }
-
-
 
 
     @Override
