@@ -117,8 +117,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private boolean hasLocationPermission;
 
-    private int gpsPrompt = 0;
-    private float zoom = 16;
+     private float zoom = 16;
     private float bearing = 40;
     private Timer timer;
     private TimerTask timerTask;
@@ -1217,7 +1216,9 @@ public class MainActivity extends AppCompatActivity implements
         if (hasLocationPermission) {
             Log.i("MyMapsActivity", "onResume() hasLocationPermission" + hasLocationPermission);
 
-            checkPhoneParams();
+            
+
+            systemStatus.checkPhoneParams();
 
             mLocationProvider.disconnect();
             mLocationProvider.connect();
@@ -1245,7 +1246,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void checkPhoneParams() {
 
-        boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
+        boolean enabledAirplaneMode = SystemStatus.isAirplaneModeOn(this);
 
         if (!systemStatus.isOnline()) {
             Log.i("MyMapsActivity", "!isOnline()");
@@ -1269,8 +1270,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
-        if (!enabledGPS && gpsPrompt == 0) {
-            gpsPrompt++;
+        if (!enabledGPS) {
             Log.i("MyMapsActivity", "!enabledGPS");
 
             toaster("Turn on GPS for best results");
@@ -1458,17 +1458,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private static boolean isAirplaneModeOn(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return Settings.System.getInt(context.getContentResolver(),
-                    Settings.System.AIRPLANE_MODE_ON, 0) != 0;
-        } else {
-            return Settings.Global.getInt(context.getContentResolver(),
-                    Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
-        }
-    }
 
 
     @Override
