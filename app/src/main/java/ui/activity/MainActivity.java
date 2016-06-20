@@ -73,6 +73,8 @@ import client.CallAndParse;
 import ui.activity.interfaces.DialogPopupListner;
 import ui.activity.interfaces.FirstBusStopHasBeenDisplayed;
 import ui.activity.interfaces.NoBusesInAreaInterface;
+import utils.AnswersManager;
+import utils.SystemStatus;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -97,8 +99,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public static GoogleMap googleMap;
 
-    private final String MAP_SELECTION = "Map selection";
-    private final String FABRIC_ANSWERS_ACTION = "Action";
+
     private LatLng onMapPresedLatLng;
     private LatLng latLng;
     private LocationProvider mLocationProvider;
@@ -172,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements
     private String savedRadius = "300";
     private String refreshTimerTaskTime = "20";
     private Toolbar toolbar;
+    private SystemStatus systemStatus;
 
 
     @Override
@@ -195,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements
         mContext = getApplicationContext();
         preferenceManager = new PreferenceManager(mContext);
 
+        systemStatus = new SystemStatus(mContext);
 
         if (navigationView != null) {
             setupDrawerContent(navigationView);
@@ -280,9 +283,9 @@ public class MainActivity extends AppCompatActivity implements
                     setUpAfterPermissionRequest();
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Fine location permission")
-                            .putContentType("Selection")
-                            .putCustomAttribute("runtime permission", "Accepted"));
+                            .putContentName(AnswersManager.FINE_LOCATION)
+                            .putContentType(AnswersManager.SELECTION)
+                            .putCustomAttribute(AnswersManager.RUNTIME_PERMISSION, AnswersManager.ACCEPTED));
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
@@ -294,9 +297,9 @@ public class MainActivity extends AppCompatActivity implements
                     setUpAfterPermissionRequest();
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Fine location permission")
-                            .putContentType("Selection")
-                            .putCustomAttribute("runtime permission", "Denied"));
+                            .putContentName(AnswersManager.FINE_LOCATION)
+                            .putContentType(AnswersManager.SELECTION)
+                            .putCustomAttribute(AnswersManager.RUNTIME_PERMISSION, AnswersManager.DENIED));
 
                 }
 
@@ -340,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements
                 enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 
-                boolean isLocationEnabled = isLocationEnabled(this);
+                boolean isLocationEnabled = systemStatus.isLocationEnabled();
                 if (!isLocationEnabled) {
                     Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
@@ -413,8 +416,8 @@ public class MainActivity extends AppCompatActivity implements
 
         refreshMarkers();
         Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("Pressed Refresh location fab")
-                .putContentType(FABRIC_ANSWERS_ACTION));
+                .putContentName(AnswersManager.FAB_ON_REFRESH)
+                .putContentType(AnswersManager.ACTION));
 
     }
 
@@ -456,9 +459,9 @@ public class MainActivity extends AppCompatActivity implements
                         );
 
                         Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName("Searched for Bus stop from dialog")
-                                .putContentType("Selection")
-                                .putCustomAttribute("address searched", locationToSearchFor.getText().toString()));
+                                .putContentName(AnswersManager.SEARCHED_FOR_BUS)
+                                .putContentType(AnswersManager.SELECTION)
+                                .putCustomAttribute(AnswersManager.ADDRESS_SEARCHED, locationToSearchFor.getText().toString()));
 
 
                     }
@@ -544,7 +547,7 @@ public class MainActivity extends AppCompatActivity implements
             if (hasLocationPermission) {
 
 
-                boolean isLocationEnabled = isLocationEnabled(this);
+                boolean isLocationEnabled = systemStatus.isLocationEnabled();
                 if (!isLocationEnabled) {
                     Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
@@ -555,8 +558,8 @@ public class MainActivity extends AppCompatActivity implements
                     onMapPresedLatLng = null;
                     newLocationFromLatLng(latLng);
                     Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Pressed My Location")
-                            .putContentType(FABRIC_ANSWERS_ACTION));
+                            .putContentName(AnswersManager.PRESSED_MY_LOCATION)
+                            .putContentType(AnswersManager.ACTION));
                 }
 
             } else {
@@ -574,8 +577,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
             Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("Launch Map Activity")
-                    .putContentType(FABRIC_ANSWERS_ACTION)
+                    .putContentName(AnswersManager.LAUNCH_MAP_ACTIVITY)
+                    .putContentType(AnswersManager.ACTION)
             );
 
             Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
@@ -602,7 +605,7 @@ public class MainActivity extends AppCompatActivity implements
 
                         Answers.getInstance().logContentView(new ContentViewEvent()
                                 .putContentName("Nav view open")
-                                .putContentType(FABRIC_ANSWERS_ACTION)
+                                .putContentType(AnswersManager.ACTION)
                         );
 
                         mContext = getApplicationContext();
@@ -645,7 +648,7 @@ public class MainActivity extends AppCompatActivity implements
 
                                 Answers.getInstance().logContentView(new ContentViewEvent()
                                         .putContentName("Follow me on twitter")
-                                        .putContentType(FABRIC_ANSWERS_ACTION)
+                                        .putContentType(AnswersManager.ACTION)
 
                                 );
                                 openTwitterIntent();
@@ -682,12 +685,12 @@ public class MainActivity extends AppCompatActivity implements
             showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
             Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentName("Enable Location")
-                    .putContentType(FABRIC_ANSWERS_ACTION)
+                    .putContentType(AnswersManager.ACTION)
                     .putCustomAttribute("Fine permission enabled", "False")
             );
         } else {
 
-            boolean isLocationEnabled = isLocationEnabled(mContext);
+            boolean isLocationEnabled = systemStatus.isLocationEnabled();
             if (!isLocationEnabled) {
                 Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
@@ -697,7 +700,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName("Enable Location")
-                        .putContentType(FABRIC_ANSWERS_ACTION)
+                        .putContentType(AnswersManager.ACTION)
                         .putCustomAttribute("Fine permission enabled", "true")
                         .putCustomAttribute("Enable GPS intent fired", "true")
                 );
@@ -709,7 +712,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName("Enable Location")
-                        .putContentType(FABRIC_ANSWERS_ACTION)
+                        .putContentType(AnswersManager.ACTION)
                         .putCustomAttribute("Location allready enabled", "true")
                 );
             }
@@ -770,7 +773,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Deleted favorite Buses")
-                .putContentType(FABRIC_ANSWERS_ACTION)
+                .putContentType(AnswersManager.ACTION)
 
         );
 
@@ -783,7 +786,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Refresh Timer Dialog")
-                .putContentType(FABRIC_ANSWERS_ACTION)
+                .putContentType(AnswersManager.ACTION)
         );
 
 
@@ -820,7 +823,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Refresh Timer Dialog")
-                .putContentType(FABRIC_ANSWERS_ACTION)
+                .putContentType(AnswersManager.ACTION)
         );
 
 
@@ -913,7 +916,7 @@ public class MainActivity extends AppCompatActivity implements
                 Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName("Select Map")
                         .putContentType("Selection")
-                        .putCustomAttribute(MAP_SELECTION, boroughs[which])
+                        .putCustomAttribute(AnswersManager.MAP_SELECTION, boroughs[which])
                 );
 
 
@@ -933,10 +936,11 @@ public class MainActivity extends AppCompatActivity implements
                 preferenceManager.saveRadius(radiusEntriesValues[which]);
 
                 preferenceManager.saveRadius(radiusEntriesValues[which]);
+
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Set radius")
-                        .putContentType(FABRIC_ANSWERS_ACTION)
-                        .putCustomAttribute("radius", radiusEntriesValues[which])
+                        .putContentName(AnswersManager.SET_RADIUS)
+                        .putContentType(AnswersManager.ACTION)
+                        .putCustomAttribute(AnswersManager.RADIUS, radiusEntriesValues[which])
 
                 );
 
@@ -956,10 +960,11 @@ public class MainActivity extends AppCompatActivity implements
                     stopTimerTask();
                     Log.i("MyMapsActivity", "mainActivity.stopTimerTask();");
 
+
                     Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Refresh Timer time")
-                            .putContentType("Selection")
-                            .putCustomAttribute("time", "0")
+                            .putContentName(AnswersManager.REFRESH_TIMER_TIME)
+                            .putContentType(AnswersManager.SELECTION)
+                            .putCustomAttribute(AnswersManager.TIME, "0")
                     );
 
                 } else {
@@ -973,9 +978,9 @@ public class MainActivity extends AppCompatActivity implements
                     Log.i("MyMapsActivity", " refreshMarkers();");
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Refresh Timer time")
-                            .putContentType("Selection")
-                            .putCustomAttribute("time", timerTaskEntriesValues[which])
+                            .putContentName(AnswersManager.REFRESH_TIMER_TIME)
+                            .putContentType(AnswersManager.SELECTION)
+                            .putCustomAttribute(AnswersManager.TIME, timerTaskEntriesValues[which])
                     );
 
 
@@ -995,7 +1000,7 @@ public class MainActivity extends AppCompatActivity implements
             Log.i("MyMapsActivity", "requestCode==ENABLE_GPS");
 
 
-            boolean isLocationEnabled = isLocationEnabled(mContext);
+            boolean isLocationEnabled = systemStatus.isLocationEnabled();
             if (isLocationEnabled) {
                 Log.i("MyMapsActivity", "onActivityResult isLocationEnabled");
 
@@ -1008,41 +1013,16 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean isLocationEnabled(Context context) {
-        int locationMode = 0;
-        String locationProviders;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            try {
-                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
-
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-
-        } else {
-            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            return !TextUtils.isEmpty(locationProviders);
-        }
 
 
-    }
 
 
-    private boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
 
 
     private void refreshMarkers() {
         Log.i("MyMapsActivity", "refreshMarkers");
 
-        if (!isOnline()) {
+        if (!systemStatus.isOnline()) {
             Log.i("MyMapsActivity", "!isOnline()");
             Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
@@ -1062,7 +1042,7 @@ public class MainActivity extends AppCompatActivity implements
 
 //                zoom = 16;
 //                bearing = 40;
-                boolean isLocationEnabled = isLocationEnabled(this);
+                boolean isLocationEnabled = systemStatus.isLocationEnabled();
                 if (!isLocationEnabled) {
                     Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
@@ -1177,7 +1157,6 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "onPause()");
 
 
-
         if (zoom != 0) {
             zoom = googleMap.getCameraPosition().zoom;
             bearing = googleMap.getCameraPosition().bearing;
@@ -1198,7 +1177,6 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "onDestroy()");
 
         MarkerManager markerManager = MarkerManager.getInstance();
-
         Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
         markerHashTable.clear();
@@ -1269,13 +1247,13 @@ public class MainActivity extends AppCompatActivity implements
 
         boolean enabledAirplaneMode = isAirplaneModeOn(mContext);
 
-        if (!isOnline()) {
+        if (!systemStatus.isOnline()) {
             Log.i("MyMapsActivity", "!isOnline()");
             Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
             this.finish();
 
-        } else if (!isLocationEnabled(mContext)) {
+        } else if (!systemStatus.isLocationEnabled()) {
 
 
             Log.i("MyMapsActivity", "!isLocationEnabled(mContext)");
@@ -1419,7 +1397,7 @@ public class MainActivity extends AppCompatActivity implements
     public void handleNewLocation(Location location) {
         Log.i("MyMapsActivity", "handleNewLocation ");
 
-        if (!isOnline()) {
+        if (!systemStatus.isOnline()) {
             Log.i("MyMapsActivity", "!isOnline()");
             Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
@@ -1499,8 +1477,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
         Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("Set Favorite bus stop dialog")
-                .putContentType(FABRIC_ANSWERS_ACTION)
+                .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
+                .putContentType(AnswersManager.ACTION)
         );
 
 
@@ -1519,9 +1497,9 @@ public class MainActivity extends AppCompatActivity implements
                 addMarkers.addPokeBusColor(finalBuscode);
 
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Set Favorite bus stop dialog")
-                        .putContentType("Selection")
-                        .putCustomAttribute("Fav Bus Stop Set", finalBuscode)
+                        .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
+                        .putContentType(AnswersManager.SELECTION)
+                        .putCustomAttribute(AnswersManager.FAV_BUS_STOP, finalBuscode)
                 );
 
 
@@ -1534,9 +1512,9 @@ public class MainActivity extends AppCompatActivity implements
 
 
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Set Favorite bus stop dialog")
-                        .putContentType("Selection")
-                        .putCustomAttribute("Fav Bus Stop Dismissed", "Dismissed")
+                        .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
+                        .putContentType(AnswersManager.SELECTION)
+                        .putCustomAttribute(AnswersManager.FAV_BUS_STOP_DISMISSED, AnswersManager.DISMISSED)
                 );
             }
         });
@@ -1609,8 +1587,8 @@ public class MainActivity extends AppCompatActivity implements
                     Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("Map on Press for New Location")
-                            .putContentType("Selection")
+                            .putContentName(AnswersManager.MAP_ON_PRESS)
+                            .putContentType(AnswersManager.SELECTION)
                     );
 
                     newLocationFromLatLng(arg0);
@@ -1657,12 +1635,15 @@ public class MainActivity extends AppCompatActivity implements
 
         if (progressBar.getVisibility() == View.VISIBLE) {
             progressBar.setVisibility(view.INVISIBLE);
-            if (onMapPresedLatLng.equals(EMPIRE_STATE_BUILDING_LAT_LNG) ) {
-                Log.d("MyMapsActivity", "latLng.equals(EMPIRE_STATE_BUILDING_LAT_LNG)");
+            if (onMapPresedLatLng != null) {
+                if (onMapPresedLatLng.equals(EMPIRE_STATE_BUILDING_LAT_LNG)) {
+                    Log.d("MyMapsActivity", "latLng.equals(EMPIRE_STATE_BUILDING_LAT_LNG)");
 
-                Snackbar.make(view, "Location not available", Snackbar.LENGTH_LONG)
-                        .show();
+                    Snackbar.make(view, "Location not available", Snackbar.LENGTH_LONG)
+                            .show();
+                }
             }
+
         }
 
 
