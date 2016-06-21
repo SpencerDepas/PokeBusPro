@@ -58,7 +58,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
+import model.LoadAndSaveFavBusInfo;
 import model.NavigationViewItems;
+import ui.activity.interfaces.TimerTaskInterface;
 import ui.component.AddMarkers;
 import clearfaun.com.pokebuspro.LocationProvider;
 import ui.component.MarkerManager;
@@ -69,6 +71,7 @@ import ui.activity.interfaces.DialogPopupListner;
 import ui.activity.interfaces.FirstBusStopHasBeenDisplayed;
 import ui.activity.interfaces.NoBusesInAreaInterface;
 import model.AnswersManager;
+import utils.RefreshTimer;
 import utils.SystemStatus;
 
 import java.io.FileInputStream;
@@ -87,13 +90,13 @@ public class MainActivity extends AppCompatActivity implements
         LocationProvider.LocationCallback,
         DialogPopupListner,
         NoBusesInAreaInterface,
+        TimerTaskInterface,
         FirstBusStopHasBeenDisplayed,
         OnMapReadyCallback,
         GoogleMap.OnInfoWindowCloseListener {
 
 
     public static GoogleMap googleMap;
-
 
     private LatLng onMapPresedLatLng;
     private LatLng latLng;
@@ -102,25 +105,33 @@ public class MainActivity extends AppCompatActivity implements
     private double longitude;
     private Context mContext;
     private boolean isMapOnPressEnabled = false;
-    private boolean hasInstructionalSnackBarBeenShownOnThisLaunch = false;
     private int SDK_LEVEL;
     private boolean responseAnsweredForRuntimePermission = false;
     private final int ENABLE_GPS = 799;
-
-
     final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 68;
 
     private boolean hasLocationPermission;
 
     private float zoom = 16;
     private float bearing = 40;
-    private Timer timer;
-    private TimerTask timerTask;
-    private String[] snackBarInstructions = new String[4];
     private ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
-    private boolean enabledGPS;
     private CallAndParse callAndParse;
+    private LoadAndSaveFavBusInfo loadAndSaveFavBusInfo;
+    private RefreshTimer refreshTimer;
 
+    private AddMarkers addMarkers;
+    private SupportMapFragment mMap;
+    private final LatLng EMPIRE_STATE_BUILDING_LAT_LNG = new LatLng(40.748441, -73.985664);
+
+    final String DIALOG_TITLE = "Access Phone Location";
+    final String DIALOG_MESSAGE = "WaveBus needs to acces your location to find local bus stops.";
+
+    private PreferenceManager preferenceManager;
+    private String prefBusMap = PreferenceManager.BUS_MAP_SELECTION_BROOKLYN;
+    private String savedRadius = "300";
+    private String refreshTimerTaskTime = "20";
+    private Toolbar toolbar;
+    private SystemStatus systemStatus;
 
     @BindArray(R.array.boroughs)
     protected String[] boroughs;
@@ -147,27 +158,12 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-    private AddMarkers addMarkers;
-    private SupportMapFragment mMap;
-    private final LatLng EMPIRE_STATE_BUILDING_LAT_LNG = new LatLng(40.748441, -73.985664);
-
-    final String DIALOG_TITLE = "Access Phone Location";
-    final String DIALOG_MESSAGE = "WaveBus needs to acces your location to find local bus stops.";
-    final String PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
-
         /*static double testLat = 40.6455520;
     static double testLng = -73.9829084;*/
     //EMPIRE STATE BUILDING
   /*  static double testLat = 40.748441;
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
-
-    private PreferenceManager preferenceManager;
-    private String prefBusMap = PreferenceManager.BUS_MAP_SELECTION_BROOKLYN;
-    private String savedRadius = "300";
-    private String refreshTimerTaskTime = "20";
-    private Toolbar toolbar;
-    private SystemStatus systemStatus;
 
 
     @Override
@@ -200,9 +196,6 @@ public class MainActivity extends AppCompatActivity implements
 
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mMap.getMapAsync(this);
-
-
-
 
 
         refreshTimerTaskTime = preferenceManager.getRefreshTime();
@@ -308,8 +301,8 @@ public class MainActivity extends AppCompatActivity implements
     private void setUpAfterPermissionRequest() {
         Log.i("MyMapsActivity ", "setUpAfterPermissionRequest");
 
+        Log.i("MyMapsActivity ", "responseAnsweredForRuntimePermission : " + responseAnsweredForRuntimePermission);
         if (responseAnsweredForRuntimePermission) {
-            Log.i("MyMapsActivity ", "responseAnsweredForRuntimePermission : " + responseAnsweredForRuntimePermission);
 
             addMarkers = AddMarkers.getInstance();
             addMarkers.setInterface(MainActivity.this);
@@ -319,12 +312,6 @@ public class MainActivity extends AppCompatActivity implements
             callAndParse = new CallAndParse(MainActivity.this);
 
 
-//            snackBarInstructions[0] = getString(R.string.tap_for_search);
-//            snackBarInstructions[1] = getString(R.string.tap_search_icon);
-//            snackBarInstructions[2] = getString(R.string.my_location_icon);
-//            snackBarInstructions[3] = getString(R.string.tap_bus_distances);
-
-
             if (hasLocationPermission) {
 
                 Log.i("MyMapsActivity", "hasLocationPermission " + hasLocationPermission);
@@ -332,8 +319,6 @@ public class MainActivity extends AppCompatActivity implements
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
                 Log.i("MyMapsActivity", "hasLocationPermission  LocationProvider on" + hasLocationPermission);
-                LocationManager lService = (LocationManager) getSystemService(LOCATION_SERVICE);
-                enabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 
                 boolean isLocationEnabled = systemStatus.isLocationEnabled();
@@ -370,6 +355,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("MyMapsActivity", "phonePermissionNotGranted");
         mMap.getMapAsync(this);
         hasLocationPermission = false;
+        responseAnsweredForRuntimePermission = true;
         setUpAfterPermissionRequest();
 
 
@@ -950,7 +936,7 @@ public class MainActivity extends AppCompatActivity implements
                     refreshTimerTaskTime = timerTaskEntriesValues[which];
                     preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
 
-                    stopTimerTask();
+                    refreshTimer.stopTimerTask();
                     Log.i("MyMapsActivity", "mainActivity.stopTimerTask();");
 
 
@@ -965,9 +951,10 @@ public class MainActivity extends AppCompatActivity implements
                     refreshTimerTaskTime = timerTaskEntriesValues[which];
                     preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
                     refreshMarkers();
-                    stopTimerTask();
+                    refreshTimer.stopTimerTask();
 
-                    startTimerTask();
+
+                    refreshTimer.startTimerTask();
                     Log.i("MyMapsActivity", " refreshMarkers();");
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
@@ -1153,8 +1140,8 @@ public class MainActivity extends AppCompatActivity implements
         }
 
 
-        stopTimerTask();
-        saveFavBus();
+        refreshTimer.stopTimerTask();
+        loadAndSaveFavBusInfo.saveFavBus(busCodeOfFavBusStops);
 
 
     }
@@ -1202,6 +1189,11 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.i("MyMapsActivity", "onResume() hasLocationPermission: " + hasLocationPermission);
 
+
+        loadAndSaveFavBusInfo = LoadAndSaveFavBusInfo.getInstance(mContext);
+        refreshTimer = RefreshTimer.getInstance(MainActivity.this);
+
+
         if (hasLocationPermission) {
             Log.i("MyMapsActivity", "onResume() hasLocationPermission" + hasLocationPermission);
 
@@ -1211,11 +1203,7 @@ public class MainActivity extends AppCompatActivity implements
             mLocationProvider.disconnect();
             mLocationProvider.connect();
 
-
-            startTimerTask();
-
-
-            //showInstructionalSnackBar();
+            refreshTimer.startTimerTask();
 
 
         } else {
@@ -1225,8 +1213,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
         }
-
-        //showInstructionalSnackBar();
 
 
     }
@@ -1238,108 +1224,6 @@ public class MainActivity extends AppCompatActivity implements
         busCodeOfFavBusStops.clear();
         Log.i("MyMapsActivity", "busCodeOfFavBusStops.size : " + busCodeOfFavBusStops.size());
     }
-
-
-    public void startTimerTask() {
-        Log.i("MyMapsActivity", "startTimerTask()");
-
-        Log.i("MyMapsActivity", "refreshTimerTaskTime : " + refreshTimerTaskTime);
-
-
-        if (refreshTimerTaskTime.equals("OFF")) {
-            refreshTimerTaskTime = "0";
-        } else {
-
-
-            Log.i("MyMapsActivity", "refreshTimerTaskTime()" + refreshTimerTaskTime);
-
-            int timeInMS = Integer.parseInt(refreshTimerTaskTime) * 1000;
-            Log.i("MyMapsActivity", "timeInMS()" + timeInMS);
-            if (timeInMS != 0) {
-                //set a new Timer
-                timer = new Timer();
-                //initialize the TimerTask's job
-
-
-                initializeTimerTask();
-                //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-                timer.schedule(timerTask, 20000, timeInMS);
-
-
-            }
-
-        }
-    }
-
-    public void stopTimerTask() {
-        Log.i("MyMapsActivity", "stopTimerTask()");
-        //stop the timer, if it's not already null
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
-
-
-    private void initializeTimerTask() {
-
-        timerTask = new TimerTask() {
-            public void run() {
-                Log.i("MyMapsActivity", "initializeTimerTask    timerTask");
-
-                selectCorrectLatLng();
-
-
-            }
-        };
-    }
-
-
-    private void saveFavBus() {
-        Log.i("MyMapsActivity", "saveFavBus()");
-
-
-        if (busCodeOfFavBusStops != null) {
-
-            try {
-                FileOutputStream fos = mContext.openFileOutput(getResources().getString(R.string.fav_bus_key), Context.MODE_PRIVATE);
-                ObjectOutputStream os = new ObjectOutputStream(fos);
-                os.writeObject(busCodeOfFavBusStops);
-                os.close();
-                fos.close();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.i("MyMapsActivity", " e.printStackTrace();()" + e);
-            }
-        }
-
-    }
-
-    private ArrayList<String> loadFavBus() {
-        Log.i("MyMapsActivity", "loadFavBus");
-
-        try {
-            FileInputStream fis = this.openFileInput(getResources().getString(R.string.fav_bus_key));
-            ObjectInputStream is = new ObjectInputStream(fis);
-            ArrayList<String> favBuses = (ArrayList) is.readObject();
-            is.close();
-            fis.close();
-            Log.i("MyMapsActivity", "favBuses.size()" + favBuses.size());
-            return favBuses;
-
-        } catch (Exception e) {
-            Log.i("MyMapsActivity", "e : " + e);
-            e.printStackTrace();
-        }
-        Log.i("MyMapsActivity", "loadFavBus return dud");
-        return new ArrayList<>();
-
-
-    }
-
-
-
 
 
     @Override
@@ -1459,15 +1343,15 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    public void noBususFound() {
-        Log.d("AlertDialog", "noBususFound");
+    public void noBusesFound() {
+        Log.d("AlertDialog", "noBusesFound");
         Snackbar.make(view, "No Buses found in the area", Snackbar.LENGTH_LONG)
                 .show();
 
         progressBar.setVisibility(view.INVISIBLE);
 
 
-        stopTimerTask();
+        refreshTimer.stopTimerTask();
     }
 
 
@@ -1486,12 +1370,12 @@ public class MainActivity extends AppCompatActivity implements
         if (!oneTimeCall) {
             oneTimeCall = true;
 
-            busCodeOfFavBusStops = loadFavBus();
+            busCodeOfFavBusStops = loadAndSaveFavBusInfo.loadFavBus();
 
             permissionAtRunTime();
 
 
-            startTimerTask();
+            refreshTimer.startTimerTask();
 
 
         }
@@ -1585,6 +1469,12 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void runTimer() {
+        Log.d("MyMapsActivity", "runTimer()");
+
+        selectCorrectLatLng();
+    }
 }
 
 

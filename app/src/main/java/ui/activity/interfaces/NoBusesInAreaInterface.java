@@ -5,6 +5,6 @@ package ui.activity.interfaces;
  */
 public interface NoBusesInAreaInterface {
 
-    public void noBususFound();
+    public void noBusesFound();
 
 }

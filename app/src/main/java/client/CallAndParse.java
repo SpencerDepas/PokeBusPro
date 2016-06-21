@@ -1,6 +1,5 @@
 package client;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -29,8 +28,6 @@ public class CallAndParse {
 
     private NoBusesInAreaInterface noBusINterFace = null;
     //private final String API_KEY = "AIzaSyAljUMfpi4WiIiLi7nHTWakvYz_PS23Pyw";
-
-
     //private final String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28"
 
 
@@ -101,7 +98,7 @@ public class CallAndParse {
                 if (busStopExample.getData().getStops().size() > 0) {
                     makeBusDistanceThreads(busStopExample);
                 } else {
-                    noBusINterFace.noBususFound();
+                    noBusINterFace.noBusesFound();
                 }
 
 
