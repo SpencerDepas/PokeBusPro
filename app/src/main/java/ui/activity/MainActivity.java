@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -67,28 +66,22 @@ import ui.component.MarkerManager;
 import ui.component.PopupAdapterForMapMarkers;
 import clearfaun.com.pokebuspro.R;
 import client.CallAndParse;
-import ui.activity.interfaces.DialogPopupListner;
+import ui.activity.interfaces.DialogPopupListener;
 import ui.activity.interfaces.FirstBusStopHasBeenDisplayed;
 import ui.activity.interfaces.NoBusesInAreaInterface;
 import model.AnswersManager;
 import utils.RefreshTimer;
 import utils.SystemStatus;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity implements
         LocationProvider.LocationCallback,
-        DialogPopupListner,
+        DialogPopupListener,
         NoBusesInAreaInterface,
         TimerTaskInterface,
         FirstBusStopHasBeenDisplayed,
@@ -308,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements
             addMarkers.setInterface(MainActivity.this);
 
 
-            PopupAdapterForMapMarkers.popupListner = MainActivity.this;
+            PopupAdapterForMapMarkers.mPopupListner = MainActivity.this;
             callAndParse = new CallAndParse(MainActivity.this);
 
 
@@ -1471,6 +1464,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void runTimer() {
+        //called from refreshTimer
         Log.d("MyMapsActivity", "runTimer()");
 
         selectCorrectLatLng();

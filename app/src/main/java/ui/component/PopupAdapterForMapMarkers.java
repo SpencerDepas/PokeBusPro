@@ -1,6 +1,9 @@
 package ui.component;
 
 import android.annotation.SuppressLint;
+import android.text.Spannable;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,22 +14,20 @@ import com.google.android.gms.maps.model.Marker;
 
 import clearfaun.com.pokebuspro.R;
 import ui.activity.MainActivity;
-import ui.activity.interfaces.DialogPopupListner;
+import ui.activity.interfaces.DialogPopupListener;
 
 /**
  * Created by spencer on 2/25/2015.
  */
 public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
 
-    private View popup = null;
-    private LayoutInflater inflater = null;
-    private MainActivity mainActivity;
-    public static String markerCurrentKey = "";
-
-    public static DialogPopupListner popupListner = null;
-
+    private View mPopup = null;
+    private LayoutInflater mInflater = null;
+    private MainActivity mMainActivity;
+    public static String mMarkerCurrentKey = "";
+    public static DialogPopupListener mPopupListner = null;
     public PopupAdapterForMapMarkers(LayoutInflater inflater) {
-        this.inflater = inflater;
+        this.mInflater = inflater;
     }
 
 
@@ -41,16 +42,16 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     public View getInfoContents(Marker marker) {
 
 
-        Log.i("PopupAdapterForMapMark", "new popup() ");
-        if (popup == null) {
-            popup = inflater.inflate(R.layout.popup_snippet, null);
+        Log.i("PopupAdapterForMapMark", "new mPopup() ");
+        if (mPopup == null) {
+            mPopup = mInflater.inflate(R.layout.popup_snippet, null);
         }
 
 
-        mainActivity = new MainActivity();
+        mMainActivity = new MainActivity();
 
-        TextView busCode = (TextView) popup.findViewById(R.id.bus_code);
-        TextView distances = (TextView) popup.findViewById(R.id.snippet);
+        TextView busCode = (TextView) mPopup.findViewById(R.id.bus_code);
+        TextView distances = (TextView) mPopup.findViewById(R.id.snippet);
 
 
         //BusInfo.setCurrentDisplayedBusName(MainActivity.busInfo.get(i).busName);
@@ -58,39 +59,32 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
 
         busCode.setText(marker.getTitle() + "\n" +
                 marker.getSnippet(), TextView.BufferType.SPANNABLE);
-//        Spannable text = (Spannable) busCode.getText();
-//
-//        text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//        text.setSpan(new RelativeSizeSpan(.7f), 6, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
 
         busCode.setText(marker.getTitle().substring(0, 6));
-
-
         distances.setText(marker.getSnippet());
-        //MainActivity.busInfo.get(i).setAddedToPopup(true);
 
 
-        markerCurrentKey = marker.getTitle().substring(0, 6);
+        mMarkerCurrentKey = marker.getTitle().substring(0, 6);
         final String fBusCode = marker.getTitle().substring(0, 6);
-        mainActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        mMainActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker Pin) {
 
                 Log.i("PopupAdapterForMapMark", "  setOnInfoWindowClickListener ");
 
 
-                popupListner.displayDialog(fBusCode);
+                mPopupListner.displayDialog(fBusCode);
 
 
             }
         });
 
 
-        mainActivity.disableMapOnPress();
+        mMainActivity.disableMapOnPress();
 
 
-        return (popup);
+        return (mPopup);
     }
 
 

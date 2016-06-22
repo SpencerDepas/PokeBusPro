@@ -61,6 +61,11 @@ public class AddMarkers {
         String busName = getBusName(distancesExample, incomingBusesSize);
 
 
+
+
+
+
+
         String allbusNamesAndDistances = putMultiBusesInStackedString(distancesExample, incomingBusesSize);
 
         Log.i("AddMarkers", "busName : " + busName);
@@ -82,10 +87,7 @@ public class AddMarkers {
 
             marker.setTitle(busCode + busName);
             marker.setSnippet(allbusNamesAndDistances);
-            //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
             Log.i("AddMarkerstz", " addMarkerToMapWithBusDistances " + marker.getId().toString());
-
-            //refreshMarkerSnippet(marker);
 
             markerHashTable.put(busCode, marker);
 
@@ -123,7 +125,7 @@ public class AddMarkers {
 
             firstBusStopHasBeenDisplayed.removeLoadingIcon();
 
-            openSnippet(PopupAdapterForMapMarkers.markerCurrentKey);
+            openSnippet(PopupAdapterForMapMarkers.mMarkerCurrentKey);
 
         }
 
