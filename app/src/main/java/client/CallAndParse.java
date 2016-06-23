@@ -30,6 +30,9 @@ public class CallAndParse {
     private String mSetHowManyIncomingBuses = "12";
     private Gson mGson;
     public static int sBusStopsSize = 0;
+    public static String sClosestMarker;
+    private static double mClosestDistance = 9999999;
+    LatLng mUserLatLng;
     final private String MTA_BUS_STOP_API = "http://pokebuspro-api.herokuapp.com/bus_time";
 
     //private final String API_KEY = "AIzaSyAljUMfpi4WiIiLi7nHTWakvYz_PS23Pyw";
@@ -49,11 +52,13 @@ public class CallAndParse {
     }
 
 
-    public void getBusStopsAndBusDistances(LatLng latLng, ArrayList<String> favBusStops, String prefRadius) {
-        Log.i("MyCallAndParse", "getBusStopsAndBusDistances");
+    public void getBusStops(LatLng latLng, ArrayList<String> favBusStops, String prefRadius) {
+        Log.i("MyCallAndParse", "getBusStops");
 
         this.mFavBusStops = favBusStops;
+        mUserLatLng = latLng;
 
+        mClosestDistance = 99999999;
 
         Log.i("MyCallAndParse", "mFavBusStops. size : " + favBusStops.size());
 
@@ -143,6 +148,8 @@ public class CallAndParse {
                 .build();
 
 
+        findClosestBusStop(busStopLatLng, busCode);
+
         GetBussStopInterface bussStopInterface = restAdapter.create(GetBussStopInterface.class);
 
         bussStopInterface.getBusDistancesFromStop("MTA_" + busCode, mSetHowManyIncomingBuses, new Callback<DistancesExample>() {
@@ -178,6 +185,22 @@ public class CallAndParse {
 
     }
 
+    private void findClosestBusStop(LatLng busStopLatLng, String busCode){
+
+
+        double currentDistance;
+        currentDistance = distFrom(mUserLatLng.latitude, mUserLatLng.longitude,
+                busStopLatLng.latitude , busStopLatLng.longitude);
+
+        if(currentDistance < mClosestDistance){
+            Log.i("MyCallAndParse", "currentDistance < mClosestDistance " + busCode);
+            sClosestMarker = busCode;
+            mClosestDistance = currentDistance;
+        }
+
+
+    }
+
 
     public class GetBusDistancesLongOperation extends AsyncTask<String, Void, Void> {
         private LatLng busStopLatLng;
@@ -209,6 +232,20 @@ public class CallAndParse {
             Log.i("MyCallAndParse", "onPostExecute busCode : " + busCode);
         }
 
+    }
+
+
+    private double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+
+        return dist;
     }
 
 

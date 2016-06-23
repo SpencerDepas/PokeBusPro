@@ -1,9 +1,6 @@
 package ui.component;
 
 import android.annotation.SuppressLint;
-import android.text.Spannable;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +21,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     private View mPopup = null;
     private LayoutInflater mInflater = null;
     private MainActivity mMainActivity;
-    public static String mMarkerCurrentKey = "";
+    public static String sMarkerCurrentKey = "";
     public static DialogPopupListener mPopupListner = null;
     public PopupAdapterForMapMarkers(LayoutInflater inflater) {
         this.mInflater = inflater;
@@ -65,7 +62,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
         distances.setText(marker.getSnippet());
 
 
-        mMarkerCurrentKey = marker.getTitle().substring(0, 6);
+        sMarkerCurrentKey = marker.getTitle().substring(0, 6);
         final String fBusCode = marker.getTitle().substring(0, 6);
         mMainActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override

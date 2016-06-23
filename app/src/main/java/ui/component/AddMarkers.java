@@ -31,6 +31,7 @@ public class AddMarkers {
     private static AddMarkers addMarkers;
 
 
+
     public void setInterface(FirstBusStopHasBeenDisplayed newfirstBusStopHasBeenDisplayed) {
         firstBusStopHasBeenDisplayed = newfirstBusStopHasBeenDisplayed;
     }
@@ -125,7 +126,7 @@ public class AddMarkers {
 
             firstBusStopHasBeenDisplayed.removeLoadingIcon();
 
-            openSnippet(PopupAdapterForMapMarkers.mMarkerCurrentKey);
+            openSnippet(PopupAdapterForMapMarkers.sMarkerCurrentKey, CallAndParse.sClosestMarker);
 
         }
 
@@ -204,23 +205,25 @@ public class AddMarkers {
     }
 
 
-    public void openSnippet(String lastOpenSnippetKey) {
+    public void openSnippet(String lastOpenSnippetKey, String closestMarkerToUser) {
 
+
+        Log.i("AddMarkerstz", " lastOpenSnippetKey :  " + lastOpenSnippetKey);
 
         if (!lastOpenSnippetKey.equals("")) {
 
-            openAfterItsBeenOpenedSnippet(lastOpenSnippetKey);
+            openAfterItsBeenOpenedSnippet(lastOpenSnippetKey, closestMarkerToUser);
 
 
         } else {
 
-            firstTimeOpenSnippet();
+            firstTimeOpenSnippet(closestMarkerToUser);
         }
 
 
     }
 
-    private void firstTimeOpenSnippet() {
+    private void firstTimeOpenSnippet(String closestMarkerToUser) {
         Log.i("AddMarkerstz", " firstTimeOpenSnippet ");
 
         if (favBuses.size() > 0) {
@@ -229,9 +232,9 @@ public class AddMarkers {
         } else {
 
             //if no fav buses we need a snippet to open
-            Log.i("AddMarkers", " randomMarkeyKey " + randomMarkeyKey);
+            Log.i("AddMarkers", " closestMarkerToUser " + closestMarkerToUser);
 
-            Marker marker = markerHashTable.get(randomMarkeyKey);
+            Marker marker = markerHashTable.get(closestMarkerToUser);
             displayMarker(marker);
 
 
@@ -239,7 +242,7 @@ public class AddMarkers {
 
     }
 
-    private void openAfterItsBeenOpenedSnippet(String lastOpenSnippetKey) {
+    private void openAfterItsBeenOpenedSnippet(String lastOpenSnippetKey, String closestMarkerToUser) {
         //on first open is different(maybe) after you have opened  another snippet
         Log.i("AddMarkerstz", " openAfterItsBeenOpenedSnippet ");
 
@@ -253,8 +256,16 @@ public class AddMarkers {
 
                 refreshMarkerSnippet(marker);
 
-
+            }else{
+                marker.showInfoWindow();
             }
+        }else {
+
+            //if the last snippet is null
+            //then lets open the closet snippet to you
+            marker = markerHashTable.get(closestMarkerToUser);
+            marker.showInfoWindow();
+
         }
 
 

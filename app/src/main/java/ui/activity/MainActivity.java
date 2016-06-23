@@ -1256,7 +1256,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (onMapPresedLatLng != null) {
 
-            callAndParse.getBusStopsAndBusDistances(onMapPresedLatLng, busCodeOfFavBusStops, savedRadius);
+            callAndParse.getBusStops(onMapPresedLatLng, busCodeOfFavBusStops, savedRadius);
         } else {
 
             if (latLng == null) {
@@ -1274,11 +1274,18 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
             }
-            Log.i("MyMapsActivity ", "getBusStopsAndBusDistances");
+            Log.i("MyMapsActivity ", "getBusStops");
 
             Log.i("MyMapsActivity ", "latLng : " + latLng.latitude);
 
-            callAndParse.getBusStopsAndBusDistances(latLng, busCodeOfFavBusStops, savedRadius);
+            if (latLng.latitude == 0) {
+                Log.i("MyMapsActivity ", "latLng.latitude == 0");
+
+                latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
+            }
+
+
+            callAndParse.getBusStops(latLng, busCodeOfFavBusStops, savedRadius);
 
         }
     }

@@ -62,7 +62,7 @@ public class AboutAppActivity extends AppCompatActivity {
 
 //        CallAndParse callAndParse = new CallAndParse();
 //
-//        callAndParse.getBusStopsAndBusDistances("will be lat lng");
+//        callAndParse.getBusStops("will be lat lng");
 
 
         Answers.getInstance().logContentView(new ContentViewEvent()
