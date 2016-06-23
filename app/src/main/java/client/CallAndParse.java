@@ -25,40 +25,37 @@ import ui.activity.interfaces.NoBusesInAreaInterface;
  */
 public class CallAndParse {
 
+    private ArrayList<String> mFavBusStops;
+    private NoBusesInAreaInterface mNoBusINterFace = null;
+    private String mSetHowManyIncomingBuses = "12";
+    private Gson mGson;
+    public static int sBusStopsSize = 0;
+    final private String MTA_BUS_STOP_API = "http://pokebuspro-api.herokuapp.com/bus_time";
 
-    private NoBusesInAreaInterface noBusINterFace = null;
     //private final String API_KEY = "AIzaSyAljUMfpi4WiIiLi7nHTWakvYz_PS23Pyw";
     //private final String API_KEY = "05a5c2c8-432a-47bd-8f50-ece9382b4b28"
 
 
-    private String returnHowManyIncomingBuses = "12";
-
-
-    private Gson gson;
-    public static int busStopsSize = 0;
-
-    final private String MTA_BUS_STOP_API = "http://pokebuspro-api.herokuapp.com/bus_time";
     //final private String MTA_BUS_DISTANCE_API = "http://pokebuspro-api.herokuapp.com/bus_time/siri/stop-monitoring.json?MonitoringRef=MTA_301649&MaximumStopVisits=3";
 
 
     public CallAndParse(NoBusesInAreaInterface noBusINterFace) {
 
 
-        this.noBusINterFace = noBusINterFace;
+        this.mNoBusINterFace = noBusINterFace;
         Log.i("MyCallAndParse", "CallAndParse");
-        gson = new GsonBuilder()
+        mGson = new GsonBuilder()
                 .create();
     }
 
-    ArrayList<String> favBusStops;
 
     public void getBusStopsAndBusDistances(LatLng latLng, ArrayList<String> favBusStops, String prefRadius) {
         Log.i("MyCallAndParse", "getBusStopsAndBusDistances");
 
-        this.favBusStops = favBusStops;
+        this.mFavBusStops = favBusStops;
 
 
-        Log.i("MyCallAndParse", "favBusStops. size : " + favBusStops.size());
+        Log.i("MyCallAndParse", "mFavBusStops. size : " + favBusStops.size());
 
         String lat = latLng.latitude + "";
         String lng = latLng.longitude + "";
@@ -66,7 +63,7 @@ public class CallAndParse {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(MTA_BUS_STOP_API)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setConverter(new GsonConverter(gson))
+                .setConverter(new GsonConverter(mGson))
                 .build();
 
 
@@ -92,13 +89,13 @@ public class CallAndParse {
 
                 Log.i("MyCallAndParse", "get bus stops local : " + busStopExample.getData().toString());
 
-                busStopsSize = busStopExample.getData().getStops().size();
+                sBusStopsSize = busStopExample.getData().getStops().size();
 
                 //only make a call if we have bus stops
                 if (busStopExample.getData().getStops().size() > 0) {
                     makeBusDistanceThreads(busStopExample);
                 } else {
-                    noBusINterFace.noBusesFound();
+                    mNoBusINterFace.noBusesFound();
                 }
 
 
@@ -142,13 +139,13 @@ public class CallAndParse {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(MTA_BUS_STOP_API)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setConverter(new GsonConverter(gson))
+                .setConverter(new GsonConverter(mGson))
                 .build();
 
 
         GetBussStopInterface bussStopInterface = restAdapter.create(GetBussStopInterface.class);
 
-        bussStopInterface.getBusDistancesFromStop("MTA_" + busCode, returnHowManyIncomingBuses, new Callback<DistancesExample>() {
+        bussStopInterface.getBusDistancesFromStop("MTA_" + busCode, mSetHowManyIncomingBuses, new Callback<DistancesExample>() {
 
 
             @Override
@@ -164,7 +161,7 @@ public class CallAndParse {
                 Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode);
                 AddMarkers addMarkers = AddMarkers.getInstance();
                 addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode,
-                        finalbusStopLatLng, favBusStops);
+                        finalbusStopLatLng, mFavBusStops);
 
 
             }

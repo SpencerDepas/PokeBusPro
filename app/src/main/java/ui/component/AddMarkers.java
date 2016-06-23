@@ -49,7 +49,7 @@ public class AddMarkers {
         Log.i("AddMarkers", "addMarkerToMapWithBusDistances");
 
         this.favBuses = favBuses;
-        CallAndParse.busStopsSize--;
+        CallAndParse.sBusStopsSize--;
 
         int incomingBusesSize = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
                 .getMonitoredStopVisit()
@@ -119,7 +119,7 @@ public class AddMarkers {
         Log.i("AddMarkers", "  favBuses.size :  " + favBuses.size());
 
 
-        if (CallAndParse.busStopsSize == 0) {
+        if (CallAndParse.sBusStopsSize == 0) {
             //called once
             Log.i("AddMarkerstz", "  called onece?  ");
 
