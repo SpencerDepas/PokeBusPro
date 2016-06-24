@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements
         refreshTimerTaskTime = preferenceManager.getRefreshTime();
         savedRadius = preferenceManager.getRadius();
 
+        Log.i("MyMapsActivity", "refreshTimerTaskTime :  " + refreshTimerTaskTime);
 
     }
 
@@ -925,12 +926,12 @@ public class MainActivity extends AppCompatActivity implements
 
 
                 if (timerTaskEntriesValues[which] == "0") {
+                    Log.i("MyMapsActivity", "timerTaskEntriesValues[which] : " + timerTaskEntriesValues[which]);
 
                     refreshTimerTaskTime = timerTaskEntriesValues[which];
                     preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
 
                     refreshTimer.stopTimerTask();
-                    Log.i("MyMapsActivity", "mainActivity.stopTimerTask();");
 
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
@@ -1184,7 +1185,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         loadAndSaveFavBusInfo = LoadAndSaveFavBusInfo.getInstance(mContext);
-        refreshTimer = RefreshTimer.getInstance(MainActivity.this);
+        refreshTimer = RefreshTimer.getInstance(MainActivity.this, refreshTimerTaskTime);
 
 
         if (hasLocationPermission) {
@@ -1455,6 +1456,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (progressBar.getVisibility() == View.VISIBLE) {
             progressBar.setVisibility(view.INVISIBLE);
+
             if (onMapPresedLatLng != null) {
                 if (onMapPresedLatLng.equals(EMPIRE_STATE_BUILDING_LAT_LNG)) {
                     Log.d("MyMapsActivity", "latLng.equals(EMPIRE_STATE_BUILDING_LAT_LNG)");

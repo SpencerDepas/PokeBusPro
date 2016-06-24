@@ -12,15 +12,17 @@ import ui.activity.interfaces.TimerTaskInterface;
  */
 public class RefreshTimer {
 
-    private TimerTaskInterface timerTaskInterface = null;
-    private String refreshTimerTaskTime = "20";
-    private Timer timer;
-    private TimerTask timerTask;
-
-
+    private TimerTaskInterface mTimerTaskInterface = null;
+    private static String sRefreshTimerTaskTime;
+    private Timer mTimer;
+    private TimerTask mTimerTask;
     private static RefreshTimer sRefreshTimer;
 
-    public static RefreshTimer getInstance(TimerTaskInterface timerTaskInterface) {
+    public static RefreshTimer getInstance(TimerTaskInterface timerTaskInterface, String refreshTimerTaskTime) {
+        Log.i("RefreshTimer", "getInstance()");
+
+        sRefreshTimerTaskTime = refreshTimerTaskTime;
+
         if (sRefreshTimer == null) {
             sRefreshTimer = new RefreshTimer(timerTaskInterface);
         }
@@ -28,33 +30,33 @@ public class RefreshTimer {
     }
 
     private RefreshTimer(TimerTaskInterface timerTaskInterface) {
-        this.timerTaskInterface = timerTaskInterface;
+        this.mTimerTaskInterface = timerTaskInterface;
     }
 
     public void startTimerTask() {
         Log.i("RefreshTimer", "startTimerTask()");
 
-        Log.i("RefreshTimer", "refreshTimerTaskTime : " + refreshTimerTaskTime);
+        Log.i("RefreshTimer", "sRefreshTimerTaskTime : " + sRefreshTimerTaskTime);
 
 
-        if (refreshTimerTaskTime.equals("OFF")) {
-            refreshTimerTaskTime = "0";
+        if (sRefreshTimerTaskTime.equals("0")) {
+            sRefreshTimerTaskTime = "0";
         } else {
 
 
-            Log.i("RefreshTimer", "refreshTimerTaskTime()" + refreshTimerTaskTime);
+            Log.i("RefreshTimer", "sRefreshTimerTaskTime()" + sRefreshTimerTaskTime);
 
-            int timeInMS = Integer.parseInt(refreshTimerTaskTime) * 1000;
+            int timeInMS = Integer.parseInt(sRefreshTimerTaskTime) * 1000;
             Log.i("RefreshTimer", "timeInMS()" + timeInMS);
             if (timeInMS != 0) {
                 //set a new Timer
-                timer = new Timer();
+                mTimer = new Timer();
                 //initialize the TimerTask's job
 
 
                 initializeTimerTask();
-                //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-                timer.schedule(timerTask, 20000, timeInMS);
+                //schedule the mTimer, after the first 5000ms the TimerTask will run every 10000ms
+                mTimer.schedule(mTimerTask, 20000, timeInMS);
 
 
             }
@@ -64,22 +66,22 @@ public class RefreshTimer {
 
     public void stopTimerTask() {
         Log.i("RefreshTimer", "stopTimerTask()");
-        //stop the timer, if it's not already null
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
+        //stop the mTimer, if it's not already null
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
         }
     }
 
 
     public void initializeTimerTask() {
 
-        timerTask = new TimerTask() {
+        mTimerTask = new TimerTask() {
             public void run() {
-                Log.i("RefreshTimer", "initializeTimerTask    timerTask");
+                Log.i("RefreshTimer", "initializeTimerTask    mTimerTask");
 
                 //selectCorrectLatLng();
-                timerTaskInterface.runTimer();
+                mTimerTaskInterface.runTimer();
 
             }
         };
