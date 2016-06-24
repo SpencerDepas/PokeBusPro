@@ -264,7 +264,10 @@ public class AddMarkers {
             //if the last snippet is null
             //then lets open the closet snippet to you
             marker = markerHashTable.get(closestMarkerToUser);
-            marker.showInfoWindow();
+            if (marker != null) {
+                marker.showInfoWindow();
+
+            }
 
         }
 
