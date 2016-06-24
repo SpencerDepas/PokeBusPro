@@ -9,7 +9,7 @@
             android:gravity="center"
 
 
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/busbusicon"/>
     </item>
 
 </layer-list>
