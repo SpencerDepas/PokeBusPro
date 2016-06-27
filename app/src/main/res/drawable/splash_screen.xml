@@ -8,7 +8,6 @@
         <bitmap
             android:gravity="center"
 
-
             android:src="@drawable/busbusicon"/>
     </item>
 

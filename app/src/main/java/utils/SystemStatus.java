@@ -19,11 +19,23 @@ import ui.activity.NoConnectionActivity;
  */
 public class SystemStatus {
 
-    private Context mContext;
+    private static Context mContext;
     private boolean mEnabledGPS;
-    ;
+    private static SystemStatus sSystemStatus;
 
-    public SystemStatus(Context context) {
+
+    public static SystemStatus getInstance(Context context) {
+        Log.i("SystemStatus", "getInstance()");
+
+        mContext = context;
+
+        if (sSystemStatus == null) {
+            sSystemStatus = new SystemStatus(mContext);
+        }
+        return sSystemStatus;
+    }
+
+    private SystemStatus(Context context) {
         this.mContext = context;
 
 

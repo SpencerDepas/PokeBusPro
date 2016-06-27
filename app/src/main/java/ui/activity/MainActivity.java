@@ -1183,7 +1183,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.i("MyMapsActivity", "onResume() hasLocationPermission: " + hasLocationPermission);
 
-
+        systemStatus = new SystemStatus(mContext);
         loadAndSaveFavBusInfo = LoadAndSaveFavBusInfo.getInstance(mContext);
         refreshTimer = RefreshTimer.getInstance(MainActivity.this, refreshTimerTaskTime);
 
