@@ -180,7 +180,8 @@ public class MainActivity extends AppCompatActivity implements
         mContext = getApplicationContext();
         preferenceManager = new PreferenceManager(mContext);
 
-        systemStatus = new SystemStatus(mContext);
+        systemStatus = SystemStatus.getInstance(mContext);
+
 
         if (navigationView != null) {
             setupDrawerContent(navigationView);
@@ -1183,7 +1184,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.i("MyMapsActivity", "onResume() hasLocationPermission: " + hasLocationPermission);
 
-        systemStatus = new SystemStatus(mContext);
+        systemStatus = SystemStatus.getInstance(mContext);
         loadAndSaveFavBusInfo = LoadAndSaveFavBusInfo.getInstance(mContext);
         refreshTimer = RefreshTimer.getInstance(MainActivity.this, refreshTimerTaskTime);
 
