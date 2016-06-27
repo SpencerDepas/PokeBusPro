@@ -8,7 +8,7 @@
         <bitmap
             android:gravity="center"
 
-            android:src="@drawable/busbusicon"/>
+            android:src="@mipmap/ic_launcher"/>
     </item>
 
 </layer-list>

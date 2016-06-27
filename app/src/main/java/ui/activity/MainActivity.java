@@ -1,5 +1,6 @@
 package ui.activity;
 
+import android.graphics.Point;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.WindowManager;
 import android.Manifest;
@@ -33,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -41,10 +43,12 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -344,6 +348,8 @@ public class MainActivity extends AppCompatActivity implements
         // permission denied, boo! Disable the
         // functionality that depends on this permission.
     }
+
+
 
 
     private void phonePermissionNotGranted() {
@@ -1367,6 +1373,8 @@ public class MainActivity extends AppCompatActivity implements
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
 
+        mapMarkerClickListener();
+
         enableMapOnPress();
 
         if (!oneTimeCall) {
@@ -1382,6 +1390,46 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
+
+    }
+
+
+    private void mapMarkerClickListener(){
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+//                marker.showInfoWindow();
+//                animateCamera(marker.getPosition(),zoom, bearing );
+
+
+
+                NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+                int container_height = navView.getHeight();
+
+                Projection projection = googleMap.getProjection();
+
+                LatLng markerLatLng = new LatLng(marker.getPosition().latitude,
+                        marker.getPosition().longitude);
+                Point markerScreenPosition = projection.toScreenLocation(markerLatLng);
+                Point pointHalfScreenAbove = new Point(markerScreenPosition.x,
+                        markerScreenPosition.y - (int)(container_height / 3.1));
+
+                LatLng aboveMarkerLatLng = projection
+                        .fromScreenLocation(pointHalfScreenAbove);
+
+                marker.showInfoWindow();
+                //CameraUpdate center = CameraUpdateFactory.newLatLng(aboveMarkerLatLng);
+                animateCamera(aboveMarkerLatLng,zoom, bearing );
+                //googleMap.moveCamera(center);
+
+
+
+                return true;
+            }
+
+        });
 
     }
 
