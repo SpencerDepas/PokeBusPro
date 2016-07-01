@@ -15,14 +15,14 @@ import clearfaun.com.pokebuspro.R;
 import client.CallAndParse;
 import model.DistancesExample;
 import ui.activity.MainActivity;
-import ui.activity.interfaces.FirstBusStopHasBeenDisplayed;
+import ui.activity.interfaces.AddMarkersCallback;
 
 /**
  * Created by spencer on 2/21/2015.
  */
 public class AddMarkers {
 
-    FirstBusStopHasBeenDisplayed firstBusStopHasBeenDisplayed = null;
+    private AddMarkersCallback firstBusStopHasBeenDisplayed = null;
 
 
     private Hashtable<String, Marker> markerHashTable;
@@ -32,7 +32,7 @@ public class AddMarkers {
 
 
 
-    public void setInterface(FirstBusStopHasBeenDisplayed newfirstBusStopHasBeenDisplayed) {
+    public void setInterface(AddMarkersCallback newfirstBusStopHasBeenDisplayed) {
         firstBusStopHasBeenDisplayed = newfirstBusStopHasBeenDisplayed;
     }
 
@@ -279,6 +279,7 @@ public class AddMarkers {
 
         if (marker != null) {
             Log.i("AddMarkerstz", " displayMarker " + marker.getId().toString());
+            firstBusStopHasBeenDisplayed.animateCameraToMarker(marker);
             marker.showInfoWindow();
         }
     }

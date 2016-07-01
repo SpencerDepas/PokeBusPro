@@ -34,7 +34,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -43,7 +42,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -71,7 +69,7 @@ import ui.component.PopupAdapterForMapMarkers;
 import clearfaun.com.pokebuspro.R;
 import client.CallAndParse;
 import ui.activity.interfaces.DialogPopupListener;
-import ui.activity.interfaces.FirstBusStopHasBeenDisplayed;
+import ui.activity.interfaces.AddMarkersCallback;
 import ui.activity.interfaces.NoBusesInAreaInterface;
 import model.AnswersManager;
 import utils.RefreshTimer;
@@ -88,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements
         DialogPopupListener,
         NoBusesInAreaInterface,
         TimerTaskInterface,
-        FirstBusStopHasBeenDisplayed,
+        AddMarkersCallback,
         OnMapReadyCallback,
         GoogleMap.OnInfoWindowCloseListener {
 
@@ -348,8 +346,6 @@ public class MainActivity extends AppCompatActivity implements
         // permission denied, boo! Disable the
         // functionality that depends on this permission.
     }
-
-
 
 
     private void phonePermissionNotGranted() {
@@ -1114,6 +1110,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void animateCamera(LatLng target, float zoom, float bearing) {
+        Log.i("MyMapsActivity", "animateCamera()");
 
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -1125,7 +1122,9 @@ public class MainActivity extends AppCompatActivity implements
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
         googleMap.setOnInfoWindowCloseListener(this);
-    }
+
+     }
+
 
 
     public void onPause() {
@@ -1394,42 +1393,45 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void mapMarkerClickListener(){
+    private void mapMarkerClickListener() {
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-//                marker.showInfoWindow();
-//                animateCamera(marker.getPosition(),zoom, bearing );
 
-
-
-                NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
-                int container_height = navView.getHeight();
-
-                Projection projection = googleMap.getProjection();
-
-                LatLng markerLatLng = new LatLng(marker.getPosition().latitude,
-                        marker.getPosition().longitude);
-                Point markerScreenPosition = projection.toScreenLocation(markerLatLng);
-                Point pointHalfScreenAbove = new Point(markerScreenPosition.x,
-                        markerScreenPosition.y - (int)(container_height / 3.1));
-
-                LatLng aboveMarkerLatLng = projection
-                        .fromScreenLocation(pointHalfScreenAbove);
-
-                marker.showInfoWindow();
-                //CameraUpdate center = CameraUpdateFactory.newLatLng(aboveMarkerLatLng);
-                animateCamera(aboveMarkerLatLng,zoom, bearing );
-                //googleMap.moveCamera(center);
-
+                animateCameraToMarkerMiddleOfScreen(marker);
 
 
                 return true;
             }
 
         });
+
+    }
+
+    private void animateCameraToMarkerMiddleOfScreen(Marker marker) {
+
+//        zoom = googleMap.getCameraPosition().zoom;
+//        bearing = googleMap.getCameraPosition().bearing;
+
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        int container_height = navView.getHeight();
+
+        Projection projection = googleMap.getProjection();
+
+        LatLng markerLatLng = new LatLng(marker.getPosition().latitude,
+                marker.getPosition().longitude);
+        Point markerScreenPosition = projection.toScreenLocation(markerLatLng);
+        Point pointHalfScreenAbove = new Point(markerScreenPosition.x,
+                markerScreenPosition.y - (int) (container_height / 4));
+
+        LatLng aboveMarkerLatLng = projection
+                .fromScreenLocation(pointHalfScreenAbove);
+
+        marker.showInfoWindow();
+        animateCamera(aboveMarkerLatLng, 17, 40);
+
 
     }
 
@@ -1518,6 +1520,17 @@ public class MainActivity extends AppCompatActivity implements
         }
 
 
+    }
+
+    @Override
+    public void animateCameraToMarker(Marker marker) {
+
+        Log.d("MyMapsActivity", "animateCameraToMarker");
+        Log.d("MyMapsActivity", "zoom : " + zoom);
+        Log.d("MyMapsActivity", "bearing : " + bearing);
+
+
+        animateCameraToMarkerMiddleOfScreen(marker);
     }
 
     @Override
