@@ -136,6 +136,7 @@ public class SystemStatus {
     private void noConnectionIntent() {
         Intent intent = new Intent(mContext, NoConnectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
 
     }

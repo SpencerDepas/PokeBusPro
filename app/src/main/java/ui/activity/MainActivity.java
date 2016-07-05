@@ -1149,6 +1149,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void saveCameraFields(){
+        Log.d("MyMapsActivity", "saveCameraFields : " );
+
         Log.d("MyMapsActivity", "tst tilt : " + tilt);
         Log.d("MyMapsActivity", "tst bearing : " + bearing);
         Log.d("MyMapsActivity", "tst animateCamera zoom : " + zoom);
@@ -1454,15 +1456,37 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("MyMapsActivity", "tst animateCameraToMarkerMiddleOfScreen zoom : " + zoom);
         Log.d("MyMapsActivity", "tst animateCameraToMarkerMiddleOfScreen bearing : " + bearing);
 
+        LatLng aboveMarkerLatLng;
+
         if(!firstTimeLoading){
+            Log.d("MyMapsActivity", "tst !firstTimeLoading  " );
 
             saveCameraFields();
 
+            NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+            int container_height = navView.getHeight();
+
+            Projection projection = googleMap.getProjection();
+
+            LatLng markerLatLng = new LatLng(marker.getPosition().latitude,
+                    marker.getPosition().longitude);
+            Point markerScreenPosition = projection.toScreenLocation(markerLatLng);
+            Point pointHalfScreenAbove = new Point(markerScreenPosition.x,
+                    markerScreenPosition.y - (int)(container_height / 3.1));
+
+            aboveMarkerLatLng = projection
+                    .fromScreenLocation(pointHalfScreenAbove);
+        }else {
+
+            aboveMarkerLatLng = marker.getPosition();
         }
 
 
+
+
+
         marker.showInfoWindow();
-        animateCamera(marker.getPosition(), zoom, bearing);
+        animateCamera(aboveMarkerLatLng, zoom, bearing);
 
 
 
