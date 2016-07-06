@@ -13,28 +13,25 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
         android:elevation="4dp"
         android:theme="@style/Theme.DesignBaddAss"
-        />
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
 
 
-    <include layout="@layout/activity_maps"/>
+    <include layout="@layout/activity_maps" />
 
-   
+
     <com.dmitrymalkovich.android.ProgressFloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true">
+        android:layout_margin="@dimen/fab_margin">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/refresh_location_fab"
-            android:src="@drawable/ic_refresh_white_48dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:src="@drawable/ic_refresh_white_48dp" />
 
         <ProgressBar
             android:id="@+id/progress_bar_activity_main"
@@ -44,9 +41,6 @@
             android:layout_height="wrap_content" />
 
     </com.dmitrymalkovich.android.ProgressFloatingActionButton>
-
-
-
 
 
 </android.support.design.widget.CoordinatorLayout>

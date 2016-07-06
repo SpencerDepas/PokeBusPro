@@ -127,12 +127,12 @@ public class AddMarkers {
             firstBusStopHasBeenDisplayed.removeLoadingIcon();
 
             openSnippet(PopupAdapterForMapMarkers.sMarkerCurrentKey, CallAndParse.sClosestMarker);
+            Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ");
 
         }
 
 
-        Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ");
-    }
+     }
 
     private String getBusName(DistancesExample distancesExample, int incomingBusesSize) {
         //this is for when no buses are incoming
@@ -211,11 +211,15 @@ public class AddMarkers {
         Log.i("AddMarkerstz", " lastOpenSnippetKey :  " + lastOpenSnippetKey);
 
         if (!lastOpenSnippetKey.equals("")) {
+            Log.i("AddMarkerstz", " !lastOpenSnippetKey.equals(\"\") :  " );
+
 
             openAfterItsBeenOpenedSnippet(lastOpenSnippetKey, closestMarkerToUser);
 
 
         } else {
+            Log.i("AddMarkerstz", " else:  " );
+
 
             firstTimeOpenSnippet(closestMarkerToUser);
         }
@@ -250,6 +254,8 @@ public class AddMarkers {
 
 
         if (marker != null) {
+            Log.i("AddMarkerstz", " marker != null ");
+
             if (marker.isInfoWindowShown()) {
 
                 Log.i("AddMarkerstz", " openSnippet " + marker.getId().toString());
@@ -257,9 +263,19 @@ public class AddMarkers {
                 refreshMarkerSnippet(marker);
 
             }else{
+
+                Log.i("AddMarkerstz", " !!!! marker.isInfoWindowShown() ");
+
+                //here we go
+                marker.hideInfoWindow();
                 marker.showInfoWindow();
+                firstBusStopHasBeenDisplayed.animateCameraToMarker(marker);
+
             }
         }else {
+
+            Log.i("AddMarkerstz", " else !!!! marker != null ");
+
 
             //if the last snippet is null
             //then lets open the closet snippet to you

@@ -254,7 +254,14 @@ public class BoroughBusMapActivity extends AppCompatActivity {
             startActivity(intent);
             this.finish();
         } else {
-            this.finish();
+
+            if(MainActivity.active == true){
+                this.finish();
+            }else{
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+
         }
 
         return true;

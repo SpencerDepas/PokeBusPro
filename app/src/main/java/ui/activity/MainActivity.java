@@ -2,6 +2,7 @@ package ui.activity;
 
 import android.graphics.Point;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.view.WindowManager;
 import android.Manifest;
 import android.app.AlertDialog;
@@ -106,8 +107,9 @@ public class MainActivity extends AppCompatActivity implements
     final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 68;
 
     private boolean hasLocationPermission;
+    private boolean firstTimeLoadingForCameraAnimation = true;
 
-
+    static boolean active = false;
     private static int tilt = 30;
     private static float zoom = 16;
     private static float bearing = 40;
@@ -145,6 +147,9 @@ public class MainActivity extends AppCompatActivity implements
     @BindArray(R.array.timer_entries_values)
     protected String[] timerTaskEntriesValues;
 
+
+    @BindView(R.id.refresh_location_fab)
+    FloatingActionButton fab;
 
     @BindView(R.id.main_coordinatorLayout)
     CoordinatorLayout view;
@@ -200,6 +205,8 @@ public class MainActivity extends AppCompatActivity implements
         savedRadius = preferenceManager.getRadius();
 
         Log.i("MyMapsActivity", "refreshTimerTaskTime :  " + refreshTimerTaskTime);
+        fab.setEnabled(false);
+        fab.setClickable(false);
 
     }
 
@@ -393,6 +400,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         refreshMarkers();
+
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName(AnswersManager.FAB_ON_REFRESH)
                 .putContentType(AnswersManager.ACTION));
@@ -1034,8 +1042,20 @@ public class MainActivity extends AppCompatActivity implements
                 selectCorrectLatLng();
             }
 
+            MarkerManager markerManager = MarkerManager.getInstance();
+            Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
-            animateCameraPos();
+            Marker currentMarker = markerHashTable.get(PopupAdapterForMapMarkers.sMarkerCurrentKey);
+
+
+            if(currentMarker != null){
+
+                animateCameraToMarkerMiddleOfScreen(currentMarker, firstTimeLoadingForCameraAnimation);
+            }else{
+                animateCameraPos();
+            }
+
+
 
 
         }
@@ -1112,12 +1132,9 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void animateCamera(LatLng target, float zoom, float bearing) {
-        Log.i("MyMapsActivity", "animateCamera()");
+        Log.i("MyMapsActivity", "tst animateCamera() being called ");
 
 
-        Log.d("MyMapsActivity", "tst animateCamera tilt " + tilt);
-        Log.d("MyMapsActivity", "tst animateCamera zoom : " + zoom);
-        Log.d("MyMapsActivity", "tst animateCamera bearing : " + bearing);
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(target)    // Sets the center of the map to Mountain View
@@ -1130,14 +1147,28 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onFinish() {
                 //DO some stuff here!
-                Log.d("animation", "onFinishCalled");
+                Log.d("MyMapsActivity", "onFinishCalled");
+                if (firstTimeLoadingForCameraAnimation) {
 
+                    firstTimeLoadingForCameraAnimation = false;
+
+                    Log.d("MyMapsActivity", "onFinishCalled tst firstTimeLoading  :"
+                            + firstTimeLoadingForCameraAnimation);
+
+
+
+                    googleMap.getUiSettings().setAllGesturesEnabled(true);
+
+                }
+                fab.setEnabled(true);
+                fab.setClickable(true);
                 saveCameraFields();
             }
 
             @Override
             public void onCancel() {
-                Log.d("animation", "onCancel");
+                Log.d("MyMapsActivity", "onCancel");
+
 
 
             }
@@ -1148,19 +1179,18 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private void saveCameraFields(){
-        Log.d("MyMapsActivity", "saveCameraFields : " );
+
+    private void saveCameraFields() {
+        Log.d("MyMapsActivity", "saveCameraFields : ");
 
         Log.d("MyMapsActivity", "tst tilt : " + tilt);
         Log.d("MyMapsActivity", "tst bearing : " + bearing);
         Log.d("MyMapsActivity", "tst animateCamera zoom : " + zoom);
 
 
-
-        tilt = (int)googleMap.getCameraPosition().tilt;
+        tilt = (int) googleMap.getCameraPosition().tilt;
         zoom = googleMap.getCameraPosition().zoom;
         bearing = googleMap.getCameraPosition().bearing;
-
 
 
     }
@@ -1171,13 +1201,14 @@ public class MainActivity extends AppCompatActivity implements
 
 
         if (zoom != 0) {
-            tilt = (int)googleMap.getCameraPosition().tilt;
+            tilt = (int) googleMap.getCameraPosition().tilt;
             zoom = googleMap.getCameraPosition().zoom;
             bearing = googleMap.getCameraPosition().bearing;
             Log.i("MyMapsActivity", "saving zoom :" + zoom);
             Log.i("MyMapsActivity", "saving bearking : " + bearing);
         }
 
+        closeDrawer();
 
         refreshTimer.stopTimerTask();
         loadAndSaveFavBusInfo.saveFavBus(busCodeOfFavBusStops);
@@ -1228,6 +1259,9 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.i("MyMapsActivity", "onResume() hasLocationPermission: " + hasLocationPermission);
 
+
+        Log.i("MyMapsActivity", "mMap!= null" + (mMap!= null));
+        Log.i("MyMapsActivity", "googleMap!= null)" + (googleMap!= null));
         systemStatus = SystemStatus.getInstance(mContext);
         loadAndSaveFavBusInfo = LoadAndSaveFavBusInfo.getInstance(mContext);
         refreshTimer = RefreshTimer.getInstance(MainActivity.this, refreshTimerTaskTime);
@@ -1284,7 +1318,7 @@ public class MainActivity extends AppCompatActivity implements
         googleMap.setMyLocationEnabled(true);
 
 
-        animateCameraPos();
+        //animateCameraPos();
 
         selectCorrectLatLng();
 
@@ -1408,6 +1442,11 @@ public class MainActivity extends AppCompatActivity implements
     public void onMapReady(GoogleMap newGoogleMap) {
         Log.d("MyMapsActivity", "onMapReadypoooo");
         this.googleMap = newGoogleMap;
+        if (firstTimeLoadingForCameraAnimation) {
+            googleMap.getUiSettings().setAllGesturesEnabled(false);
+
+        }
+
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
 
@@ -1439,7 +1478,8 @@ public class MainActivity extends AppCompatActivity implements
             public boolean onMarkerClick(Marker marker) {
 
 
-                animateCameraToMarkerMiddleOfScreen(marker, false);
+
+                animateCameraToMarkerMiddleOfScreen(marker, firstTimeLoadingForCameraAnimation);
 
 
                 return true;
@@ -1457,9 +1497,12 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("MyMapsActivity", "tst animateCameraToMarkerMiddleOfScreen bearing : " + bearing);
 
         LatLng aboveMarkerLatLng;
+        Log.d("MyMapsActivity", "tst firstTimeLoading  :"  + firstTimeLoading);
 
-        if(!firstTimeLoading){
-            Log.d("MyMapsActivity", "tst !firstTimeLoading  " );
+
+
+        if (!firstTimeLoading) {
+            Log.d("MyMapsActivity", "tst !firstTimeLoading  ");
 
             saveCameraFields();
 
@@ -1472,22 +1515,18 @@ public class MainActivity extends AppCompatActivity implements
                     marker.getPosition().longitude);
             Point markerScreenPosition = projection.toScreenLocation(markerLatLng);
             Point pointHalfScreenAbove = new Point(markerScreenPosition.x,
-                    markerScreenPosition.y - (int)(container_height / 3.1));
+                    markerScreenPosition.y - (int) (container_height / 3.1));
 
             aboveMarkerLatLng = projection
                     .fromScreenLocation(pointHalfScreenAbove);
-        }else {
+        } else {
 
             aboveMarkerLatLng = marker.getPosition();
         }
 
 
-
-
-
         marker.showInfoWindow();
         animateCamera(aboveMarkerLatLng, zoom, bearing);
-
 
 
     }
@@ -1580,6 +1619,19 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
+    }
+
+
+    @Override
     public void animateCameraToMarker(Marker marker) {
 
         Log.d("MyMapsActivity", "animateCameraToMarker");
@@ -1587,7 +1639,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("MyMapsActivity", "bearing : " + bearing);
 
 
-        animateCameraToMarkerMiddleOfScreen(marker, true);
+        animateCameraToMarkerMiddleOfScreen(marker, firstTimeLoadingForCameraAnimation);
     }
 
     @Override
