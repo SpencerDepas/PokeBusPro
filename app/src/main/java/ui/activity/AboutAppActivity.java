@@ -1,9 +1,12 @@
 package ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -86,17 +89,37 @@ public class AboutAppActivity extends AppCompatActivity {
         );
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        if (!isOnline()) {
+            Log.i("MyMapsActivity", "!isOnline()");
+            Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
+            startActivity(intent);
+            this.finish();
+        } else {
 
-        this.finish();
+            if(MainActivity.active == true){
+                this.finish();
+            }else{
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                this.finish();
+            }
 
+        }
 
         return true;
     }
 
+
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+ 
 
     @Override
     protected void onDestroy() {
