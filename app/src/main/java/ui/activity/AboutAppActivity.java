@@ -99,9 +99,9 @@ public class AboutAppActivity extends AppCompatActivity {
             this.finish();
         } else {
 
-            if(MainActivity.active == true){
+            if (MainActivity.active == true) {
                 this.finish();
-            }else{
+            } else {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 this.finish();
@@ -119,7 +119,6 @@ public class AboutAppActivity extends AppCompatActivity {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
- 
 
     @Override
     protected void onDestroy() {

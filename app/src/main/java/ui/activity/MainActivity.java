@@ -755,7 +755,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Toast.makeText(mContext, getString(R.string.removed_fav_bus),
                 Toast.LENGTH_LONG).show();
-        ;
+
 
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("Deleted favorite Buses")
@@ -1316,7 +1316,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         googleMap.setMyLocationEnabled(true);
-
+        googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
 
         //animateCameraPos();
 
