@@ -1592,6 +1592,7 @@ public class MainActivity extends AppCompatActivity implements
         bearing = googleMap.getCameraPosition().bearing;
         selectCorrectLatLng();
 
+
         //animateCameraPos();
     }
 

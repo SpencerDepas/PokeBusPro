@@ -281,6 +281,7 @@ public class AddMarkers {
             //then lets open the closet snippet to you
             marker = markerHashTable.get(closestMarkerToUser);
             if (marker != null) {
+                firstBusStopHasBeenDisplayed.animateCameraToMarker(marker);
                 marker.showInfoWindow();
 
             }
