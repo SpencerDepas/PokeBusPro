@@ -249,15 +249,20 @@ public class BoroughBusMapActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (!isOnline()) {
-            Log.i("MyMapsActivity", "!isOnline()");
+            Log.i("BoroughBusMapActivity", "!isOnline()");
             Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
             this.finish();
         } else {
+            Log.i("BoroughBusMapActivity", "isOnline()");
 
-            if(MainActivity.active == true){
+            if (MainActivity.active == true) {
+                Log.i("BoroughBusMapActivity", "MainActivity.active == true");
+
                 this.finish();
-            }else{
+            } else {
+                Log.i("BoroughBusMapActivity", "else");
+
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 this.finish();

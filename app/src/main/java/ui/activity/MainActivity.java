@@ -1226,6 +1226,7 @@ public class MainActivity extends AppCompatActivity implements
 
         markerHashTable.clear();
 
+        active = false;
         mMap = null;
         finish();
     }
@@ -1591,7 +1592,7 @@ public class MainActivity extends AppCompatActivity implements
         bearing = googleMap.getCameraPosition().bearing;
         selectCorrectLatLng();
 
-        animateCameraPos();
+        //animateCameraPos();
     }
 
 
@@ -1624,11 +1625,7 @@ public class MainActivity extends AppCompatActivity implements
         active = true;
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        active = false;
-    }
+
 
 
     @Override
