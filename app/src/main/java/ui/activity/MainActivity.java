@@ -398,6 +398,9 @@ public class MainActivity extends AppCompatActivity implements
     public void refreshLocation(View view) {
         Log.i("MyMapsActivity", "onClick refreshLocation");
 
+        tilt = (int) googleMap.getCameraPosition().tilt;
+        zoom = googleMap.getCameraPosition().zoom;
+        bearing = googleMap.getCameraPosition().bearing;
 
         refreshMarkers();
 
@@ -1012,8 +1015,7 @@ public class MainActivity extends AppCompatActivity implements
 
         } else {
 
-            zoom = googleMap.getCameraPosition().zoom;
-            bearing = googleMap.getCameraPosition().bearing;
+            saveCameraFields();
 
 
             progressBar.setVisibility(view.VISIBLE);
@@ -1025,6 +1027,7 @@ public class MainActivity extends AppCompatActivity implements
 //                zoom = 16;
 //                bearing = 40;
                 boolean isLocationEnabled = systemStatus.isLocationEnabled();
+
                 if (!isLocationEnabled) {
                     Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
@@ -1084,13 +1087,17 @@ public class MainActivity extends AppCompatActivity implements
             if (zoom > 4) {
                 Log.i("MyMapsActivity", "animateCameraPos bearing != 0");
 
+                Log.i("MyMapsActivity", "animateCamera(onMapPresedLatLng, zoom, bearing);");
+
                 animateCamera(onMapPresedLatLng, zoom, bearing);
 
 
             } else {
                 Log.i("MyMapsActivity", "animateCameraPos bearing == 0");
 
-                animateCamera(onMapPresedLatLng, 16, 40);
+                Log.i("MyMapsActivity", "animateCamera(onMapPresedLatLng, 16, 40);");
+
+                //animateCamera(onMapPresedLatLng, 16, 40);
 
 
             }
@@ -1103,9 +1110,13 @@ public class MainActivity extends AppCompatActivity implements
             if (latLng.latitude == 0) {
                 Log.i("MyMapsActivity ", "latLng.latitude == 0");
 
+                Log.i("MyMapsActivity ", "animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, zoom, bearing);");
+
                 animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, zoom, bearing);
 
             } else {
+                Log.i("MyMapsActivity ", "animateCamera(latLng, zoom, bearing);");
+
                 animateCamera(latLng, zoom, bearing);
 
             }
@@ -1118,9 +1129,15 @@ public class MainActivity extends AppCompatActivity implements
             if (latLng.latitude == 0) {
                 Log.i("MyMapsActivity ", "latLng.latitude == 0");
 
+                Log.i("MyMapsActivity ", "animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, 16, 40);");
+
                 animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, 16, 40);
 
             } else {
+
+                Log.i("MyMapsActivity ", "animateCamera(latLng, 16, 40);");
+
+
                 animateCamera(latLng, 16, 40);
 
             }
@@ -1162,7 +1179,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 fab.setEnabled(true);
                 fab.setClickable(true);
-                saveCameraFields();
+                //saveCameraFields();
             }
 
             @Override
@@ -1183,14 +1200,22 @@ public class MainActivity extends AppCompatActivity implements
     private void saveCameraFields() {
         Log.d("MyMapsActivity", "saveCameraFields : ");
 
-        Log.d("MyMapsActivity", "tst tilt : " + tilt);
-        Log.d("MyMapsActivity", "tst bearing : " + bearing);
-        Log.d("MyMapsActivity", "tst animateCamera zoom : " + zoom);
+        if(hasLocationPermission){
+            Log.d("MyMapsActivity", "tst tilt : " + tilt);
+            Log.d("MyMapsActivity", "tst bearing : " + bearing);
+            Log.d("MyMapsActivity", "tst animateCamera zoom : " + zoom);
 
 
-        tilt = (int) googleMap.getCameraPosition().tilt;
-        zoom = googleMap.getCameraPosition().zoom;
-        bearing = googleMap.getCameraPosition().bearing;
+
+            tilt = (int) googleMap.getCameraPosition().tilt;
+            zoom = googleMap.getCameraPosition().zoom;
+            bearing = googleMap.getCameraPosition().bearing;
+
+            Log.d("MyMapsActivity", "tst tilt : " + tilt);
+            Log.d("MyMapsActivity", "tst bearing : " + bearing);
+            Log.d("MyMapsActivity", "tst animateCamera zoom : " + zoom);
+        }
+
 
 
     }
@@ -1201,9 +1226,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         if (zoom != 0) {
-            tilt = (int) googleMap.getCameraPosition().tilt;
-            zoom = googleMap.getCameraPosition().zoom;
-            bearing = googleMap.getCameraPosition().bearing;
+            saveCameraFields();
             Log.i("MyMapsActivity", "saving zoom :" + zoom);
             Log.i("MyMapsActivity", "saving bearking : " + bearing);
         }
@@ -1443,6 +1466,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onMapReady(GoogleMap newGoogleMap) {
         Log.d("MyMapsActivity", "onMapReadypoooo");
         this.googleMap = newGoogleMap;
+
         if (firstTimeLoadingForCameraAnimation) {
             googleMap.getUiSettings().setAllGesturesEnabled(false);
 
@@ -1463,7 +1487,10 @@ public class MainActivity extends AppCompatActivity implements
             permissionAtRunTime();
 
 
-            refreshTimer.startTimerTask();
+            if(responseAnsweredForRuntimePermission){
+                refreshTimer.startTimerTask();
+            }
+
 
 
         }
@@ -1491,6 +1518,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void animateCameraToMarkerMiddleOfScreen(Marker marker, boolean firstTimeLoading) {
+        Log.d("MyMapsActivity", "animateCameraToMarkerMiddleOfScreen" );
 
 
         Log.d("MyMapsActivity", "tst animateCameraToMarkerMiddleOfScreen tilt " + tilt);
@@ -1527,6 +1555,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
         marker.showInfoWindow();
+        Log.d("MyMapsActivity", " marker.showInfoWindow(); animateCamera(aboveMarkerLatLng, zoom, bearing);");
+
         animateCamera(aboveMarkerLatLng, zoom, bearing);
 
 
@@ -1588,8 +1618,8 @@ public class MainActivity extends AppCompatActivity implements
         googleMap.clear();
         progressBar.setVisibility(view.VISIBLE);
 
-        zoom = googleMap.getCameraPosition().zoom;
-        bearing = googleMap.getCameraPosition().bearing;
+
+        saveCameraFields();
         selectCorrectLatLng();
 
 

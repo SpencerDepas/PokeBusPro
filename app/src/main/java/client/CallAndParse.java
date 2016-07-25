@@ -45,6 +45,7 @@ public class CallAndParse {
     public CallAndParse(NoBusesInAreaInterface noBusINterFace) {
 
 
+        //lets see if this shit works!
         this.mNoBusINterFace = noBusINterFace;
         Log.i("MyCallAndParse", "CallAndParse");
         mGson = new GsonBuilder()
