@@ -1,204 +1,180 @@
 package model;
 
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
+public class Stop {
 
-/**
- * Created by SpencerDepas on 3/15/16.
- */
-public class Stop  {
-
-    @SerializedName("code")
+    @SerializedName("atcocode")
     @Expose
-    private String code;
-    @SerializedName("direction")
+    private String atcocode;
+    @SerializedName("smscode")
     @Expose
-    private String direction;
-    @SerializedName("id")
-    @Expose
-    private String id;
-    @SerializedName("lat")
-    @Expose
-    private Double lat;
-    @SerializedName("locationType")
-    @Expose
-    private Integer locationType;
-    @SerializedName("lon")
-    @Expose
-    private Double lon;
+    private String smscode;
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("routes")
+    @SerializedName("mode")
     @Expose
-    private List<Route> routes = new ArrayList<>();
-    @SerializedName("wheelchairBoarding")
+    private String mode;
+    @SerializedName("bearing")
     @Expose
-    private String wheelchairBoarding;
+    private String bearing;
+    @SerializedName("locality")
+    @Expose
+    private String locality;
+    @SerializedName("indicator")
+    @Expose
+    private String indicator;
+    @SerializedName("longitude")
+    @Expose
+    private Double longitude;
+    @SerializedName("latitude")
+    @Expose
+    private Double latitude;
+    @SerializedName("distance")
+    @Expose
+    private Integer distance;
 
     /**
-     *
-     * @return
-     * The code
+     * @return The atcocode
      */
-    public String getCode() {
-        return code;
+    public String getAtcocode() {
+        return atcocode;
     }
 
     /**
-     *
-     * @param code
-     * The code
+     * @param atcocode The atcocode
      */
-    public void setCode(String code) {
-        this.code = code;
+    public void setAtcocode(String atcocode) {
+        this.atcocode = atcocode;
     }
 
     /**
-     *
-     * @return
-     * The direction
+     * @return The smscode
      */
-    public String getDirection() {
-        return direction;
+    public String getSmscode() {
+        return smscode;
     }
 
     /**
-     *
-     * @param direction
-     * The direction
+     * @param smscode The smscode
      */
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public void setSmscode(String smscode) {
+        this.smscode = smscode;
     }
 
     /**
-     *
-     * @return
-     * The id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     *
-     * @param id
-     * The id
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     *
-     * @return
-     * The lat
-     */
-    public Double getLat() {
-        return lat;
-    }
-
-    /**
-     *
-     * @param lat
-     * The lat
-     */
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
-    /**
-     *
-     * @return
-     * The locationType
-     */
-    public Integer getLocationType() {
-        return locationType;
-    }
-
-    /**
-     *
-     * @param locationType
-     * The locationType
-     */
-    public void setLocationType(Integer locationType) {
-        this.locationType = locationType;
-    }
-
-    /**
-     *
-     * @return
-     * The lon
-     */
-    public Double getLon() {
-        return lon;
-    }
-
-    /**
-     *
-     * @param lon
-     * The lon
-     */
-    public void setLon(Double lon) {
-        this.lon = lon;
-    }
-
-    /**
-     *
-     * @return
-     * The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     * The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
-     * The routes
+     * @return The mode
      */
-    public List<Route> getRoutes() {
-        return routes;
+    public String getMode() {
+        return mode;
     }
 
     /**
-     *
-     * @param routes
-     * The routes
+     * @param mode The mode
      */
-    public void setRoutes(List<Route> routes) {
-        this.routes = routes;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     /**
-     *
-     * @return
-     * The wheelchairBoarding
+     * @return The bearing
      */
-    public String getWheelchairBoarding() {
-        return wheelchairBoarding;
+    public String getBearing() {
+        return bearing;
     }
 
     /**
-     *
-     * @param wheelchairBoarding
-     * The wheelchairBoarding
+     * @param bearing The bearing
      */
-    public void setWheelchairBoarding(String wheelchairBoarding) {
-        this.wheelchairBoarding = wheelchairBoarding;
+    public void setBearing(String bearing) {
+        this.bearing = bearing;
+    }
+
+    /**
+     * @return The locality
+     */
+    public String getLocality() {
+        return locality;
+    }
+
+    /**
+     * @param locality The locality
+     */
+    public void setLocality(String locality) {
+        this.locality = locality;
+    }
+
+    /**
+     * @return The indicator
+     */
+    public String getIndicator() {
+        return indicator;
+    }
+
+    /**
+     * @param indicator The indicator
+     */
+    public void setIndicator(String indicator) {
+        this.indicator = indicator;
+    }
+
+    /**
+     * @return The longitude
+     */
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * @param longitude The longitude
+     */
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    /**
+     * @return The latitude
+     */
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * @param latitude The latitude
+     */
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * @return The distance
+     */
+    public Integer getDistance() {
+        return distance;
+    }
+
+    /**
+     * @param distance The distance
+     */
+    public void setDistance(Integer distance) {
+        this.distance = distance;
     }
 
 }
