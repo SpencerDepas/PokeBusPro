@@ -1,12 +1,14 @@
 package client;
 
 
+import model.BusStopDistances;
 import model.BusStopExample;
 import model.DistancesExample;
 import model.UkBusStopsLocation;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Headers;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
@@ -23,18 +25,16 @@ public interface GetBussStopInterface {
                     Callback<UkBusStopsLocation> response
     );
 
-    @GET("/siri/stop-monitoring.json")
-    void getBusDistancesFromStop(@Query("atcocode") String atCode,
+    @GET("/stop/{atcocode}/live.json")
+    void getBusDistancesFromStop(@Path("atcocode") String atCode,
                                  @Query("app_id") String appId,
                                  @Query("app_key") String appKey,
-                                 Callback<DistancesExample> response
+                                 @Query("group") String group,
+                                 @Query("nextbuses") String nextbuses,
+
+                                 Callback<BusStopDistances> response
     );
 
-    @GET("/siri/stop-monitoring.json")
-    void fgetBusDistancesFromStop(@Query("MonitoringRef") String buscode,
-                                 @Query("MaximumStopVisits") String returnHowManyIncomingBuses,
-                                 Callback<DistancesExample> response
-    );
 
 
     @GET("/siri/stop-monitoring.json")

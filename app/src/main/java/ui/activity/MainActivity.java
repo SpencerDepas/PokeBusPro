@@ -1342,7 +1342,7 @@ public class MainActivity extends AppCompatActivity implements
         googleMap.setMyLocationEnabled(true);
         googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
 
-        //animateCameraPos();
+        animateCameraPos();
 
         selectCorrectLatLng();
 

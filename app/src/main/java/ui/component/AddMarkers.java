@@ -13,6 +13,7 @@ import java.util.Hashtable;
 
 import clearfaun.com.pokebuspro.R;
 import client.CallAndParse;
+import model.BusStopDistances;
 import model.DistancesExample;
 import ui.activity.MainActivity;
 import ui.activity.interfaces.AddMarkersCallback;
@@ -44,7 +45,7 @@ public class AddMarkers {
     }
 
 
-    public void addMarkerToMapWithBusDistances(DistancesExample distancesExample, String busCode,
+    public void addMarkerToMapWithBusDistances(BusStopDistances distancesExample, String busCode,
                                                LatLng busStopLatLng, ArrayList<String> favBuses) {
 
         Log.i("AddMarkers", "addMarkerToMapWithBusDistances");
@@ -52,15 +53,13 @@ public class AddMarkers {
         this.favBuses = favBuses;
         CallAndParse.sBusStopsSize--;
 
-        int incomingBusesSize = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
-                .getMonitoredStopVisit()
-                .size();
+        int incomingBusesSize = distancesExample.getDepartures().getAll().size();
 
         Log.i("AddMarkers", "addMarkerToMapWithBusDistances");
 
 
         String busName = getBusName(distancesExample, incomingBusesSize);
-
+        //String busName = busCode;
 
 
 
@@ -100,20 +99,20 @@ public class AddMarkers {
             marker = MainActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
             marker.setTitle(busCode + busName);
-            marker.setSnippet(allbusNamesAndDistances);
+            marker.setSnippet( allbusNamesAndDistances);
 
             markerHashTable.put(busCode, marker);
 
 
             //this does not scale
             //could make a hashtable for this
-            for (int i = 0; i < favBuses.size(); i++) {
-
-                if (favBuses.get(i).equals(busCode)) {
-                    Log.i("AddMarkers", "  I R FAV BUS ");
-                    addPokeBusColor(busCode);
-                }
-            }
+//            for (int i = 0; i < favBuses.size(); i++) {
+//
+//                if (favBuses.get(i).equals(busCode)) {
+//                    Log.i("AddMarkers", "  I R FAV BUS ");
+//                    addPokeBusColor(busCode);
+//                }
+//            }
         }
 
 
@@ -134,7 +133,7 @@ public class AddMarkers {
 
      }
 
-    private String getBusName(DistancesExample distancesExample, int incomingBusesSize) {
+    private String getBusName(BusStopDistances distancesExample, int incomingBusesSize) {
         //this is for when no buses are incoming
 
 
@@ -147,11 +146,7 @@ public class AddMarkers {
 
         } else {
 
-            busName = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
-                    .getMonitoredStopVisit()
-                    .get(0)
-                    .getMonitoredVehicleJourney()
-                    .getLineRef();
+            busName = distancesExample.getDepartures().getAll().get(0).getLineName();
 
 
             int indexOfChar = busName.indexOf('_') + 1;
@@ -162,7 +157,7 @@ public class AddMarkers {
 
     }
 
-    private String putMultiBusesInStackedString(DistancesExample distancesExample, int incomingBusesSize) {
+    private String putMultiBusesInStackedString(BusStopDistances distancesExample, int incomingBusesSize) {
         //still for one stop
         Log.i("AddMarkers", "putMultiBusesInStackedString");
 
@@ -172,26 +167,15 @@ public class AddMarkers {
         for (int i = 0; i < incomingBusesSize; i++) {
 
 
-            String busNamec = distancesExample.getSiri().getServiceDelivery().getStopMonitoringDelivery().get(0)
-                    .getMonitoredStopVisit()
-                    .get(i)
-                    .getMonitoredVehicleJourney()
-                    .getLineRef();
+            String busNamec = distancesExample.getDepartures().getAll().get(i).getLineName();
 
 
             int indexOfChar = busNamec.indexOf('_') + 1;
             busNamec = busNamec.substring(indexOfChar);
 
 
-            String distance = distancesExample.getSiri().getServiceDelivery()
-                    .getStopMonitoringDelivery().get(0)
-                    .getMonitoredStopVisit()
-                    .get(i)
-                    .getMonitoredVehicleJourney()
-                    .getMonitoredCall()
-                    .getExtensions()
-                    .getDistances()
-                    .getPresentableDistance();
+            String distance = distancesExample.getDepartures().getAll().get(i)
+                    .getBestDepartureEstimate();
 
             allbusNamesAndDistances += busNamec + ": " + distance + "\n";
             //Log.i("AddMarkerss", "distance : "  + distance );

@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 
 
+import model.BusStopDistances;
 import model.UkBusStopsLocation;
 import ui.component.AddMarkers;
 import model.BusStopExample;
@@ -149,6 +150,9 @@ public class CallAndParse {
         }
 
 
+
+
+
     }
 
 
@@ -161,7 +165,7 @@ public class CallAndParse {
         Log.i("MyCallAndParse", " getBusStopsDistances   busCode  : " + busCode);
         //Retrofit
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(MTA_BUS_STOP_API)
+                .setEndpoint(UK_BUS_API)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setConverter(new GsonConverter(mGson))
                 .build();
@@ -171,18 +175,22 @@ public class CallAndParse {
 
         GetBussStopInterface bussStopInterface = restAdapter.create(GetBussStopInterface.class);
 
-        bussStopInterface.getBusDistancesFromStop("MTA_" + busCode, mSetHowManyIncomingBuses, new Callback<DistancesExample>() {
+        bussStopInterface.getBusDistancesFromStop(busCode, APP_ID,API_KEY,"no", "yes", new Callback<BusStopDistances>() {
 
 
             @Override
-            public void success(DistancesExample distancesExample, Response response) {
-                Log.i("MyCallAndParse", "get bus stops success");
+            public void success(BusStopDistances distancesExample, Response response) {
+                Log.i("MyCallAndParse", "get bus stop distances success");
 
 
-                Log.i("MyCallAndParse", "get bus distances size : " + distancesExample.getSiri().getServiceDelivery()
-                        .getStopMonitoringDelivery()
-                        .size()
-                );
+                Log.i("MyCallAndParse", "get getAtcocode : " + distancesExample.getAtcocode());
+                Log.i("MyCallAndParse", "get59().get(0).getBestDepartureEstimate() : " +
+                        distancesExample.getDepartures().getAll().get(0).getBestDepartureEstimate());
+
+//                Log.i("MyCallAndParse", "get getBestDepartureEstimate : " + distancesExample.getDepartures().
+//                        get59().get(0)
+//                        .getBestDepartureEstimate());
+
 
                 Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode);
                 AddMarkers addMarkers = AddMarkers.getInstance();
