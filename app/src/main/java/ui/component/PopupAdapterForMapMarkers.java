@@ -62,7 +62,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
         distances.setText(marker.getSnippet());
 
 
-        sMarkerCurrentKey = marker.getTitle().substring(0, 6);
+        sMarkerCurrentKey = marker.getTitle();
         final String fBusCode = marker.getTitle();
         mMainActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
