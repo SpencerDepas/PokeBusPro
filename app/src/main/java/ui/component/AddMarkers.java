@@ -50,6 +50,9 @@ public class AddMarkers {
 
         Log.i("AddMarkers", "addMarkerToMapWithBusDistances");
 
+        Log.i("AddMarkers", "busCode : " + busCode);
+
+
         this.favBuses = favBuses;
         CallAndParse.sBusStopsSize--;
 
@@ -106,13 +109,13 @@ public class AddMarkers {
 
             //this does not scale
             //could make a hashtable for this
-//            for (int i = 0; i < favBuses.size(); i++) {
-//
-//                if (favBuses.get(i).equals(busCode)) {
-//                    Log.i("AddMarkers", "  I R FAV BUS ");
-//                    addPokeBusColor(busCode);
-//                }
-//            }
+            for (int i = 0; i < favBuses.size(); i++) {
+
+                if (favBuses.get(i).equals(busCode)) {
+                    Log.i("AddMarkers", "  I R FAV BUS ");
+                    addPokeBusColor(busCode);
+                }
+            }
         }
 
 
@@ -215,19 +218,28 @@ public class AddMarkers {
         Log.i("AddMarkerstz", " firstTimeOpenSnippet ");
 
         if (favBuses.size() > 0) {
-            showFavBusStopSnippet();
+
+            boolean hasFavBusStopBeenDisplayed = showFavBusStopSnippet();
+
+            if(!hasFavBusStopBeenDisplayed){
+                displayClosestMarker(closestMarkerToUser);
+            }
 
         } else {
 
             //if no fav buses we need a snippet to open
-            Log.i("AddMarkers", " closestMarkerToUser " + closestMarkerToUser);
-
-            Marker marker = markerHashTable.get(closestMarkerToUser);
-            displayMarker(marker);
+            displayClosestMarker(closestMarkerToUser);
 
 
         }
 
+    }
+
+    private void displayClosestMarker(String closestMarkerToUser){
+        Log.i("AddMarkers", " displayClosestMarker " + closestMarkerToUser);
+
+        Marker marker = markerHashTable.get(closestMarkerToUser);
+        displayMarker(marker);
     }
 
     private void openAfterItsBeenOpenedSnippet(String lastOpenSnippetKey, String closestMarkerToUser) {
@@ -279,14 +291,14 @@ public class AddMarkers {
         Log.i("AddMarkerstz", " displayMarker ");
 
         if (marker != null) {
-            Log.i("AddMarkerstz", " displayMarker " + marker.getId().toString());
+            Log.i("AddMarkerstz", " displayMarker " + marker.getId());
             firstBusStopHasBeenDisplayed.animateCameraToMarker(marker);
             marker.showInfoWindow();
         }
     }
 
     private void refreshMarkerSnippet(Marker marker) {
-        Log.i("AddMarkerstz", " refreshMarkerSnippet " + marker.getTitle().toString());
+        Log.i("AddMarkerstz", " refreshMarkerSnippet " + marker.getTitle());
 
         Log.i("AddMarkerstz", " marker.isInfoWindowShown() " + marker.isInfoWindowShown());
 
@@ -316,15 +328,19 @@ public class AddMarkers {
 
     }
 
-    private void showFavBusStopSnippet() {
+    private boolean showFavBusStopSnippet() {
+        Log.i("AddMarkers", "showFavBusStopSnippet ");
+
 
         for (int i = 0; i < favBuses.size(); i++) {
 
             Marker marker = markerHashTable.get(favBuses.get(i));
 
             displayMarker(marker);
-            break;
+            return true;
         }
+
+        return false;
 
     }
 

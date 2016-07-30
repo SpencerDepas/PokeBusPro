@@ -22,6 +22,7 @@ public interface GetBussStopInterface {
                     @Query("lon") String lng,
                     @Query("app_id") String appId,
                     @Query("app_key") String appKey,
+                    @Query("rpp") String numberOfReturnedBustops,
                     Callback<UkBusStopsLocation> response
     );
 
@@ -31,6 +32,7 @@ public interface GetBussStopInterface {
                                  @Query("app_key") String appKey,
                                  @Query("group") String group,
                                  @Query("nextbuses") String nextbuses,
+                                 @Query("limit") String limit,
 
                                  Callback<BusStopDistances> response
     );

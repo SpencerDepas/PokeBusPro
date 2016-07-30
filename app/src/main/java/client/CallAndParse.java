@@ -39,9 +39,7 @@ public class CallAndParse {
 
     private final String APP_ID = "03bf8009";
     private final String API_KEY = "d9307fd91b0247c607e098d5effedc97";
-
-
-
+    private final String NUMBER_OF_BUS_STOPS_TO_GET = "15";
 
 
     //private final String API_KEY = "AIzaSyAljUMfpi4WiIiLi7nHTWakvYz_PS23Pyw";
@@ -96,9 +94,11 @@ public class CallAndParse {
         //String lng = "-73.9838934";
 
 
-        bussStopInterface.getBusStop(derbyRoad.latitude + "", derbyRoad.longitude + "",
+        bussStopInterface.getBusStop(lat,
+                lng,
                 APP_ID,
                 API_KEY,
+                NUMBER_OF_BUS_STOPS_TO_GET,
                 new Callback<UkBusStopsLocation>() {
 
 
@@ -150,9 +150,6 @@ public class CallAndParse {
         }
 
 
-
-
-
     }
 
 
@@ -175,39 +172,34 @@ public class CallAndParse {
 
         GetBussStopInterface bussStopInterface = restAdapter.create(GetBussStopInterface.class);
 
-        bussStopInterface.getBusDistancesFromStop(busCode, APP_ID,API_KEY,"no", "yes", new Callback<BusStopDistances>() {
+        bussStopInterface.getBusDistancesFromStop(busCode, APP_ID, API_KEY, "no", "yes", "5",
+                new Callback<BusStopDistances>() {
 
 
-            @Override
-            public void success(BusStopDistances distancesExample, Response response) {
-                Log.i("MyCallAndParse", "get bus stop distances success");
+                    @Override
+                    public void success(BusStopDistances distancesExample, Response response) {
+                        Log.i("MyCallAndParse", "get bus stop distances success");
 
 
-                Log.i("MyCallAndParse", "get getAtcocode : " + distancesExample.getAtcocode());
-                Log.i("MyCallAndParse", "get59().get(0).getBestDepartureEstimate() : " +
-                        distancesExample.getDepartures().getAll().get(0).getBestDepartureEstimate());
-
-//                Log.i("MyCallAndParse", "get getBestDepartureEstimate : " + distancesExample.getDepartures().
-//                        get59().get(0)
-//                        .getBestDepartureEstimate());
+                        Log.i("MyCallAndParse", "get getAtcocode : " + distancesExample.getAtcocode());
 
 
-                Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode);
-                AddMarkers addMarkers = AddMarkers.getInstance();
-                addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode,
-                        finalbusStopLatLng, mFavBusStops);
+                        Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode);
+                        AddMarkers addMarkers = AddMarkers.getInstance();
+                        addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode,
+                                finalbusStopLatLng, mFavBusStops);
 
 
-            }
+                    }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Log.i("MyCallAndParse", "get bus stops  error  " + error.toString());
-                //zipAPIResponse.processFailed();
-            }
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.i("MyCallAndParse", "get bus stops  error  " + error.toString());
+                        //zipAPIResponse.processFailed();
+                    }
 
 
-        });
+                });
 
 
     }

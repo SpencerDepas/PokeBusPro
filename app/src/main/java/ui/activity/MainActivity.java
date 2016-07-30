@@ -1097,7 +1097,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 Log.i("MyMapsActivity", "animateCamera(onMapPresedLatLng, 16, 40);");
 
-                //animateCamera(onMapPresedLatLng, 16, 40);
+                animateCamera(onMapPresedLatLng, 16, 40);
 
 
             }
