@@ -1416,9 +1416,18 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d("AlertDialog", "Positive");
                 dialog.dismiss();
 
+                Log.d("AlertDialog", "finalBuscode :" + finalBuscode);
+
+
 
                 busCodeOfFavBusStops.add(finalBuscode);
                 addMarkers.addPokeBusColor(finalBuscode);
+
+                for(int i = 0 ; i < busCodeOfFavBusStops.size(); i ++){
+                    Log.d("AlertDialog", "busCodeOfFavBusStops.get(i) :"
+                            + busCodeOfFavBusStops.get(i));
+
+                }
 
                 Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
@@ -1453,8 +1462,6 @@ public class MainActivity extends AppCompatActivity implements
                 .show();
 
         progressBar.setVisibility(view.INVISIBLE);
-
-
         refreshTimer.stopTimerTask();
     }
 

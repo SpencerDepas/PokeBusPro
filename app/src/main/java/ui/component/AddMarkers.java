@@ -79,8 +79,9 @@ public class AddMarkers {
         MarkerManager markerManager = MarkerManager.getInstance();
         markerHashTable = markerManager.getMarkerHashTable();
 
+        Log.i("AddMarkers", "busCode : " + busCode);
+
         Marker marker = markerHashTable.get(busCode);
-        randomMarkeyKey = busCode + busName;
         if (marker != null) {
             Log.i("AddMarkers", "markerHashTable.containsKey(hash) use old marker : " + busName);
             //use old
@@ -88,7 +89,7 @@ public class AddMarkers {
             //we do need to delete the old info
 
 
-            marker.setTitle(busCode + busName);
+            marker.setTitle(busCode);
             marker.setSnippet(allbusNamesAndDistances);
             Log.i("AddMarkerstz", " addMarkerToMapWithBusDistances " + marker.getId().toString());
 
@@ -221,7 +222,9 @@ public class AddMarkers {
 
             boolean hasFavBusStopBeenDisplayed = showFavBusStopSnippet();
 
-            if(!hasFavBusStopBeenDisplayed){
+            if(hasFavBusStopBeenDisplayed){
+                Log.i("AddMarkerstz", " !hasFavBusStopBeenDisplayed :" + hasFavBusStopBeenDisplayed);
+
                 displayClosestMarker(closestMarkerToUser);
             }
 
@@ -314,11 +317,12 @@ public class AddMarkers {
     public void addPokeBusColor(String busCode) {
         Log.i("AddMarkers", "addPokeBusColor");
 
+        Log.i("AddMarkers", "busCode : " + busCode);
 
         Marker marker = markerHashTable.get(busCode);
 
         if (marker != null) {
-            Log.i("AddMarkers", "  I R FAV BUS ");
+            Log.i("AddMarkers", "I R FAV BUS ");
 
 
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
@@ -333,6 +337,9 @@ public class AddMarkers {
 
 
         for (int i = 0; i < favBuses.size(); i++) {
+
+            Log.i("AddMarkers", "favBuses :  " + favBuses.get(i));
+
 
             Marker marker = markerHashTable.get(favBuses.get(i));
 

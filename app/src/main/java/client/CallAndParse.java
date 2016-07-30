@@ -39,7 +39,7 @@ public class CallAndParse {
 
     private final String APP_ID = "03bf8009";
     private final String API_KEY = "d9307fd91b0247c607e098d5effedc97";
-    private final String NUMBER_OF_BUS_STOPS_TO_GET = "15";
+    private final String NUMBER_OF_BUS_STOPS_TO_GET = "10";
 
 
     //private final String API_KEY = "AIzaSyAljUMfpi4WiIiLi7nHTWakvYz_PS23Pyw";

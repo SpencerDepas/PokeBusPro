@@ -58,12 +58,12 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
                 marker.getSnippet(), TextView.BufferType.SPANNABLE);
 
 
-        busCode.setText(marker.getTitle().substring(0, 6));
+        busCode.setText(marker.getTitle());
         distances.setText(marker.getSnippet());
 
 
         sMarkerCurrentKey = marker.getTitle().substring(0, 6);
-        final String fBusCode = marker.getTitle().substring(0, 6);
+        final String fBusCode = marker.getTitle();
         mMainActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker Pin) {
