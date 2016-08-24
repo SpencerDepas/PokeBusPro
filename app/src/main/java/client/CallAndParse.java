@@ -182,9 +182,10 @@ public class CallAndParse {
 
 
                         Log.i("MyCallAndParse", "get getAtcocode : " + distancesExample.getAtcocode());
-
+                        Log.i("MyCallAndParse", "LLLgetAimedDepartureTime" + distancesExample.getDepartures().getAll().size());
 
                         Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode);
+
                         AddMarkers addMarkers = AddMarkers.getInstance();
                         addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode,
                                 finalbusStopLatLng, mFavBusStops);

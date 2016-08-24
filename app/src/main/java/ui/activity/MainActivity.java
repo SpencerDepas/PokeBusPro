@@ -147,9 +147,9 @@ public class MainActivity extends AppCompatActivity implements
     @BindArray(R.array.timer_entries_values)
     protected String[] timerTaskEntriesValues;
 
-
     @BindView(R.id.refresh_location_fab)
     FloatingActionButton fab;
+
 
     @BindView(R.id.main_coordinatorLayout)
     CoordinatorLayout view;
@@ -441,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements
                         // edit text
                         Log.i("MyMapsActivity", "DialogInterface onClick ");
 
-                        getLatLngForSearchLocationFromAddress(locationToSearchFor.getText().toString() + "new york ny");
+                        getLatLngForSearchLocationFromAddress(locationToSearchFor.getText().toString());
 
                         getWindow().setSoftInputMode(
                                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -1153,30 +1153,19 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(target)    // Sets the center of the map to Mountain View
-                .zoom(zoom)                   // Sets the zoom
-                .bearing(bearing)                // Sets the orientation of the camera to east
-                //.tilt(tilt)                   // Sets the tilt of the camera to 30 degrees
-                .build();                   // Creates a CameraPosition from the builder
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
+               CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(target)    // Sets the center of the map to Mountain View
+                    .zoom(zoom)                   // Sets the zoom
+                    .bearing(bearing)                // Sets the orientation of the camera to east
+                    //.tilt(tilt)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
 
             @Override
             public void onFinish() {
                 //DO some stuff here!
-                Log.d("MyMapsActivity", "onFinishCalled");
-                if (firstTimeLoadingForCameraAnimation) {
 
-                    firstTimeLoadingForCameraAnimation = false;
-
-                    Log.d("MyMapsActivity", "onFinishCalled tst firstTimeLoading  :"
-                            + firstTimeLoadingForCameraAnimation);
-
-
-
-                    googleMap.getUiSettings().setAllGesturesEnabled(true);
-
-                }
+                googleMap.getUiSettings().setAllGesturesEnabled(true);
                 fab.setEnabled(true);
                 fab.setClickable(true);
                 //saveCameraFields();

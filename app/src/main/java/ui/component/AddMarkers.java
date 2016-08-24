@@ -8,7 +8,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 
 import clearfaun.com.pokebuspro.R;
@@ -30,6 +33,7 @@ public class AddMarkers {
     private ArrayList<String> favBuses;
     private String randomMarkeyKey = "";
     private static AddMarkers addMarkers;
+    private static String currentTime;
 
 
 
@@ -58,6 +62,8 @@ public class AddMarkers {
 
         int incomingBusesSize = distancesExample.getDepartures().getAll().size();
 
+
+        Log.i("AddMarkers", "incomingBusesSize : " + incomingBusesSize);
         Log.i("AddMarkers", "addMarkerToMapWithBusDistances");
 
 
@@ -161,9 +167,52 @@ public class AddMarkers {
 
     }
 
+    private String currentTime(){
+        Log.i("AddMarkers", "currentTime" );
+
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String str = sdf.format(new Date());
+
+
+        return str;
+    }
+
+
+    private String timeToMinuets(String incomingBusTime){
+        Log.i("AddMarkers", "timeToMinuets" + incomingBusTime);
+
+        int timeTillBus = 0;
+        if(incomingBusTime != null){
+
+
+            currentTime = currentTime();
+            Log.i("AddMarkers", "currentTime" + currentTime);
+
+            currentTime = currentTime.replaceAll(":", "");
+            incomingBusTime = incomingBusTime.replaceAll(":", "");
+            int incomingBusInt = Integer.parseInt(incomingBusTime);
+            int timeInt = Integer.parseInt(currentTime);
+
+            timeTillBus = incomingBusInt  -timeInt;
+
+            Log.i("AddMarkers", "timeTillBus" + timeTillBus);
+
+
+        }
+
+
+
+        return (timeTillBus + "");
+    }
+
     private String putMultiBusesInStackedString(BusStopDistances distancesExample, int incomingBusesSize) {
         //still for one stop
         Log.i("AddMarkers", "putMultiBusesInStackedString");
+        Log.i("AddMarkers", "incomingBusesSize : " + incomingBusesSize);
+        Log.i("AddMarkers", "distancesExample.getDepartures().getAll().size() : " + distancesExample.getDepartures().getAll().size());
+
 
 
         String allbusNamesAndDistances = "";
@@ -177,11 +226,12 @@ public class AddMarkers {
             int indexOfChar = busNamec.indexOf('_') + 1;
             busNamec = busNamec.substring(indexOfChar);
 
+            String time = timeToMinuets(distancesExample.getDepartures().getAll().get(i)
+                    .getBestDepartureEstimate());
+            Log.i("AddMarkers", "LLL time" + time);
 
-            String distance = distancesExample.getDepartures().getAll().get(i)
-                    .getBestDepartureEstimate();
 
-            allbusNamesAndDistances += busNamec + ": " + distance + "\n";
+            allbusNamesAndDistances += busNamec + ": " + time + "min\n";
             //Log.i("AddMarkerss", "distance : "  + distance );
         }
 
