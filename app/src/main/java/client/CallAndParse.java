@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 import model.BusStopDistances;
@@ -181,14 +182,23 @@ public class CallAndParse {
                         Log.i("MyCallAndParse", "get bus stop distances success");
 
 
-                        Log.i("MyCallAndParse", "get getAtcocode : " + distancesExample.getAtcocode());
-                        Log.i("MyCallAndParse", "LLLgetAimedDepartureTime" + distancesExample.getDepartures().getAll().size());
 
-                        Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode);
+                        try{
+                            Log.i("MyCallAndParse", "get getAtcocode : " + distancesExample.getAtcocode());
+                            Log.i("MyCallAndParse", "LLLgetAimedDepartureTime" + distancesExample.getDepartures().getAll().size());
 
-                        AddMarkers addMarkers = AddMarkers.getInstance();
-                        addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode,
-                                finalbusStopLatLng, mFavBusStops);
+                            Log.i("MyCallAndParse", "finalBusCode : " + finalBusCode);
+
+                            AddMarkers addMarkers = AddMarkers.getInstance();
+                            addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode,
+                                    finalbusStopLatLng, mFavBusStops);
+                            
+                        }catch(Exception e){
+                            Log.i("MyCallAndParse", "e : " + e);
+
+                        }
+
+
 
 
                     }

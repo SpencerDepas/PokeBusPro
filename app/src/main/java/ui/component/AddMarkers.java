@@ -36,7 +36,6 @@ public class AddMarkers {
     private static String currentTime;
 
 
-
     public void setInterface(AddMarkersCallback newfirstBusStopHasBeenDisplayed) {
         firstBusStopHasBeenDisplayed = newfirstBusStopHasBeenDisplayed;
     }
@@ -69,10 +68,6 @@ public class AddMarkers {
 
         String busName = getBusName(distancesExample, incomingBusesSize);
         //String busName = busCode;
-
-
-
-
 
 
         String allbusNamesAndDistances = putMultiBusesInStackedString(distancesExample, incomingBusesSize);
@@ -109,7 +104,7 @@ public class AddMarkers {
             marker = MainActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
             marker.setTitle(busCode + busName);
-            marker.setSnippet( allbusNamesAndDistances);
+            marker.setSnippet(allbusNamesAndDistances);
 
             markerHashTable.put(busCode, marker);
 
@@ -141,7 +136,7 @@ public class AddMarkers {
         }
 
 
-     }
+    }
 
     private String getBusName(BusStopDistances distancesExample, int incomingBusesSize) {
         //this is for when no buses are incoming
@@ -167,9 +162,8 @@ public class AddMarkers {
 
     }
 
-    private String currentTime(){
-        Log.i("AddMarkers", "currentTime" );
-
+    private String currentTime() {
+        Log.i("AddMarkers", "currentTime");
 
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -180,28 +174,29 @@ public class AddMarkers {
     }
 
 
-    private String timeToMinuets(String incomingBusTime){
+    private String timeToMinuets(String incomingBusTime) {
         Log.i("AddMarkers", "timeToMinuets" + incomingBusTime);
 
         int timeTillBus = 0;
-        if(incomingBusTime != null){
+        if (incomingBusTime != null) {
 
 
             currentTime = currentTime();
             Log.i("AddMarkers", "currentTime" + currentTime);
 
             currentTime = currentTime.replaceAll(":", "");
-            incomingBusTime = incomingBusTime.replaceAll(":", "");
-            int incomingBusInt = Integer.parseInt(incomingBusTime);
+            int incomingBusInt = Integer.parseInt(incomingBusTime.replaceAll(":", ""));
             int timeInt = Integer.parseInt(currentTime);
 
-            timeTillBus = incomingBusInt  -timeInt;
+            timeTillBus = incomingBusInt - timeInt;
+            if (timeTillBus < 0) {
+                return incomingBusTime;
+            }
 
             Log.i("AddMarkers", "timeTillBus" + timeTillBus);
 
 
         }
-
 
 
         return (timeTillBus + "");
@@ -212,7 +207,6 @@ public class AddMarkers {
         Log.i("AddMarkers", "putMultiBusesInStackedString");
         Log.i("AddMarkers", "incomingBusesSize : " + incomingBusesSize);
         Log.i("AddMarkers", "distancesExample.getDepartures().getAll().size() : " + distancesExample.getDepartures().getAll().size());
-
 
 
         String allbusNamesAndDistances = "";
@@ -230,9 +224,15 @@ public class AddMarkers {
                     .getBestDepartureEstimate());
             Log.i("AddMarkers", "LLL time" + time);
 
+            if(time.contains(":")){
+                allbusNamesAndDistances += busNamec + ": " + time + " AM\n";
 
-            allbusNamesAndDistances += busNamec + ": " + time + "min\n";
-            //Log.i("AddMarkerss", "distance : "  + distance );
+            }else{
+                allbusNamesAndDistances += busNamec + ": " + time + "min\n";
+
+            }
+
+             //Log.i("AddMarkerss", "distance : "  + distance );
         }
 
         if (allbusNamesAndDistances.length() < 1) {
@@ -249,14 +249,14 @@ public class AddMarkers {
         Log.i("AddMarkerstz", " lastOpenSnippetKey :  " + lastOpenSnippetKey);
 
         if (!lastOpenSnippetKey.equals("")) {
-            Log.i("AddMarkerstz", " !lastOpenSnippetKey.equals(\"\") :  " );
+            Log.i("AddMarkerstz", " !lastOpenSnippetKey.equals(\"\") :  ");
 
 
             openAfterItsBeenOpenedSnippet(lastOpenSnippetKey, closestMarkerToUser);
 
 
         } else {
-            Log.i("AddMarkerstz", " else:  " );
+            Log.i("AddMarkerstz", " else:  ");
 
 
             firstTimeOpenSnippet(closestMarkerToUser);
@@ -272,7 +272,7 @@ public class AddMarkers {
 
             boolean hasFavBusStopBeenDisplayed = showFavBusStopSnippet();
 
-            if(hasFavBusStopBeenDisplayed){
+            if (hasFavBusStopBeenDisplayed) {
                 Log.i("AddMarkerstz", " !hasFavBusStopBeenDisplayed :" + hasFavBusStopBeenDisplayed);
 
                 displayClosestMarker(closestMarkerToUser);
@@ -288,7 +288,7 @@ public class AddMarkers {
 
     }
 
-    private void displayClosestMarker(String closestMarkerToUser){
+    private void displayClosestMarker(String closestMarkerToUser) {
         Log.i("AddMarkers", " displayClosestMarker " + closestMarkerToUser);
 
         Marker marker = markerHashTable.get(closestMarkerToUser);
@@ -311,7 +311,7 @@ public class AddMarkers {
 
                 refreshMarkerSnippet(marker);
 
-            }else{
+            } else {
 
                 Log.i("AddMarkerstz", " !!!! marker.isInfoWindowShown() ");
 
@@ -321,7 +321,7 @@ public class AddMarkers {
                 firstBusStopHasBeenDisplayed.animateCameraToMarker(marker);
 
             }
-        }else {
+        } else {
 
             Log.i("AddMarkerstz", " else !!!! marker != null ");
 
