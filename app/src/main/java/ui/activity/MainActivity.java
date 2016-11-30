@@ -54,12 +54,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 
+import Manager.AnswersManager;
 import Preference.PreferenceManager;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
+import model.AnswersConstants;
 import model.LoadAndSaveFavBusInfo;
 import model.NavigationViewItems;
 import ui.activity.interfaces.TimerTaskInterface;
@@ -72,13 +74,11 @@ import client.CallAndParse;
 import ui.activity.interfaces.DialogPopupListener;
 import ui.activity.interfaces.AddMarkersCallback;
 import ui.activity.interfaces.NoBusesInAreaInterface;
-import model.AnswersManager;
 import utils.RefreshTimer;
 import utils.SystemStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 
@@ -92,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements
         GoogleMap.OnInfoWindowCloseListener {
 
 
+    private final String TAG = "MainActivity";
     public static GoogleMap googleMap;
-
     private LatLng onMapPresedLatLng;
     private LatLng latLng;
     private LocationProvider mLocationProvider;
@@ -149,8 +149,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @BindView(R.id.refresh_location_fab)
     FloatingActionButton fab;
-
-
     @BindView(R.id.main_coordinatorLayout)
     CoordinatorLayout view;
     @BindView(R.id.progress_bar_activity_main)
@@ -175,8 +173,19 @@ public class MainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
         Fabric.with(this, new Crashlytics());
 
-        Log.i("MyMapsActivity", "onCreate");
+        initUI();
 
+
+        mContext = getApplicationContext();
+        systemStatus = SystemStatus.getInstance(mContext);
+
+        preferenceManager = new PreferenceManager(mContext);
+
+        refreshTimerTaskTime = preferenceManager.getRefreshTime();
+        savedRadius = preferenceManager.getRadius();
+    }
+
+    private void initUI() {
 
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -185,34 +194,19 @@ public class MainActivity extends AppCompatActivity implements
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         ab.setDisplayHomeAsUpEnabled(true);
 
-
-        mContext = getApplicationContext();
-        preferenceManager = new PreferenceManager(mContext);
-
-        systemStatus = SystemStatus.getInstance(mContext);
-
-
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
 
-
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mMap.getMapAsync(this);
 
-
-        refreshTimerTaskTime = preferenceManager.getRefreshTime();
-        savedRadius = preferenceManager.getRadius();
-
-        Log.i("MyMapsActivity", "refreshTimerTaskTime :  " + refreshTimerTaskTime);
         fab.setEnabled(false);
         fab.setClickable(false);
-
     }
 
 
     private void permissionAtRunTime() {
-        Log.i("MyMapsActivity", "permissionAtRunTime ");
 
         SDK_LEVEL = android.os.Build.VERSION.SDK_INT;
         if (SDK_LEVEL >= Build.VERSION_CODES.M) {
@@ -275,9 +269,9 @@ public class MainActivity extends AppCompatActivity implements
                     setUpAfterPermissionRequest();
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersManager.FINE_LOCATION)
-                            .putContentType(AnswersManager.SELECTION)
-                            .putCustomAttribute(AnswersManager.RUNTIME_PERMISSION, AnswersManager.ACCEPTED));
+                            .putContentName(AnswersConstants.FINE_LOCATION)
+                            .putContentType(AnswersConstants.SELECTION)
+                            .putCustomAttribute(AnswersConstants.RUNTIME_PERMISSION, AnswersConstants.ACCEPTED));
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
@@ -289,9 +283,9 @@ public class MainActivity extends AppCompatActivity implements
                     setUpAfterPermissionRequest();
 
                     Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersManager.FINE_LOCATION)
-                            .putContentType(AnswersManager.SELECTION)
-                            .putCustomAttribute(AnswersManager.RUNTIME_PERMISSION, AnswersManager.DENIED));
+                            .putContentName(AnswersConstants.FINE_LOCATION)
+                            .putContentType(AnswersConstants.SELECTION)
+                            .putCustomAttribute(AnswersConstants.RUNTIME_PERMISSION, AnswersConstants.DENIED));
 
                 }
 
@@ -363,8 +357,6 @@ public class MainActivity extends AppCompatActivity implements
         hasLocationPermission = false;
         responseAnsweredForRuntimePermission = true;
         setUpAfterPermissionRequest();
-
-
     }
 
     private void showPermissionAlertDialog(String title, String message) {
@@ -405,8 +397,8 @@ public class MainActivity extends AppCompatActivity implements
         refreshMarkers();
 
         Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName(AnswersManager.FAB_ON_REFRESH)
-                .putContentType(AnswersManager.ACTION));
+                .putContentName(AnswersConstants.FAB_ON_REFRESH)
+                .putContentType(AnswersConstants.ACTION));
 
     }
 
@@ -448,9 +440,9 @@ public class MainActivity extends AppCompatActivity implements
                         );
 
                         Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName(AnswersManager.SEARCHED_FOR_BUS)
-                                .putContentType(AnswersManager.SELECTION)
-                                .putCustomAttribute(AnswersManager.ADDRESS_SEARCHED, locationToSearchFor.getText().toString()));
+                                .putContentName(AnswersConstants.SEARCHED_FOR_BUS)
+                                .putContentType(AnswersConstants.SELECTION)
+                                .putCustomAttribute(AnswersConstants.ADDRESS_SEARCHED, locationToSearchFor.getText().toString()));
 
 
                     }
@@ -547,8 +539,8 @@ public class MainActivity extends AppCompatActivity implements
                     onMapPresedLatLng = null;
                     newLocationFromLatLng(latLng);
                     Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersManager.PRESSED_MY_LOCATION)
-                            .putContentType(AnswersManager.ACTION));
+                            .putContentName(AnswersConstants.PRESSED_MY_LOCATION)
+                            .putContentType(AnswersConstants.ACTION));
                 }
 
             } else {
@@ -566,8 +558,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
             Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName(AnswersManager.LAUNCH_MAP_ACTIVITY)
-                    .putContentType(AnswersManager.ACTION)
+                            .putContentName(AnswersConstants.LAUNCH_MAP_ACTIVITY)
+                            .putContentType(AnswersConstants.ACTION)
             );
 
             Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
@@ -593,8 +585,8 @@ public class MainActivity extends AppCompatActivity implements
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
                         Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName("Nav view open")
-                                .putContentType(AnswersManager.ACTION)
+                                        .putContentName("Nav view open")
+                                        .putContentType(AnswersConstants.ACTION)
                         );
 
                         mContext = getApplicationContext();
@@ -636,8 +628,8 @@ public class MainActivity extends AppCompatActivity implements
                             case NavigationViewItems.FOLLOW_ME_ON_TWITTER:
 
                                 Answers.getInstance().logContentView(new ContentViewEvent()
-                                        .putContentName("Follow me on twitter")
-                                        .putContentType(AnswersManager.ACTION)
+                                                .putContentName("Follow me on twitter")
+                                                .putContentType(AnswersConstants.ACTION)
 
                                 );
                                 openTwitterIntent();
@@ -672,11 +664,9 @@ public class MainActivity extends AppCompatActivity implements
         if (!hasLocationPermission) {
             Log.d("MyMainActivity", "!hasLocationPermission || SDK_LEVEL < 23");
             showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("Enable Location")
-                    .putContentType(AnswersManager.ACTION)
-                    .putCustomAttribute("Fine permission enabled", "False")
-            );
+            AnswersManager.getInstance().fineLocationDenied();
+
+
         } else {
 
             boolean isLocationEnabled = systemStatus.isLocationEnabled();
@@ -684,26 +674,13 @@ public class MainActivity extends AppCompatActivity implements
                 Log.i("MyMapsActivity", "hasLocationPermission !isLocationEnabled");
 
                 startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), ENABLE_GPS);
-
                 onMapPresedLatLng = null;
+                AnswersManager.getInstance().enableLocation();
 
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Enable Location")
-                        .putContentType(AnswersManager.ACTION)
-                        .putCustomAttribute("Fine permission enabled", "true")
-                        .putCustomAttribute("Enable GPS intent fired", "true")
-                );
 
             } else {
                 Toast.makeText(mContext, getString(R.string.you_allready_have_permission),
                         Toast.LENGTH_LONG).show();
-                ;
-
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Enable Location")
-                        .putContentType(AnswersManager.ACTION)
-                        .putCustomAttribute("Location allready enabled", "true")
-                );
             }
 
         }
@@ -752,31 +729,19 @@ public class MainActivity extends AppCompatActivity implements
 
         //removes change of color from icon color
         addMarkers.removePokeBusColor(busCodeOfFavBusStops);
-
         removeSavedFavBusFromStorage();
-
 
         Toast.makeText(mContext, getString(R.string.removed_fav_bus),
                 Toast.LENGTH_LONG).show();
 
 
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("Deleted favorite Buses")
-                .putContentType(AnswersManager.ACTION)
-
-        );
+        AnswersManager.getInstance().deleteFavoriteBusStops();
 
         closeDrawer();
 
     }
 
     private void setRefreshTimerNavViewSelection() {
-
-
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("Refresh Timer Dialog")
-                .putContentType(AnswersManager.ACTION)
-        );
 
 
         final String findWhatToPreSelect = refreshTimerTaskTime;
@@ -810,11 +775,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setRadiusNavViewSelection() {
 
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("Refresh Timer Dialog")
-                .putContentType(AnswersManager.ACTION)
-        );
-
+        AnswersManager.getInstance().refreshDialog();
 
         final String findWhatToPreSelect = savedRadius;
 
@@ -888,51 +849,31 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void alertDialogLogic(String alertDialogTittle, int which) {
+    private void alertDialogLogic(String alertDialogTittle, int index) {
 
         Log.d("MyMapsActivity", "alertDialogTittle.toLowerCase() : " + alertDialogTittle.toLowerCase());
 
-        Log.d("MyMapsActivity", " which : " + which);
+        Log.d("MyMapsActivity", " which : " + index);
 
 
         switch (alertDialogTittle.toLowerCase()) {
             case NavigationViewItems.DIALOG_TITTLE_BOROUGH:
 
-                Log.d("MyMapsActivity", "alertDialogLogic Select your borough boroughs[which] : " + boroughs[which]);
-
-
-                preferenceManager.saveBusMapSelection(boroughs[which]);
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Select Map")
-                        .putContentType("Selection")
-                        .putCustomAttribute(AnswersManager.MAP_SELECTION, boroughs[which])
-                );
-
+                preferenceManager.saveBusMapSelection(boroughs[index]);
+                AnswersManager.getInstance().selectMap(boroughs[index]);
 
                 break;
             case NavigationViewItems.DIALOG_TITTLE_SET_RADIUS:
 
-                Log.d("MyMapsActivity", "alertDialogLogic Select your radius radius[which] : " + radiusEntriesValues[which]);
-
-                MarkerManager markerManager = MarkerManager.getInstance();
-
-                Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-
-                markerHashTable.clear();
+                MarkerManager.getInstance().getMarkerHashTable().clear();
                 googleMap.clear();
 
-                savedRadius = radiusEntriesValues[which];
-                preferenceManager.saveRadius(radiusEntriesValues[which]);
+                savedRadius = radiusEntriesValues[index];
+                preferenceManager.saveRadius(radiusEntriesValues[index]);
 
-                preferenceManager.saveRadius(radiusEntriesValues[which]);
+                preferenceManager.saveRadius(radiusEntriesValues[index]);
 
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName(AnswersManager.SET_RADIUS)
-                        .putContentType(AnswersManager.ACTION)
-                        .putCustomAttribute(AnswersManager.RADIUS, radiusEntriesValues[which])
-
-                );
-
+                AnswersManager.getInstance().setRadius(radiusEntriesValues[index]);
 
                 progressBar.setVisibility(view.VISIBLE);
                 refreshMarkers();
@@ -941,45 +882,28 @@ public class MainActivity extends AppCompatActivity implements
             case NavigationViewItems.DIALOG_TITTLE_AUTO_REFRESH_TIME:
 
 
-                if (timerTaskEntriesValues[which] == "0") {
-                    Log.i("MyMapsActivity", "timerTaskEntriesValues[which] : " + timerTaskEntriesValues[which]);
+                if (timerTaskEntriesValues[index] == "0") {
 
-                    refreshTimerTaskTime = timerTaskEntriesValues[which];
-                    preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
+                    refreshTimerTaskTime = timerTaskEntriesValues[index];
+                    preferenceManager.saveRefreshTime(timerTaskEntriesValues[index]);
 
                     refreshTimer.stopTimerTask();
 
+                    AnswersManager.getInstance().setRefreshTime("0");
 
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersManager.REFRESH_TIMER_TIME)
-                            .putContentType(AnswersManager.SELECTION)
-                            .putCustomAttribute(AnswersManager.TIME, "0")
-                    );
 
                 } else {
 
-                    refreshTimerTaskTime = timerTaskEntriesValues[which];
-                    preferenceManager.saveRefreshTime(timerTaskEntriesValues[which]);
+                    refreshTimerTaskTime = timerTaskEntriesValues[index];
+                    preferenceManager.saveRefreshTime(timerTaskEntriesValues[index]);
                     refreshMarkers();
                     refreshTimer.stopTimerTask();
-
-
                     refreshTimer.startTimerTask();
-                    Log.i("MyMapsActivity", " refreshMarkers();");
-
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersManager.REFRESH_TIMER_TIME)
-                            .putContentType(AnswersManager.SELECTION)
-                            .putCustomAttribute(AnswersManager.TIME, timerTaskEntriesValues[which])
-                    );
-
+                    AnswersManager.getInstance().setRefreshTime(timerTaskEntriesValues[index]);
 
                 }
-
-
                 break;
         }
-
     }
 
     @Override
@@ -1045,20 +969,15 @@ public class MainActivity extends AppCompatActivity implements
                 selectCorrectLatLng();
             }
 
-            MarkerManager markerManager = MarkerManager.getInstance();
-            Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
 
-            Marker currentMarker = markerHashTable.get(PopupAdapterForMapMarkers.sMarkerCurrentKey);
+            Marker currentMarker = MarkerManager.getInstance().getMarkerHashTable()
+                    .get(PopupAdapterForMapMarkers.sMarkerCurrentKey);
 
-
-            if(currentMarker != null){
-
+            if (currentMarker != null) {
                 animateCameraToMarkerMiddleOfScreen(currentMarker, firstTimeLoadingForCameraAnimation);
-            }else{
+            } else {
                 animateCameraPos();
             }
-
-
 
 
         }
@@ -1151,15 +1070,13 @@ public class MainActivity extends AppCompatActivity implements
     private void animateCamera(LatLng target, float zoom, float bearing) {
         Log.i("MyMapsActivity", "tst animateCamera() being called ");
 
-
-
-               CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(target)    // Sets the center of the map to Mountain View
-                    .zoom(zoom)                   // Sets the zoom
-                    .bearing(bearing)                // Sets the orientation of the camera to east
-                    //.tilt(tilt)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(target)    // Sets the center of the map to Mountain View
+                .zoom(zoom)                   // Sets the zoom
+                .bearing(bearing)                // Sets the orientation of the camera to east
+                        //.tilt(tilt)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
 
             @Override
             public void onFinish() {
@@ -1176,68 +1093,39 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d("MyMapsActivity", "onCancel");
 
 
-
             }
         });
         googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
         googleMap.setOnInfoWindowCloseListener(this);
-
-
     }
 
 
     private void saveCameraFields() {
-        Log.d("MyMapsActivity", "saveCameraFields : ");
-
-        if(hasLocationPermission){
-            Log.d("MyMapsActivity", "tst tilt : " + tilt);
-            Log.d("MyMapsActivity", "tst bearing : " + bearing);
-            Log.d("MyMapsActivity", "tst animateCamera zoom : " + zoom);
-
-
-
+        if (hasLocationPermission) {
             tilt = (int) googleMap.getCameraPosition().tilt;
             zoom = googleMap.getCameraPosition().zoom;
             bearing = googleMap.getCameraPosition().bearing;
-
-            Log.d("MyMapsActivity", "tst tilt : " + tilt);
-            Log.d("MyMapsActivity", "tst bearing : " + bearing);
-            Log.d("MyMapsActivity", "tst animateCamera zoom : " + zoom);
         }
-
-
-
     }
 
     public void onPause() {
         super.onPause();
-        Log.i("MyMapsActivity", "onPause()");
-
 
         if (zoom != 0) {
             saveCameraFields();
-            Log.i("MyMapsActivity", "saving zoom :" + zoom);
-            Log.i("MyMapsActivity", "saving bearking : " + bearing);
         }
 
         closeDrawer();
 
         refreshTimer.stopTimerTask();
         loadAndSaveFavBusInfo.saveFavBus(busCodeOfFavBusStops);
-
-
     }
 
 
     public void onDestroy() {
         super.onDestroy();
-        Log.i("MyMapsActivity", "onDestroy()");
 
-        MarkerManager markerManager = MarkerManager.getInstance();
-        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-
-        markerHashTable.clear();
-
+        MarkerManager.getInstance().getMarkerHashTable().clear();
         active = false;
         mMap = null;
         finish();
@@ -1268,39 +1156,19 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("MyMapsActivity", "onResume()");
 
-        Log.i("MyMapsActivity", "onResume() hasLocationPermission: " + hasLocationPermission);
-
-
-        Log.i("MyMapsActivity", "mMap!= null" + (mMap!= null));
-        Log.i("MyMapsActivity", "googleMap!= null)" + (googleMap!= null));
         systemStatus = SystemStatus.getInstance(mContext);
         loadAndSaveFavBusInfo = LoadAndSaveFavBusInfo.getInstance(mContext);
         refreshTimer = RefreshTimer.getInstance(MainActivity.this, refreshTimerTaskTime);
 
-
         if (hasLocationPermission) {
-            Log.i("MyMapsActivity", "onResume() hasLocationPermission" + hasLocationPermission);
-
-
             systemStatus.checkPhoneParams();
-
             mLocationProvider.disconnect();
             mLocationProvider.connect();
-
             refreshTimer.startTimerTask();
-
-
         } else {
-
-
             setUpAfterPermissionRequest();
-
-
         }
-
-
     }
 
 
@@ -1389,11 +1257,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "displayDialog interface");
 
 
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
-                .putContentType(AnswersManager.ACTION)
-        );
-
+        AnswersManager.getInstance().setFavBusStopDialog();
 
         final String finalBuscode = buscode;
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
@@ -1402,28 +1266,11 @@ public class MainActivity extends AppCompatActivity implements
                 + "\n" + "\n" + getString(R.string.set_fav_bus_body));
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("AlertDialog", "Positive");
                 dialog.dismiss();
-
-                Log.d("AlertDialog", "finalBuscode :" + finalBuscode);
-
-
 
                 busCodeOfFavBusStops.add(finalBuscode);
                 addMarkers.addPokeBusColor(finalBuscode);
-
-                for(int i = 0 ; i < busCodeOfFavBusStops.size(); i ++){
-                    Log.d("AlertDialog", "busCodeOfFavBusStops.get(i) :"
-                            + busCodeOfFavBusStops.get(i));
-
-                }
-
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
-                        .putContentType(AnswersManager.SELECTION)
-                        .putCustomAttribute(AnswersManager.FAV_BUS_STOP, finalBuscode)
-                );
-
+                AnswersManager.getInstance().selectedFavBus(finalBuscode);
 
             }
         });
@@ -1431,13 +1278,6 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 Log.d("AlertDialog", "dismiss");
                 dialog.dismiss();
-
-
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
-                        .putContentType(AnswersManager.SELECTION)
-                        .putCustomAttribute(AnswersManager.FAV_BUS_STOP_DISMISSED, AnswersManager.DISMISSED)
-                );
             }
         });
         builder.show();
@@ -1482,11 +1322,9 @@ public class MainActivity extends AppCompatActivity implements
 
             permissionAtRunTime();
 
-
-            if(responseAnsweredForRuntimePermission){
+            if (responseAnsweredForRuntimePermission) {
                 refreshTimer.startTimerTask();
             }
-
 
 
         }
@@ -1502,7 +1340,6 @@ public class MainActivity extends AppCompatActivity implements
             public boolean onMarkerClick(Marker marker) {
 
 
-
                 animateCameraToMarkerMiddleOfScreen(marker, firstTimeLoadingForCameraAnimation);
 
 
@@ -1514,7 +1351,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void animateCameraToMarkerMiddleOfScreen(Marker marker, boolean firstTimeLoading) {
-        Log.d("MyMapsActivity", "animateCameraToMarkerMiddleOfScreen" );
+        Log.d("MyMapsActivity", "animateCameraToMarkerMiddleOfScreen");
 
 
         Log.d("MyMapsActivity", "tst animateCameraToMarkerMiddleOfScreen tilt " + tilt);
@@ -1522,8 +1359,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("MyMapsActivity", "tst animateCameraToMarkerMiddleOfScreen bearing : " + bearing);
 
         LatLng aboveMarkerLatLng;
-        Log.d("MyMapsActivity", "tst firstTimeLoading  :"  + firstTimeLoading);
-
+        Log.d("MyMapsActivity", "tst firstTimeLoading  :" + firstTimeLoading);
 
 
         if (!firstTimeLoading) {
@@ -1581,10 +1417,7 @@ public class MainActivity extends AppCompatActivity implements
                     // TODO Auto-generated method stub
                     Log.d("MyMapsActivity", arg0.latitude + "-" + arg0.longitude);
 
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersManager.MAP_ON_PRESS)
-                            .putContentType(AnswersManager.SELECTION)
-                    );
+                    AnswersManager.getInstance().mapOnPress();
 
                     newLocationFromLatLng(arg0);
                 } else {
@@ -1592,8 +1425,6 @@ public class MainActivity extends AppCompatActivity implements
                     isMapOnPressEnabled = true;
                     //Log.d("MyMapsActivity", "isMapOnPressEnabled : " + isMapOnPressEnabled);
                 }
-
-
             }
         });
 
@@ -1601,25 +1432,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void newLocationFromLatLng(LatLng latLng) {
-        Log.d("MyMapsActivity", "newLocationFromLatLng");
-
-        MarkerManager markerManager = MarkerManager.getInstance();
-
-        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-
 
         onMapPresedLatLng = latLng;
-
-        markerHashTable.clear();
+        MarkerManager.getInstance().getMarkerHashTable().clear();
         googleMap.clear();
         progressBar.setVisibility(view.VISIBLE);
-
-
         saveCameraFields();
         selectCorrectLatLng();
-
-
-        //animateCameraPos();
     }
 
 
@@ -1651,8 +1470,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
         active = true;
     }
-
-
 
 
     @Override

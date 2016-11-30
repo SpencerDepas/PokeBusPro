@@ -4,18 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
-import com.google.android.gms.common.stats.ConnectionEvent;
 
 import clearfaun.com.pokebuspro.R;
-import model.AnswersManager;
+import model.AnswersConstants;
 
 /**
  * Created by SpencerDepas on 6/21/16.
@@ -35,8 +29,8 @@ public class DialogManager {
 
 
         Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
-                .putContentType(AnswersManager.ACTION)
+                .putContentName(AnswersConstants.SET_FAV_BUS_STOP_DIALOG)
+                .putContentType(AnswersConstants.ACTION)
         );
 
 
@@ -55,9 +49,9 @@ public class DialogManager {
 //                addMarkers.addPokeBusColor(finalBuscode);
 
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
-                        .putContentType(AnswersManager.SELECTION)
-                        .putCustomAttribute(AnswersManager.FAV_BUS_STOP, finalBuscode)
+                        .putContentName(AnswersConstants.SET_FAV_BUS_STOP_DIALOG)
+                        .putContentType(AnswersConstants.SELECTION)
+                        .putCustomAttribute(AnswersConstants.FAV_BUS_STOP, finalBuscode)
                 );
 
 
@@ -70,9 +64,9 @@ public class DialogManager {
 
 
                 Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName(AnswersManager.SET_FAV_BUS_STOP_DIALOG)
-                        .putContentType(AnswersManager.SELECTION)
-                        .putCustomAttribute(AnswersManager.FAV_BUS_STOP_DISMISSED, AnswersManager.DISMISSED)
+                        .putContentName(AnswersConstants.SET_FAV_BUS_STOP_DIALOG)
+                        .putContentType(AnswersConstants.SELECTION)
+                        .putCustomAttribute(AnswersConstants.FAV_BUS_STOP_DISMISSED, AnswersConstants.DISMISSED)
                 );
             }
         });
@@ -116,9 +110,9 @@ public class DialogManager {
 //                        );
 //
 //                        Answers.getInstance().logContentView(new ContentViewEvent()
-//                                .putContentName(AnswersManager.SEARCHED_FOR_BUS)
-//                                .putContentType(AnswersManager.SELECTION)
-//                                .putCustomAttribute(AnswersManager.ADDRESS_SEARCHED, locationToSearchFor.getText().toString()));
+//                                .putContentName(AnswersConstants.SEARCHED_FOR_BUS)
+//                                .putContentType(AnswersConstants.SELECTION)
+//                                .putCustomAttribute(AnswersConstants.ADDRESS_SEARCHED, locationToSearchFor.getText().toString()));
 //
 //
 //                    }

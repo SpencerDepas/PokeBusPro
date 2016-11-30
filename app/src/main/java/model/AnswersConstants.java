@@ -6,7 +6,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 /**
  * Created by SpencerDepas on 6/20/16.
  */
-public class AnswersManager {
+public class AnswersConstants {
 
     //content name
     public final static String REFRESH_TIMER_TIME = "Refresh Timer time";

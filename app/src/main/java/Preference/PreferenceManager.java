@@ -71,22 +71,8 @@ public class PreferenceManager {
     }
 
 
-    public boolean getHasInstructionalSnackBarBeenDismissed() {
-        return this.sharedPreferences.getBoolean(HAS_INSTRUCTIONAL_SNACKBAR_BEEN_DISMISSED, false);
-    }
-
-    public void saveHasInstructionalSnackBarBeenDismissed(boolean value) {
-        saveValue(HAS_INSTRUCTIONAL_SNACKBAR_BEEN_DISMISSED, value);
-    }
-
     public String getRefreshTime() {
         return this.sharedPreferences.getString(REFRESH_TIME, "20");
-
-    }
-
-    public boolean getinstructionalSnackbar() {
-        randomNum = 0 + (int) (Math.random() * 3);
-        return this.sharedPreferences.getBoolean(instructions[randomNum], false);
 
     }
 
