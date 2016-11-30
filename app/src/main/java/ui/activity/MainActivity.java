@@ -117,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements
     private CallAndParse callAndParse;
     private LoadAndSaveFavBusInfo loadAndSaveFavBusInfo;
     private RefreshTimer refreshTimer;
+    boolean oneTimeCall = false;
+
 
     private AddMarkers addMarkers;
     private SupportMapFragment mMap;
@@ -268,10 +270,9 @@ public class MainActivity extends AppCompatActivity implements
                     hasLocationPermission = true;
                     setUpAfterPermissionRequest();
 
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersConstants.FINE_LOCATION)
-                            .putContentType(AnswersConstants.SELECTION)
-                            .putCustomAttribute(AnswersConstants.RUNTIME_PERMISSION, AnswersConstants.ACCEPTED));
+                    AnswersManager.getInstance().fineLocationPermissionAsked(AnswersConstants.ACCEPTED);
+
+
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
@@ -282,10 +283,7 @@ public class MainActivity extends AppCompatActivity implements
                     closeDrawer();
                     setUpAfterPermissionRequest();
 
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersConstants.FINE_LOCATION)
-                            .putContentType(AnswersConstants.SELECTION)
-                            .putCustomAttribute(AnswersConstants.RUNTIME_PERMISSION, AnswersConstants.DENIED));
+                    AnswersManager.getInstance().fineLocationPermissionAsked(AnswersConstants.DENIED);
 
                 }
 
@@ -396,16 +394,12 @@ public class MainActivity extends AppCompatActivity implements
 
         refreshMarkers();
 
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName(AnswersConstants.FAB_ON_REFRESH)
-                .putContentType(AnswersConstants.ACTION));
+        AnswersManager.getInstance().fabOnRefreshPressed();
 
     }
 
 
     private void searchForLocationFromAddress() {
-        Log.i("MyMapsActivity", "onClick searchForLocation");
-
 
         //brings up keyboard
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -439,11 +433,7 @@ public class MainActivity extends AppCompatActivity implements
                                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
                         );
 
-                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName(AnswersConstants.SEARCHED_FOR_BUS)
-                                .putContentType(AnswersConstants.SELECTION)
-                                .putCustomAttribute(AnswersConstants.ADDRESS_SEARCHED, locationToSearchFor.getText().toString()));
-
+                        AnswersManager.getInstance().searchedForBus(locationToSearchFor.getText().toString());
 
                     }
 
@@ -538,9 +528,8 @@ public class MainActivity extends AppCompatActivity implements
                 } else {
                     onMapPresedLatLng = null;
                     newLocationFromLatLng(latLng);
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersConstants.PRESSED_MY_LOCATION)
-                            .putContentType(AnswersConstants.ACTION));
+                    AnswersManager.getInstance().pressedMyLocation();
+
                 }
 
             } else {
@@ -557,12 +546,7 @@ public class MainActivity extends AppCompatActivity implements
         } else if (item.getItemId() == R.id.map_item) {
 
 
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName(AnswersConstants.LAUNCH_MAP_ACTIVITY)
-                            .putContentType(AnswersConstants.ACTION)
-            );
-
-            Log.i("MyMapsActivity", "prefBusMap " + prefBusMap);
+            AnswersManager.getInstance().launchMapActivty();
             Intent intent = new Intent(mContext, BoroughBusMapActivity.class);
             intent.putExtra("maptype", "Current Map is: " + prefBusMap);
             startActivity(intent);
@@ -584,15 +568,11 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                        .putContentName("Nav view open")
-                                        .putContentType(AnswersConstants.ACTION)
-                        );
 
+                        AnswersManager.getInstance().openNavView();
                         mContext = getApplicationContext();
                         prefBusMap = preferenceManager.getBusMapSelection();
 
-                        Intent intent = new Intent(mContext, AboutAppActivity.class);
 
 
                         switch (menuItem.getTitle().toString()) {
@@ -615,7 +595,7 @@ public class MainActivity extends AppCompatActivity implements
                                 break;
 
                             case NavigationViewItems.ABOUT_BUSBUS:
-
+                                Intent intent = new Intent(mContext, AboutAppActivity.class);
                                 startActivity(intent);
                                 mDrawerLayout.closeDrawers();
 
@@ -627,11 +607,7 @@ public class MainActivity extends AppCompatActivity implements
                                 break;
                             case NavigationViewItems.FOLLOW_ME_ON_TWITTER:
 
-                                Answers.getInstance().logContentView(new ContentViewEvent()
-                                                .putContentName("Follow me on twitter")
-                                                .putContentType(AnswersConstants.ACTION)
-
-                                );
+                                AnswersManager.getInstance().followMeOnTwitter();
                                 openTwitterIntent();
                                 closeDrawer();
 
@@ -1295,7 +1271,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    boolean oneTimeCall = false;
 
 
     @Override
@@ -1338,11 +1313,7 @@ public class MainActivity extends AppCompatActivity implements
 
             @Override
             public boolean onMarkerClick(Marker marker) {
-
-
                 animateCameraToMarkerMiddleOfScreen(marker, firstTimeLoadingForCameraAnimation);
-
-
                 return true;
             }
 
@@ -1381,23 +1352,18 @@ public class MainActivity extends AppCompatActivity implements
             aboveMarkerLatLng = projection
                     .fromScreenLocation(pointHalfScreenAbove);
         } else {
-
             aboveMarkerLatLng = marker.getPosition();
         }
 
 
         marker.showInfoWindow();
-        Log.d("MyMapsActivity", " marker.showInfoWindow(); animateCamera(aboveMarkerLatLng, zoom, bearing);");
-
         animateCamera(aboveMarkerLatLng, zoom, bearing);
 
 
     }
 
     public void disableMapOnPress() {
-        Log.d("MyMapsActivity", "disableMapOnPress");
         googleMap.setOnMapClickListener(null);
-        Log.d("MyMapsActivity", "i work once fEnable : " + isMapOnPressEnabled);
         isMapOnPressEnabled = false;
     }
 
@@ -1486,8 +1452,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void runTimer() {
         //called from refreshTimer
-        Log.d("MyMapsActivity", "runTimer()");
-
         selectCorrectLatLng();
     }
 }

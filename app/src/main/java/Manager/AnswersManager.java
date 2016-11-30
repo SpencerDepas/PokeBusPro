@@ -52,13 +52,13 @@ public class AnswersManager {
                 .putCustomAttribute("Fine permission enabled", "False"));
     }
 
-    public void mapOnPress(){
+    public void mapOnPress() {
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName(AnswersConstants.MAP_ON_PRESS)
                 .putContentType(AnswersConstants.SELECTION));
     }
 
-    public void selectMap(String boroughs){
+    public void selectMap(String boroughs) {
         Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName("Select Map")
                         .putContentType("Selection")
@@ -66,7 +66,21 @@ public class AnswersManager {
         );
     }
 
-    public void setRadius(String radius){
+    public void followMeOnTwitter() {
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("Follow me on twitter")
+                        .putContentType(AnswersConstants.ACTION)
+
+        );
+    }
+
+    public void fabOnRefreshPressed() {
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName(AnswersConstants.FAB_ON_REFRESH)
+                .putContentType(AnswersConstants.ACTION));
+    }
+
+    public void setRadius(String radius) {
         Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName(AnswersConstants.SET_RADIUS)
                         .putContentType(AnswersConstants.ACTION)
@@ -75,7 +89,7 @@ public class AnswersManager {
         );
     }
 
-    public void setRefreshTime(String time){
+    public void setRefreshTime(String time) {
         Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName(AnswersConstants.REFRESH_TIMER_TIME)
                         .putContentType(AnswersConstants.SELECTION)
@@ -83,7 +97,7 @@ public class AnswersManager {
         );
     }
 
-    public void setFavBusStopDialog(){
+    public void setFavBusStopDialog() {
         Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName(AnswersConstants.SET_FAV_BUS_STOP_DIALOG)
                         .putContentType(AnswersConstants.ACTION)
@@ -91,13 +105,54 @@ public class AnswersManager {
     }
 
 
-    public void selectedFavBus(String buscode){
+    public void selectedFavBus(String buscode) {
         Answers.getInstance().logContentView(new ContentViewEvent()
                         .putContentName(AnswersConstants.SET_FAV_BUS_STOP_DIALOG)
                         .putContentType(AnswersConstants.SELECTION)
                         .putCustomAttribute(AnswersConstants.FAV_BUS_STOP, buscode)
         );
 
+    }
+
+    public void fineLocationPermissionAsked(String buscode) {
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName(AnswersConstants.SET_FAV_BUS_STOP_DIALOG)
+                        .putContentType(AnswersConstants.SELECTION)
+                        .putCustomAttribute(AnswersConstants.FAV_BUS_STOP, buscode)
+        );
+
+    }
+
+    public void pressedMyLocation() {
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName(AnswersConstants.PRESSED_MY_LOCATION)
+                .putContentType(AnswersConstants.ACTION));
+    }
+
+
+
+
+    public void openNavView() {
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName("Nav view open")
+                        .putContentType(AnswersConstants.ACTION)
+        );
+    }
+
+
+    public void launchMapActivty() {
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                        .putContentName(AnswersConstants.LAUNCH_MAP_ACTIVITY)
+                        .putContentType(AnswersConstants.ACTION)
+        );
+    }
+
+
+    public void searchedForBus(String address) {
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName(AnswersConstants.SEARCHED_FOR_BUS)
+                .putContentType(AnswersConstants.SELECTION)
+                .putCustomAttribute(AnswersConstants.ADDRESS_SEARCHED, address));
     }
 
 }
