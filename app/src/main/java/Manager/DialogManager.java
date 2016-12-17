@@ -1,4 +1,4 @@
-package utils;
+package Manager;
 
 import android.app.AlertDialog;
 import android.content.Context;

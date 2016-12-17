@@ -8,16 +8,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 
+import Manager.MarkerManager;
 import clearfaun.com.pokebuspro.R;
 import client.CallAndParse;
 import model.BusStopDistances;
-import model.DistancesExample;
 import ui.activity.MainActivity;
 import ui.activity.interfaces.AddMarkersCallback;
 

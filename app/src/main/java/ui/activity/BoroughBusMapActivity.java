@@ -23,7 +23,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
-import Preference.PreferenceManager;
+import Manager.PreferenceManager;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import clearfaun.com.pokebuspro.R;

@@ -1,4 +1,4 @@
-package ui.component;
+package Manager;
 
 import android.util.Log;
 
@@ -25,7 +25,6 @@ public class MarkerManager {
 
     private MarkerManager() {
         Log.i("MarkerManager", " ");
-
     }
 
     public Hashtable<String, Marker> getMarkerHashTable() {

@@ -2,7 +2,6 @@ package ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,7 +17,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
-import Preference.PreferenceManager;
+import Manager.PreferenceManager;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import clearfaun.com.pokebuspro.R;

@@ -2,12 +2,10 @@ package client;
 
 
 import model.BusStopDistances;
-import model.BusStopExample;
 import model.DistancesExample;
 import model.UkBusStopsLocation;
 import retrofit.Callback;
 import retrofit.http.GET;
-import retrofit.http.Headers;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
@@ -16,15 +14,13 @@ import retrofit.http.Query;
  */
 public interface GetBussStopInterface {
 
-
     @GET("/stops/near.json")
     void getBusStop(@Query("lat") String lat,
                     @Query("lon") String lng,
                     @Query("app_id") String appId,
                     @Query("app_key") String appKey,
                     @Query("rpp") String numberOfReturnedBustops,
-                    Callback<UkBusStopsLocation> response
-    );
+                    Callback<UkBusStopsLocation> response);
 
     @GET("/stop/{atcocode}/live.json")
     void getBusDistancesFromStop(@Path("atcocode") String atCode,
@@ -33,16 +29,9 @@ public interface GetBussStopInterface {
                                  @Query("group") String group,
                                  @Query("nextbuses") String nextbuses,
                                  @Query("limit") String limit,
-
-                                 Callback<BusStopDistances> response
-    );
-
-
+                                 Callback<BusStopDistances> response);
 
     @GET("/siri/stop-monitoring.json")
     DistancesExample getBusDistancesFromStopTwo(@Query("MonitoringRef") String busCode,
-                                                @Query("MaximumStopVisits") String returnHowManyIncomingBuses
-    );
-
-
+                                                @Query("MaximumStopVisits") String returnHowManyIncomingBuses);
 }

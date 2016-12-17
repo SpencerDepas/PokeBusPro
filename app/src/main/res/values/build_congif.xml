@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+
+    <string name="uk_bus_api_id">03bf8009</string>
+    <string name="uk_bus_api_key">d9307fd91b0247c607e098d5effedc97</string>
+    <string name="uk_bus_api_endpoint">http://transportapi.com/v3/uk/bus</string>
+    <string name="uk_bus_api_number_of_bus_Stops_to_return">10</string>
+
+
+</resources>

@@ -53,8 +53,6 @@ public class CallAndParse {
 
 
     public CallAndParse(NoBusesInAreaInterface noBusINterFace) {
-
-
         //lets see if this shit works! and it does!
         this.mNoBusINterFace = noBusINterFace;
         Log.i("MyCallAndParse", "CallAndParse");
@@ -131,17 +129,11 @@ public class CallAndParse {
                         Log.i("MyCallAndParse", "get bus stops  error  " + error.toString());
                         //zipAPIResponse.processFailed();
                     }
-
-
                 });
-
-
     }
 
     private void makeBusDistanceThreads(UkBusStopsLocation ukBusStopsLocation) {
         Log.i("MyCallAndParse", "makeBusDistanceThreads");
-
-
         for (int i = 0; i < ukBusStopsLocation.getStops().size(); i++) {
             Log.i("MyCallAndParse", "makeBusDistanceThreads buscode for loop " + ukBusStopsLocation.getStops().get(i).getAtcocode());
             LatLng busStopLatLng = new LatLng(ukBusStopsLocation.getStops().get(i).getLatitude(),
@@ -149,15 +141,11 @@ public class CallAndParse {
             GetBusDistancesLongOperation getBusDistancesLongOperation = new GetBusDistancesLongOperation(busStopLatLng);
             getBusDistancesLongOperation.execute(ukBusStopsLocation.getStops().get(i).getAtcocode());
         }
-
-
     }
 
 
     public void getBusStopsDistances(String busCode, LatLng busStopLatLng) {
         Log.i("MyCallAndParse", " getBusStopsDistances   ");
-
-
         final String finalBusCode = busCode;
         final LatLng finalbusStopLatLng = busStopLatLng;
         Log.i("MyCallAndParse", " getBusStopsDistances   busCode  : " + busCode);
@@ -182,8 +170,7 @@ public class CallAndParse {
                         Log.i("MyCallAndParse", "get bus stop distances success");
 
 
-
-                        try{
+                        try {
                             Log.i("MyCallAndParse", "get getAtcocode : " + distancesExample.getAtcocode());
                             Log.i("MyCallAndParse", "LLLgetAimedDepartureTime" + distancesExample.getDepartures().getAll().size());
 
@@ -193,12 +180,10 @@ public class CallAndParse {
                             addMarkers.addMarkerToMapWithBusDistances(distancesExample, finalBusCode,
                                     finalbusStopLatLng, mFavBusStops);
 
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             Log.i("MyCallAndParse", "e : " + e);
 
                         }
-
-
 
 
                     }

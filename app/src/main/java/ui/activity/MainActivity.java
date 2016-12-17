@@ -40,8 +40,6 @@ import android.widget.Toast;
 
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 
 import com.google.android.gms.maps.OnMapReadyCallback;
 
@@ -55,7 +53,7 @@ import com.google.android.gms.maps.model.Marker;
 
 
 import Manager.AnswersManager;
-import Preference.PreferenceManager;
+import Manager.PreferenceManager;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,13 +65,14 @@ import model.NavigationViewItems;
 import ui.activity.interfaces.TimerTaskInterface;
 import ui.component.AddMarkers;
 import clearfaun.com.pokebuspro.LocationProvider;
-import ui.component.MarkerManager;
+import Manager.MarkerManager;
 import ui.component.PopupAdapterForMapMarkers;
 import clearfaun.com.pokebuspro.R;
 import client.CallAndParse;
 import ui.activity.interfaces.DialogPopupListener;
 import ui.activity.interfaces.AddMarkersCallback;
 import ui.activity.interfaces.NoBusesInAreaInterface;
+import utils.MarkerRefreshTimerConverter;
 import utils.RefreshTimer;
 import utils.SystemStatus;
 
@@ -553,8 +552,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -572,7 +569,6 @@ public class MainActivity extends AppCompatActivity implements
                         AnswersManager.getInstance().openNavView();
                         mContext = getApplicationContext();
                         prefBusMap = preferenceManager.getBusMapSelection();
-
 
 
                         switch (menuItem.getTitle().toString()) {
@@ -710,7 +706,6 @@ public class MainActivity extends AppCompatActivity implements
         Toast.makeText(mContext, getString(R.string.removed_fav_bus),
                 Toast.LENGTH_LONG).show();
 
-
         AnswersManager.getInstance().deleteFavoriteBusStops();
 
         closeDrawer();
@@ -720,29 +715,9 @@ public class MainActivity extends AppCompatActivity implements
     private void setRefreshTimerNavViewSelection() {
 
 
-        final String findWhatToPreSelect = refreshTimerTaskTime;
-
-        int preSelectedIndex = 0;
-        try {
-            switch (Integer.parseInt(findWhatToPreSelect)) {
-                case 20:
-                    preSelectedIndex = 0;
-                    break;
-                case 30:
-                    preSelectedIndex = 1;
-                    break;
-                case 60:
-                    preSelectedIndex = 2;
-                    break;
-                default:
-                    preSelectedIndex = 3;
-                    break;
-
-            }
-        } catch (Exception e) {
-            preSelectedIndex = 3;
-        }
-
+        MarkerRefreshTimerConverter markerRefreshTimerConverter
+                = new MarkerRefreshTimerConverter();
+        int preSelectedIndex = markerRefreshTimerConverter.convertStringToInt(refreshTimerTaskTime);
 
         alertDialogWithList(getString(R.string.auto_refresh_time), preSelectedIndex, timerTaskEntries);
 
@@ -770,12 +745,8 @@ public class MainActivity extends AppCompatActivity implements
                 preSelectedIndex = 2;
                 break;
 
-
         }
-
         alertDialogWithList(getString(R.string.dialog_set_radius), preSelectedIndex, radiusEntries);
-
-
     }
 
     private void openTwitterIntent() {
@@ -783,8 +754,6 @@ public class MainActivity extends AppCompatActivity implements
         Intent intent = null;
         try {
             // get the Twitter app if possible
-
-
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" +
                     mTwitterName));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -792,20 +761,16 @@ public class MainActivity extends AppCompatActivity implements
 
 
         } catch (Exception e) {
-            Log.d("MyMapsActivity", "e :  " + e.toString());
             // no Twitter app, revert to browser
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" +
                     mTwitterName));
             startActivity(intent);
-
-
         }
 
     }
 
 
     private void alertDialogWithList(final String tittle, int preSelectedIndex, final String[] items) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(tittle);
         builder.setNegativeButton(R.string.dimiss, null);
