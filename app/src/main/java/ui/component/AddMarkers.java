@@ -15,7 +15,6 @@ import java.util.Hashtable;
 
 import Manager.MarkerManager;
 import clearfaun.com.pokebuspro.R;
-import client.CallAndParse;
 import model.BusStopDistances;
 import ui.activity.MainActivity;
 import ui.activity.interfaces.AddMarkersCallback;
@@ -26,7 +25,6 @@ import ui.activity.interfaces.AddMarkersCallback;
 public class AddMarkers {
 
     private AddMarkersCallback firstBusStopHasBeenDisplayed = null;
-
 
     private Hashtable<String, Marker> markerHashTable;
     private ArrayList<String> favBuses;
@@ -56,7 +54,8 @@ public class AddMarkers {
 
 
         this.favBuses = favBuses;
-        CallAndParse.sBusStopsSize--;
+
+        MarkerManager.getInstance().subtractOneBusStop();
 
         int incomingBusesSize = distancesExample.getDepartures().getAll().size();
 
@@ -123,18 +122,16 @@ public class AddMarkers {
         Log.i("AddMarkers", "  favBuses.size :  " + favBuses.size());
 
 
-        if (CallAndParse.sBusStopsSize == 0) {
+        if (MarkerManager.getInstance().getBusStopCount() == 0) {
             //called once
             Log.i("AddMarkerstz", "  called onece?  ");
 
             firstBusStopHasBeenDisplayed.removeLoadingIcon();
 
-            openSnippet(PopupAdapterForMapMarkers.sMarkerCurrentKey, CallAndParse.sClosestMarker);
+            openSnippet(PopupAdapterForMapMarkers.sMarkerCurrentKey,
+                    MarkerManager.getInstance().getBusCodeOfClosetBusStopToUser());
             Log.i("AddMarkers", "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ");
-
         }
-
-
     }
 
     private String getBusName(BusStopDistances distancesExample, int incomingBusesSize) {

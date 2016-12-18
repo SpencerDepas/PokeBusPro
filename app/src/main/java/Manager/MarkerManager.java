@@ -16,7 +16,7 @@ public class MarkerManager {
     private static MarkerManager sMarkerManager;
     private static double mClosestDistance = 9999999;
     private static String sClosestMarker;
-    public static int sBusStopsSize = 0;
+    private static int sBusStopsSize = 0;
     private ArrayList<String> mFavBusStops;
 
     //private List<Crime> mCrimes;
@@ -54,6 +54,12 @@ public class MarkerManager {
 
     public int getBusStopCount(){
         return sBusStopsSize;
+    }
+
+    public void subtractOneBusStop(){
+        //this is so we know when we have loaded all bus stops
+        //and can stop a loading bar
+        sBusStopsSize--;
     }
 
 

@@ -1,26 +1,24 @@
 package ui.activity;
 
-import android.graphics.Point;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.view.WindowManager;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.os.Bundle;
-
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,54 +31,50 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-
 import com.crashlytics.android.Crashlytics;
-
-import com.google.android.gms.maps.OnMapReadyCallback;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import Manager.AnswersManager;
 import Manager.BusStopDataManager;
 import Manager.LocationManager;
+import Manager.MarkerManager;
 import Manager.PreferenceManager;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import clearfaun.com.pokebuspro.LocationProvider;
+import clearfaun.com.pokebuspro.R;
 import io.fabric.sdk.android.Fabric;
 import model.AnswersConstants;
 import model.LoadAndSaveFavBusInfo;
 import model.NavigationViewItems;
+import ui.activity.interfaces.AddMarkersCallback;
+import ui.activity.interfaces.DialogPopupListener;
+import ui.activity.interfaces.NoBusesInAreaInterface;
 import ui.activity.interfaces.TimerTaskInterface;
 import ui.component.AddMarkers;
-import clearfaun.com.pokebuspro.LocationProvider;
-import Manager.MarkerManager;
 import ui.component.PopupAdapterForMapMarkers;
-import clearfaun.com.pokebuspro.R;
-import client.CallAndParse;
-import ui.activity.interfaces.DialogPopupListener;
-import ui.activity.interfaces.AddMarkersCallback;
-import ui.activity.interfaces.NoBusesInAreaInterface;
 import utils.MarkerRefreshTimerConverter;
 import utils.RefreshTimer;
 import utils.SystemStatus;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -115,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements
     private static float zoom = 16;
     private static float bearing = 40;
     private ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
-    private CallAndParse callAndParse;
     private LoadAndSaveFavBusInfo loadAndSaveFavBusInfo;
     private RefreshTimer refreshTimer;
     boolean oneTimeCall = false;
@@ -308,7 +301,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
             PopupAdapterForMapMarkers.mPopupListner = MainActivity.this;
-            callAndParse = new CallAndParse(MainActivity.this);
 
 
             if (hasLocationPermission) {
@@ -1148,13 +1140,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void selectCorrectLatLng() {
-        Log.i("MyMapsActivity ", "selectCorrectLatLng ");
-
-
-        if (callAndParse == null) {
-            callAndParse = new CallAndParse(MainActivity.this);
-        }
-
 
         if (onMapPresedLatLng != null) {
 

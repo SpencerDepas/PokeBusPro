@@ -63,9 +63,6 @@ public class AboutAppActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
 
-//        CallAndParse callAndParse = new CallAndParse();
-//
-//        callAndParse.getBusStops("will be lat lng");
 
 
         Answers.getInstance().logContentView(new ContentViewEvent()
