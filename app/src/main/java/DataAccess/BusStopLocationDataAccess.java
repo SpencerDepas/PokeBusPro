@@ -57,8 +57,8 @@ public class BusStopLocationDataAccess {
     }
 
     public interface OnBusStopLocationCallBack {
-        public void onApiSuccess(UkBusStopsLocation ukBusStopsLocation);
-        public void onApiError(String error);
+        void onApiSuccess(UkBusStopsLocation ukBusStopsLocation);
+        void onApiError(String error);
     }
 
 }

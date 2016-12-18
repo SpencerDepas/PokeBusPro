@@ -23,17 +23,19 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import Manager.BusStopDataManager;
 import Manager.PreferenceManager;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import clearfaun.com.pokebuspro.R;
 import io.fabric.sdk.android.Fabric;
+import ui.activity.interfaces.NoBusesInAreaInterface;
 
 
 /**
  * Created by spencer on 3/16/2015.
  */
-public class BoroughBusMapActivity extends AppCompatActivity {
+public class BusMapActivity extends AppCompatActivity implements NoBusesInAreaInterface {
 
     private ProgressBar spinner;
     SubsamplingScaleImageView imageView;
@@ -41,6 +43,7 @@ public class BoroughBusMapActivity extends AppCompatActivity {
     private final String MAP_SELECTION = "Map selection";
     private PreferenceManager preferenceManager;
     private Context mContext;
+    private static final String TAG = "BusMapActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class BoroughBusMapActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Fabric.with(this, new Crashlytics());
 
-        Log.i("BoroughBusMapActivity", "onCreate");
+        Log.i("BusMapActivity", "onCreate");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
@@ -73,35 +76,38 @@ public class BoroughBusMapActivity extends AppCompatActivity {
         spinner = (ProgressBar) findViewById(R.id.spinner);
 
 
-        Log.d("BoroughBusMapActivity", "savedBusMap:" + savedBusMap);
+        Log.d("BusMapActivity", "savedBusMap:" + savedBusMap);
 
         loadMap();
+
+        BusStopDataManager busStopDataManager = new BusStopDataManager();
+        busStopDataManager.getBusStops(this);
 
 
     }
 
     private void loadMap() {
-        Log.i("BoroughBusMapActivity", "loadMap");
+        Log.i("BusMapActivity", "loadMap");
 
 
         if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_BROOKLYN)) {
-            Log.i("BoroughBusMapActivity", "in bk");
+            Log.i("BusMapActivity", "in bk");
             imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busbklnmap.jpg"));
         } else if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_MANHATTAN)) {
-            Log.i("BoroughBusMapActivity", "in mn");
+            Log.i("BusMapActivity", "in mn");
             imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("manbusmap.jpg"));
         } else if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_QUEENS)) {
-            Log.i("BoroughBusMapActivity", "in qns");
+            Log.i("BusMapActivity", "in qns");
             imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busqnsmap.jpg"));
         } else if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_BRONX)) {
-            Log.i("BoroughBusMapActivity", "in bx");
+            Log.i("BusMapActivity", "in bx");
             imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("busbxmap.jpg"));
         } else if (savedBusMap.equals(PreferenceManager.BUS_MAP_SELECTION_STATEN_ISLAND)) {
-            Log.i("BoroughBusMapActivity", "in si");
+            Log.i("BusMapActivity", "in si");
             imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
             imageView.setImage(ImageSource.asset("bussimap.jpg"));
 
@@ -170,42 +176,42 @@ public class BoroughBusMapActivity extends AppCompatActivity {
         int preSelectedIndex = findPreselectedIndex();
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(BoroughBusMapActivity.this, R.style.AppCompatAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(BusMapActivity.this, R.style.AppCompatAlertDialogStyle);
         CharSequence items[] = new CharSequence[]{"Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"};
         builder.setTitle(getString(R.string.select_bus_map_tittle));
         builder.setNegativeButton("DISMISS", null);
         builder.setSingleChoiceItems(items, preSelectedIndex, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("BoroughBusMapActivity", "Positive");
+                Log.d("BusMapActivity", "Positive");
                 spinner.setVisibility(View.VISIBLE);
                 dialog.dismiss();
 
                 if (which == 0) {
-                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 0);
+                    Log.d("BusMapActivity", "menuItem.getTitle():" + 0);
 
                     saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_BROOKLYN);
 
 
                 } else if (which == 1) {
-                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 1);
+                    Log.d("BusMapActivity", "menuItem.getTitle():" + 1);
 
                     saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_MANHATTAN);
 
 
                 } else if (which == 2) {
-                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 2);
+                    Log.d("BusMapActivity", "menuItem.getTitle():" + 2);
 
                     saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_QUEENS);
 
 
                 } else if (which == 3) {
-                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 2);
+                    Log.d("BusMapActivity", "menuItem.getTitle():" + 2);
 
                     saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_BRONX);
 
 
                 } else if (which == 4) {
-                    Log.d("BoroughBusMapActivity", "menuItem.getTitle():" + 2);
+                    Log.d("BusMapActivity", "menuItem.getTitle():" + 2);
 
 
                     saveMapSelection(PreferenceManager.BUS_MAP_SELECTION_STATEN_ISLAND);
@@ -238,7 +244,7 @@ public class BoroughBusMapActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @OnClick(R.id.map_fab)
     public void selectMap(View view) {
-        Log.i("BoroughBusMapActivity", "selectMap");
+        Log.i("BusMapActivity", "selectMap");
 
 
         selectMapDialog();
@@ -249,19 +255,19 @@ public class BoroughBusMapActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (!isOnline()) {
-            Log.i("BoroughBusMapActivity", "!isOnline()");
+            Log.i("BusMapActivity", "!isOnline()");
             Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
             this.finish();
         } else {
-            Log.i("BoroughBusMapActivity", "isOnline()");
+            Log.i("BusMapActivity", "isOnline()");
 
             if (MainActivity.active == true) {
-                Log.i("BoroughBusMapActivity", "MainActivity.active == true");
+                Log.i("BusMapActivity", "MainActivity.active == true");
 
                 this.finish();
             } else {
-                Log.i("BoroughBusMapActivity", "else");
+                Log.i("BusMapActivity", "else");
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
@@ -286,4 +292,8 @@ public class BoroughBusMapActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void noBusesFound() {
+        Log.d(TAG, "noBusesFound: noBusesFound");
+    }
 }

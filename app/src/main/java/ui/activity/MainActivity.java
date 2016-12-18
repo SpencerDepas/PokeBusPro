@@ -53,6 +53,7 @@ import com.google.android.gms.maps.model.Marker;
 
 
 import Manager.AnswersManager;
+import Manager.LocationManager;
 import Manager.PreferenceManager;
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -546,7 +547,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
             AnswersManager.getInstance().launchMapActivty();
-            Intent intent = new Intent(mContext, BoroughBusMapActivity.class);
+            Intent intent = new Intent(mContext, BusMapActivity.class);
             intent.putExtra("maptype", "Current Map is: " + prefBusMap);
             startActivity(intent);
 
@@ -1125,6 +1126,7 @@ public class MainActivity extends AppCompatActivity implements
     public void handleNewLocation(Location location) {
         Log.i("MyMapsActivity", "handleNewLocation ");
 
+
         if (!systemStatus.isOnline()) {
             Log.i("MyMapsActivity", "!isOnline()");
             Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
@@ -1135,16 +1137,13 @@ public class MainActivity extends AppCompatActivity implements
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         latLng = new LatLng(latitude, longitude);
+        LocationManager.getInstance().setUserLatLng(latLng);
 
 
         googleMap.setMyLocationEnabled(true);
         googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
-
         animateCameraPos();
-
         selectCorrectLatLng();
-
-
     }
 
     private void selectCorrectLatLng() {

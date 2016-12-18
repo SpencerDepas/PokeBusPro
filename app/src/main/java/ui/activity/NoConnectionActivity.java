@@ -86,7 +86,7 @@ public class NoConnectionActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.map_item) {
 
-            Intent intent = new Intent(mContext, BoroughBusMapActivity.class);
+            Intent intent = new Intent(mContext, BusMapActivity.class);
             startActivity(intent);
         }
 

@@ -125,7 +125,7 @@ ADDED from AndroidManifest.xml:49:9
 		ADDED from AndroidManifest.xml:49:19
 	android:name
 		ADDED from AndroidManifest.xml:49:52
-activity#ui.activity.BoroughBusMapActivity
+activity#ui.activity.BusMapActivity
 ADDED from AndroidManifest.xml:50:9
 	android:label
 		ADDED from AndroidManifest.xml:50:19
