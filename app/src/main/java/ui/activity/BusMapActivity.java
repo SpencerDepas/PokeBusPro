@@ -23,7 +23,6 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
-import Manager.BusStopDataManager;
 import Manager.PreferenceManager;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -79,11 +78,6 @@ public class BusMapActivity extends AppCompatActivity implements NoBusesInAreaIn
         Log.d("BusMapActivity", "savedBusMap:" + savedBusMap);
 
         loadMap();
-
-        BusStopDataManager busStopDataManager = new BusStopDataManager();
-        busStopDataManager.getBusStops(this);
-
-
     }
 
     private void loadMap() {

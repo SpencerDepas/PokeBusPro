@@ -53,6 +53,7 @@ import com.google.android.gms.maps.model.Marker;
 
 
 import Manager.AnswersManager;
+import Manager.BusStopDataManager;
 import Manager.LocationManager;
 import Manager.PreferenceManager;
 import butterknife.BindArray;
@@ -1157,13 +1158,17 @@ public class MainActivity extends AppCompatActivity implements
 
         if (onMapPresedLatLng != null) {
 
-            callAndParse.getBusStops(onMapPresedLatLng, busCodeOfFavBusStops, savedRadius);
+            BusStopDataManager busStopDataManager = new BusStopDataManager();
+            busStopDataManager.getBusStops(this);
+
+            //callAndParse.getBusStops(onMapPresedLatLng, busCodeOfFavBusStops, savedRadius);
         } else {
 
             if (latLng == null) {
                 Log.i("MyMapsActivity ", "Used prefrence manager latLng ");
 
                 latLng = preferenceManager.getLatLng();
+                LocationManager.getInstance().setUserLatLng(latLng);
 
 
             } else {
@@ -1172,6 +1177,8 @@ public class MainActivity extends AppCompatActivity implements
                     Log.i("MyMapsActivity ", "latLng.latitude == 0");
 
                     latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
+                    LocationManager.getInstance().setUserLatLng(latLng);
+
                 }
 
             }
@@ -1182,11 +1189,13 @@ public class MainActivity extends AppCompatActivity implements
             if (latLng.latitude == 0) {
                 Log.i("MyMapsActivity ", "latLng.latitude == 0");
 
-                latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
+                //latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
+                LocationManager.getInstance().setUserLatLng(latLng);
             }
 
-
-            callAndParse.getBusStops(latLng, busCodeOfFavBusStops, savedRadius);
+            BusStopDataManager busStopDataManager = new BusStopDataManager();
+            busStopDataManager.getBusStops(this);
+            //callAndParse.getBusStops(latLng, busCodeOfFavBusStops, savedRadius);
 
         }
     }
