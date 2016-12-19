@@ -1,11 +1,15 @@
 package Manager;
 
+import android.util.Log;
+
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import clearfaun.com.pokebuspro.R;
 import utils.DistanceFormula;
 
 /**
@@ -77,4 +81,23 @@ public class MarkerManager {
             mClosestDistance = currentDistance;
         }
     }
+
+//    public void addPokeBusColor(String busCode) {
+//        Log.i("AddMarkers", "addPokeBusColor");
+//
+//        Log.i("AddMarkers", "busCode : " + busCode);
+//
+//        Marker marker = markerHashTable.get(busCode);
+//
+//        if (marker != null) {
+//            Log.i("AddMarkers", "I R FAV BUS ");
+//
+//
+//            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
+//
+//        }
+//
+//
+//    }
+
 }

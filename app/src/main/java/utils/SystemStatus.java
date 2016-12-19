@@ -8,11 +8,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.design.widget.NavigationView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import clearfaun.com.pokebuspro.R;
+import ui.activity.MainActivity;
 import ui.activity.NoConnectionActivity;
+import ui.activity.PokeBusApplicationClass;
 
 /**
  * Created by SpencerDepas on 6/20/16.
@@ -24,21 +28,21 @@ public class SystemStatus {
     private static SystemStatus sSystemStatus;
 
 
-    public static SystemStatus getInstance(Context context) {
-        Log.i("SystemStatus", "getInstance()");
-
-        mContext = context;
-
+    public static SystemStatus getInstance() {
         if (sSystemStatus == null) {
-            sSystemStatus = new SystemStatus(mContext);
+            sSystemStatus = new SystemStatus(PokeBusApplicationClass.getContext());
         }
         return sSystemStatus;
     }
 
     private SystemStatus(Context context) {
         this.mContext = context;
+    }
 
-
+    public int getScreenHeight(){
+        NavigationView navView = (NavigationView) ((MainActivity) mContext)
+                .findViewById(R.id.nav_view);
+        return navView.getHeight();
     }
 
 
@@ -66,11 +70,8 @@ public class SystemStatus {
 
 
     private void getLocationEnabled() {
-
         LocationManager lService = (LocationManager) mContext.getSystemService(mContext.LOCATION_SERVICE);
         mEnabledGPS = lService.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-
     }
 
     public boolean isOnline() {
@@ -106,16 +107,8 @@ public class SystemStatus {
 
         } else if (!isLocationEnabled()) {
 
-
-            Log.i("MyMapsActivity", "!isLocationEnabled(mContext)");
-
-
         } else if (enabledAirplaneMode) {
-            Log.i("MyMapsActivity", "preference == enabledAirplaneMode");
-
-
             noConnectionIntent();
-
         }
 
         if (!mEnabledGPS) {

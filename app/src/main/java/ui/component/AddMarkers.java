@@ -347,13 +347,7 @@ public class AddMarkers {
     }
 
     private void refreshMarkerSnippet(Marker marker) {
-        Log.i("AddMarkerstz", " refreshMarkerSnippet " + marker.getTitle());
-
-        Log.i("AddMarkerstz", " marker.isInfoWindowShown() " + marker.isInfoWindowShown());
-
         if (marker.isInfoWindowShown()) {
-            Log.i("AddMarkerstz", "this is the refresh refreshMarkerSnippet " + marker.getId().toString());
-
             marker.hideInfoWindow();
             marker.showInfoWindow();
         }

@@ -1,4 +1,4 @@
-package client;
+package DataAccess;
 
 
 import model.BusStopDistances;

@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import clearfaun.com.pokebuspro.R;
-import client.GetBussStopInterface;
 import model.BusStopDistances;
 import retrofit.Callback;
 import retrofit.RestAdapter;
