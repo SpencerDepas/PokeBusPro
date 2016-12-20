@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import javax.inject.Inject;
 
 import butterknife.BindArray;
 import clearfaun.com.pokebuspro.R;

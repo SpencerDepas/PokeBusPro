@@ -80,6 +80,7 @@ public class MapsCameraManager {
     public void animateCameraPos() {
 
         if (onMapPresedLatLng != null) {
+
             if (mMapsCamera.getZoom() > 4) {
                 animateCamera(onMapPresedLatLng, mMapsCamera.getZoom(), mMapsCamera.getBearing());
             } else {
@@ -108,12 +109,9 @@ public class MapsCameraManager {
         LatLng aboveMarkerLatLng;
 
         if (!firstTimeLoading) {
-            Log.d("MyMapsActivity", "tst !firstTimeLoading  ");
-
             saveCameraPositionOnMap();
 
             int container_height = SystemStatus.getInstance().getScreenHeight();
-
             Projection projection = MainActivity.googleMap.getProjection();
 
             LatLng markerLatLng = new LatLng(marker.getPosition().latitude,

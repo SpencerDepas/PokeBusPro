@@ -257,90 +257,51 @@ public class AddMarkers {
 
             firstTimeOpenSnippet(closestMarkerToUser);
         }
-
-
     }
 
     private void firstTimeOpenSnippet(String closestMarkerToUser) {
-        Log.i("AddMarkerstz", " firstTimeOpenSnippet ");
-
         if (favBuses.size() > 0) {
-
             boolean hasFavBusStopBeenDisplayed = showFavBusStopSnippet();
-
             if (hasFavBusStopBeenDisplayed) {
-                Log.i("AddMarkerstz", " !hasFavBusStopBeenDisplayed :" + hasFavBusStopBeenDisplayed);
-
                 displayClosestMarker(closestMarkerToUser);
             }
-
         } else {
-
             //if no fav buses we need a snippet to open
             displayClosestMarker(closestMarkerToUser);
-
-
         }
-
     }
 
     private void displayClosestMarker(String closestMarkerToUser) {
-        Log.i("AddMarkers", " displayClosestMarker " + closestMarkerToUser);
-
         Marker marker = markerHashTable.get(closestMarkerToUser);
         displayMarker(marker);
     }
 
     private void openAfterItsBeenOpenedSnippet(String lastOpenSnippetKey, String closestMarkerToUser) {
         //on first open is different(maybe) after you have opened  another snippet
-        Log.i("AddMarkerstz", " openAfterItsBeenOpenedSnippet ");
-
         Marker marker = markerHashTable.get(lastOpenSnippetKey);
-
-
         if (marker != null) {
-            Log.i("AddMarkerstz", " marker != null ");
-
             if (marker.isInfoWindowShown()) {
-
-                Log.i("AddMarkerstz", " openSnippet " + marker.getId().toString());
-
                 refreshMarkerSnippet(marker);
 
             } else {
-
-                Log.i("AddMarkerstz", " !!!! marker.isInfoWindowShown() ");
-
                 //here we go
                 marker.hideInfoWindow();
                 marker.showInfoWindow();
                 firstBusStopHasBeenDisplayed.animateCameraToMarker(marker);
-
             }
         } else {
-
-            Log.i("AddMarkerstz", " else !!!! marker != null ");
-
-
             //if the last snippet is null
             //then lets open the closet snippet to you
             marker = markerHashTable.get(closestMarkerToUser);
             if (marker != null) {
                 firstBusStopHasBeenDisplayed.animateCameraToMarker(marker);
                 marker.showInfoWindow();
-
             }
-
         }
-
-
     }
 
     private void displayMarker(Marker marker) {
-        Log.i("AddMarkerstz", " displayMarker ");
-
         if (marker != null) {
-            Log.i("AddMarkerstz", " displayMarker " + marker.getId());
             firstBusStopHasBeenDisplayed.animateCameraToMarker(marker);
             marker.showInfoWindow();
         }
@@ -353,68 +314,35 @@ public class AddMarkers {
         }
     }
 
-
     public void addPokeBusColor(String busCode) {
-        Log.i("AddMarkers", "addPokeBusColor");
-
-        Log.i("AddMarkers", "busCode : " + busCode);
-
         Marker marker = markerHashTable.get(busCode);
-
         if (marker != null) {
-            Log.i("AddMarkers", "I R FAV BUS ");
-
-
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
-
         }
-
-
     }
 
     private boolean showFavBusStopSnippet() {
-        Log.i("AddMarkers", "showFavBusStopSnippet ");
-
-
         for (int i = 0; i < favBuses.size(); i++) {
-
-            Log.i("AddMarkers", "favBuses :  " + favBuses.get(i));
-
-
             Marker marker = markerHashTable.get(favBuses.get(i));
-
             displayMarker(marker);
             return true;
         }
-
         return false;
-
     }
 
     public void removePokeBusColor(ArrayList<String> arrayList) {
-
         MarkerManager markerManager = MarkerManager.getInstance();
         Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-
-
         if (arrayList.size() > 0) {
             for (int i = 0; i < arrayList.size(); i++) {
-
-                Log.i("AddMarkers", "arrayList.get(i) : " + arrayList.get(i));
-
                 Marker marker = markerHashTable.get(arrayList.get(i));
                 if (marker != null) {
                     //this is because you may delete an icon you can not see
                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-                    Log.i("AddMarkers", " removePokeBusColor " + marker.getId().toString());
                     refreshMarkerSnippet(marker);
                 }
-
             }
         }
-
-
     }
-
 
 }

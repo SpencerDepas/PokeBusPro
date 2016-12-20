@@ -193,8 +193,8 @@ public class MainActivity extends AppCompatActivity implements
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mMap.getMapAsync(this);
 
-        fab.setEnabled(false);
-        fab.setClickable(false);
+//        fab.setEnabled(false);
+//        fab.setClickable(false);
     }
 
 
