@@ -1,7 +1,6 @@
 package Manager;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,7 +26,7 @@ public class MapsCameraManager {
 
     private static MapsCameraManager sMapsCameraManager;
 
-    private MapsCameraManager(){
+    private MapsCameraManager() {
         mMapsCamera = new MapsCamera();
     }
 
@@ -52,7 +51,7 @@ public class MapsCameraManager {
 
             @Override
             public void onFinish() {
-                MainActivity.googleMap.getUiSettings().setAllGesturesEnabled(true);
+                //MainActivity.googleMap.getUiSettings().setAllGesturesEnabled(true);
                 saveCameraPositionOnMap();
 //                fab.setEnabled(true);
 //                fab.setClickable(true);
@@ -63,6 +62,17 @@ public class MapsCameraManager {
             public void onCancel() {
             }
         });
+    }
+
+    public void mapStartingLocation(LatLng target, float zoom, float bearing) {
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(target)               // Sets the center of the map to Mountain View
+                .zoom(mMapsCamera.getZoom())                   // Sets the zoom
+                .bearing(bearing)             // Sets the orientation of the camera to eas
+                // .tilt(tilt)                 // Sets the tilt of the camera to 30 degrees
+                .build();                     // Creates a CameraPosition from the builder
+        MainActivity.googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
 
@@ -91,10 +101,9 @@ public class MapsCameraManager {
             if (LocationManager.getInstance().getUserLatLng().latitude == 0) {
                 animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, mMapsCamera.getZoom(), mMapsCamera.getBearing());
             } else {
-                animateCamera(LocationManager.getInstance().getUserLatLng(), mMapsCamera.getZoom(), mMapsCamera.getBearing());
+                mapStartingLocation(LocationManager.getInstance().getUserLatLng(), mMapsCamera.getZoom(), mMapsCamera.getBearing());
+                //animateCamera(LocationManager.getInstance().getUserLatLng(), mMapsCamera.getZoom(), mMapsCamera.getBearing());
             }
-
-
         } else {
 
             if (LocationManager.getInstance().getUserLatLng().latitude == 0) {
@@ -137,5 +146,13 @@ public class MapsCameraManager {
 
     public void setFirstTimeLoadingForCameraAnimation(boolean firstTimeLoadingForCameraAnimation) {
         this.firstTimeLoadingForCameraAnimation = firstTimeLoadingForCameraAnimation;
+    }
+
+    public LatLng getOnMapPresedLatLng() {
+        return onMapPresedLatLng;
+    }
+
+    public void setOnMapPresedLatLng(LatLng onMapPresedLatLng) {
+        this.onMapPresedLatLng = onMapPresedLatLng;
     }
 }

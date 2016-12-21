@@ -193,8 +193,6 @@ public class MainActivity extends AppCompatActivity implements
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mMap.getMapAsync(this);
 
-//        fab.setEnabled(false);
-//        fab.setClickable(false);
     }
 
 
@@ -382,9 +380,9 @@ public class MainActivity extends AppCompatActivity implements
 
         AnswersManager.getInstance().fabOnRefreshPressed();
 
-        MapsCameraManager.getInstance().animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, mMapsCamera.getZoom(), mMapsCamera.getBearing());
-
-
+        //MapsCameraManager.getInstance().animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, mMapsCamera.getZoom(), mMapsCamera.getBearing());
+        MapsCameraManager.getInstance().animateCamera(LocationManager.getInstance().getUserLatLng(),
+                mMapsCamera.getZoom(), mMapsCamera.getBearing());
     }
 
 
@@ -1069,8 +1067,11 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
-                busCodeOfFavBusStops.add(finalBuscode);
-                addMarkers.addPokeBusColor(finalBuscode);
+//                busCodeOfFavBusStops.add(finalBuscode);
+//                addMarkers.addPokeBusColor(finalBuscode);
+                MarkerManager.getInstance().addFavoriteBusStop(finalBuscode);
+                MarkerManager.getInstance().addPokeBusColor(finalBuscode);
+
                 AnswersManager.getInstance().selectedFavBus(finalBuscode);
 
             }
@@ -1101,12 +1102,11 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("MyMapsActivity", "onMapReadypoooo");
         this.googleMap = newGoogleMap;
 
-        if (MapsCameraManager.getInstance().isFirstTimeLoadingForCameraAnimation()) {
-            googleMap.getUiSettings().setAllGesturesEnabled(false);
-        }
 
         googleMap.getUiSettings().setMapToolbarEnabled(false);
-
+        //googleMap.getUiSettings().setAllGesturesEnabled(false);
+        googleMap.getUiSettings().setTiltGesturesEnabled(false);
+        googleMap.setBuildingsEnabled(false);
 
         mapMarkerClickListener();
 
@@ -1116,17 +1116,14 @@ public class MainActivity extends AppCompatActivity implements
             oneTimeCall = true;
 
             busCodeOfFavBusStops = loadAndSaveFavBusInfo.loadFavBus();
+            MarkerManager.getInstance().setmFavBusStops(busCodeOfFavBusStops);
 
             permissionAtRunTime();
 
             if (responseAnsweredForRuntimePermission) {
                 refreshTimer.startTimerTask();
             }
-
-
         }
-
-
     }
 
 
@@ -1141,7 +1138,6 @@ public class MainActivity extends AppCompatActivity implements
             }
 
         });
-
     }
 
     public void disableMapOnPress() {
@@ -1182,6 +1178,8 @@ public class MainActivity extends AppCompatActivity implements
     private void newLocationFromLatLng(LatLng latLng) {
 
         onMapPresedLatLng = latLng;
+        MapsCameraManager.getInstance().setOnMapPresedLatLng(latLng);
+
         MarkerManager.getInstance().getMarkerHashTable().clear();
         googleMap.clear();
         progressBar.setVisibility(view.VISIBLE);

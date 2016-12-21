@@ -57,6 +57,9 @@ public class BusStopDataManager {
     }
 
     private void makeBusDistanceThreads(UkBusStopsLocation ukBusStopsLocation) {
+
+        MarkerManager.getInstance().setBusStopCount(ukBusStopsLocation.getStops().size());
+
         for (int i = 0; i < ukBusStopsLocation.getStops().size(); i++) {
             LatLng busStopLatLng = new LatLng(ukBusStopsLocation.getStops().get(i).getLatitude(),
                     ukBusStopsLocation.getStops().get(i).getLongitude());
@@ -67,6 +70,7 @@ public class BusStopDataManager {
                     findClosestBusStopToCurrentLocation(busStopLatLng,
                             LocationManager.getInstance().getUserLatLng(),
                             ukBusStopsLocation.getStops().get(i).getAtcocode());
+
         }
     }
 

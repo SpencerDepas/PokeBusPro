@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import clearfaun.com.pokebuspro.R;
+import ui.component.AddMarkers;
 import utils.DistanceFormula;
 
 /**
@@ -21,7 +22,13 @@ public class MarkerManager {
     private static double mClosestDistance = 9999999;
     private static String sClosestMarker;
     private static int sBusStopsSize = 0;
+
     private ArrayList<String> mFavBusStops;
+
+     private ArrayList<String> favBuses;
+    private String randomMarkeyKey = "";
+    private static AddMarkers addMarkers;
+    private static String currentTime;
 
     //private List<Crime> mCrimes;
     private Hashtable<String, Marker> markerHashTable;
@@ -39,6 +46,11 @@ public class MarkerManager {
     public ArrayList<String> getFavoriteBusStops(){
         return mFavBusStops;
     }
+
+    public void setmFavBusStops(ArrayList<String> mFavBusStops) {
+        this.mFavBusStops = mFavBusStops;
+    }
+
 
     public void addFavoriteBusStop(String favBusCode){
         mFavBusStops.add(favBusCode);
@@ -82,22 +94,13 @@ public class MarkerManager {
         }
     }
 
-//    public void addPokeBusColor(String busCode) {
-//        Log.i("AddMarkers", "addPokeBusColor");
-//
-//        Log.i("AddMarkers", "busCode : " + busCode);
-//
-//        Marker marker = markerHashTable.get(busCode);
-//
-//        if (marker != null) {
-//            Log.i("AddMarkers", "I R FAV BUS ");
-//
-//
-//            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
-//
-//        }
-//
-//
-//    }
+
+
+    public void addPokeBusColor(String busCode) {
+        Marker marker = markerHashTable.get(busCode);
+        if (marker != null) {
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
+        }
+    }
 
 }
