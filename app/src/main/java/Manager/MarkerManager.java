@@ -22,9 +22,9 @@ public class MarkerManager {
     private static double mClosestDistance = 9999999;
     private static String sClosestMarker;
     private static int sBusStopsSize = 0;
+    private String mMarkerCurrentKey = "";
 
     private ArrayList<String> mFavBusStops;
-
      private ArrayList<String> favBuses;
     private String randomMarkeyKey = "";
     private static AddMarkers addMarkers;
@@ -51,6 +51,14 @@ public class MarkerManager {
         this.mFavBusStops = mFavBusStops;
     }
 
+    public String getCurrentKey() {
+        return mMarkerCurrentKey;
+    }
+
+    public void setCurrentKey(String sMarkerCurrentKey) {
+        mMarkerCurrentKey = sMarkerCurrentKey;
+    }
+
     public void addFavoriteBusStop(String favBusCode){
         mFavBusStops.add(favBusCode);
     }
@@ -59,7 +67,6 @@ public class MarkerManager {
         if (markerHashTable == null) {
             markerHashTable = new Hashtable<String, Marker>();
         }
-
         return markerHashTable;
     }
 
@@ -96,6 +103,28 @@ public class MarkerManager {
         Marker marker = markerHashTable.get(busCode);
         if (marker != null) {
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
+        }
+    }
+
+    public void removePokeBusColor(ArrayList<String> arrayList) {
+        MarkerManager markerManager = MarkerManager.getInstance();
+        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
+        if (arrayList.size() > 0) {
+            for (int i = 0; i < arrayList.size(); i++) {
+                Marker marker = markerHashTable.get(arrayList.get(i));
+                if (marker != null) {
+                    //this is because you may delete an icon you can not see
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+                    refreshMarkerSnippet(marker);
+                }
+            }
+        }
+    }
+
+    private void refreshMarkerSnippet(Marker marker) {
+        if (marker.isInfoWindowShown()) {
+            marker.hideInfoWindow();
+            marker.showInfoWindow();
         }
     }
 

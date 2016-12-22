@@ -83,7 +83,7 @@ public class BusStopDataManager {
                         try {
                             AddMarkers addMarkers = AddMarkers.getInstance();
                             addMarkers.addMarkerToMapWithBusDistances(distancesExample, busCode,
-                                    busStopLatLng, MarkerManager.getInstance().getFavoriteBusStops());
+                                    busStopLatLng);
 
                         } catch (Exception e) {
                             Log.i(TAG, "BusStopInformationDataAccess Exception: " + e);

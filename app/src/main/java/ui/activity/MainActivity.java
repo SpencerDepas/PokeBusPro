@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements
     protected String[] timerTaskEntriesValues;
 
     @BindView(R.id.refresh_location_fab)
-    FloatingActionButton fab;
+    FloatingActionButton mrefreshFab;
     @BindView(R.id.main_coordinatorLayout)
     CoordinatorLayout view;
     @BindView(R.id.progress_bar_activity_main)
@@ -372,17 +372,13 @@ public class MainActivity extends AppCompatActivity implements
     public void refreshLocation(View view) {
         Log.i("MyMapsActivity", "onClick refreshLocation");
 
-
-        MapsCameraManager.getInstance().saveCameraPositionOnMap();
-
-
         refreshMarkers();
+
+        MapsCameraManager.getInstance().animateCamera(LocationManager.getInstance().getUserLatLng(),
+                mMapsCamera.getZoom(), mMapsCamera.getBearing());
 
         AnswersManager.getInstance().fabOnRefreshPressed();
 
-        //MapsCameraManager.getInstance().animateCamera(EMPIRE_STATE_BUILDING_LAT_LNG, mMapsCamera.getZoom(), mMapsCamera.getBearing());
-        MapsCameraManager.getInstance().animateCamera(LocationManager.getInstance().getUserLatLng(),
-                mMapsCamera.getZoom(), mMapsCamera.getBearing());
     }
 
 
@@ -551,7 +547,6 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-
                         AnswersManager.getInstance().openNavView();
                         mContext = getApplicationContext();
                         prefBusMap = preferenceManager.getBusMapSelection();
@@ -588,30 +583,21 @@ public class MainActivity extends AppCompatActivity implements
 
                                 break;
                             case NavigationViewItems.FOLLOW_ME_ON_TWITTER:
-
                                 AnswersManager.getInstance().followMeOnTwitter();
                                 openTwitterIntent();
                                 closeDrawer();
-
                                 break;
                             case NavigationViewItems.LICENSE:
-
                                 intent = new Intent(mContext, LicenseActivity.class);
                                 startActivity(intent);
                                 closeDrawer();
-
-
                                 break;
                             case NavigationViewItems.ENABLE_LOCATION:
 
                                 enableLocationNavViewSelection();
 
                                 break;
-
-
                         }
-
-
                         return true;
                     }
                 });
@@ -684,7 +670,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         //removes change of color from icon color
-        addMarkers.removePokeBusColor(busCodeOfFavBusStops);
+        MarkerManager.getInstance().removePokeBusColor(busCodeOfFavBusStops);
         removeSavedFavBusFromStorage();
 
         Toast.makeText(mContext, getString(R.string.removed_fav_bus),
@@ -858,7 +844,6 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
             startActivity(intent);
 
-
         } else {
 
             MapsCameraManager.getInstance().saveCameraPositionOnMap();
@@ -878,14 +863,13 @@ public class MainActivity extends AppCompatActivity implements
 
 
             } else {
-                Log.i("MyMapsActivity", "hasLocationPermission : " + hasLocationPermission);
 
                 selectCorrectLatLng();
             }
 
 
             Marker currentMarker = MarkerManager.getInstance().getMarkerHashTable()
-                    .get(PopupAdapterForMapMarkers.sMarkerCurrentKey);
+                    .get(MarkerManager.getInstance().getCurrentKey());
 
             if (currentMarker != null) {
                 MapsCameraManager.getInstance().animateCameraToMarkerMiddleOfScreen(currentMarker,
@@ -1067,8 +1051,6 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
-//                busCodeOfFavBusStops.add(finalBuscode);
-//                addMarkers.addPokeBusColor(finalBuscode);
                 MarkerManager.getInstance().addFavoriteBusStop(finalBuscode);
                 MarkerManager.getInstance().addPokeBusColor(finalBuscode);
 

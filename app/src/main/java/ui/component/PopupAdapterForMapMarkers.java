@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
+import Manager.MarkerManager;
 import clearfaun.com.pokebuspro.R;
 import ui.activity.MainActivity;
 import ui.activity.interfaces.DialogPopupListener;
@@ -21,7 +22,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
     private View mPopup = null;
     private LayoutInflater mInflater = null;
     private MainActivity mMainActivity;
-    public static String sMarkerCurrentKey = "";
+    //public static String sMarkerCurrentKey = "";
     public static DialogPopupListener mPopupListner = null;
     public PopupAdapterForMapMarkers(LayoutInflater inflater) {
         this.mInflater = inflater;
@@ -62,7 +63,7 @@ public class PopupAdapterForMapMarkers implements GoogleMap.InfoWindowAdapter {
         distances.setText(marker.getSnippet());
 
 
-        sMarkerCurrentKey = marker.getTitle();
+        MarkerManager.getInstance().setCurrentKey(marker.getTitle());
         final String fBusCode = marker.getTitle();
         mMainActivity.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override

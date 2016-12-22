@@ -9,9 +9,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 
 import Manager.MarkerManager;
 import clearfaun.com.pokebuspro.R;
@@ -25,13 +23,10 @@ import ui.activity.interfaces.AddMarkersCallback;
  */
 public class AddMarkers {
 
+    private static final String TAG = "AddMarkers";
     private AddMarkersCallback firstBusStopHasBeenDisplayed = null;
-
-    private ArrayList<String> favBuses;
-    private String randomMarkeyKey = "";
     private static AddMarkers addMarkers;
     private static String currentTime;
-    private static final String TAG = "AddMarkers";
 
     public static synchronized AddMarkers getInstance() {
         if (addMarkers == null) {
@@ -45,74 +40,69 @@ public class AddMarkers {
     }
 
     public void addMarkerToMapWithBusDistances(BusStopDistances distancesExample, String currenBusCode,
-                                               LatLng busStopLatLng, ArrayList<String> favBuses) {
-        this.favBuses = favBuses;
-
+                                               LatLng busStopLatLng) {
         MarkerManager.getInstance().subtractOneBusStop();
         int incomingBusesSize = distancesExample.getDepartures().getAll().size();
-
-        String busName = getBusName(distancesExample, incomingBusesSize);
-        //String busName = busCode;
-
 
         String allbusNamesAndDistances = putMultiBusesInStackedString(distancesExample,
                 incomingBusesSize);
 
-        LatLng markerLocation;
 
-        Marker marker =  MarkerManager.getInstance().getMarkerHashTable().get(currenBusCode);
+        Marker marker = MarkerManager.getInstance().getMarkerHashTable().get(currenBusCode);
         if (marker != null) {
-            //use old
-            //we do not need to re add it to the screen
-            //we do need to delete the old info
-            marker.setTitle(currenBusCode);
-            marker.setSnippet(allbusNamesAndDistances);
-
-            MarkerManager.getInstance().getMarkerHashTable().put(currenBusCode, marker);
-
-
+            updateMarker(marker, currenBusCode, allbusNamesAndDistances);
         } else {
-            //make new
-            markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
-            marker = MainActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
-            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-            marker.setTitle(currenBusCode + busName);
-            marker.setSnippet(allbusNamesAndDistances);
-
-            MarkerManager.getInstance().getMarkerHashTable().put(currenBusCode, marker);
-
-
+            makeNewMarker(currenBusCode, allbusNamesAndDistances, busStopLatLng);
             //this does not scale
             //could make a hashtable for this
-            String favBusCode = isAFavoriteBus(favBuses, currenBusCode);
-            if(favBusCode != null){
+            Boolean isAFavoriteBus = isAFavoriteBusStop(currenBusCode);
+            if (isAFavoriteBus) {
                 MarkerManager.getInstance().addPokeBusColor(currenBusCode);
             }
-
         }
 
+        checkIfIsLastBusStop();
+    }
+
+    private void checkIfIsLastBusStop(){
         if (MarkerManager.getInstance().getBusStopCount() == 0) {
             //called once
             firstBusStopHasBeenDisplayed.removeLoadingIcon();
-            openSnippet(PopupAdapterForMapMarkers.sMarkerCurrentKey,
+            openSnippet(MarkerManager.getInstance().getCurrentKey(),
                     MarkerManager.getInstance().getBusCodeOfClosetBusStopToUser());
             Log.i(TAG, "  DOIBNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ");
         }
     }
 
-    private String isAFavoriteBus(ArrayList<String> favBuses, String busCode){
-        for (int i = 0; i < favBuses.size(); i++) {
-            if (favBuses.get(i).equals(busCode)) {
-                return busCode;
+    private void updateMarker(Marker marker, String currenBusCode, String busInfo) {
+        marker.setTitle(currenBusCode);
+        marker.setSnippet(busInfo);
+        MarkerManager.getInstance().getMarkerHashTable().put(currenBusCode, marker);
+    }
+
+    private void makeNewMarker(String currenBusCode, String busInfo, LatLng busStopLatLng) {
+        LatLng markerLocation = new LatLng(busStopLatLng.latitude, busStopLatLng.longitude);
+        Marker marker = MainActivity.googleMap.addMarker(new MarkerOptions().position(markerLocation));
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
+        marker.setTitle(currenBusCode);
+        marker.setSnippet(busInfo);
+
+        MarkerManager.getInstance().getMarkerHashTable().put(currenBusCode, marker);
+
+    }
+
+    private boolean isAFavoriteBusStop(String busCode) {
+        for (int i = 0; i < MarkerManager.getInstance().getFavoriteBusStops().size(); i++) {
+            if (MarkerManager.getInstance().getFavoriteBusStops().get(i).equals(busCode)) {
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     private String getBusName(BusStopDistances distancesExample, int incomingBusesSize) {
         //this is for when no buses are incoming
         String busName;
-
         if (incomingBusesSize == 0) {
             busName = PokeBusApplicationClass.getContext().getString(R.string.no_incoming_buses);
         } else {
@@ -133,7 +123,6 @@ public class AddMarkers {
         int timeTillBus = 0;
         if (incomingBusTime != null) {
             currentTime = currentTime();
-            Log.i(TAG, "currentTime" + currentTime);
 
             currentTime = currentTime.replaceAll(":", "");
             int incomingBusInt = Integer.parseInt(incomingBusTime.replaceAll(":", ""));
@@ -143,7 +132,6 @@ public class AddMarkers {
             if (timeTillBus < 0) {
                 return incomingBusTime;
             }
-
         }
         return (timeTillBus + "");
     }
@@ -153,7 +141,6 @@ public class AddMarkers {
         String allbusNamesAndDistances = "";
         for (int i = 0; i < incomingBusesSize; i++) {
 
-
             String busNamec = distancesExample.getDepartures().getAll().get(i).getLineName();
             int indexOfChar = busNamec.indexOf('_') + 1;
             busNamec = busNamec.substring(indexOfChar);
@@ -162,10 +149,10 @@ public class AddMarkers {
                     .getBestDepartureEstimate());
             Log.i(TAG, "LLL time" + time);
 
-            if(time.contains(":")){
+            if (time.contains(":")) {
                 allbusNamesAndDistances += busNamec + ": " + time + " AM\n";
 
-            }else{
+            } else {
                 allbusNamesAndDistances += busNamec + ": " + time + "min\n";
 
             }
@@ -186,9 +173,9 @@ public class AddMarkers {
     }
 
     private void firstTimeOpenSnippet(String closestMarkerToUser) {
-        if (favBuses.size() > 0) {
+        if (MarkerManager.getInstance().getFavoriteBusStops().size() > 0) {
             boolean hasFavBusStopBeenDisplayed = showFavBusStopSnippet();
-            if (hasFavBusStopBeenDisplayed) {
+            if (!hasFavBusStopBeenDisplayed) {
                 displayClosestMarker(closestMarkerToUser);
             }
         } else {
@@ -198,14 +185,13 @@ public class AddMarkers {
     }
 
     private void displayClosestMarker(String closestMarkerToUser) {
-
         Marker marker = MarkerManager.getInstance().getMarkerHashTable().get(closestMarkerToUser);
         displayMarker(marker);
     }
 
     private void openAfterItsBeenOpenedSnippet(String lastOpenSnippetKey, String closestMarkerToUser) {
         //on first open is different(maybe) after you have opened  another snippet
-        Marker marker = MarkerManager.getInstance().getMarkerHashTable().get(closestMarkerToUser);
+        Marker marker = MarkerManager.getInstance().getMarkerHashTable().get(lastOpenSnippetKey);
         if (marker != null) {
             if (marker.isInfoWindowShown()) {
                 refreshMarkerSnippet(marker);
@@ -241,34 +227,16 @@ public class AddMarkers {
         }
     }
 
-    public void addPokeBusColor(String busCode) {
-        Marker marker = MarkerManager.getInstance().getMarkerHashTable().get(busCode);
-        if (marker != null) {
-            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_white_blue36dp));
-        }
-    }
-
     private boolean showFavBusStopSnippet() {
-        for (int i = 0; i < favBuses.size(); i++) {
-            Marker marker = MarkerManager.getInstance().getMarkerHashTable().get(favBuses.get(i));
-            displayMarker(marker);
-            return true;
+        for (int i = 0; i < MarkerManager.getInstance().getFavoriteBusStops().size(); i++) {
+            Marker marker = MarkerManager.getInstance().getMarkerHashTable()
+                    .get(MarkerManager.getInstance().getFavoriteBusStops().get(i));
+            if (marker != null) {
+                displayMarker(marker);
+                return true;
+            }
         }
         return false;
     }
 
-    public void removePokeBusColor(ArrayList<String> arrayList) {
-        MarkerManager markerManager = MarkerManager.getInstance();
-        Hashtable<String, Marker> markerHashTable = markerManager.getMarkerHashTable();
-        if (arrayList.size() > 0) {
-            for (int i = 0; i < arrayList.size(); i++) {
-                Marker marker = markerHashTable.get(arrayList.get(i));
-                if (marker != null) {
-                    //this is because you may delete an icon you can not see
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker_grey600_36dp));
-                    refreshMarkerSnippet(marker);
-                }
-            }
-        }
-    }
 }
