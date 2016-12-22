@@ -171,4 +171,5 @@
     <string name="request_location_dialog_titlle">Request</string>
     <string name="dimiss">DISMISS</string>
     <string name="dialog_set_radius">Set your radius</string>
+    <string name="no_incoming_buses">Not available</string>
 </resources>

@@ -51,7 +51,6 @@ public class MarkerManager {
         this.mFavBusStops = mFavBusStops;
     }
 
-
     public void addFavoriteBusStop(String favBusCode){
         mFavBusStops.add(favBusCode);
     }
@@ -78,7 +77,6 @@ public class MarkerManager {
         sBusStopsSize--;
     }
 
-
     public String getBusCodeOfClosetBusStopToUser(){
         return sClosestMarker;
     }
@@ -93,8 +91,6 @@ public class MarkerManager {
             mClosestDistance = currentDistance;
         }
     }
-
-
 
     public void addPokeBusColor(String busCode) {
         Marker marker = markerHashTable.get(busCode);
