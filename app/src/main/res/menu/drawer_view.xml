@@ -6,6 +6,7 @@
             <item
                 android:key="@string/radius_key"
                 android:title="@string/radius_preference"
+                android:visible="false"
                 android:id="@+id/register_to_vote"
                 android:icon="@drawable/ic_panorama_fish_eye_black_24dp"
                 android:entries="@array/radius_entries"
@@ -17,7 +18,7 @@
                 android:title="@string/auto_refresh_time"
                 android:id="@+id/nav_discussion"
                 android:icon="@drawable/ic_schedule_black_24dp"
-
+                android:visible="false"
                 android:key="@string/refresh_time_key"
                 android:entries="@array/auto_refresh_entries"
                 android:entryValues="@array/auto_refresh_entries_values"
@@ -26,6 +27,7 @@
 
 
             <item
+                android:visible="false"
                 android:icon="@drawable/ic_map_black_24dp"
                 android:key="@string/bus_maps_key"
                 android:title="@string/map_preference"
@@ -35,7 +37,6 @@
                 />
 
             <item
-
                 android:title="@string/remove_saved_bus_stops"
                 android:key="@string/remove_poke_bus_key"
                 android:id="@+id/set_my_adress"
@@ -43,7 +44,7 @@
                 />
 
             <item
-
+                android:visible="false"
                 android:title="@string/enable_location"
                 android:id="@+id/enable_my_location"
                 android:icon="@drawable/ic_my_location_white_48dp"
@@ -66,14 +67,13 @@
 
             <item
                 android:key="@string/about_page_key"
+                android:visible="false"
                 android:title="@string/about"
                 />
             <item
                 android:key="@string/license_key"
                 android:title="@string/license"
                 />
-
-
 
         </menu>
 
