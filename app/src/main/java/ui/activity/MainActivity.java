@@ -18,7 +18,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -90,16 +89,11 @@ public class MainActivity extends AppCompatActivity implements
     private LatLng onMapPresedLatLng;
     private LatLng latLng;
     private LocationProvider mLocationProvider;
-    private double latitude;
-    private double longitude;
     private Context mContext;
     private boolean isMapOnPressEnabled = false;
-    private int SDK_LEVEL;
     private boolean responseAnsweredForRuntimePermission = false;
-    private final int ENABLE_GPS = 799;
+    private final int ENABLE_GPS_REQUEST_CODE = 799;
     final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 68;
-
-    private boolean hasLocationPermission;
 
     static boolean active = false;
     private ArrayList<String> busCodeOfFavBusStops = new ArrayList<>();
@@ -198,14 +192,10 @@ public class MainActivity extends AppCompatActivity implements
 
     private void permissionAtRunTime() {
 
-        SDK_LEVEL = android.os.Build.VERSION.SDK_INT;
+        int SDK_LEVEL = android.os.Build.VERSION.SDK_INT;
         if (SDK_LEVEL >= Build.VERSION_CODES.M) {
             // ask runtime for lollipop and above versions
-            hasLocationPermission = permissionCheck();
-            Log.i("MyMapsActivity", "permissionCheck hasLocationPermission : " + hasLocationPermission);
-
-            if (!hasLocationPermission) {
-                Log.i("MyMapsActivity", "permissionCheck !hasLocationPermission");
+            if (!SystemStatus.getInstance().fineLocationPermissionCheck()) {
 
                 boolean hasFineLocationBeenRequested =
                         preferenceManager.getHasFineLocationPermissionBeenAsked();
@@ -218,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements
 
             } else {
                 responseAnsweredForRuntimePermission = true;
-                hasLocationPermission = true;
                 setUpAfterPermissionRequest();
             }
 
@@ -226,7 +215,6 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             // do something for phones running an SDK before lollipop
             responseAnsweredForRuntimePermission = true;
-            hasLocationPermission = true;
             setUpAfterPermissionRequest();
         }
     }
@@ -245,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_GRANTED");
+                    Log.i("MyMapsActivity ", " fineLocationPermissionCheck PERMISSION_GRANTED");
 
                     closeDrawer();
                     googleMap.clear();
@@ -254,8 +242,6 @@ public class MainActivity extends AppCompatActivity implements
 
                     onMapPresedLatLng = null;
 
-
-                    hasLocationPermission = true;
                     setUpAfterPermissionRequest();
 
                     AnswersManager.getInstance().fineLocationPermissionAsked(AnswersConstants.ACCEPTED);
@@ -265,8 +251,7 @@ public class MainActivity extends AppCompatActivity implements
                     // contacts-related task you need to do.
 
                 } else {
-                    Log.i("MyMapsActivity ", " permissionCheck PERMISSION_DENIED");
-                    hasLocationPermission = false;
+                    Log.i("MyMapsActivity ", " fineLocationPermissionCheck PERMISSION_DENIED");
                     closeDrawer();
                     setUpAfterPermissionRequest();
 
@@ -296,14 +281,11 @@ public class MainActivity extends AppCompatActivity implements
             PopupAdapterForMapMarkers.mPopupListner = MainActivity.this;
 
 
-            if (hasLocationPermission) {
+            if (SystemStatus.getInstance().fineLocationPermissionCheck()) {
 
-                Log.i("MyMapsActivity", "hasLocationPermission " + hasLocationPermission);
                 mLocationProvider = new LocationProvider(this, this);
                 mLocationProvider.disconnect();
                 mLocationProvider.connect();
-                Log.i("MyMapsActivity", "hasLocationPermission  LocationProvider on" + hasLocationPermission);
-
 
                 if (!SystemStatus.getInstance().isLocationEnabled()) {
 
@@ -315,7 +297,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
             } else {
-                Log.i("MyMapsActivity", "hasLocationPermission " + hasLocationPermission);
 
                 latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
                 onMapPresedLatLng = EMPIRE_STATE_BUILDING_LAT_LNG;
@@ -336,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements
     private void phonePermissionNotGranted() {
         Log.d("MyMapsActivity", "phonePermissionNotGranted");
         mMap.getMapAsync(this);
-        hasLocationPermission = false;
         responseAnsweredForRuntimePermission = true;
         setUpAfterPermissionRequest();
     }
@@ -376,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements
 
         MapsCameraManager.getInstance().animateCamera(LocationManager.getInstance().getUserLatLng(),
                 mMapsCamera.getZoom(), mMapsCamera.getBearing());
+
 
         AnswersManager.getInstance().fabOnRefreshPressed();
 
@@ -471,22 +452,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private boolean permissionCheck() {
-        Log.i("MyMapsActivity ", "permissionCheck");
-        int permissionCheck = ContextCompat.checkSelfPermission(mContext,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-
-        if (permissionCheck == 0) {
-            return true;
-        }
-
-        Log.i("MyMapsActivity ", "permissionCheck == " + permissionCheck);
-
-        return false;
-
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -498,7 +463,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.my_location_item) {
-            if (hasLocationPermission) {
+            if (SystemStatus.getInstance().fineLocationPermissionCheck()) {
 
 
                 if (!SystemStatus.getInstance().isLocationEnabled()) {
@@ -579,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements
                                 break;
                             case NavigationViewItems.SELECT_FAV_MAP:
 
-                                selectDefaultBusMapNavViewSelection();
+                                //selectDefaultBusMapNavViewSelection();
 
                                 break;
                             case NavigationViewItems.FOLLOW_ME_ON_TWITTER:
@@ -605,8 +570,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void enableLocationNavViewSelection() {
 
-        if (!hasLocationPermission) {
-            Log.d("MyMainActivity", "!hasLocationPermission || SDK_LEVEL < 23");
+        if (!SystemStatus.getInstance().fineLocationPermissionCheck()) {
             showPermissionAlertDialog(DIALOG_TITLE, DIALOG_MESSAGE);
             AnswersManager.getInstance().fineLocationDenied();
 
@@ -615,7 +579,7 @@ public class MainActivity extends AppCompatActivity implements
 
             if (!SystemStatus.getInstance().isLocationEnabled()) {
 
-                startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), ENABLE_GPS);
+                startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), ENABLE_GPS_REQUEST_CODE);
                 onMapPresedLatLng = null;
                 AnswersManager.getInstance().enableLocation();
 
@@ -630,40 +594,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void selectDefaultBusMapNavViewSelection() {
-
-
-        final String findWhatToPreSelect = preferenceManager.getBusMapSelection();
-
-        int preSelectedIndex = 0;
-
-        switch (findWhatToPreSelect) {
-            case PreferenceManager.BUS_MAP_SELECTION_BROOKLYN:
-                preSelectedIndex = 0;
-                break;
-            case PreferenceManager.BUS_MAP_SELECTION_MANHATTAN:
-                preSelectedIndex = 1;
-                break;
-            case PreferenceManager.BUS_MAP_SELECTION_QUEENS:
-                preSelectedIndex = 2;
-                break;
-            case PreferenceManager.BUS_MAP_SELECTION_BRONX:
-                preSelectedIndex = 3;
-                break;
-            case PreferenceManager.BUS_MAP_SELECTION_STATEN_ISLAND:
-                preSelectedIndex = 4;
-                break;
-            default:
-                preSelectedIndex = 0;
-                break;
-
-        }
-
-
-        alertDialogWithList(getString(R.string.select_bus_map_tittle), preSelectedIndex, boroughs);
-
-
-    }
 
 
     private void deleteSavedFavoriteBusesNavViewSelection() {
@@ -729,7 +659,6 @@ public class MainActivity extends AppCompatActivity implements
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
-
         } catch (Exception e) {
             // no Twitter app, revert to browser
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" +
@@ -755,8 +684,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         builder.show();
-
-
     }
 
 
@@ -821,8 +748,8 @@ public class MainActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         Log.i("MyMapsActivity", "onActivityResult");
 
-        if (requestCode == ENABLE_GPS) {
-            Log.i("MyMapsActivity", "requestCode==ENABLE_GPS");
+        if (requestCode == ENABLE_GPS_REQUEST_CODE) {
+            Log.i("MyMapsActivity", "requestCode==ENABLE_GPS_REQUEST_CODE");
 
 
             if (SystemStatus.getInstance().isLocationEnabled()) {
@@ -834,52 +761,53 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void ifNotOnlineGoToNoConnectionActivity() {
+        if (!SystemStatus.getInstance().isOnline()) {
+            Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
+    }
+
 
     private void refreshMarkers() {
         Log.i("MyMapsActivity", "refreshMarkers");
 
 
-        if (!SystemStatus.getInstance().isOnline()) {
-            Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
-            startActivity(intent);
+        ifNotOnlineGoToNoConnectionActivity();
+        progressBar.setVisibility(view.VISIBLE);
+
+        MapsCameraManager.getInstance().saveCameraPositionOnMap();
+
+
+        if (SystemStatus.getInstance().fineLocationPermissionCheck()) {
+
+            if (!SystemStatus.getInstance().isLocationEnabled()) {
+
+                selectCorrectLatLng();
+
+            } else {
+                mLocationProvider.disconnect();
+                mLocationProvider.connect();
+            }
+
 
         } else {
 
-            MapsCameraManager.getInstance().saveCameraPositionOnMap();
-
-            progressBar.setVisibility(view.VISIBLE);
-
-            if (hasLocationPermission) {
-
-                if (!SystemStatus.getInstance().isLocationEnabled()) {
-
-                    selectCorrectLatLng();
-
-                } else {
-                    mLocationProvider.disconnect();
-                    mLocationProvider.connect();
-                }
-
-
-            } else {
-
-                selectCorrectLatLng();
-            }
-
-
-            Marker currentMarker = MarkerManager.getInstance().getMarkerHashTable()
-                    .get(MarkerManager.getInstance().getCurrentKey());
-
-            if (currentMarker != null) {
-                MapsCameraManager.getInstance().animateCameraToMarkerMiddleOfScreen(currentMarker,
-                        MapsCameraManager.getInstance().isFirstTimeLoadingForCameraAnimation());
-            } else {
-                MapsCameraManager.getInstance().animateCameraPos();
-            }
-
-
+            selectCorrectLatLng();
         }
+
+
+        Marker currentMarker = MarkerManager.getInstance().getMarkerHashTable()
+                .get(MarkerManager.getInstance().getCurrentKey());
+
+        if (currentMarker != null) {
+            MapsCameraManager.getInstance().animateCameraToMarkerMiddleOfScreen(currentMarker,
+                    MapsCameraManager.getInstance().isFirstTimeLoadingForCameraAnimation());
+        } else {
+            MapsCameraManager.getInstance().animateCameraPos();
+        }
+
 
     }
 
@@ -896,8 +824,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
         MapsCameraManager.getInstance().saveCameraPositionOnMap();
-
-
         closeDrawer();
 
         refreshTimer.stopTimerTask();
@@ -944,8 +870,9 @@ public class MainActivity extends AppCompatActivity implements
         loadAndSaveFavBusInfo = LoadAndSaveFavBusInfo.getInstance(mContext);
         refreshTimer = RefreshTimer.getInstance(MainActivity.this, refreshTimerTaskTime);
 
-        if (hasLocationPermission) {
+        if (SystemStatus.getInstance().fineLocationPermissionCheck()) {
             SystemStatus.getInstance().checkPhoneParams();
+            mLocationProvider = new LocationProvider(this, this);
             mLocationProvider.disconnect();
             mLocationProvider.connect();
             refreshTimer.startTimerTask();
@@ -968,16 +895,10 @@ public class MainActivity extends AppCompatActivity implements
         Log.i("MyMapsActivity", "handleNewLocation ");
 
 
-        if (!SystemStatus.getInstance().isOnline()) {
-            Log.i("MyMapsActivity", "!isOnline()");
-            Intent intent = new Intent(getApplicationContext(), NoConnectionActivity.class);
-            startActivity(intent);
-            this.finish();
-        }
+        ifNotOnlineGoToNoConnectionActivity();
 
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        latLng = new LatLng(latitude, longitude);
+
+        latLng = new LatLng(location.getLatitude(), location.getLongitude());
         LocationManager.getInstance().setUserLatLng(latLng);
 
 

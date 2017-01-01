@@ -1,5 +1,6 @@
 package utils;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -43,6 +45,16 @@ public class SystemStatus {
         NavigationView navView = (NavigationView) ((MainActivity) mContext)
                 .findViewById(R.id.nav_view);
         return navView.getHeight();
+    }
+
+    public boolean fineLocationPermissionCheck() {
+        int permissionCheck = ContextCompat.checkSelfPermission(mContext,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionCheck == 0)
+            return true;
+
+        return false;
+
     }
 
 

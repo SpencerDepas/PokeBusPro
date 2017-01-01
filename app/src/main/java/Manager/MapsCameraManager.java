@@ -64,6 +64,19 @@ public class MapsCameraManager {
         });
     }
 
+    public void newAnimateCamera(LatLng target){
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(target)      // Sets the center of the map to Mountain View
+                .zoom(17)                   // Sets the zoom
+                .bearing(90)                // Sets the orientation of the camera to east
+                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        MainActivity.googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+
+    }
+
     public void mapStartingLocation(LatLng target, float zoom, float bearing) {
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -83,8 +96,6 @@ public class MapsCameraManager {
             mMapsCamera.setZoom(MainActivity.googleMap.getCameraPosition().zoom);
             mMapsCamera.setBearing(MainActivity.googleMap.getCameraPosition().bearing);
         }
-
-
     }
 
     public void animateCameraPos() {
