@@ -41,6 +41,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -354,9 +355,13 @@ public class MainActivity extends AppCompatActivity implements
 
         refreshMarkers();
 
-        MapsCameraManager.getInstance().animateCamera(LocationManager.getInstance().getUserLatLng(),
-                mMapsCamera.getZoom(), mMapsCamera.getBearing());
+//        MapsCameraManager.getInstance().animateCamera(LocationManager.getInstance().getUserLatLng(),
+//                mMapsCamera.getZoom(), mMapsCamera.getBearing());
 
+
+
+//        MapsCameraManager.getInstance().animateCameraToMarkerMiddleOfScreen(marker,
+//                MapsCameraManager.getInstance().isFirstTimeLoadingForCameraAnimation());
 
         AnswersManager.getInstance().fabOnRefreshPressed();
 
@@ -1124,6 +1129,7 @@ public class MainActivity extends AppCompatActivity implements
 
         MapsCameraManager.getInstance().animateCameraToMarkerMiddleOfScreen(marker,
                 MapsCameraManager.getInstance().isFirstTimeLoadingForCameraAnimation());
+        MapsCameraManager.getInstance().setFirstTimeLoadingForCameraAnimation(false);
     }
 
     @Override

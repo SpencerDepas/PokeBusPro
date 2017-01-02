@@ -21,25 +21,29 @@
     <include layout="@layout/activity_maps" />
 
 
-    <com.dmitrymalkovich.android.ProgressFloatingActionButton
+    <!--<com.dmitrymalkovich.android.ProgressFloatingActionButton-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="end|bottom"-->
+    <!--android:layout_margin="@dimen/fab_margin">-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/refresh_location_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin">
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_refresh_white_48dp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/refresh_location_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_refresh_white_48dp" />
+    <ProgressBar
+        android:id="@+id/progress_bar_activity_main"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/fab_margin" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar_activity_main"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </com.dmitrymalkovich.android.ProgressFloatingActionButton>
+    <!--</com.dmitrymalkovich.android.ProgressFloatingActionButton>-->
 
 
 </android.support.design.widget.CoordinatorLayout>

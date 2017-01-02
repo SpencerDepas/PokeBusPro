@@ -131,7 +131,7 @@ public class MapsCameraManager {
         if (!firstTimeLoading) {
             saveCameraPositionOnMap();
 
-            int container_height = SystemStatus.getInstance().getScreenHeight();
+            int container_height = 500;
             Projection projection = MainActivity.googleMap.getProjection();
 
             LatLng markerLatLng = new LatLng(marker.getPosition().latitude,
