@@ -41,11 +41,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import Manager.AnswersManager;
 import Manager.BusStopDataManager;
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements
     private RefreshTimer refreshTimer;
     boolean oneTimeCall = false;
     private MapsCamera mMapsCamera;
+    private BusStopDataManager mBusStopDataManager;
 
     private AddMarkers addMarkers;
     private SupportMapFragment mMap;
@@ -148,7 +149,9 @@ public class MainActivity extends AppCompatActivity implements
   /*  static double testLat = 40.748441;
     static double testLng = -73.985664;
     static LatLng latLngEMPIRE ;*/
-
+    //philpot street
+    //51.5170386
+    //-0.0617888
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mMapsCamera = new MapsCamera();
 
+        mBusStopDataManager = new BusStopDataManager();
 
     }
 
@@ -308,10 +312,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
         }
-
-
-        // permission denied, boo! Disable the
-        // functionality that depends on this permission.
     }
 
 
@@ -357,7 +357,6 @@ public class MainActivity extends AppCompatActivity implements
 
 //        MapsCameraManager.getInstance().animateCamera(LocationManager.getInstance().getUserLatLng(),
 //                mMapsCamera.getZoom(), mMapsCamera.getBearing());
-
 
 
 //        MapsCameraManager.getInstance().animateCameraToMarkerMiddleOfScreen(marker,
@@ -599,8 +598,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-
     private void deleteSavedFavoriteBusesNavViewSelection() {
 
 
@@ -789,7 +786,7 @@ public class MainActivity extends AppCompatActivity implements
 
             if (!SystemStatus.getInstance().isLocationEnabled()) {
 
-                selectCorrectLatLng();
+                getBusStops();
 
             } else {
                 mLocationProvider.disconnect();
@@ -799,7 +796,7 @@ public class MainActivity extends AppCompatActivity implements
 
         } else {
 
-            selectCorrectLatLng();
+            getBusStops();
         }
 
 
@@ -820,7 +817,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onInfoWindowClose(Marker marker) {
         Log.i("PopupAdapterForMapMark", "  onInfoWindowClose ");
 
-        enableMapOnPress();
+        //enableMapOnPress();
 
     }
 
@@ -881,9 +878,23 @@ public class MainActivity extends AppCompatActivity implements
             mLocationProvider.disconnect();
             mLocationProvider.connect();
             refreshTimer.startTimerTask();
+
+            makeNewMarkersIfGC();
+
         } else {
             setUpAfterPermissionRequest();
         }
+    }
+
+    private void makeNewMarkersIfGC() {
+        if (MarkerManager.getInstance().getMarkerHashTable().size() != 0) {
+            Map.Entry<String, Marker> entry = MarkerManager.getInstance().getMarkerHashTable()
+                    .entrySet().iterator().next();
+            if (!MarkerManager.getInstance().getMarkerHashTable().get(entry.getKey()).isVisible()) {
+                mBusStopDataManager.getBusStops(this);
+            }
+        }
+
     }
 
 
@@ -902,6 +913,12 @@ public class MainActivity extends AppCompatActivity implements
 
         ifNotOnlineGoToNoConnectionActivity();
 
+        if(!MarkerManager.getInstance().areMarkersVisible() && latLng == null){
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            LocationManager.getInstance().setUserLatLng(latLng);
+            getBusStops();
+        }
+
 
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
         LocationManager.getInstance().setUserLatLng(latLng);
@@ -911,53 +928,15 @@ public class MainActivity extends AppCompatActivity implements
         googleMap.setInfoWindowAdapter(new PopupAdapterForMapMarkers(getLayoutInflater()));
         googleMap.setOnInfoWindowCloseListener(this);
         MapsCameraManager.getInstance().animateCameraPos();
-        selectCorrectLatLng();
+
+
     }
 
-    private void selectCorrectLatLng() {
-
-        if (onMapPresedLatLng != null) {
-
-            BusStopDataManager busStopDataManager = new BusStopDataManager();
-            busStopDataManager.getBusStops(this);
-
-            //callAndParse.getBusStops(onMapPresedLatLng, busCodeOfFavBusStops, savedRadius);
-        } else {
-
-            if (latLng == null) {
-                Log.i("MyMapsActivity ", "Used prefrence manager latLng ");
-
-                latLng = preferenceManager.getLatLng();
-                LocationManager.getInstance().setUserLatLng(latLng);
+    private void getBusStops() {
 
 
-            } else {
+        mBusStopDataManager.getBusStops(this);
 
-                if (latLng.latitude == 0) {
-                    Log.i("MyMapsActivity ", "latLng.latitude == 0");
-
-                    latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
-                    LocationManager.getInstance().setUserLatLng(latLng);
-
-                }
-
-            }
-            Log.i("MyMapsActivity ", "getBusStops");
-
-            Log.i("MyMapsActivity ", "latLng : " + latLng.latitude);
-
-            if (latLng.latitude == 0) {
-                Log.i("MyMapsActivity ", "latLng.latitude == 0");
-
-                //latLng = EMPIRE_STATE_BUILDING_LAT_LNG;
-                LocationManager.getInstance().setUserLatLng(latLng);
-            }
-
-            BusStopDataManager busStopDataManager = new BusStopDataManager();
-            busStopDataManager.getBusStops(this);
-            //callAndParse.getBusStops(latLng, busCodeOfFavBusStops, savedRadius);
-
-        }
     }
 
 
@@ -1018,7 +997,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mapMarkerClickListener();
 
-        enableMapOnPress();
+        //enableMapOnPress();
 
         if (!oneTimeCall) {
             oneTimeCall = true;
@@ -1093,7 +1072,7 @@ public class MainActivity extends AppCompatActivity implements
         progressBar.setVisibility(view.VISIBLE);
         MapsCameraManager.getInstance().saveCameraPositionOnMap();
 
-        selectCorrectLatLng();
+        getBusStops();
     }
 
 
@@ -1135,7 +1114,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void runTimer() {
         //called from refreshTimer
-        selectCorrectLatLng();
+        getBusStops();
     }
 }
 

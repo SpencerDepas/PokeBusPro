@@ -81,7 +81,7 @@ public class RefreshTimer {
                 Log.i("RefreshTimer", "initializeTimerTask    mTimerTask");
 
                 //selectCorrectLatLng();
-                mTimerTaskInterface.runTimer();
+               // mTimerTaskInterface.runTimer();
 
             }
         };

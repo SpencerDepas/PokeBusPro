@@ -25,7 +25,7 @@ public class BusStopLocationDataAccess {
     public void getBusStops(LatLng latLng, final OnBusStopLocationCallBack onBusStopLocationCallBack) {
 
         String app_id = PokeBusApplicationClass.getContext().getString(R.string.uk_bus_api_id);
-        String app_key = PokeBusApplicationClass.getContext().getString(R.string.uk_bus_api_key);
+        String app_key =   PokeBusApplicationClass.getContext().getString(R.string.uk_bus_api_key);
         String uk_bus_endpoint = PokeBusApplicationClass.getContext().getString(R.string.uk_bus_api_endpoint);
         String numberOfBusStopsToReturn = PokeBusApplicationClass.getContext().getString(R.string.uk_bus_api_number_of_bus_Stops_to_return);
 

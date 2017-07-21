@@ -35,24 +35,26 @@ public class BusStopDataManager {
 
     public void getBusStops(final NoBusesInAreaInterface mNoBusINterFace) {
 
-        BusStopLocationDataAccess mBusStopLocationDataAccess = new BusStopLocationDataAccess();
-        mBusStopLocationDataAccess.getBusStops(LocationManager.getInstance().getUserLatLng(),
-                new OnBusStopLocationCallBack() {
-                    @Override
-                    public void onApiSuccess(UkBusStopsLocation ukBusStopsLocation) {
-                        sBusStopsSize = ukBusStopsLocation.getStops().size();
-                        if (sBusStopsSize > 0) {
-                            makeBusDistanceThreads(ukBusStopsLocation);
-                        } else {
-                            mNoBusINterFace.noBusesFound();
+        if (LocationManager.getInstance().getUserLatLng() != null) {
+            BusStopLocationDataAccess mBusStopLocationDataAccess = new BusStopLocationDataAccess();
+            mBusStopLocationDataAccess.getBusStops(LocationManager.getInstance().getUserLatLng(),
+                    new OnBusStopLocationCallBack() {
+                        @Override
+                        public void onApiSuccess(UkBusStopsLocation ukBusStopsLocation) {
+                            sBusStopsSize = ukBusStopsLocation.getStops().size();
+                            if (sBusStopsSize > 0) {
+                                makeBusDistanceThreads(ukBusStopsLocation);
+                            } else {
+                                mNoBusINterFace.noBusesFound();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onApiError(String error) {
+                        @Override
+                        public void onApiError(String error) {
 
-                    }
-                });
+                        }
+                    });
+        }
 
     }
 

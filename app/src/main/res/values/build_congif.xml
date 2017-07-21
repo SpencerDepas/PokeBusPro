@@ -4,8 +4,8 @@
 
 
 
-    <string name="uk_bus_api_id">03bf8009</string>
-    <string name="uk_bus_api_key">d9307fd91b0247c607e098d5effedc97</string>
+    <string name="uk_bus_api_id">0a0a93f4</string>
+    <string name="uk_bus_api_key">ef736c87a0d3668cd709902c6e275957</string>
     <string name="uk_bus_api_endpoint">http://transportapi.com/v3/uk/bus</string>
     <string name="uk_bus_api_number_of_bus_Stops_to_return">10</string>
 

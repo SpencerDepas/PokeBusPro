@@ -48,17 +48,26 @@ public class AddMarkers {
                 incomingBusesSize);
 
 
-        Marker marker = MarkerManager.getInstance().getMarkerHashTable().get(currenBusCode);
-        if (marker != null) {
-            updateMarker(marker, currenBusCode, allbusNamesAndDistances);
-        } else {
-            makeNewMarker(currenBusCode, allbusNamesAndDistances, busStopLatLng);
-            //this does not scale
-            //could make a hashtable for this
-            Boolean isAFavoriteBus = isAFavoriteBusStop(currenBusCode);
-            if (isAFavoriteBus) {
-                MarkerManager.getInstance().addPokeBusColor(currenBusCode);
-            }
+//        Marker marker = MarkerManager.getInstance().getMarkerHashTable().get(currenBusCode);
+//        if (marker != null) {
+//            updateMarker(marker, currenBusCode, allbusNamesAndDistances);
+//            marker.isVisible();
+//        } else {
+//            makeNewMarker(currenBusCode, allbusNamesAndDistances, busStopLatLng);
+//            //this does not scale
+//            //could make a hashtable for this
+//            Boolean isAFavoriteBus = isAFavoriteBusStop(currenBusCode);
+//            if (isAFavoriteBus) {
+//                MarkerManager.getInstance().addPokeBusColor(currenBusCode);
+//            }
+//        }
+
+        makeNewMarker(currenBusCode, allbusNamesAndDistances, busStopLatLng);
+        //this does not scale
+        //could make a hashtable for this
+        Boolean isAFavoriteBus = isAFavoriteBusStop(currenBusCode);
+        if (isAFavoriteBus) {
+            MarkerManager.getInstance().addPokeBusColor(currenBusCode);
         }
 
         checkIfIsLastBusStop();
@@ -78,6 +87,9 @@ public class AddMarkers {
         marker.setTitle(currenBusCode);
         marker.setSnippet(busInfo);
         MarkerManager.getInstance().getMarkerHashTable().put(currenBusCode, marker);
+//        if(!marker.isVisible()){
+//              MainActivity.googleMap.addMarker(new MarkerOptions().position(marker.getPosition()));
+//        }
     }
 
     private void makeNewMarker(String currenBusCode, String busInfo, LatLng busStopLatLng) {

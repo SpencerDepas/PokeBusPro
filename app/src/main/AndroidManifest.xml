@@ -29,9 +29,9 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBSD0_ViGwMwNooLtSDXXX1dWiVFvpU680" />
 
-        <uses-library
-            android:name="com.google.android.maps"
-            android:required="true" />
+        <!--<uses-library-->
+            <!--android:name="com.google.android.maps"-->
+            <!--android:required="true" />-->
 
         <activity
             android:name="ui.activity.MainActivity"

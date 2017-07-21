@@ -172,4 +172,5 @@
     <string name="dimiss">DISMISS</string>
     <string name="dialog_set_radius">Set your radius</string>
     <string name="no_incoming_buses">Not available</string>
+    <string name="no_google_services_error">Google Services Required for app to work</string>
 </resources>

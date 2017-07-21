@@ -1,13 +1,13 @@
 package Manager;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 import clearfaun.com.pokebuspro.R;
 import ui.component.AddMarkers;
@@ -25,7 +25,7 @@ public class MarkerManager {
     private String mMarkerCurrentKey = "";
 
     private ArrayList<String> mFavBusStops;
-     private ArrayList<String> favBuses;
+    private ArrayList<String> favBuses;
     private String randomMarkeyKey = "";
     private static AddMarkers addMarkers;
     private static String currentTime;
@@ -43,7 +43,20 @@ public class MarkerManager {
         return sMarkerManager;
     }
 
-    public ArrayList<String> getFavoriteBusStops(){
+    public boolean areMarkersVisible(){
+        Iterator it = markerHashTable.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            Marker marker = (Marker)pair.getValue();
+            if (marker.isVisible()){
+                return true;
+            }else {
+                return false;
+            }
+        }
+        return false;
+    }
+    public ArrayList<String> getFavoriteBusStops() {
         return mFavBusStops;
     }
 
@@ -59,7 +72,7 @@ public class MarkerManager {
         mMarkerCurrentKey = sMarkerCurrentKey;
     }
 
-    public void addFavoriteBusStop(String favBusCode){
+    public void addFavoriteBusStop(String favBusCode) {
         mFavBusStops.add(favBusCode);
     }
 
@@ -70,21 +83,21 @@ public class MarkerManager {
         return markerHashTable;
     }
 
-    public void setBusStopCount(int bustStopCount){
+    public void setBusStopCount(int bustStopCount) {
         sBusStopsSize = bustStopCount;
     }
 
-    public int getBusStopCount(){
+    public int getBusStopCount() {
         return sBusStopsSize;
     }
 
-    public void subtractOneBusStop(){
+    public void subtractOneBusStop() {
         //this is so we know when we have loaded all bus stops
         //and can stop a loading bar
         sBusStopsSize--;
     }
 
-    public String getBusCodeOfClosetBusStopToUser(){
+    public String getBusCodeOfClosetBusStopToUser() {
         return sClosestMarker;
     }
 
